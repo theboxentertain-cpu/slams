@@ -10,9 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BaselineRouteImport } from './routes/baseline'
 import { Route as ConservatoryRouteImport } from './routes/conservatory'
+import { Route as DirectorRouteImport } from './routes/director'
+import { Route as LabRouteImport } from './routes/lab'
+import { Route as LoungeRouteImport } from './routes/lounge'
+import { Route as MatrixRouteImport } from './routes/matrix'
 import { Route as PassportRouteImport } from './routes/passport'
 import { Route as SceneRouteImport } from './routes/scene'
+import { Route as StuckRouteImport } from './routes/stuck'
+import { Route as WorkRouteImport } from './routes/work'
 import { Route as ConservatoryIndexRouteImport } from './routes/conservatory.index'
 import { Route as ConservatorySchoolRouteImport } from './routes/conservatory.$school'
 
@@ -21,9 +28,34 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BaselineRoute = BaselineRouteImport.update({
+  id: '/baseline',
+  path: '/baseline',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConservatoryRoute = ConservatoryRouteImport.update({
   id: '/conservatory',
   path: '/conservatory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DirectorRoute = DirectorRouteImport.update({
+  id: '/director',
+  path: '/director',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabRoute = LabRouteImport.update({
+  id: '/lab',
+  path: '/lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoungeRoute = LoungeRouteImport.update({
+  id: '/lounge',
+  path: '/lounge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MatrixRoute = MatrixRouteImport.update({
+  id: '/matrix',
+  path: '/matrix',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PassportRoute = PassportRouteImport.update({
@@ -34,6 +66,16 @@ const PassportRoute = PassportRouteImport.update({
 const SceneRoute = SceneRouteImport.update({
   id: '/scene',
   path: '/scene',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StuckRoute = StuckRouteImport.update({
+  id: '/stuck',
+  path: '/stuck',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkRoute = WorkRouteImport.update({
+  id: '/work',
+  path: '/work',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConservatoryIndexRoute = ConservatoryIndexRouteImport.update({
@@ -49,25 +91,46 @@ const ConservatorySchoolRoute = ConservatorySchoolRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/baseline': typeof BaselineRoute
   '/conservatory': typeof ConservatoryRouteWithChildren
+  '/director': typeof DirectorRoute
+  '/lab': typeof LabRoute
+  '/lounge': typeof LoungeRoute
+  '/matrix': typeof MatrixRoute
   '/passport': typeof PassportRoute
   '/scene': typeof SceneRoute
+  '/stuck': typeof StuckRoute
+  '/work': typeof WorkRoute
   '/conservatory/$school': typeof ConservatorySchoolRoute
   '/conservatory/': typeof ConservatoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/baseline': typeof BaselineRoute
+  '/director': typeof DirectorRoute
+  '/lab': typeof LabRoute
+  '/lounge': typeof LoungeRoute
+  '/matrix': typeof MatrixRoute
   '/passport': typeof PassportRoute
   '/scene': typeof SceneRoute
+  '/stuck': typeof StuckRoute
+  '/work': typeof WorkRoute
   '/conservatory/$school': typeof ConservatorySchoolRoute
   '/conservatory': typeof ConservatoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/baseline': typeof BaselineRoute
   '/conservatory': typeof ConservatoryRouteWithChildren
+  '/director': typeof DirectorRoute
+  '/lab': typeof LabRoute
+  '/lounge': typeof LoungeRoute
+  '/matrix': typeof MatrixRoute
   '/passport': typeof PassportRoute
   '/scene': typeof SceneRoute
+  '/stuck': typeof StuckRoute
+  '/work': typeof WorkRoute
   '/conservatory/$school': typeof ConservatorySchoolRoute
   '/conservatory/': typeof ConservatoryIndexRoute
 }
@@ -75,28 +138,61 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/baseline'
     | '/conservatory'
+    | '/director'
+    | '/lab'
+    | '/lounge'
+    | '/matrix'
     | '/passport'
     | '/scene'
+    | '/stuck'
+    | '/work'
     | '/conservatory/$school'
     | '/conservatory/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/passport' | '/scene' | '/conservatory/$school' | '/conservatory'
+  to:
+    | '/'
+    | '/baseline'
+    | '/director'
+    | '/lab'
+    | '/lounge'
+    | '/matrix'
+    | '/passport'
+    | '/scene'
+    | '/stuck'
+    | '/work'
+    | '/conservatory/$school'
+    | '/conservatory'
   id:
     | '__root__'
     | '/'
+    | '/baseline'
     | '/conservatory'
+    | '/director'
+    | '/lab'
+    | '/lounge'
+    | '/matrix'
     | '/passport'
     | '/scene'
+    | '/stuck'
+    | '/work'
     | '/conservatory/$school'
     | '/conservatory/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BaselineRoute: typeof BaselineRoute
   ConservatoryRoute: typeof ConservatoryRouteWithChildren
+  DirectorRoute: typeof DirectorRoute
+  LabRoute: typeof LabRoute
+  LoungeRoute: typeof LoungeRoute
+  MatrixRoute: typeof MatrixRoute
   PassportRoute: typeof PassportRoute
   SceneRoute: typeof SceneRoute
+  StuckRoute: typeof StuckRoute
+  WorkRoute: typeof WorkRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -108,11 +204,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/baseline': {
+      id: '/baseline'
+      path: '/baseline'
+      fullPath: '/baseline'
+      preLoaderRoute: typeof BaselineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conservatory': {
       id: '/conservatory'
       path: '/conservatory'
       fullPath: '/conservatory'
       preLoaderRoute: typeof ConservatoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/director': {
+      id: '/director'
+      path: '/director'
+      fullPath: '/director'
+      preLoaderRoute: typeof DirectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lab': {
+      id: '/lab'
+      path: '/lab'
+      fullPath: '/lab'
+      preLoaderRoute: typeof LabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lounge': {
+      id: '/lounge'
+      path: '/lounge'
+      fullPath: '/lounge'
+      preLoaderRoute: typeof LoungeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/matrix': {
+      id: '/matrix'
+      path: '/matrix'
+      fullPath: '/matrix'
+      preLoaderRoute: typeof MatrixRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/passport': {
@@ -127,6 +258,20 @@ declare module '@tanstack/react-router' {
       path: '/scene'
       fullPath: '/scene'
       preLoaderRoute: typeof SceneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stuck': {
+      id: '/stuck'
+      path: '/stuck'
+      fullPath: '/stuck'
+      preLoaderRoute: typeof StuckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/work': {
+      id: '/work'
+      path: '/work'
+      fullPath: '/work'
+      preLoaderRoute: typeof WorkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conservatory/': {
@@ -162,9 +307,16 @@ const ConservatoryRouteWithChildren = ConservatoryRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BaselineRoute: BaselineRoute,
   ConservatoryRoute: ConservatoryRouteWithChildren,
+  DirectorRoute: DirectorRoute,
+  LabRoute: LabRoute,
+  LoungeRoute: LoungeRoute,
+  MatrixRoute: MatrixRoute,
   PassportRoute: PassportRoute,
   SceneRoute: SceneRoute,
+  StuckRoute: StuckRoute,
+  WorkRoute: WorkRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
