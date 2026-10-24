@@ -14,7 +14,401 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audition_prep: {
+        Row: {
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      curriculum_assessments: {
+        Row: {
+          content_version: number
+          id: string
+          lesson_id: string
+          position: number
+          slug: string
+          status: string
+          title: string
+        }
+        Insert: {
+          content_version?: number
+          id?: string
+          lesson_id: string
+          position?: number
+          slug: string
+          status?: string
+          title: string
+        }
+        Update: {
+          content_version?: number
+          id?: string
+          lesson_id?: string
+          position?: number
+          slug?: string
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_assessments_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_courses: {
+        Row: {
+          content_version: number
+          id: string
+          position: number
+          slug: string
+          status: string
+          term_id: string
+          title: string
+        }
+        Insert: {
+          content_version?: number
+          id?: string
+          position?: number
+          slug: string
+          status?: string
+          term_id: string
+          title: string
+        }
+        Update: {
+          content_version?: number
+          id?: string
+          position?: number
+          slug?: string
+          status?: string
+          term_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_courses_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_terms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_exercises: {
+        Row: {
+          content_version: number
+          id: string
+          lesson_id: string
+          position: number
+          slug: string
+          status: string
+          title: string
+        }
+        Insert: {
+          content_version?: number
+          id?: string
+          lesson_id: string
+          position?: number
+          slug: string
+          status?: string
+          title: string
+        }
+        Update: {
+          content_version?: number
+          id?: string
+          lesson_id?: string
+          position?: number
+          slug?: string
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_exercises_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_imports: {
+        Row: {
+          counts: Json
+          id: string
+          imported_at: string
+          pack_version: number
+          source: string
+        }
+        Insert: {
+          counts?: Json
+          id?: string
+          imported_at?: string
+          pack_version: number
+          source?: string
+        }
+        Update: {
+          counts?: Json
+          id?: string
+          imported_at?: string
+          pack_version?: number
+          source?: string
+        }
+        Relationships: []
+      }
+      curriculum_lessons: {
+        Row: {
+          content_version: number
+          id: string
+          position: number
+          slug: string
+          status: string
+          title: string
+          workshop_id: string
+        }
+        Insert: {
+          content_version?: number
+          id?: string
+          position?: number
+          slug: string
+          status?: string
+          title: string
+          workshop_id: string
+        }
+        Update: {
+          content_version?: number
+          id?: string
+          position?: number
+          slug?: string
+          status?: string
+          title?: string
+          workshop_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_lessons_workshop_id_fkey"
+            columns: ["workshop_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_workshops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_terms: {
+        Row: {
+          id: string
+          number: number
+          status: string
+          year_id: string
+        }
+        Insert: {
+          id?: string
+          number: number
+          status?: string
+          year_id: string
+        }
+        Update: {
+          id?: string
+          number?: number
+          status?: string
+          year_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_terms_year_id_fkey"
+            columns: ["year_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_years"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_workshops: {
+        Row: {
+          content_version: number
+          course_id: string
+          id: string
+          position: number
+          slug: string
+          status: string
+          title: string
+        }
+        Insert: {
+          content_version?: number
+          course_id: string
+          id?: string
+          position?: number
+          slug: string
+          status?: string
+          title: string
+        }
+        Update: {
+          content_version?: number
+          course_id?: string
+          id?: string
+          position?: number
+          slug?: string
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_workshops_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_years: {
+        Row: {
+          id: string
+          number: number
+          school_id: string
+        }
+        Insert: {
+          id?: string
+          number: number
+          school_id: string
+        }
+        Update: {
+          id?: string
+          number?: number
+          school_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_years_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      passport_entries: {
+        Row: {
+          created_at: string
+          exercise_note: string
+          id: string
+          intervention: string
+          obstacle: string
+          reflection: string
+          retake_line: string
+          tactic: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          exercise_note?: string
+          id?: string
+          intervention: string
+          obstacle?: string
+          reflection: string
+          retake_line?: string
+          tactic: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          exercise_note?: string
+          id?: string
+          intervention?: string
+          obstacle?: string
+          reflection?: string
+          retake_line?: string
+          tactic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      schools: {
+        Row: {
+          focus: string
+          id: string
+          name: string
+          position: number
+          slug: string
+          terms: number
+          years: number
+        }
+        Insert: {
+          focus?: string
+          id?: string
+          name: string
+          position?: number
+          slug: string
+          terms: number
+          years: number
+        }
+        Update: {
+          focus?: string
+          id?: string
+          name?: string
+          position?: number
+          slug?: string
+          terms?: number
+          years?: number
+        }
+        Relationships: []
+      }
+      unit_progress: {
+        Row: {
+          status: string
+          unit_id: string
+          unit_kind: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          status: string
+          unit_id: string
+          unit_kind: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          status?: string
+          unit_id?: string
+          unit_kind?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
