@@ -1,13 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Page, btnPrimary } from "@/components/slams";
+import { Page, btnPrimary, btnSecondary } from "@/components/slams";
+import { useAuditionPrep } from "@/lib/store";
 
 export const Route = createFileRoute("/work")({
   head: () => ({ meta: [{ title: "Actor at Work — SLAMS" }, { name: "description", content: "Prepare an audition step by step." }, { property: "og:title", content: "Actor at Work — SLAMS" }, { property: "og:description", content: "Prepare an audition step by step." }] }),
   component: Work,
 });
 
-const KEY = "slams.audition.v1";
 const FIELDS = [
   { id: "role", label: "Role & project" },
   { id: "circumstances", label: "Given circumstances (who, where, when)" },
@@ -18,22 +18,79 @@ const FIELDS = [
 ] as const;
 
 function Work() {
-  const [data, setData] = useState<Record<string, string>>({});
-  const [saved, setSaved] = useState(false);
-  useEffect(() => { try { setData(JSON.parse(localStorage.getItem(KEY) || "{}")); } catch { /* ignore */ } }, []);
+  const { data, loaded, signedIn, sessionLoading, localHasData, save, importLocalToCloud } = useAuditionPrep();
+  const [draft, setDraft] = useState<Record<string, string>>({});
+  const [status, setStatus] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (loaded) setDraft(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded, signedIn]);
+
+  async function handleSave() {
+    setBusy(true);
+    setStatus(null);
+    const res = await save(draft);
+    setBusy(false);
+    setStatus(res.error ? `Save failed: ${res.error}` : signedIn ? "Saved to your account." : "Saved in this browser.");
+  }
+
+  async function handleImport() {
+    setBusy(true);
+    setStatus(null);
+    const res = await importLocalToCloud();
+    setBusy(false);
+    setStatus(res.error ? `Import failed: ${res.error}` : "Browser notes imported to your account.");
+  }
+
   return (
     <Page title="Actor at Work" eyebrow="Portal · Audition prep">
-      <p className="mb-4 text-sm text-muted-foreground">Work through your sides before the room. Saved locally in this browser.</p>
-      <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); localStorage.setItem(KEY, JSON.stringify(data)); setSaved(true); }}>
-        {FIELDS.map((f) => (
-          <label key={f.id} className="grid gap-1 text-sm">
-            {f.label}
-            <textarea rows={2} value={data[f.id] ?? ""} onChange={(e) => { setData({ ...data, [f.id]: e.target.value }); setSaved(false); }} className="rounded border border-input bg-background p-2" />
-          </label>
-        ))}
-        <button className={btnPrimary}>Save audition prep</button>
-        {saved && <p role="status" className="text-sm text-amber">Saved in this browser.</p>}
-      </form>
+      {!sessionLoading && !signedIn && (
+        <p className="mb-4 text-sm text-muted-foreground">
+          Work through your sides before the room. Saved locally in this browser —{" "}
+          <Link to="/auth" className="underline">sign in to save to your account.</Link>
+        </p>
+      )}
+      {signedIn && (
+        <p className="mb-4 text-sm text-muted-foreground">Work through your sides before the room. Saved to your account.</p>
+      )}
+      {signedIn && localHasData && (
+        <div className="mb-4 rounded border border-amber p-3 text-sm">
+          <p>This browser holds audition notes not yet in your account.</p>
+          <button type="button" className={`${btnSecondary} mt-2`} disabled={busy} onClick={handleImport}>
+            Import browser notes to my account
+          </button>
+        </div>
+      )}
+      {!loaded ? (
+        <p role="status">Loading…</p>
+      ) : (
+        <form
+          className="grid gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSave();
+          }}
+        >
+          {FIELDS.map((f) => (
+            <label key={f.id} className="grid gap-1 text-sm">
+              {f.label}
+              <textarea
+                rows={2}
+                value={draft[f.id] ?? ""}
+                onChange={(e) => {
+                  setDraft({ ...draft, [f.id]: e.target.value });
+                  setStatus(null);
+                }}
+                className="rounded border border-input bg-background p-2"
+              />
+            </label>
+          ))}
+          <button className={btnPrimary} disabled={busy}>{busy ? "Saving…" : "Save audition prep"}</button>
+          {status && <p role="status" className="text-sm text-amber">{status}</p>}
+        </form>
+      )}
     </Page>
   );
 }
