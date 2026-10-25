@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import studio from "@/assets/studio-bg.jpg";
-import { DemoBanner, DirectorNote, DirectorToggle, SystemsNav, Wordmark, btnPrimary } from "@/components/slams";
+import { AccountLink, DemoBanner, DirectorNote, DirectorToggle, SystemsNav, Wordmark, btnPrimary } from "@/components/slams";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,7 +27,7 @@ function Home() {
       <div className="studio-veil fixed inset-0 -z-10" />
       <DemoBanner />
       <div className="mx-auto max-w-3xl px-4 py-4">
-        <div className="flex justify-end"><DirectorToggle /></div>
+        <div className="flex items-center justify-end gap-2"><AccountLink /><DirectorToggle /></div>
         <header className="rise pt-10 pb-8 text-center">
           <p className="text-xs font-bold tracking-[0.3em] text-amber">MRAHMO STUDIOS PRESENTS</p>
           <h1 className="mt-2"><Wordmark /></h1>

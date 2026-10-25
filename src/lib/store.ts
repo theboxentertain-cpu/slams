@@ -196,3 +196,71 @@ export function useDirectorMode() {
   const [mode, setMode] = useStored<DirectorMode>(DIRECTOR_KEY, "on");
   return [mode, setMode] as const;
 }
+
+export type AuditionPrep = Record<string, string>;
+
+/** Audition prep: cloud row per signed-in user, localStorage otherwise. */
+export function useAuditionPrep() {
+  const { user, loading: sessionLoading } = useSession();
+  const [localData, setLocalData, localLoaded] = useStored<AuditionPrep>(AUDITION_KEY, {});
+  const [cloudData, setCloudData] = useState<AuditionPrep>({});
+  const [cloudLoaded, setCloudLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setCloudData({});
+      setCloudLoaded(false);
+      return;
+    }
+    let active = true;
+    supabase
+      .from("audition_prep")
+      .select("data")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!active) return;
+        if (error) console.error("audition prep load failed", error);
+        setCloudData((data?.data as AuditionPrep) ?? {});
+        setCloudLoaded(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [user?.id]);
+
+  const signedIn = !!user;
+  const data = signedIn ? cloudData : localData;
+  const loaded = signedIn ? cloudLoaded : localLoaded;
+  const localHasData = Object.keys(localData).some((k) => (localData[k] ?? "").trim() !== "");
+
+  const save = useCallback(
+    async (next: AuditionPrep): Promise<{ error?: string }> => {
+      if (!user) {
+        setLocalData(next);
+        return {};
+      }
+      const { error } = await supabase
+        .from("audition_prep")
+        .upsert({ user_id: user.id, data: next, updated_at: new Date().toISOString() });
+      if (error) return { error: error.message };
+      setCloudData(next);
+      return {};
+    },
+    [user, setLocalData],
+  );
+
+  /** Opt-in import of this browser's local prep into the signed-in account. Clears local copy on success. */
+  const importLocalToCloud = useCallback(async (): Promise<{ error?: string }> => {
+    if (!user) return { error: "Not signed in" };
+    const local = read<AuditionPrep>(AUDITION_KEY, {});
+    if (!Object.keys(local).some((k) => (local[k] ?? "").trim() !== "")) return {};
+    const res = await save(local);
+    if (res.error) return res;
+    localStorage.removeItem(AUDITION_KEY);
+    window.dispatchEvent(new Event(EVT));
+    return {};
+  }, [user, save]);
+
+  return { data, loaded, signedIn, sessionLoading, localHasData, save, importLocalToCloud };
+}
