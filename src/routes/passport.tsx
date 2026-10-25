@@ -9,10 +9,40 @@ export const Route = createFileRoute("/passport")({
 });
 
 function Passport() {
-  const { entries, loaded, remove, clear } = usePassport();
+  const { entries, loaded, signedIn, sessionLoading, localCount, remove, clear, importLocalToCloud } = usePassport();
+  const [importMsg, setImportMsg] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+
+  async function handleImport() {
+    setImporting(true);
+    setImportMsg(null);
+    const res = await importLocalToCloud();
+    setImporting(false);
+    setImportMsg(res.error ? `Import failed: ${res.error}` : `Imported ${res.imported} ${res.imported === 1 ? "entry" : "entries"} to your account.`);
+  }
+
   return (
     <Page title="Actor's Passport" eyebrow="Studio system">
-      <p className="mb-4 rounded border border-warning p-3 text-sm">Local-only: entries live in this browser. Clearing browser data deletes them. No account or cloud backup yet.</p>
+      {!sessionLoading && !signedIn && (
+        <p className="mb-4 rounded border border-warning p-3 text-sm">
+          Local-only: entries live in this browser. Clearing browser data deletes them.{" "}
+          <Link to="/auth" className="underline">Sign in to save them to your account.</Link>
+        </p>
+      )}
+      {signedIn && (
+        <p className="mb-4 rounded border border-border p-3 text-sm">
+          Entries are saved to your account and sync across devices.
+        </p>
+      )}
+      {signedIn && localCount > 0 && (
+        <div className="mb-4 rounded border border-amber p-3 text-sm">
+          <p>This browser holds {localCount} local {localCount === 1 ? "entry" : "entries"} not yet in your account.</p>
+          <button className={`${btnSecondary} mt-2`} disabled={importing} onClick={handleImport}>
+            {importing ? "Importing…" : "Import browser entries to my account"}
+          </button>
+          {importMsg && <p role="status" className="mt-2">{importMsg}</p>}
+        </div>
+      )}
       {!loaded ? (
         <p role="status">Loading…</p>
       ) : entries.length === 0 ? (
