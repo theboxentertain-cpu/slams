@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BaselineRouteImport } from './routes/baseline'
 import { Route as ConservatoryRouteImport } from './routes/conservatory'
 import { Route as DirectorRouteImport } from './routes/director'
@@ -17,6 +18,7 @@ import { Route as LabRouteImport } from './routes/lab'
 import { Route as LoungeRouteImport } from './routes/lounge'
 import { Route as MatrixRouteImport } from './routes/matrix'
 import { Route as PassportRouteImport } from './routes/passport'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SceneRouteImport } from './routes/scene'
 import { Route as StuckRouteImport } from './routes/stuck'
 import { Route as WorkRouteImport } from './routes/work'
@@ -26,6 +28,11 @@ import { Route as ConservatorySchoolRouteImport } from './routes/conservatory.$s
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BaselineRoute = BaselineRouteImport.update({
@@ -63,6 +70,11 @@ const PassportRoute = PassportRouteImport.update({
   path: '/passport',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SceneRoute = SceneRouteImport.update({
   id: '/scene',
   path: '/scene',
@@ -91,6 +103,7 @@ const ConservatorySchoolRoute = ConservatorySchoolRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/baseline': typeof BaselineRoute
   '/conservatory': typeof ConservatoryRouteWithChildren
   '/director': typeof DirectorRoute
@@ -98,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/lounge': typeof LoungeRoute
   '/matrix': typeof MatrixRoute
   '/passport': typeof PassportRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/stuck': typeof StuckRoute
   '/work': typeof WorkRoute
@@ -106,12 +120,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/baseline': typeof BaselineRoute
   '/director': typeof DirectorRoute
   '/lab': typeof LabRoute
   '/lounge': typeof LoungeRoute
   '/matrix': typeof MatrixRoute
   '/passport': typeof PassportRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/stuck': typeof StuckRoute
   '/work': typeof WorkRoute
@@ -121,6 +137,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/baseline': typeof BaselineRoute
   '/conservatory': typeof ConservatoryRouteWithChildren
   '/director': typeof DirectorRoute
@@ -128,6 +145,7 @@ export interface FileRoutesById {
   '/lounge': typeof LoungeRoute
   '/matrix': typeof MatrixRoute
   '/passport': typeof PassportRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/stuck': typeof StuckRoute
   '/work': typeof WorkRoute
@@ -138,6 +156,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/baseline'
     | '/conservatory'
     | '/director'
@@ -145,6 +164,7 @@ export interface FileRouteTypes {
     | '/lounge'
     | '/matrix'
     | '/passport'
+    | '/reset-password'
     | '/scene'
     | '/stuck'
     | '/work'
@@ -153,12 +173,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/baseline'
     | '/director'
     | '/lab'
     | '/lounge'
     | '/matrix'
     | '/passport'
+    | '/reset-password'
     | '/scene'
     | '/stuck'
     | '/work'
@@ -167,6 +189,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/baseline'
     | '/conservatory'
     | '/director'
@@ -174,6 +197,7 @@ export interface FileRouteTypes {
     | '/lounge'
     | '/matrix'
     | '/passport'
+    | '/reset-password'
     | '/scene'
     | '/stuck'
     | '/work'
@@ -183,6 +207,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   BaselineRoute: typeof BaselineRoute
   ConservatoryRoute: typeof ConservatoryRouteWithChildren
   DirectorRoute: typeof DirectorRoute
@@ -190,6 +215,7 @@ export interface RootRouteChildren {
   LoungeRoute: typeof LoungeRoute
   MatrixRoute: typeof MatrixRoute
   PassportRoute: typeof PassportRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SceneRoute: typeof SceneRoute
   StuckRoute: typeof StuckRoute
   WorkRoute: typeof WorkRoute
@@ -202,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/baseline': {
@@ -251,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/passport'
       fullPath: '/passport'
       preLoaderRoute: typeof PassportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/scene': {
@@ -307,6 +347,7 @@ const ConservatoryRouteWithChildren = ConservatoryRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   BaselineRoute: BaselineRoute,
   ConservatoryRoute: ConservatoryRouteWithChildren,
   DirectorRoute: DirectorRoute,
@@ -314,6 +355,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoungeRoute: LoungeRoute,
   MatrixRoute: MatrixRoute,
   PassportRoute: PassportRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SceneRoute: SceneRoute,
   StuckRoute: StuckRoute,
   WorkRoute: WorkRoute,

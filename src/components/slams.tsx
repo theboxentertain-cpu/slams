@@ -1,5 +1,7 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useSession } from "@/lib/session";
 import { useDirectorMode, type DirectorMode } from "@/lib/store";
 
 export function Wordmark({ small = false }: { small?: boolean }) {
@@ -11,10 +13,38 @@ export function Wordmark({ small = false }: { small?: boolean }) {
 }
 
 export function DemoBanner() {
+  const { user, loading } = useSession();
+  if (loading) return null;
+  if (user) {
+    return (
+      <p role="note" className="bg-secondary px-3 py-1.5 text-center text-xs font-bold text-foreground">
+        Signed in as {user.email} — your progress is saved to your account.
+      </p>
+    );
+  }
   return (
     <p role="note" className="bg-warning px-3 py-1.5 text-center text-xs font-bold text-charcoal">
-      DEMO MODE — progress is saved only in this browser (local-only). No account, no cloud storage.
+      DEMO MODE — progress is saved only in this browser (local-only).{" "}
+      <Link to="/auth" className="underline">Sign in to save to your account.</Link>
     </p>
+  );
+}
+
+export function AccountLink() {
+  const { user, loading } = useSession();
+  const navigate = useNavigate();
+  if (loading) return null;
+  if (!user) {
+    return <Link to="/auth" className="rounded bg-secondary px-3 py-2 text-sm">Sign in</Link>;
+  }
+  return (
+    <button
+      type="button"
+      className="rounded bg-secondary px-3 py-2 text-sm"
+      onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/", replace: true }); }}
+    >
+      Sign out
+    </button>
   );
 }
 
