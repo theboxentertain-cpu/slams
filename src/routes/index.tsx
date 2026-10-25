@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import studio from "@/assets/studio-bg.jpg";
-import { DemoBanner, DirectorNote, DirectorToggle, SystemsNav, Wordmark, btnPrimary } from "@/components/slams";
+import { AccountLink, DemoBanner, DirectorNote, DirectorToggle, SystemsNav, Wordmark, btnPrimary } from "@/components/slams";
 
 export const Route = createFileRoute("/")({
   head: () => ({

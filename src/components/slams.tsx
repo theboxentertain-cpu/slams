@@ -119,6 +119,7 @@ export function Page({ title, eyebrow, children, school }: { title: string; eyeb
           ← Back
         </button>
         <Link to="/" aria-label="SLAMS home"><Wordmark small /></Link>
+        <AccountLink />
       </header>
       <main className="rise mx-auto max-w-3xl px-4 pb-16">
         {eyebrow && <p className="text-xs font-bold tracking-widest text-school uppercase">{eyebrow}</p>}
