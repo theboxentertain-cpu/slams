@@ -1,0 +1,11 @@
+ALTER TABLE public.curriculum_courses ADD COLUMN content TEXT NOT NULL DEFAULT '', ADD COLUMN reviewed BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.curriculum_workshops ADD COLUMN content TEXT NOT NULL DEFAULT '', ADD COLUMN reviewed BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.curriculum_lessons ADD COLUMN content TEXT NOT NULL DEFAULT '', ADD COLUMN reviewed BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.curriculum_exercises ADD COLUMN content TEXT NOT NULL DEFAULT '', ADD COLUMN reviewed BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE public.curriculum_assessments ADD COLUMN content TEXT NOT NULL DEFAULT '', ADD COLUMN reviewed BOOLEAN NOT NULL DEFAULT false;
+CREATE OR REPLACE FUNCTION public.require_reviewed_curriculum() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF NEW.status = 'published' AND (NOT NEW.reviewed OR length(trim(NEW.content)) = 0) THEN RAISE EXCEPTION 'Published units require reviewed material'; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER reviewed_course BEFORE INSERT OR UPDATE ON public.curriculum_courses FOR EACH ROW EXECUTE FUNCTION public.require_reviewed_curriculum();
+CREATE TRIGGER reviewed_workshop BEFORE INSERT OR UPDATE ON public.curriculum_workshops FOR EACH ROW EXECUTE FUNCTION public.require_reviewed_curriculum();
+CREATE TRIGGER reviewed_lesson BEFORE INSERT OR UPDATE ON public.curriculum_lessons FOR EACH ROW EXECUTE FUNCTION public.require_reviewed_curriculum();
+CREATE TRIGGER reviewed_exercise BEFORE INSERT OR UPDATE ON public.curriculum_exercises FOR EACH ROW EXECUTE FUNCTION public.require_reviewed_curriculum();
+CREATE TRIGGER reviewed_assessment BEFORE INSERT OR UPDATE ON public.curriculum_assessments FOR EACH ROW EXECUTE FUNCTION public.require_reviewed_curriculum();

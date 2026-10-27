@@ -34,28 +34,34 @@ export type Database = {
       }
       curriculum_assessments: {
         Row: {
+          content: string
           content_version: number
           id: string
           lesson_id: string
           position: number
+          reviewed: boolean
           slug: string
           status: string
           title: string
         }
         Insert: {
+          content?: string
           content_version?: number
           id?: string
           lesson_id: string
           position?: number
+          reviewed?: boolean
           slug: string
           status?: string
           title: string
         }
         Update: {
+          content?: string
           content_version?: number
           id?: string
           lesson_id?: string
           position?: number
+          reviewed?: boolean
           slug?: string
           status?: string
           title?: string
@@ -72,27 +78,33 @@ export type Database = {
       }
       curriculum_courses: {
         Row: {
+          content: string
           content_version: number
           id: string
           position: number
+          reviewed: boolean
           slug: string
           status: string
           term_id: string
           title: string
         }
         Insert: {
+          content?: string
           content_version?: number
           id?: string
           position?: number
+          reviewed?: boolean
           slug: string
           status?: string
           term_id: string
           title: string
         }
         Update: {
+          content?: string
           content_version?: number
           id?: string
           position?: number
+          reviewed?: boolean
           slug?: string
           status?: string
           term_id?: string
@@ -110,28 +122,34 @@ export type Database = {
       }
       curriculum_exercises: {
         Row: {
+          content: string
           content_version: number
           id: string
           lesson_id: string
           position: number
+          reviewed: boolean
           slug: string
           status: string
           title: string
         }
         Insert: {
+          content?: string
           content_version?: number
           id?: string
           lesson_id: string
           position?: number
+          reviewed?: boolean
           slug: string
           status?: string
           title: string
         }
         Update: {
+          content?: string
           content_version?: number
           id?: string
           lesson_id?: string
           position?: number
+          reviewed?: boolean
           slug?: string
           status?: string
           title?: string
@@ -172,27 +190,33 @@ export type Database = {
       }
       curriculum_lessons: {
         Row: {
+          content: string
           content_version: number
           id: string
           position: number
+          reviewed: boolean
           slug: string
           status: string
           title: string
           workshop_id: string
         }
         Insert: {
+          content?: string
           content_version?: number
           id?: string
           position?: number
+          reviewed?: boolean
           slug: string
           status?: string
           title: string
           workshop_id: string
         }
         Update: {
+          content?: string
           content_version?: number
           id?: string
           position?: number
+          reviewed?: boolean
           slug?: string
           status?: string
           title?: string
@@ -239,28 +263,34 @@ export type Database = {
       }
       curriculum_workshops: {
         Row: {
+          content: string
           content_version: number
           course_id: string
           id: string
           position: number
+          reviewed: boolean
           slug: string
           status: string
           title: string
         }
         Insert: {
+          content?: string
           content_version?: number
           course_id: string
           id?: string
           position?: number
+          reviewed?: boolean
           slug: string
           status?: string
           title: string
         }
         Update: {
+          content?: string
           content_version?: number
           course_id?: string
           id?: string
           position?: number
+          reviewed?: boolean
           slug?: string
           status?: string
           title?: string
