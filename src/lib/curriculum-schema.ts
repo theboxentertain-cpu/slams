@@ -11,35 +11,39 @@ const slug = z
   .string()
   .min(1)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "slug must be lowercase kebab-case");
-const title = z.string().min(1);
+const title = z.string().trim().min(1).max(500);
+const material = { content: z.string().max(100000).default(""), reviewed: z.boolean().default(false), contentVersion: z.number().int().positive().default(1) };
 
-const assessmentSchema = z.object({ slug, title, status: status.default("in-development") });
-const exerciseSchema = z.object({ slug, title, status: status.default("in-development") });
+const assessmentSchema = z.object({ slug, title, ...material, status: status.default("in-development") }).strict();
+const exerciseSchema = z.object({ slug, title, ...material, status: status.default("in-development") }).strict();
 const lessonSchema = z.object({
   slug,
   title,
+  ...material,
   status: status.default("in-development"),
   exercises: z.array(exerciseSchema).default([]),
   assessments: z.array(assessmentSchema).default([]),
-});
+}).strict();
 const workshopSchema = z.object({
   slug,
   title,
+  ...material,
   status: status.default("in-development"),
   lessons: z.array(lessonSchema).default([]),
-});
+}).strict();
 const courseSchema = z.object({
   slug,
   title,
+  ...material,
   status: status.default("in-development"),
   workshops: z.array(workshopSchema).default([]),
-});
+}).strict();
 const termSchema = z.object({
   number: z.number().int().positive(),
   status: status.default("in-development"),
   courses: z.array(courseSchema).default([]),
-});
-const yearSchema = z.object({ number: z.number().int().positive(), terms: z.array(termSchema).default([]) });
+}).strict();
+const yearSchema = z.object({ number: z.number().int().positive(), terms: z.array(termSchema).default([]) }).strict();
 const schoolSchema = z.object({
   slug,
   name: title,
@@ -47,13 +51,13 @@ const schoolSchema = z.object({
   years: z.number().int().positive(),
   terms: z.number().int().positive(),
   curriculum: z.array(yearSchema).default([]),
-});
+}).strict();
 
 export const curriculumPackSchema = z.object({
   version: z.literal(PACK_VERSION),
   source: z.string().default(""),
   schools: z.array(schoolSchema).min(1),
-});
+}).strict();
 
 export type CurriculumPack = z.infer<typeof curriculumPackSchema>;
 
@@ -99,6 +103,10 @@ export function validateCurriculumPack(input: unknown): PackValidation {
     if (termTotal !== school.terms)
       errors.push(`${school.slug}: declares ${school.terms} terms but contains ${termTotal}`);
 
+    const years = school.curriculum.map((year) => year.number).sort((a,b) => a-b);
+    if (years.some((number, index) => number !== index + 1)) errors.push(`${school.slug}: year numbers must be unique and consecutive`);
+    const terms = school.curriculum.flatMap((year) => year.terms.map((term) => term.number));
+    if (terms.some((number, index) => number !== index + 1)) errors.push(`${school.slug}: term numbers must be unique, consecutive, and in year order`);
     for (const year of school.curriculum) {
       counts.years++;
       for (const term of year.terms) {
@@ -111,12 +119,16 @@ export function validateCurriculumPack(input: unknown): PackValidation {
 
         for (const course of term.courses) {
           counts.courses++;
+          checkMaterial(course, `${where}/${course.slug}`, errors);
           for (const dup of duplicateSlugs(course.workshops)) errors.push(`${where}/${course.slug}: duplicate workshop slug "${dup}"`);
           for (const workshop of course.workshops) {
             counts.workshops++;
+            checkMaterial(workshop, `${where}/${course.slug}/${workshop.slug}`, errors);
             for (const dup of duplicateSlugs(workshop.lessons)) errors.push(`${where}/${course.slug}/${workshop.slug}: duplicate lesson slug "${dup}"`);
             for (const lesson of workshop.lessons) {
               counts.lessons++;
+              checkMaterial(lesson, `${where}/${course.slug}/${workshop.slug}/${lesson.slug}`, errors);
+              for (const unit of [...lesson.exercises, ...lesson.assessments]) checkMaterial(unit, `${where}/${lesson.slug}/${unit.slug}`, errors);
               counts.exercises += lesson.exercises.length;
               counts.assessments += lesson.assessments.length;
               for (const dup of duplicateSlugs(lesson.exercises)) errors.push(`${lesson.slug}: duplicate exercise slug "${dup}"`);
@@ -130,4 +142,8 @@ export function validateCurriculumPack(input: unknown): PackValidation {
 
   if (errors.length) return { ok: false, errors };
   return { ok: true, pack, counts };
+}
+
+function checkMaterial(unit: { status: string; content: string; reviewed: boolean }, path: string, errors: string[]) {
+  if (unit.status === "published" && (!unit.reviewed || !unit.content.trim())) errors.push(`${path}: published units require reviewed material`);
 }
