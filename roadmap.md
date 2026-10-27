@@ -9,3 +9,10 @@
 - [~] Tests: auth helpers done (9 tests); migration/import logic done; RLS verified live via signed-in cloud save; still missing: dedicated scene regression test, multi-user isolation test
 - [x] Typecheck + tests (21 pass) + browser verification (signed-out, signup, signed-in, refresh, sign-out, cloud save)
 - [ ] Remaining: real curriculum content import (blocked on authored content), Passport entry cloud write E2E via full rehearsal, email-confirmation-aware E2E sign-in test
+
+## Continuation
+- [ ] Centralize session-aware navigation and safe sign-out
+- [ ] Await cloud writes, expose failures, retain rejected local imports, prevent audition import overwrite
+- [ ] Strengthen curriculum validation and wire actual-unit progress with database existence checks
+- [ ] Run automated rehearsal/migration/validator tests and database multi-user RLS checks
+- [ ] Run desktop/mobile browser regression and document verified vs blocked checks

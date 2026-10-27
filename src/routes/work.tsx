@@ -18,7 +18,7 @@ const FIELDS = [
 ] as const;
 
 function Work() {
-  const { data, loaded, signedIn, sessionLoading, localHasData, save, importLocalToCloud } = useAuditionPrep();
+  const { error, data, loaded, signedIn, sessionLoading, localHasData, save, importLocalToCloud } = useAuditionPrep();
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -26,7 +26,7 @@ function Work() {
   useEffect(() => {
     if (loaded) setDraft(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loaded, signedIn]);
+  }, [loaded, signedIn, data]);
 
   async function handleSave() {
     setBusy(true);
@@ -63,6 +63,7 @@ function Work() {
           </button>
         </div>
       )}
+      {error && <p role="alert" className="text-destructive">{error}</p>}
       {!loaded ? (
         <p role="status">Loading…</p>
       ) : (

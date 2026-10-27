@@ -9,7 +9,7 @@ export const Route = createFileRoute("/passport")({
 });
 
 function Passport() {
-  const { entries, loaded, signedIn, sessionLoading, localCount, remove, clear, importLocalToCloud } = usePassport();
+  const { error, entries, loaded, signedIn, sessionLoading, localCount, remove, clear, importLocalToCloud } = usePassport();
   const [importMsg, setImportMsg] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
 
@@ -43,6 +43,8 @@ function Passport() {
           {importMsg && <p role="status" className="mt-2">{importMsg}</p>}
         </div>
       )}
+      {error && <p role="alert" className="mb-3 text-destructive">{error}</p>}
+      {importMsg && localCount === 0 && <p role="status">{importMsg}</p>}
       {!loaded ? (
         <p role="status">Loading…</p>
       ) : entries.length === 0 ? (
@@ -55,7 +57,7 @@ function Passport() {
           <ul className="grid gap-3">
             {entries.map((e) => (
               <li key={e.id} className="panel p-4 text-sm">
-                <p className="text-xs text-muted-foreground">{new Date(e.date).toLocaleString()} · “Stay” demo · stages completed: Perform, Intervene, Practice, Retake, Reflect</p>
+                <p className="text-xs text-muted-foreground">{new Date(e.date).toLocaleString()} · “Stay” demo</p>
                 <p className="mt-1"><b>Tactic:</b> {e.tactic}</p>
                 <p><b>Intervention:</b> {e.intervention}</p>
                 <p><b>Exercise:</b> {e.exerciseNote}</p>
@@ -66,7 +68,7 @@ function Passport() {
               </li>
             ))}
           </ul>
-          <button className={`${btnSecondary} mt-4`} onClick={() => { if (confirm("Delete all Passport entries?")) clear(); }}>Delete all my data</button>
+          <button className={`${btnSecondary} mt-4`} onClick={() => { if (confirm("Delete all Passport entries?")) clear(); }}>Delete all Passport entries</button>
         </>
       )}
     </Page>

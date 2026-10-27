@@ -10,6 +10,9 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
-- Persistence is local-only demo mode (src/lib/store.ts, localStorage) until a backend is enabled; UI must keep the demo-mode banner while that is true — the spec forbids implying cloud storage.
+- SessionProvider owns identity state and the identity-transition listener; sign-out cancels and clears queries before clearing the session to avoid stale private data.
+- Progress uses browser-local storage while signed out and user-scoped cloud tables while signed in; writes must confirm success and local imports must retain rejected data.
+- Curriculum reads use a public server function; published material requires review, and database triggers reject progress for nonexistent or unpublished units.
+- Curriculum pack validation precedes trusted imports; parent-scoped slugs and year/term numbers preserve stable database IDs across updates. No browser-admin import endpoint is allowed.
 - Curriculum structure lives in src/data/schools.ts as a typed School>Year>Term>Course>Workshop>Lesson>Exercise model; never mark content complete without reviewed material.
 - Living Scene content is fixed scripted data in src/data/scene.ts; no AI judgment or grading.

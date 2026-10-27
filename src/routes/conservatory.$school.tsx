@@ -1,12 +1,15 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { InDev, Page } from "@/components/slams";
 import { getSchool, totalTerms } from "@/data/schools";
+import { getCurriculum } from "@/lib/curriculum.functions";
+import { CurriculumUnit } from "@/components/CurriculumUnit";
 
 export const Route = createFileRoute("/conservatory/$school")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
     const school = getSchool(params.school);
     if (!school) throw notFound();
-    return { school };
+    const catalog = await getCurriculum();
+    return { school, cloud: catalog.find((item) => item.slug === school.slug) };
   },
   head: ({ loaderData }) => {
     const t = loaderData ? `${loaderData.school.name} School — SLAMS` : "School — SLAMS";
@@ -16,7 +19,7 @@ export const Route = createFileRoute("/conservatory/$school")({
 });
 
 function SchoolPage() {
-  const { school } = Route.useLoaderData();
+  const { school, cloud } = Route.useLoaderData();
   return (
     <Page title={school.name} eyebrow="Conservatory school" school={school.slug}>
       <p>{school.focus}</p>
@@ -26,12 +29,24 @@ function SchoolPage() {
           <h2 className="mb-2 text-xl font-bold text-school">Year {y.number}</h2>
           <ul className="grid gap-2">
             {y.terms.map((t) => (
-              <li key={t.number} className="panel flex items-center justify-between p-3">
+              <li key={t.number} className="panel p-3">
+                <div className="flex items-center justify-between">
                 <span>Term {t.number}</span>
                 <span className="flex items-center gap-2 text-xs">
                   <span className="text-muted-foreground">{t.courses.length} courses published</span>
                   <InDev />
                 </span>
+                </div>
+                {cloud?.curriculum_years.find((year) => year.number === y.number)?.curriculum_terms.find((term) => term.number === t.number)?.curriculum_courses.map((course) => (
+                  <CurriculumUnit key={course.id} unit={course} kind="course">
+                    {course.curriculum_workshops.map((workshop) => <CurriculumUnit key={workshop.id} unit={workshop} kind="workshop">
+                      {workshop.curriculum_lessons.map((lesson) => <CurriculumUnit key={lesson.id} unit={lesson} kind="lesson">
+                        {lesson.curriculum_exercises.map((exercise) => <CurriculumUnit key={exercise.id} unit={exercise} kind="exercise" />)}
+                        {lesson.curriculum_assessments.map((assessment) => <CurriculumUnit key={assessment.id} unit={assessment} kind="assessment" />)}
+                      </CurriculumUnit>)}
+                    </CurriculumUnit>)}
+                  </CurriculumUnit>
+                ))}
               </li>
             ))}
           </ul>

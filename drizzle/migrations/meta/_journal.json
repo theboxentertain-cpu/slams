@@ -8,6 +8,20 @@
       "when": 1792801308611,
       "tag": "0000_sprint01b_foundation",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793074008283,
+      "tag": "0001_validate_actual_unit_progress",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793074036504,
+      "tag": "0002_curriculum_reviewed_material",
+      "breakpoints": true
     }
   ]
 }

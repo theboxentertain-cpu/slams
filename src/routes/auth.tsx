@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/lib/session";
 import { looksLikeEmail, validatePassword } from "@/lib/auth-utils";
 import { Wordmark, btnPrimary, btnSecondary } from "@/components/slams";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/auth")({
 type Mode = "signin" | "signup" | "forgot";
 
 function Auth() {
-  const { user, loading } = useSession();
+  const { user, loading, signOut } = useSession();
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
@@ -64,6 +65,8 @@ function Auth() {
         if (error) return setError(error.message);
         setNotice("If that email has an account, a password-reset link is on its way.");
       }
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Could not reach your account. Try again.");
     } finally {
       setBusy(false);
     }
@@ -81,13 +84,14 @@ function Auth() {
             <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
             <div className="mt-4 flex flex-col gap-2">
               <Link to="/" className={btnPrimary}>Back to the studio</Link>
-              <button
+              <Button variant="secondary"
                 type="button"
                 className={btnSecondary}
-                onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/", replace: true }); }}
+                onClick={async () => { try { await signOut(); } catch { setError("Sign-out failed. Try again."); } }}
               >
                 Sign out
-              </button>
+              </Button>
+              {error && <p role="alert" className="text-destructive">{error}</p>}
             </div>
           </div>
         ) : (

@@ -1,6 +1,6 @@
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import type { ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { Link, useRouter } from "@tanstack/react-router";
+import { useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/session";
 import { useDirectorMode, type DirectorMode } from "@/lib/store";
 
@@ -18,7 +18,7 @@ export function DemoBanner() {
   if (user) {
     return (
       <p role="note" className="bg-secondary px-3 py-1.5 text-center text-xs font-bold text-foreground">
-        Signed in as {user.email} — your progress is saved to your account.
+        Signed in as {user.email} — Passport and audition saves use Lovable Cloud. Director settings stay in this browser.
       </p>
     );
   }
@@ -31,20 +31,24 @@ export function DemoBanner() {
 }
 
 export function AccountLink() {
-  const { user, loading } = useSession();
-  const navigate = useNavigate();
+  const { user, loading, signOut } = useSession();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
   if (loading) return null;
   if (!user) {
     return <Link to="/auth" className="rounded bg-secondary px-3 py-2 text-sm">Sign in</Link>;
   }
   return (
-    <button
+    <span className="text-sm">
+    <Button variant="secondary" disabled={busy}
       type="button"
       className="rounded bg-secondary px-3 py-2 text-sm"
-      onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/", replace: true }); }}
+      onClick={async () => { setBusy(true); setError(""); try { await signOut(); } catch { setError("Sign-out failed. Try again."); } finally { setBusy(false); } }}
     >
-      Sign out
-    </button>
+      {busy ? "Signing out…" : "Sign out"}
+    </Button>
+    {error && <span role="alert" className="block text-destructive">{error}</span>}
+    </span>
   );
 }
 
