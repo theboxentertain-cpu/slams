@@ -3,6 +3,7 @@
 import type { PassportEntry } from "@/lib/store";
 
 export interface CloudPassportRow {
+  id: string;
   user_id: string;
   tactic: string;
   intervention: string;
@@ -18,6 +19,7 @@ export function toCloudRows(entries: PassportEntry[], userId: string): CloudPass
   return entries
     .filter((e) => e.tactic.trim().length > 0 && e.reflection.trim().length > 0)
     .map((e) => ({
+      id: e.id,
       user_id: userId,
       tactic: e.tactic,
       intervention: e.intervention,

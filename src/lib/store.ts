@@ -85,6 +85,8 @@ export function usePassport() {
   const [localEntries, setLocalEntries, localLoaded] = useStored<PassportEntry[]>(PASSPORT_KEY, []);
   const [cloudEntries, setCloudEntries] = useState<PassportEntry[]>([]);
   const [cloudLoaded, setCloudLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [owner, setOwner] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -92,6 +94,8 @@ export function usePassport() {
       setCloudLoaded(false);
       return;
     }
+    setCloudLoaded(false);
+    setError(null);
     let active = true;
     supabase
       .from("passport_entries")
@@ -99,7 +103,8 @@ export function usePassport() {
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
         if (!active) return;
-        if (error) console.error("passport load failed", error);
+        setError(error?.message ?? null);
+        setOwner(user.id);
         setCloudEntries(((data ?? []) as CloudRow[]).map(fromCloud));
         setCloudLoaded(true);
       });
@@ -109,67 +114,50 @@ export function usePassport() {
   }, [user?.id]);
 
   const signedIn = !!user;
-  const entries = signedIn ? cloudEntries : localEntries;
-  const loaded = signedIn ? cloudLoaded : localLoaded;
+  const entries = signedIn ? (owner === user.id ? cloudEntries : []) : localEntries;
+  const loaded = !sessionLoading && (signedIn ? cloudLoaded && owner === user.id : localLoaded);
 
-  const add = useCallback(
-    (e: PassportEntry) => {
+  const add = useCallback(async (e: PassportEntry): Promise<{ error?: string }> => {
+    if (sessionLoading) return { error: "Your account is still loading. Please wait." };
+    setError(null);
+    try {
       if (!user) {
         setLocalEntries([e, ...read<PassportEntry[]>(PASSPORT_KEY, [])]);
-        return;
+        return {};
       }
-      supabase
-        .from("passport_entries")
-        .insert({
-          user_id: user.id,
-          tactic: e.tactic,
-          intervention: e.intervention,
-          exercise_note: e.exerciseNote,
-          obstacle: e.obstacle,
-          retake_line: e.retakeLine,
-          reflection: e.reflection,
-        })
-        .select("id, created_at")
-        .single()
-        .then(({ data, error }) => {
-          if (error) return console.error("passport save failed", error);
-          setCloudEntries((cur) => [{ ...e, id: data.id, date: data.created_at }, ...cur]);
-        });
-    },
-    [user, setLocalEntries],
-  );
-
-  const remove = useCallback(
-    (id: string) => {
-      if (!user) {
-        setLocalEntries(read<PassportEntry[]>(PASSPORT_KEY, []).filter((x) => x.id !== id));
-        return;
-      }
-      supabase
-        .from("passport_entries")
-        .delete()
-        .eq("id", id)
-        .then(({ error }) => {
-          if (error) return console.error("passport delete failed", error);
-          setCloudEntries((cur) => cur.filter((x) => x.id !== id));
-        });
-    },
-    [user, setLocalEntries],
-  );
-
-  const clear = useCallback(() => {
-    if (!user) {
-      setLocalEntries([]);
-      return;
+      const { data, error } = await supabase.from("passport_entries").insert({
+        id: e.id, user_id: user.id, created_at: e.date, tactic: e.tactic,
+        intervention: e.intervention, exercise_note: e.exerciseNote,
+        obstacle: e.obstacle, retake_line: e.retakeLine, reflection: e.reflection,
+      }).select("id, created_at").single();
+      if (error || !data) throw new Error(error?.message ?? "No save confirmation received.");
+      setCloudEntries((cur) => [{ ...e, id: data.id, date: data.created_at }, ...cur]);
+      return {};
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : "Save failed. Try again.";
+      setError(message);
+      return { error: message };
     }
-    supabase
-      .from("passport_entries")
-      .delete()
-      .eq("user_id", user.id)
-      .then(({ error }) => {
-        if (error) return console.error("passport clear failed", error);
-        setCloudEntries([]);
-      });
+  }, [user, sessionLoading, setLocalEntries]);
+
+  const remove = useCallback(async (id: string) => {
+    setError(null);
+    try {
+      if (!user) { setLocalEntries(read<PassportEntry[]>(PASSPORT_KEY, []).filter((x) => x.id !== id)); return; }
+      const { error } = await supabase.from("passport_entries").delete().eq("id", id).eq("user_id", user.id);
+      if (error) throw error;
+      setCloudEntries((cur) => cur.filter((x) => x.id !== id));
+    } catch { setError("Could not delete this entry. Try again."); }
+  }, [user, setLocalEntries]);
+
+  const clear = useCallback(async () => {
+    setError(null);
+    try {
+      if (!user) { setLocalEntries([]); return; }
+      const { error } = await supabase.from("passport_entries").delete().eq("user_id", user.id);
+      if (error) throw error;
+      setCloudEntries([]);
+    } catch { setError("Could not delete your entries. Try again."); }
   }, [user, setLocalEntries]);
 
   /** Opt-in import of this browser's local entries into the signed-in account. Clears local copy on success. */
@@ -180,16 +168,16 @@ export function usePassport() {
     if (rows.length === 0) return { imported: 0 };
     const { data, error } = await supabase
       .from("passport_entries")
-      .insert(rows)
+      .upsert(rows, { onConflict: "id", ignoreDuplicates: true })
       .select("id, created_at, tactic, intervention, exercise_note, obstacle, retake_line, reflection");
     if (error) return { imported: 0, error: error.message };
-    localStorage.removeItem(PASSPORT_KEY);
-    window.dispatchEvent(new Event(EVT));
+    const accepted = new Set(rows.map((row) => row.id));
+    setLocalEntries(local.filter((entry) => !accepted.has(entry.id)));
     setCloudEntries((cur) => [...((data ?? []) as CloudRow[]).map(fromCloud), ...cur]);
     return { imported: data?.length ?? 0 };
-  }, [user]);
+  }, [user, setLocalEntries]);
 
-  return { entries, loaded, signedIn, sessionLoading, localCount: localEntries.length, add, remove, clear, importLocalToCloud };
+  return { error, entries, loaded, signedIn, sessionLoading, localCount: localEntries.length, add, remove, clear, importLocalToCloud };
 }
 
 export function useDirectorMode() {
@@ -205,6 +193,8 @@ export function useAuditionPrep() {
   const [localData, setLocalData, localLoaded] = useStored<AuditionPrep>(AUDITION_KEY, {});
   const [cloudData, setCloudData] = useState<AuditionPrep>({});
   const [cloudLoaded, setCloudLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [owner, setOwner] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -212,6 +202,8 @@ export function useAuditionPrep() {
       setCloudLoaded(false);
       return;
     }
+    setCloudLoaded(false);
+    setError(null);
     let active = true;
     supabase
       .from("audition_prep")
@@ -220,7 +212,8 @@ export function useAuditionPrep() {
       .maybeSingle()
       .then(({ data, error }) => {
         if (!active) return;
-        if (error) console.error("audition prep load failed", error);
+        setError(error?.message ?? null);
+        setOwner(user.id);
         setCloudData((data?.data as AuditionPrep) ?? {});
         setCloudLoaded(true);
       });
@@ -230,12 +223,13 @@ export function useAuditionPrep() {
   }, [user?.id]);
 
   const signedIn = !!user;
-  const data = signedIn ? cloudData : localData;
-  const loaded = signedIn ? cloudLoaded : localLoaded;
+  const data = signedIn ? (owner === user.id ? cloudData : {}) : localData;
+  const loaded = !sessionLoading && (signedIn ? cloudLoaded && owner === user.id : localLoaded);
   const localHasData = Object.keys(localData).some((k) => (localData[k] ?? "").trim() !== "");
 
   const save = useCallback(
     async (next: AuditionPrep): Promise<{ error?: string }> => {
+      if (sessionLoading) return { error: "Your account is still loading. Please wait." };
       if (!user) {
         setLocalData(next);
         return {};
@@ -247,7 +241,7 @@ export function useAuditionPrep() {
       setCloudData(next);
       return {};
     },
-    [user, setLocalData],
+    [user, sessionLoading, setLocalData],
   );
 
   /** Opt-in import of this browser's local prep into the signed-in account. Clears local copy on success. */
@@ -255,6 +249,12 @@ export function useAuditionPrep() {
     if (!user) return { error: "Not signed in" };
     const local = read<AuditionPrep>(AUDITION_KEY, {});
     if (!Object.keys(local).some((k) => (local[k] ?? "").trim() !== "")) return {};
+    const { data: current, error: loadError } = await supabase.from("audition_prep").select("data").eq("user_id", user.id).maybeSingle();
+    if (loadError) return { error: loadError.message };
+    const existing = (current?.data as AuditionPrep) ?? {};
+    if (Object.values(existing).some((value) => typeof value === "string" && value.trim())) {
+      return { error: "Your account already has audition notes. Browser notes were kept; save or export both before replacing either copy." };
+    }
     const res = await save(local);
     if (res.error) return res;
     localStorage.removeItem(AUDITION_KEY);
@@ -262,5 +262,5 @@ export function useAuditionPrep() {
     return {};
   }, [user, save]);
 
-  return { data, loaded, signedIn, sessionLoading, localHasData, save, importLocalToCloud };
+  return { error, data, loaded, signedIn, sessionLoading, localHasData, save, importLocalToCloud };
 }

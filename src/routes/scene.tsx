@@ -21,6 +21,7 @@ function Scene() {
   const [retakeLine, setRetakeLine] = useState("");
   const [reflection, setReflection] = useState("");
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const t = TACTICS.find((x) => x.id === tactic);
   const iv = INTERVENTIONS.find((x) => x.id === intervention);
@@ -28,13 +29,16 @@ function Scene() {
   const performing = step === "perform" || step === "retake";
   const stageIdx = STAGES.indexOf(step === "response" ? "perform" : step);
 
-  function save() {
+  async function save() {
     if (!t || !iv) return;
     if (reflection.trim().length < 3) return setError("Write a short reflection before saving.");
-    passport.add({
+    setSaving(true);
+    const result = await passport.add({
       id: crypto.randomUUID(), date: new Date().toISOString(), tactic: t.verb, intervention: `${iv.school}: ${iv.label}`,
       exerciseNote: note.trim(), obstacle, retakeLine: retakeLine.trim(), reflection: reflection.trim(),
     });
+    setSaving(false);
+    if (result.error) return setError(result.error);
     setStep("saved");
   }
 
@@ -113,13 +117,13 @@ function Scene() {
             <label htmlFor="rf" className="sr-only">Reflection</label>
             <textarea id="rf" value={reflection} onChange={(e) => { setReflection(e.target.value); setError(""); }} rows={4} className="mt-2 w-full rounded border border-input bg-background p-2" />
             {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-            <button className={`${btnPrimary} mt-3 w-full`} onClick={save}>Save to Passport</button>
+            <button disabled={saving || passport.sessionLoading} className={`${btnPrimary} mt-3 w-full`} onClick={save}>{saving ? "Saving…" : "Save to Passport"}</button>
           </>
         )}
         {step === "saved" && (
           <>
             <h2 className="text-xl font-bold">Saved to your Passport</h2>
-            <p className="text-sm text-muted-foreground">Stored in this browser only (demo mode).</p>
+            <p className="text-sm text-muted-foreground">{passport.signedIn ? "Saved to your account in Lovable Cloud." : "Stored in this browser only (demo mode)."}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Link to="/passport" className={btnPrimary}>Open Passport</Link>
               <button className={btnSecondary} onClick={() => { setStep("explore"); setTactic(undefined); setIntervention(undefined); setNote(""); setRetakeLine(""); setReflection(""); }}>Rehearse again</button>
