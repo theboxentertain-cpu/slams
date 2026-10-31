@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Page, btnSecondary } from "@/components/slams";
 
 export const Route = createFileRoute("/stuck")({
-  head: () => ({ meta: [{ title: "The Stuck Desk — SLAMS" }, { name: "description", content: "Quick technique interventions for common scene problems." }, { property: "og:title", content: "The Stuck Desk — SLAMS" }, { property: "og:description", content: "Quick technique interventions for common scene problems." }] }),
+  head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { title: "The Stuck Desk — SLAMS" }, { name: "description", content: "Quick technique interventions for common scene problems." }, { property: "og:title", content: "The Stuck Desk — SLAMS" }, { property: "og:description", content: "Quick technique interventions for common scene problems." }] }),
   component: Stuck,
 });
 

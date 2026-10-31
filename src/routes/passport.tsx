@@ -4,7 +4,7 @@ import { Page, btnPrimary, btnSecondary } from "@/components/slams";
 import { usePassport } from "@/lib/store";
 
 export const Route = createFileRoute("/passport")({
-  head: () => ({ meta: [{ title: "Actor's Passport — SLAMS" }, { name: "description", content: "Your completed rehearsals and reflections." }, { property: "og:title", content: "Actor's Passport — SLAMS" }, { property: "og:description", content: "Your completed rehearsals and reflections." }] }),
+  head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { title: "Actor's Passport — SLAMS" }, { name: "description", content: "Your completed rehearsals and reflections." }, { property: "og:title", content: "Actor's Passport — SLAMS" }, { property: "og:description", content: "Your completed rehearsals and reflections." }] }),
   component: Passport,
 });
 

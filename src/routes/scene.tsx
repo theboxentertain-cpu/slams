@@ -5,7 +5,7 @@ import { INTERVENTIONS, SCENE, TACTICS, getObstacle } from "@/data/scene";
 import { usePassport } from "@/lib/store";
 
 export const Route = createFileRoute("/scene")({
-  head: () => ({ meta: [{ title: "Living Scene: Stay — SLAMS" }, { name: "description", content: "A demonstration branching rehearsal scene." }, { property: "og:title", content: "Living Scene: Stay — SLAMS" }, { property: "og:description", content: "Perform, intervene, practice, retake." }] }),
+  head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { title: "Living Scene: Stay — SLAMS" }, { name: "description", content: "A demonstration branching rehearsal scene." }, { property: "og:title", content: "Living Scene: Stay — SLAMS" }, { property: "og:description", content: "Perform, intervene, practice, retake." }] }),
   component: Scene,
 });
 
