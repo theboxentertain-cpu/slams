@@ -6,7 +6,10 @@ import { progressInput } from "@/lib/unit-progress";
 import { SCHOOLS } from "@/data/schools";
 import type { PassportEntry } from "@/lib/store";
 
-const pack = () => ({ version: 1, schools: [{ slug: "test", name: "Test", years: 1, terms: 1, curriculum: [{ number: 1, terms: [{ number: 1, courses: [] as unknown[] }] }] }] });
+// Single-element tuples make these deliberately nonempty fixtures safe under
+// noUncheckedIndexedAccess without weakening the production compiler settings.
+const single = <T,>(value: T): [T] => [value];
+const pack = () => ({ version: 1, schools: single({ slug: "test", name: "Test", years: 1, terms: 1, curriculum: single({ number: 1, terms: single({ number: 1, courses: [] as unknown[] }) }) }) });
 describe("Curriculum honesty and stable imports", () => {
   it("accepts the actual 8 school / 36 term empty structure without inventing 432 lessons", () => {
     const result = validateCurriculumPack({ version: 1, schools: SCHOOLS });

@@ -5,6 +5,8 @@ import { AccountLink, DemoBanner, DirectorNote, DirectorToggle, SystemsNav, Word
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "SLAMS: The Actor's Pocket Studio — MRAHMO STUDIOS" },
       { name: "description", content: "Train, rehearse and get unstuck with eight acting schools in your pocket." },
       { property: "og:title", content: "SLAMS: The Actor's Pocket Studio" },

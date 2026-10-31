@@ -3,7 +3,7 @@ import { Page } from "@/components/slams";
 import { SCHOOLS, totalTerms } from "@/data/schools";
 
 export const Route = createFileRoute("/conservatory/")({
-  head: () => ({ meta: [{ title: "The Conservatory — SLAMS" }, { name: "description", content: "Eight schools of acting technique." }, { property: "og:title", content: "The Conservatory — SLAMS" }, { property: "og:description", content: "Eight schools of acting technique." }] }),
+  head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { title: "The Conservatory — SLAMS" }, { name: "description", content: "Eight schools of acting technique." }, { property: "og:title", content: "The Conservatory — SLAMS" }, { property: "og:description", content: "Eight schools of acting technique." }] }),
   component: Conservatory,
 });
 

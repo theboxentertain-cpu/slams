@@ -6,13 +6,20 @@
 - [x] Cloud persistence for Passport + audition prep with opt-in local→cloud import
 - [x] Versioned validated curriculum JSON import architecture (zod schema + validator)
 - [x] Demo banner copy update (signed-in vs signed-out)
-- [~] Tests: auth helpers done (9 tests); migration/import logic done; RLS verified live via signed-in cloud save; still missing: dedicated scene regression test, multi-user isolation test
-- [x] Typecheck + tests (21 pass) + browser verification (signed-out, signup, signed-in, refresh, sign-out, cloud save)
-- [ ] Remaining: real curriculum content import (blocked on authored content), Passport entry cloud write E2E via full rehearsal, email-confirmation-aware E2E sign-in test
+- [x] Automated tests: 32 pass across auth helpers, schools, migration/import, routes and scene regression
+- [x] Automatic TypeScript check exits 0; preview reports build OK
+- [ ] Real curriculum content import — blocked on reviewed authored material
+- [ ] Email-confirmation/password sign-in/recovery E2E — blocked on an available confirmation/recovery link; managed-session restoration is verified instead
 
 ## Continuation
-- [ ] Centralize session-aware navigation and safe sign-out
-- [ ] Await cloud writes, expose failures, retain rejected local imports, prevent audition import overwrite
-- [ ] Strengthen curriculum validation and wire actual-unit progress with database existence checks
-- [ ] Run automated rehearsal/migration/validator tests and database multi-user RLS checks
-- [ ] Run desktop/mobile browser regression and document verified vs blocked checks
+- [x] Repair foundation test fixture indexing using nonempty tuples, preserving strict compiler settings
+- [x] Verify desktop/mobile navigation, all Director modes, nine scene obstacles, branches/retakes, local/cloud Passport and audition refresh persistence
+- [x] Verify live RLS: 14 owner/spoofed-write/anonymous/nonexistent-unit checks pass
+- [ ] True two-account isolation — blocked on a second confirmed account (database currently has one); nonowner UUID probes are not a substitute
+- [x] Centralized session-aware navigation and sign-out verified in the browser
+- [x] Opt-in Passport import and audition import-conflict retention verified
+- [x] Validator tests and nonexistent-unit rejection verified; no lessons imported
+- [x] Complete leaf-route sharing metadata without changing visuals
+- [ ] Separate production build — not run manually because platform instructions reserve builds to the harness; preview build OK is not claimed as production verification
+- [x] Browser regression: 66 core checks + 8 extended checks passed; no uncaught page errors in core run
+- Verification used the existing test account and saved clearly named regression Passport entries and audition notes in it.

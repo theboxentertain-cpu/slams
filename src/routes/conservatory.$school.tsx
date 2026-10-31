@@ -13,7 +13,7 @@ export const Route = createFileRoute("/conservatory/$school")({
   },
   head: ({ loaderData }) => {
     const t = loaderData ? `${loaderData.school.name} School — SLAMS` : "School — SLAMS";
-    return { meta: [{ title: t }, { name: "description", content: loaderData?.school.focus ?? "SLAMS school" }, { property: "og:title", content: t }, { property: "og:description", content: loaderData?.school.focus ?? "SLAMS school" }] };
+    return { meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { title: t }, { name: "description", content: loaderData?.school.focus ?? "SLAMS school" }, { property: "og:title", content: t }, { property: "og:description", content: loaderData?.school.focus ?? "SLAMS school" }] };
   },
   component: SchoolPage,
 });
