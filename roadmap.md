@@ -11,6 +11,9 @@
 - [ ] Remaining: real curriculum content import (blocked on authored content), Passport entry cloud write E2E via full rehearsal, email-confirmation-aware E2E sign-in test
 
 ## Continuation
+- [ ] Repair reported TypeScript/preview failures and verify harness typecheck/build plus full tests
+- [ ] Verify desktop/mobile auth, navigation, all Director modes, scene branches/retakes and cloud persistence
+- [ ] Verify two-account isolation/RLS where available; record precise blockers
 - [ ] Centralize session-aware navigation and safe sign-out
 - [ ] Await cloud writes, expose failures, retain rejected local imports, prevent audition import overwrite
 - [ ] Strengthen curriculum validation and wire actual-unit progress with database existence checks
