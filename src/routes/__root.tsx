@@ -83,15 +83,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "MRAHMO STUDIOS presents SLAMS, the actor's pocket studio." },
       { name: "author", content: "MRAHMO STUDIOS" },
       { property: "og:title", content: "SLAMS: The Actor's Pocket Studio" },
-      { property: "og:description", content: "MRAHMO STUDIOS presents SLAMS, the actor's pocket studio." },
+      {
+        property: "og:description",
+        content: "MRAHMO STUDIOS presents SLAMS, the actor's pocket studio.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=Karla:wght@400;700&display=swap" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=Karla:wght@400;700&display=swap",
+      },
+      { rel: "icon", href: "/slams-icon.svg", type: "image/svg+xml" },
     ],
   }),
   shellComponent: RootShell,
@@ -120,7 +126,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <SessionProvider><Outlet /></SessionProvider>
+      <SessionProvider>
+        <Outlet />
+      </SessionProvider>
     </QueryClientProvider>
   );
 }
