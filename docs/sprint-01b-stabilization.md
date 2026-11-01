@@ -28,7 +28,7 @@ Local HTTP smoke checks also passed: the homepage, Scene, Passport and auth rout
 
 The new regression tests exercise the real hooks with deferred Supabase responses and localStorage. They cover duplicate and conflicting IDs, failed writes/verification, partial imports, lost-response retries, per-field mismatches, concurrent local edits, storage failures, StrictMode, unmounts, account switches, audition confirmation/concurrency and session cache ordering.
 
-The build emits an existing advisory that `vite-tsconfig-paths` overlaps Vite's native path resolution. It does not fail the build; the Lovable plugin configuration is preserved.
+The build emits an existing advisory that `vite-tsconfig-paths` overlaps Vite's native path resolution, plus a warning that `inlineDynamicImports` is ignored when `codeSplitting` is specified. Neither fails the build; the Lovable/Nitro plugin configuration is preserved.
 
 ## Authentication and RLS audit
 
