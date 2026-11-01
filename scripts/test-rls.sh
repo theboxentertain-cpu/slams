@@ -12,7 +12,8 @@ trap '"${docker_cmd[@]}" rm -fv "$container" >/dev/null 2>&1 || true' EXIT
   postgres:17-alpine >/dev/null
 ready=false
 for _ in {1..30}; do
-  if "${docker_cmd[@]}" exec "$container" pg_isready -U postgres >/dev/null 2>&1; then
+  # Initialization briefly exposes a temporary Unix socket before restarting.
+  if "${docker_cmd[@]}" exec "$container" pg_isready -h 127.0.0.1 -U postgres >/dev/null 2>&1; then
     ready=true
     break
   fi
