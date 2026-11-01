@@ -1,9 +1,10 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/session";
 import { useDirectorMode, type DirectorMode } from "@/lib/store";
 import { DirectorPortrait } from "@/components/office/DirectorPortrait";
+import { ProfileMenu } from "@/components/foundation/AppShell";
 
 export function Wordmark({ small = false }: { small?: boolean }) {
   return (
@@ -158,31 +159,28 @@ export function Page({
   eyebrow,
   children,
   school,
+  backTo = "/",
 }: {
   title: string;
   eyebrow?: string;
   children: ReactNode;
   school?: string;
+  backTo?: "/" | "/work" | "/stuck" | "/rehearsal" | "/conservatory";
 }) {
-  const router = useRouter();
   return (
     <div data-school={school} className="min-h-screen">
       <DemoBanner />
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-3">
-        <button
-          type="button"
-          onClick={() => router.history.back()}
-          className="page-back-button rounded bg-secondary px-3 py-2 text-sm"
-        >
+        <Link to={backTo} className="page-back-button rounded bg-secondary px-3 py-2 text-sm">
           ← Back
-        </button>
+        </Link>
         <Link to="/" aria-label="Return to the Director’s Office" className="page-office-link">
           <Wordmark small />
           <span>THE OFFICE</span>
         </Link>
-        <AccountLink />
+        <ProfileMenu />
       </header>
-      <main className="rise mx-auto max-w-3xl px-4 pb-16">
+      <main id="page-content" tabIndex={-1} className="rise mx-auto max-w-3xl px-4 pb-8">
         {eyebrow && (
           <p className="text-xs font-bold tracking-widest text-school uppercase">{eyebrow}</p>
         )}

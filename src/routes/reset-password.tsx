@@ -60,20 +60,28 @@ function ResetPassword() {
 
   return (
     <div className="flex min-h-screen flex-col items-center px-4 py-10">
-      <Link to="/" aria-label="SLAMS home"><Wordmark small /></Link>
-      <main className="panel mt-8 w-full max-w-sm p-6">
+      <Link to="/" aria-label="SLAMS home">
+        <Wordmark small />
+      </Link>
+      <main id="page-content" tabIndex={-1} className="panel mt-8 w-full max-w-sm p-6">
         <h1 className="text-xl font-bold">Set a new password</h1>
         {valid === null ? (
-          <p role="status" className="mt-2 text-sm">Checking your reset link…</p>
+          <p role="status" className="mt-2 text-sm">
+            Checking your reset link…
+          </p>
         ) : valid === false ? (
           <>
             <p role="alert" className="mt-2 text-sm text-crimson">
               This reset link is invalid or has expired. Request a new one.
             </p>
-            <Link to="/auth" className={`${btnPrimary} mt-4`}>Back to sign in</Link>
+            <Link to="/auth" className={`${btnPrimary} mt-4`}>
+              Back to sign in
+            </Link>
           </>
         ) : done ? (
-          <p role="status" className="mt-2 text-sm text-amber">Password updated. Taking you back to the studio…</p>
+          <p role="status" className="mt-2 text-sm text-amber">
+            Password updated. Taking you back to the studio…
+          </p>
         ) : (
           <form className="mt-4 grid gap-3" onSubmit={submit}>
             <label className="grid gap-1 text-sm">
@@ -100,8 +108,14 @@ function ResetPassword() {
                 className="rounded border border-input bg-background p-2"
               />
             </label>
-            {error && <p role="alert" className="text-sm text-crimson">{error}</p>}
-            <button className={btnPrimary} disabled={busy}>{busy ? "Saving…" : "Update password"}</button>
+            {error && (
+              <p role="alert" className="text-sm text-crimson">
+                {error}
+              </p>
+            )}
+            <button className={btnPrimary} disabled={busy}>
+              {busy ? "Saving…" : "Update password"}
+            </button>
           </form>
         )}
       </main>

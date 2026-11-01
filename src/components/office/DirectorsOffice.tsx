@@ -5,7 +5,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   Bell,
-  CircleUserRound,
   Menu,
   Play,
   MoveHorizontal,
@@ -19,13 +18,16 @@ import panorama from "@/assets/office/office-reference.webp";
 import desk from "@/assets/office/desk-reference.webp";
 import { DirectorPortrait } from "./DirectorPortrait";
 import { BadActingWall } from "./BadActingWall";
-import { OfficeDirectory, OfficeBottomNav } from "./OfficeDirectory";
-import { OfficeProgress } from "./OfficeProgress";
+import { OfficeDirectory } from "./OfficeDirectory";
+import { ProfileMenu } from "@/components/foundation/AppShell";
+import { TrainingSummary } from "@/components/foundation/TrainingSummary";
+import { useOfficePreferences } from "@/lib/office-preferences";
+import { CoachPanel } from "./CoachPanel";
 import { OfficeObject } from "./OfficeObject";
 import { DeskBooks, SchoolBooks } from "./SchoolBooks";
 import { useOfficeMilestones } from "./useOfficeMilestones";
 import {
-  OFFICE_DESTINATIONS,
+  OFFICE_CONTROLS,
   OFFICE_VIEWS,
   type DirectorExpression,
   type OfficeView,
@@ -33,9 +35,7 @@ import {
 
 const WorkWall = lazy(() => import("./WorkWall"));
 const RehearsalCorner = lazy(() => import("./RehearsalCorner"));
-const PREFERENCES = "slams.office.preferences.v1";
 const VIEW_KEY = "slams.office.view.v1";
-type Preferences = { motion: boolean; sound: boolean };
 
 function paperSound() {
   try {
@@ -63,9 +63,8 @@ export function DirectorsOffice() {
   const [visited, setVisited] = useState<OfficeView[]>(["desk"]);
   const [booksOpen, setBooksOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [progressOpen, setProgressOpen] = useState(false);
-  const [preferences, setPreferences] = useState<Preferences>({ motion: true, sound: false });
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [coachOpen, setCoachOpen] = useState(false);
+  const { preferences, updatePreferences, reducedMotion, animate } = useOfficePreferences();
   const [intent, setIntent] = useState<"script" | null>(null);
   const [mode] = useDirectorMode();
   const passport = usePassport();
@@ -73,25 +72,14 @@ export function DirectorsOffice() {
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const booksTrigger = useRef<HTMLButtonElement>(null);
   const activeBookTrigger = useRef<HTMLElement | null>(null);
-  const progressTrigger = useRef<HTMLElement | null>(null);
+  const coachTrigger = useRef<HTMLButtonElement>(null);
   const start = useRef<{ x: number; y: number } | null>(null);
   const swiped = useRef(false);
   const count = passport.loaded && !passport.error ? passport.entries.length : null;
   const index = OFFICE_VIEWS.findIndex((item) => item.id === view);
-  const animate = preferences.motion && !reducedMotion;
 
   useEffect(() => {
     try {
-      const value: unknown = JSON.parse(localStorage.getItem(PREFERENCES) ?? "null");
-      if (
-        value &&
-        typeof value === "object" &&
-        "motion" in value &&
-        "sound" in value &&
-        typeof value.motion === "boolean" &&
-        typeof value.sound === "boolean"
-      )
-        setPreferences({ motion: value.motion, sound: value.sound });
       const prior = sessionStorage.getItem(VIEW_KEY);
       if (prior === "wall" || prior === "corner") {
         setView(prior);
@@ -100,30 +88,13 @@ export function DirectorsOffice() {
     } catch {
       /* Usable defaults when storage is unavailable. */
     }
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReducedMotion(media.matches);
-    sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
   }, []);
 
-  function updatePreferences(next: Preferences) {
-    setPreferences(next);
-    try {
-      localStorage.setItem(PREFERENCES, JSON.stringify(next));
-    } catch {
-      /* Keep the current preference. */
-    }
-  }
   function openBooks(trigger: HTMLElement | null = booksTrigger.current) {
     activeBookTrigger.current = trigger;
     setBooksOpen(true);
     setIntent(null);
     if (preferences.sound) paperSound();
-  }
-  function openProgress(trigger: HTMLElement) {
-    progressTrigger.current = trigger;
-    setProgressOpen(true);
   }
   function selectView(next: OfficeView, focus = false) {
     setView(next);
@@ -189,26 +160,19 @@ export function DirectorsOffice() {
           >
             {settingsOpen ? <X size={25} /> : <Menu size={29} />}
           </button>
-          <button
-            type="button"
+          <Link
+            to={OFFICE_CONTROLS.progress.to}
             className="office-icon-button reference-status"
             aria-label={
               passport.error
                 ? "Progress and save status — records unavailable"
                 : "Progress and save status"
             }
-            onClick={(event) => openProgress(event.currentTarget)}
           >
             <Bell size={25} />
             {passport.error && <span className="save-attention" aria-hidden="true" />}
-          </button>
-          <Link
-            to="/auth"
-            className="office-icon-button reference-account"
-            aria-label={passport.signedIn ? "Your account" : "Sign in"}
-          >
-            <CircleUserRound size={29} />
           </Link>
+          <ProfileMenu className="office-icon-button reference-account" />
         </div>
       </header>
       {settingsOpen && (
@@ -240,7 +204,8 @@ export function DirectorsOffice() {
         <span>YOUR NEXT TAKE STARTS HERE</span>
       </div>
       <main
-        id="office"
+        id="page-content"
+        tabIndex={-1}
         aria-label="The Director’s Office"
         className="office-world"
         data-view={view}
@@ -292,7 +257,7 @@ export function DirectorsOffice() {
               <>
                 <BadActingWall />
                 <Link
-                  to="/scene"
+                  to={OFFICE_CONTROLS.studio.to}
                   className="reference-rehearsal-sign"
                   aria-label="Go to the rehearsal studio"
                 >
@@ -312,8 +277,10 @@ export function DirectorsOffice() {
                     <br />A lifetime of better questions.
                   </p>
                 </div>
-                <Link
-                  to={OFFICE_DESTINATIONS.director.to}
+                <button
+                  type="button"
+                  ref={coachTrigger}
+                  onClick={() => setCoachOpen(true)}
                   className="director-figure office-object"
                   aria-label="The Director — Acting Coach, meet your studio guide"
                 >
@@ -324,7 +291,7 @@ export function DirectorsOffice() {
                     </strong>
                     <span>Your reluctant accomplice</span>
                   </span>
-                </Link>
+                </button>
                 <div className="office-desk" aria-hidden="true">
                   <img src={desk} alt="" width={2048} height={768} />
                 </div>
@@ -370,7 +337,6 @@ export function DirectorsOffice() {
           <span className="caption-rule" />
         </div>
       </main>
-      {view === "desk" && <OfficeDirectory onProgress={openProgress} />}
       <div className="office-navigation">
         <button
           type="button"
@@ -411,6 +377,12 @@ export function DirectorsOffice() {
           <ArrowRight size={19} />
         </button>
       </div>
+      {view === "desk" && (
+        <>
+          <OfficeDirectory />
+          <TrainingSummary />
+        </>
+      )}
       <div className="office-understage">
         <div className="office-director-note" aria-live="polite">
           {mode !== "off" && (
@@ -428,29 +400,17 @@ export function DirectorsOffice() {
         <DemoBanner />
         <p>SCENE · LISTENING · ACTION · MOVEMENT · STAKES</p>
       </footer>
-      <OfficeBottomNav
-        onBooks={openBooks}
-        onProgress={openProgress}
-        onOffice={() => {
-          selectView("desk");
-          window.scrollTo({ top: 0, behavior: animate ? "smooth" : "auto" });
-        }}
-      />
       <SchoolBooks
         open={booksOpen}
         onOpenChange={setBooksOpen}
         motion={animate}
         onReturnFocus={() => (activeBookTrigger.current ?? booksTrigger.current)?.focus()}
       />
-      <OfficeProgress
-        open={progressOpen}
-        onOpenChange={setProgressOpen}
-        onReturnFocus={() => progressTrigger.current?.focus()}
-        rehearsals={count}
-        milestones={milestones}
-        signedIn={!!passport.signedIn}
-        error={!!passport.error}
+      <CoachPanel
+        open={coachOpen}
+        onOpenChange={setCoachOpen}
         motion={animate}
+        onReturnFocus={() => coachTrigger.current?.focus()}
       />
     </div>
   );
