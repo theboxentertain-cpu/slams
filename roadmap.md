@@ -1,5 +1,12 @@
 # SLAMS Sprint 01B — Foundation Repair
 
+## Current verification request
+- [ ] Inspect current preview/compiler signals; repair any reproduced failure
+- [ ] Rerun full automated tests and inspect available automatic typecheck/build results
+- [ ] Recheck desktop/mobile navigation, auth, scene/Director, cloud saves and consent-based import
+- [ ] Recheck live access policies and whether two confirmed test accounts are available
+- [ ] Report this run's exact outcomes separately from earlier verification
+
 - [x] DB schema: profiles (+signup trigger), passport_entries, audition_prep, unit_progress, curriculum hierarchy (schools→assessments) with GRANTs + RLS
 - [x] Seed 8 schools / 36 terms from existing data (no fabricated course content)
 - [x] Auth UI: /auth (signup, signin, forgot password), /reset-password, session-aware header, sign-out
