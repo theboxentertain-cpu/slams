@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DirectorsOffice } from "@/components/office/DirectorsOffice";
-import panorama from "@/assets/office/office-panorama.webp";
-import director from "@/assets/office/director-atlas.webp";
+import panorama from "@/assets/office/office-reference.webp";
+import director from "@/assets/office/director-reference.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({

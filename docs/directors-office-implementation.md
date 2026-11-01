@@ -1,5 +1,7 @@
 # The Director's Office — implementation and verification
 
+The later [supplied-reference revision and current verification](directors-office-reference-verification.md) updates the character, scene artwork, navigation and test results. Sizes and performance numbers below describe the initial version.
+
 Implemented on `feat/directors-office`, based on main `34bfc86`. This upgrades the existing TanStack/Lovable application; it does not introduce a second application, new route hierarchy, assessment system or backend.
 
 ## Audit baseline

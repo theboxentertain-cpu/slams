@@ -4,17 +4,23 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  Bell,
+  CircleUserRound,
+  Menu,
+  Play,
   MoveHorizontal,
-  Settings2,
   Volume2,
   VolumeX,
   X,
 } from "lucide-react";
-import { AccountLink, DemoBanner, DirectorToggle, Wordmark } from "@/components/slams";
+import { DemoBanner, DirectorToggle, Wordmark } from "@/components/slams";
 import { useDirectorMode, usePassport } from "@/lib/store";
-import panorama from "@/assets/office/office-panorama.webp";
+import panorama from "@/assets/office/office-reference.webp";
+import desk from "@/assets/office/desk-reference.webp";
 import { DirectorPortrait } from "./DirectorPortrait";
-import { DeskArt } from "./OfficeArt";
+import { BadActingWall } from "./BadActingWall";
+import { OfficeDirectory, OfficeBottomNav } from "./OfficeDirectory";
+import { OfficeProgress } from "./OfficeProgress";
 import { OfficeObject } from "./OfficeObject";
 import { DeskBooks, SchoolBooks } from "./SchoolBooks";
 import { useOfficeMilestones } from "./useOfficeMilestones";
@@ -57,6 +63,7 @@ export function DirectorsOffice() {
   const [visited, setVisited] = useState<OfficeView[]>(["desk"]);
   const [booksOpen, setBooksOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [progressOpen, setProgressOpen] = useState(false);
   const [preferences, setPreferences] = useState<Preferences>({ motion: true, sound: false });
   const [reducedMotion, setReducedMotion] = useState(false);
   const [intent, setIntent] = useState<"script" | null>(null);
@@ -65,7 +72,10 @@ export function DirectorsOffice() {
   const milestones = useOfficeMilestones();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const booksTrigger = useRef<HTMLButtonElement>(null);
+  const activeBookTrigger = useRef<HTMLElement | null>(null);
+  const progressTrigger = useRef<HTMLElement | null>(null);
   const start = useRef<{ x: number; y: number } | null>(null);
+  const swiped = useRef(false);
   const count = passport.loaded && !passport.error ? passport.entries.length : null;
   const index = OFFICE_VIEWS.findIndex((item) => item.id === view);
   const animate = preferences.motion && !reducedMotion;
@@ -104,6 +114,16 @@ export function DirectorsOffice() {
     } catch {
       /* Keep the current preference. */
     }
+  }
+  function openBooks(trigger: HTMLElement | null = booksTrigger.current) {
+    activeBookTrigger.current = trigger;
+    setBooksOpen(true);
+    setIntent(null);
+    if (preferences.sound) paperSound();
+  }
+  function openProgress(trigger: HTMLElement) {
+    progressTrigger.current = trigger;
+    setProgressOpen(true);
   }
   function selectView(next: OfficeView, focus = false) {
     setView(next);
@@ -150,26 +170,45 @@ export function DirectorsOffice() {
           : "You’re here. Good. Let’s get to work.";
 
   return (
-    <div className="office-shell" data-motion={animate ? "on" : "off"}>
+    <div className="office-shell office-reference" data-motion={animate ? "on" : "off"}>
       <header className="office-masthead">
         <h1 className="sr-only">The Director’s Office</h1>
         <div className="office-brand">
-          <span className="studio-credit">MRAHMO STUDIOS PRESENTS</span>
+          <span className="studio-credit">mrahmostudios presents</span>
           <Wordmark small />
           <span className="office-tagline">The Actor’s Pocket Studio</span>
         </div>
         <div className="office-header-actions">
-          <AccountLink />
           <button
-            className="office-icon-button"
+            className="office-icon-button reference-menu"
             type="button"
             aria-label="Office preferences"
             aria-expanded={settingsOpen}
             aria-controls="office-settings"
             onClick={() => setSettingsOpen(!settingsOpen)}
           >
-            {settingsOpen ? <X size={19} /> : <Settings2 size={19} />}
+            {settingsOpen ? <X size={25} /> : <Menu size={29} />}
           </button>
+          <button
+            type="button"
+            className="office-icon-button reference-status"
+            aria-label={
+              passport.error
+                ? "Progress and save status — records unavailable"
+                : "Progress and save status"
+            }
+            onClick={(event) => openProgress(event.currentTarget)}
+          >
+            <Bell size={25} />
+            {passport.error && <span className="save-attention" aria-hidden="true" />}
+          </button>
+          <Link
+            to="/auth"
+            className="office-icon-button reference-account"
+            aria-label={passport.signedIn ? "Your account" : "Sign in"}
+          >
+            <CircleUserRound size={29} />
+          </Link>
         </div>
       </header>
       {settingsOpen && (
@@ -208,7 +247,8 @@ export function DirectorsOffice() {
         style={{ backgroundImage: `url(${panorama})` }}
         onPointerDown={(event) => {
           start.current = null;
-          if (!(event.target as Element).closest("a,button,input,textarea,[role=dialog]"))
+          swiped.current = false;
+          if (!(event.target as Element).closest("input,textarea,[role=dialog]"))
             start.current = { x: event.clientX, y: event.clientY };
         }}
         onPointerCancel={() => {
@@ -220,8 +260,22 @@ export function DirectorsOffice() {
           if (!from) return;
           const dx = event.clientX - from.x,
             dy = event.clientY - from.y;
-          if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.4)
+          if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+            // A deliberate horizontal swipe can begin on a physical object.
+            // Suppress its ensuing pointer click; ordinary taps/keyboard links remain native.
+            swiped.current = true;
+            event.preventDefault();
             selectView(OFFICE_VIEWS[Math.max(0, Math.min(2, index + (dx < 0 ? 1 : -1)))]!.id);
+          }
+        }}
+        onClickCapture={(event) => {
+          if (swiped.current) {
+            swiped.current = false;
+            if (event.detail > 0) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }
         }}
       >
         <div className="office-light" aria-hidden="true" />
@@ -236,6 +290,16 @@ export function DirectorsOffice() {
           >
             {item.id === "desk" ? (
               <>
+                <BadActingWall />
+                <Link
+                  to="/scene"
+                  className="reference-rehearsal-sign"
+                  aria-label="Go to the rehearsal studio"
+                >
+                  Rehearsal
+                  <br />
+                  Studio <Play size={16} aria-hidden="true" />
+                </Link>
                 <div className="room-heading">
                   <span className="office-kicker">01 / THE DIRECTOR’S DESK</span>
                   <h2>
@@ -251,27 +315,20 @@ export function DirectorsOffice() {
                 <Link
                   to={OFFICE_DESTINATIONS.director.to}
                   className="director-figure office-object"
-                  aria-label="The Director — meet your studio guide"
+                  aria-label="The Director — Acting Coach, meet your studio guide"
                 >
-                  <DirectorPortrait expression={expression} />
+                  <DirectorPortrait expression={expression} hero />
                   <span className="object-label">
                     <strong>
-                      The Director <ArrowUpRight aria-hidden="true" size={12} />
+                      Acting Coach <ArrowUpRight aria-hidden="true" size={12} />
                     </strong>
                     <span>Your reluctant accomplice</span>
                   </span>
                 </Link>
                 <div className="office-desk" aria-hidden="true">
-                  <DeskArt />
+                  <img src={desk} alt="" width={2048} height={768} />
                 </div>
-                <DeskBooks
-                  buttonRef={booksTrigger}
-                  onOpen={() => {
-                    setBooksOpen(true);
-                    setIntent(null);
-                    if (preferences.sound) paperSound();
-                  }}
-                />
+                <DeskBooks buttonRef={booksTrigger} onOpen={() => openBooks()} />
                 <OfficeObject destination="rehearsal" />
                 {milestones !== null && milestones > 0 && (
                   <span className="office-milestone">
@@ -313,6 +370,7 @@ export function DirectorsOffice() {
           <span className="caption-rule" />
         </div>
       </main>
+      {view === "desk" && <OfficeDirectory onProgress={openProgress} />}
       <div className="office-navigation">
         <button
           type="button"
@@ -370,11 +428,29 @@ export function DirectorsOffice() {
         <DemoBanner />
         <p>SCENE · LISTENING · ACTION · MOVEMENT · STAKES</p>
       </footer>
+      <OfficeBottomNav
+        onBooks={openBooks}
+        onProgress={openProgress}
+        onOffice={() => {
+          selectView("desk");
+          window.scrollTo({ top: 0, behavior: animate ? "smooth" : "auto" });
+        }}
+      />
       <SchoolBooks
         open={booksOpen}
         onOpenChange={setBooksOpen}
         motion={animate}
-        onReturnFocus={() => booksTrigger.current?.focus()}
+        onReturnFocus={() => (activeBookTrigger.current ?? booksTrigger.current)?.focus()}
+      />
+      <OfficeProgress
+        open={progressOpen}
+        onOpenChange={setProgressOpen}
+        onReturnFocus={() => progressTrigger.current?.focus()}
+        rehearsals={count}
+        milestones={milestones}
+        signedIn={!!passport.signedIn}
+        error={!!passport.error}
+        motion={animate}
       />
     </div>
   );

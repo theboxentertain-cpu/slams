@@ -10,6 +10,7 @@ const state = vi.hoisted(() => ({
   error: null as string | null,
   loaded: true,
   milestones: null as number | null,
+  signedIn: false,
 }));
 vi.mock("@tanstack/react-router", () => ({
   Link: ({
@@ -22,7 +23,12 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 vi.mock("@/lib/store", () => ({
   useDirectorMode: () => [state.mode, vi.fn()],
-  usePassport: () => ({ entries: state.entries, loaded: state.loaded, error: state.error }),
+  usePassport: () => ({
+    entries: state.entries,
+    loaded: state.loaded,
+    error: state.error,
+    signedIn: state.signedIn,
+  }),
 }));
 vi.mock("@/components/office/useOfficeMilestones", () => ({
   useOfficeMilestones: () => state.milestones,
@@ -42,6 +48,7 @@ beforeEach(() => {
   state.error = null;
   state.loaded = true;
   state.milestones = null;
+  state.signedIn = false;
 });
 afterEach(() => {
   cleanup();
@@ -49,14 +56,96 @@ afterEach(() => {
 });
 
 describe("The interactive office", () => {
+  it("opens a real progress summary with a verified zero and an unavailable cloud count", () => {
+    render(<DirectorsOffice />);
+    fireEvent.click(screen.getByRole("button", { name: "Progress — view verified progress" }));
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText("0", { exact: true })).toBeInTheDocument();
+    expect(within(dialog).getByText("—", { exact: true })).toBeInTheDocument();
+    expect(within(dialog).getByText(/Sign in for account milestones/)).toBeInTheDocument();
+    expect(dialog.textContent).not.toMatch(/\d+%/);
+  });
+
+  it("shows only confirmed account counts in the progress panel", () => {
+    state.signedIn = true;
+    state.entries = [{ id: "one" }, { id: "two" }];
+    state.milestones = 4;
+    render(<DirectorsOffice />);
+    fireEvent.click(screen.getByRole("button", { name: "Progress — open your progress summary" }));
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText("2", { exact: true })).toBeInTheDocument();
+    expect(within(dialog).getByText("4", { exact: true })).toBeInTheDocument();
+    expect(within(dialog).queryByRole("link", { name: "Sign in to your account" })).toBeNull();
+  });
+
+  it("uses the bell to expose an actual record error without inventing notifications", () => {
+    state.error = "Request failed";
+    const { container } = render(<DirectorsOffice />);
+    expect(container.querySelector(".save-attention")).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Progress and save status — records unavailable" }),
+    );
+    expect(within(screen.getByRole("dialog")).getByRole("alert")).toHaveTextContent(
+      "Rehearsal records could not be loaded",
+    );
+    expect(within(screen.getByRole("dialog")).queryByText("0", { exact: true })).toBeNull();
+  });
+
+  it("restores focus to the particular bottom-nav library opener", async () => {
+    render(<DirectorsOffice />);
+    const opener = screen.getByRole("button", {
+      name: "Conservatory — open the acting-school library",
+    });
+    fireEvent.click(opener);
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(opener).toHaveFocus());
+  });
+
+  it("restores progress-dialog focus and preserves reduced-motion settings", async () => {
+    localStorage.setItem(
+      "slams.office.preferences.v1",
+      JSON.stringify({ motion: false, sound: false }),
+    );
+    render(<DirectorsOffice />);
+    const opener = screen.getByRole("button", { name: "Progress — view verified progress" });
+    fireEvent.click(opener);
+    expect(screen.getByRole("dialog")).toHaveAttribute("data-motion", "off");
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(opener).toHaveFocus());
+  });
+
+  it("preserves real directory destinations and the account-management route", () => {
+    state.signedIn = true;
+    const { container } = render(<DirectorsOffice />);
+    const directory = within(screen.getByRole("navigation", { name: "Studio directory" }));
+    expect(directory.getByRole("link", { name: /Actor at Work/ })).toHaveAttribute("href", "/work");
+    expect(directory.getByRole("link", { name: /The Stuck Desk/ })).toHaveAttribute(
+      "href",
+      "/stuck",
+    );
+    expect(directory.getByRole("link", { name: /Technique Matrix/ })).toHaveAttribute(
+      "href",
+      "/matrix",
+    );
+    expect(directory.getByRole("link", { name: /Performance Lab/ })).toHaveAttribute(
+      "href",
+      "/lab",
+    );
+    expect(screen.getByRole("link", { name: "Your account" })).toHaveAttribute("href", "/auth");
+    expect(container.querySelector('a[href="/progress"]')).toBeNull();
+    expect(container.querySelector(".save-attention")).toBeNull();
+  });
   it("connects the desk props to existing functionality and renders all eight physical books", () => {
     const { container } = render(<DirectorsOffice />);
-    expect(screen.getByRole("link", { name: /Start rehearsal/ })).toHaveAttribute("href", "/scene");
-    expect(screen.getByRole("link", { name: /The Stuck Desk/ })).toHaveAttribute("href", "/stuck");
-    expect(screen.getByRole("link", { name: /The Director —/ })).toHaveAttribute(
-      "href",
-      "/director",
-    );
+    expect(
+      within(screen.getByRole("main")).getByRole("link", { name: /Start rehearsal/ }),
+    ).toHaveAttribute("href", "/scene");
+    expect(
+      within(screen.getByRole("main")).getByRole("link", { name: /The Stuck Desk/ }),
+    ).toHaveAttribute("href", "/stuck");
+    expect(
+      within(screen.getByRole("main")).getByRole("link", { name: /The Director —/ }),
+    ).toHaveAttribute("href", "/director");
     expect(container.querySelectorAll(".school-book-mini")).toHaveLength(8);
     expect(screen.getByRole("tab", { name: /The desk/ })).toHaveAttribute("aria-selected", "true");
   });
@@ -87,21 +176,21 @@ describe("The interactive office", () => {
       ["Passport", "/passport"],
       ["Technique Matrix", "/matrix"],
     ])
-      expect(await screen.findByRole("link", { name: new RegExp(name!) })).toHaveAttribute(
-        "href",
-        route,
-      );
-    expect(screen.queryByRole("link", { name: /Start rehearsal/ })).toBeNull();
+      expect(
+        await within(screen.getByRole("main")).findByRole("link", { name: new RegExp(name!) }),
+      ).toHaveAttribute("href", route);
+    expect(
+      within(screen.getByRole("main")).queryByRole("link", { name: /Start rehearsal/ }),
+    ).toBeNull();
     fireEvent.click(screen.getByRole("tab", { name: /Rehearsal corner/ }));
     for (const [name, route] of [
       ["Baseline", "/baseline"],
       ["Performance Lab", "/lab"],
       ["Rehearsal Lounge", "/lounge"],
     ])
-      expect(await screen.findByRole("link", { name: new RegExp(name!) })).toHaveAttribute(
-        "href",
-        route,
-      );
+      expect(
+        await within(screen.getByRole("main")).findByRole("link", { name: new RegExp(name!) }),
+      ).toHaveAttribute("href", route);
     expect(screen.getByText(/These studio systems are in development/)).toBeInTheDocument();
   });
 
@@ -124,7 +213,9 @@ describe("The interactive office", () => {
     sessionStorage.setItem("slams.office.view.v1", "wall");
     localStorage.setItem("slams.passport.v1", "preserve this data");
     render(<DirectorsOffice />);
-    expect(await screen.findByRole("link", { name: /Actor at Work/ })).toBeInTheDocument();
+    expect(
+      await within(screen.getByRole("main")).findByRole("link", { name: /Actor at Work/ }),
+    ).toBeInTheDocument();
     expect(localStorage.getItem("slams.passport.v1")).toBe("preserve this data");
   });
 
@@ -185,6 +276,8 @@ describe("The interactive office", () => {
     state.mode = "off";
     render(<DirectorsOffice />);
     expect(screen.queryByText("A WORD FROM THE DIRECTOR")).toBeNull();
-    expect(screen.getByRole("link", { name: /The Director —/ })).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("main")).getByRole("link", { name: /The Director —/ }),
+    ).toBeInTheDocument();
   });
 });

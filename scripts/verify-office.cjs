@@ -34,6 +34,11 @@ function check(value, label) {
         );
       });
     }
+    async function chooseView(name) {
+      const tab = page.getByRole("tab", { name: new RegExp(name) });
+      await tab.evaluate((node) => node.scrollIntoView({ block: "center" }));
+      await tab.click();
+    }
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(base, { waitUntil: "networkidle" });
     for (const width of [320, 360, 390, 412, 768, 1440]) {
@@ -65,6 +70,52 @@ function check(value, label) {
         });
     }
     await page.setViewportSize({ width: 390, height: 844 });
+    const progressButton = page.getByRole("button", {
+      name: "Progress — open your progress summary",
+    });
+    await progressButton.click();
+    let summary = page.getByRole("dialog");
+    check(
+      (await summary.getByText("0", { exact: true }).count()) === 1,
+      "Progress shows the actual zero saved rehearsal count",
+    );
+    check(
+      (await summary.getByText("—", { exact: true }).count()) === 1,
+      "Unknown cloud milestones are not fabricated as zero",
+    );
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(
+      () =>
+        document.activeElement?.getAttribute("aria-label") ===
+        "Progress — open your progress summary",
+    );
+    check(true, "Progress dialog returns focus to its navigation opener");
+    const globalBooks = page.getByRole("button", {
+      name: "Conservatory — open the acting-school library",
+    });
+    await globalBooks.click();
+    check(
+      (await page
+        .getByRole("dialog")
+        .getByRole("link", { name: /^Open .+ school$/ })
+        .count()) === 8,
+      "Bottom navigation opens the real eight-book library",
+    );
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(
+      () =>
+        document.activeElement?.getAttribute("aria-label") ===
+        "Conservatory — open the acting-school library",
+    );
+    check(true, "Library returns focus to the bottom-nav opener");
+    await page.locator(".reference-account").click();
+    await page.waitForURL(base + "/auth");
+    check(
+      (await page.getByLabel("Email", { exact: true }).count()) === 1,
+      "Reference account icon opens real account management",
+    );
+    await page.getByRole("link", { name: "SLAMS home" }).click();
+    await page.locator(".office-world").waitFor();
     const routes = [
       [
         "The desk",
@@ -92,9 +143,9 @@ function check(value, label) {
       ],
     ];
     for (const [view, objects] of routes) {
-      await page.getByRole("tab", { name: new RegExp(view) }).click();
+      await chooseView(view);
       for (const [label, route] of objects) {
-        const link = page.getByRole("link", { name: new RegExp(label) });
+        const link = page.locator(".office-world").getByRole("link", { name: new RegExp(label) });
         await link.waitFor({ state: "visible" });
         check((await link.getAttribute("href")) === route, `${label} maps to ${route}`);
         await link.click();
@@ -117,7 +168,7 @@ function check(value, label) {
         fullPage: true,
       });
     }
-    await page.getByRole("tab", { name: /The desk/ }).click();
+    await chooseView("The desk");
     await page.getByRole("tab", { name: /The desk/ }).focus();
     await page.keyboard.press("ArrowRight");
     check(
@@ -152,10 +203,10 @@ function check(value, label) {
       );
     await page.screenshot({ path: path.join(out, "books-mobile.png"), fullPage: true });
     await page.keyboard.press("Escape");
-    await page.waitForFunction(
-      () =>
-        document.activeElement?.getAttribute("aria-label") ===
-        "Explore the eight acting-school books",
+    await page.waitForFunction(() =>
+      document.activeElement
+        ?.getAttribute("aria-label")
+        ?.startsWith("Explore the eight acting-school books"),
     );
     check(
       await page
@@ -186,7 +237,7 @@ function check(value, label) {
       "Reduced-motion media is respected",
     );
     await page.getByRole("button", { name: "Office preferences" }).click();
-    // Actual touch events, beginning on the background instead of an interactive prop.
+    // Actual touch events: a swipe may begin on a prop without activating its link.
     await page.locator(".office-world").scrollIntoViewIfNeeded();
     const rect = await page.locator(".office-world").boundingBox();
     const cdp = await context.newCDPSession(page);
@@ -199,6 +250,7 @@ function check(value, label) {
     await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
     await page.getByRole("tab", { name: /Work wall/, selected: true }).waitFor();
     check(true, "Touch swipe moves to connected work wall");
+    check(new URL(page.url()).pathname === "/", "Swiping a prop does not accidentally navigate");
     // Browser-only scripted rehearsal: exercise all 3x3 existing branches.
     const obstacles = new Set();
     const tactics = ["To plead", "To tease", "To confront"];
@@ -245,7 +297,7 @@ function check(value, label) {
       "Local Passport record survives reload",
     );
     await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
-    await page.getByRole("tab", { name: /The desk/ }).click();
+    await chooseView("The desk");
     check(
       (await page.locator("[data-expression=proud]").count()) === 1,
       "Office reacts to an actual persisted rehearsal",
@@ -254,6 +306,17 @@ function check(value, label) {
       (await page.getByText(/1 rehearsal record saved/).count()) === 1,
       "Office shows a factual saved-record count",
     );
+    await page.getByRole("button", { name: "Progress — open your progress summary" }).click();
+    summary = page.getByRole("dialog");
+    check(
+      (await summary.getByText("1", { exact: true }).count()) === 1,
+      "Progress reflects the actually persisted rehearsal",
+    );
+    check(
+      !/\d+%/.test(await summary.innerText()),
+      "Progress does not invent a training percentage",
+    );
+    await page.keyboard.press("Escape");
     await page.goto(base + "/work", { waitUntil: "networkidle" });
     await page.getByLabel("Role & project").fill("Browser regression fixture");
     await page.getByRole("button", { name: "Save audition prep" }).click();
