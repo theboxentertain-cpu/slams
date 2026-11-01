@@ -17,7 +17,7 @@ export function ProgressPage({
   const catalog = useCatalog();
   const count = passport.loaded && !passport.error ? passport.entries.length : null;
   return (
-    <Page title="Your progress" eyebrow="YOUR WORK, ON RECORD" backTo="/">
+    <Page title="Your progress" eyebrow="YOUR WORK, ON RECORD" backTo="/" world="progress">
       <p className="section-intro">
         {passport.signedIn ? "Account records" : "Rehearsal records in this browser"}. Counts
         describe saved work, not acting ability.

@@ -5,6 +5,8 @@
 @import "./office-reference.css";
 @import "./foundation.css";
 @import "./welcome.css";
+@import "./office-cinematic.css";
+@import "./studio-world.css";
 
 @custom-variant dark (&:is(.dark *));
 

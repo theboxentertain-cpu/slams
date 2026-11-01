@@ -1,0 +1,690 @@
+/* Shared working-world surfaces. Content, reviewed gates and storage stay in their owners. */
+.studio-page {
+  position: relative;
+  isolation: isolate;
+  color: #f4e5c9;
+  background-color: #100c09;
+  background-image:
+    linear-gradient(#100b0877, #100b08d9 580px, #100b08 1100px),
+    url("./assets/office/office-reference.webp");
+  background-size:
+    auto,
+    1100px auto;
+  background-position: center top;
+  background-repeat: no-repeat;
+  padding-bottom: 28px;
+}
+.studio-page::before,
+.studio-page::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  top: 0;
+  width: min(17vw, 210px);
+  height: 260px;
+  background: repeating-linear-gradient(105deg, #230408, #7b1420 16%, #37070d 35%);
+  filter: drop-shadow(3px 3px 6px #0009);
+}
+.studio-page::before {
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 32% 70%, 0 100%);
+}
+.studio-page::after {
+  right: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 65% 70%);
+}
+.studio-page > [role="note"] {
+  background: #22150fe8;
+  color: #ecd3a5;
+  border-bottom: 1px solid #9b784a55;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.studio-page > header {
+  position: relative;
+  max-width: 940px;
+  padding: 16px 20px;
+  min-height: 84px;
+}
+.studio-page .page-back-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  border: 1px solid #b08d5966;
+  border-radius: 22px;
+  color: #f8e2ba;
+  background: #1d130fd9;
+}
+.studio-page .page-office-link {
+  min-height: 48px;
+  color: #f9e7c6;
+}
+.studio-page .page-office-link .wordmark {
+  font-size: 34px;
+  line-height: 1;
+}
+.studio-page .page-office-link > span:last-child {
+  color: #d8bc89;
+  font-size: 9px;
+}
+.studio-page > main {
+  max-width: 900px;
+  padding: 0 24px 36px;
+}
+.studio-heading {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-bottom: 24px;
+  padding: 22px 26px;
+  min-height: 130px;
+  border: 1px solid #bca06a88;
+  border-radius: 13px 13px 3px 3px;
+  background: linear-gradient(95deg, #120b07f5, #2d1b10ca, #1c100566);
+  box-shadow:
+    0 5px 16px #0007,
+    inset 0 0 0 4px #5d392244;
+}
+.studio-heading[data-illustrated="true"] {
+  min-height: 275px;
+  display: flex;
+  align-items: center;
+}
+.studio-heading-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.studio-heading[data-illustrated="true"] .studio-heading-copy {
+  max-width: 59%;
+}
+.studio-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #e7c58c;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.studio-heading h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5vw, 57px);
+  font-weight: 600;
+  line-height: 1.03;
+  font-style: italic;
+  text-shadow: 0 2px 8px #000;
+  color: #f7e5c0;
+}
+.studio-title-stroke {
+  display: block;
+  width: 70%;
+  height: 3px;
+  background: #b32636;
+  margin-top: 14px;
+  transform: rotate(-3deg);
+  box-shadow: 0 2px 4px #0007;
+}
+.studio-heading-director {
+  position: absolute;
+  z-index: 0;
+  bottom: -9%;
+  right: -2%;
+  width: 48%;
+  height: 111%;
+  object-fit: contain;
+  object-position: right bottom;
+  pointer-events: none;
+  filter: drop-shadow(-6px 2px 5px #0009);
+}
+.studio-page[data-world="stuck"] .studio-heading-director {
+  max-width: none;
+  width: 65%;
+  right: -15%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+}
+.studio-heading-book {
+  position: absolute;
+  right: 34%;
+  bottom: 4%;
+  z-index: 1;
+  transform: rotate(-8deg);
+  filter: drop-shadow(2px 5px 4px #0009);
+}
+.studio-heading-book .school-book-mini {
+  width: 75px;
+  height: 108px;
+  margin: 0;
+}
+.studio-heading-book .book-cover {
+  padding: 10px 4px;
+}
+.studio-heading-book .book-title {
+  font-size: 9px;
+  writing-mode: horizontal-tb;
+  white-space: normal;
+  text-align: center;
+}
+.studio-heading-book .book-cover svg {
+  display: block;
+  width: 45px;
+  height: 45px;
+}
+.studio-heading-prop {
+  position: absolute;
+  right: 3%;
+  bottom: 0;
+  width: 40%;
+  height: 100%;
+  transform: rotate(4deg);
+  filter: drop-shadow(4px 5px 4px #0007);
+}
+.studio-heading-prop > svg {
+  width: 100%;
+  height: 100%;
+}
+.studio-passport-cover {
+  position: absolute;
+  z-index: 1;
+  right: 34%;
+  bottom: 4%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100px;
+  height: 140px;
+  padding: 14px 7px;
+  background:
+    linear-gradient(100deg, #13090bf2, #6b2339cc, #280c13f2),
+    url("./assets/office/aged-paper.webp") center / cover;
+  color: #ebc980;
+  border: 4px double #b68a49;
+  border-radius: 3px 10px 10px 3px;
+  box-shadow:
+    inset 7px 0 5px #0009,
+    3px 4px 5px #0007;
+  transform: rotate(-8deg);
+}
+.studio-passport-cover svg {
+  width: 44px;
+  height: 44px;
+  stroke-width: 1.3;
+}
+.studio-passport-cover strong {
+  font-family: var(--font-display);
+  font-size: 23px;
+}
+.studio-passport-cover small {
+  font-size: 7px;
+  letter-spacing: 0.04em;
+}
+.studio-page .section-intro {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: #f0d5a6;
+  font-style: italic;
+}
+.studio-page main > p {
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.studio-page .section-tab-list {
+  gap: 4px;
+  padding: 6px;
+  margin: 18px 0;
+  border: 1px solid #a8875480;
+  border-radius: 9px;
+  background: linear-gradient(#2c2018, #160f0b);
+  box-shadow: inset 0 0 0 2px #70492f33;
+}
+.studio-page .section-tab-list [role="tab"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 10px 12px;
+  color: #f2dfbb;
+  border: 0;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.studio-page .section-tab-list [role="tab"][data-state="active"] {
+  color: #2d1b0d;
+  background: linear-gradient(120deg, #cda36b, #efd4a5 45%, #c99c5e);
+  box-shadow:
+    inset 0 0 0 1px #eccc92,
+    0 1px 4px #0009;
+}
+.studio-page .section-tab-list svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.studio-page .panel,
+.studio-page .studio-sheet,
+.studio-page .availability-note,
+.studio-page [aria-label="Audition preparation"] form {
+  padding: 22px;
+  color: #322214;
+  background:
+    linear-gradient(100deg, #b18a5355, #f6e2bc77 30%, #cba26544),
+    url("./assets/office/aged-paper.webp") center / 100% 100%;
+  border: 1px solid #b58f52;
+  border-radius: 7px;
+  box-shadow:
+    0 3px 10px #0006,
+    inset 0 0 15px #88603122;
+}
+.studio-page .panel h2,
+.studio-page .studio-sheet h2,
+.studio-page .availability-note h2 {
+  color: #38200e;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+.studio-page .availability-note {
+  border-left: 4px solid #9c2932;
+}
+.studio-page .panel p,
+.studio-page .studio-sheet p,
+.studio-page .availability-note p {
+  line-height: 1.65;
+}
+.studio-page .panel .text-muted-foreground,
+.studio-page .panel .text-amber,
+.studio-page [aria-label="Audition preparation"] form .text-muted-foreground {
+  color: #67472b;
+}
+.studio-page .panel .text-school {
+  color: color-mix(in srgb, var(--school) 70%, #1f120a);
+}
+.studio-page .panel .text-destructive {
+  color: #93162b;
+}
+.studio-page .panel a:not(.studio-action-primary):not(.studio-action-secondary),
+.studio-page .studio-sheet a:not(.studio-action-primary):not(.studio-action-secondary),
+.studio-page .availability-note a {
+  color: #76232b;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.studio-page .studio-action-primary,
+.studio-action-primary {
+  color: #fff0d0;
+  text-decoration: none;
+  background: linear-gradient(175deg, #cf293c, #9f0d21 52%, #5a0913);
+  border: 1px solid #d0a365;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 2px 2px #f2917d66,
+    0 3px 7px #0007;
+  min-height: 50px;
+}
+.studio-page .studio-action-secondary,
+.studio-action-secondary,
+.studio-page .preference-button {
+  color: #f6e1b9;
+  background: linear-gradient(#36261b, #1b120e);
+  border: 1px solid #a68350;
+  border-radius: 7px;
+  min-height: 48px;
+  text-decoration: none;
+}
+.studio-page .studio-action-secondary .text-amber {
+  color: #f6d79f;
+}
+.studio-page .studio-action-secondary .text-school {
+  color: #f6d79f;
+}
+.studio-page a.studio-action-primary {
+  color: #fff0d0;
+  text-decoration: none;
+}
+.studio-page a.studio-action-secondary {
+  color: #f6e1b9;
+  text-decoration: none;
+}
+.studio-page .studio-action-primary:disabled,
+.studio-page .studio-action-secondary:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.studio-page button:focus-visible,
+.studio-page a:focus-visible,
+.studio-page input:focus-visible,
+.studio-page textarea:focus-visible {
+  outline: 3px solid #e65d6b;
+  outline-offset: 4px;
+}
+.studio-page input:not([type="checkbox"]):not([type="radio"]),
+.studio-page textarea {
+  min-height: 48px;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid #98764a;
+  border-radius: 5px;
+  color: #2c1b0e;
+  background: #f8e8c9;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.studio-page input::placeholder,
+.studio-page textarea::placeholder {
+  color: #755e43;
+}
+.studio-page .context-links a {
+  color: #f2d7ac;
+  background: #26180ee8;
+  border: 1px solid #9e7b48;
+  border-radius: 7px;
+}
+.studio-page .panel .context-links a {
+  color: #f2d7ac;
+}
+.studio-page .saved-choices {
+  padding: 18px;
+  border: 1px solid #98794c;
+  border-radius: 7px;
+  background: #21160fe8;
+}
+.studio-page .saved-choices dt {
+  color: #e5c48b;
+}
+.studio-page .progress-counts > div {
+  border: 1px solid #ae8b52;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #3a2418, #1b100a);
+  box-shadow: inset 0 0 0 3px #68432955;
+}
+.studio-page .progress-counts dd {
+  color: #f2d3a0;
+}
+.studio-page .training-summary {
+  padding: 18px;
+  border: 1px solid #ad8b56;
+  border-radius: 9px;
+  background: #21160ee8;
+}
+.studio-page .school-progress-list {
+  padding: 8px 15px;
+  background: #20150ee8;
+  border-radius: 7px;
+  border: 1px solid #a88a5955;
+}
+.studio-page .school-progress-list a {
+  color: #f5dcae;
+}
+.studio-page[data-world="scene"] ol[aria-label="Progress"] {
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 18px;
+}
+.studio-page[data-world="scene"] ol[aria-label="Progress"] li {
+  min-width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 5px;
+  border: 1px solid #b48d5877;
+  background: #2b1b13;
+  font-size: 11px;
+  color: #f7dfb9;
+}
+.studio-page[data-world="scene"] ol[aria-label="Progress"] [aria-current="step"] {
+  background: #8f1a2a;
+  border-color: #ee9a88;
+}
+.studio-page[data-world="scene"] .studio-heading {
+  min-height: 190px;
+}
+/* Eight physical book covers remain individually selectable; no fabricated completion badges. */
+.studio-page .school-selector {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px 14px;
+  margin: 20px 0;
+}
+.studio-page .school-selector > li {
+  min-width: 0;
+  border-bottom: 4px ridge #87552f;
+  padding: 8px 0;
+  background: linear-gradient(transparent 50%, #482a1844);
+}
+.studio-page .school-entrance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  padding: 8px 4px 14px;
+  border: 0;
+  min-height: 100%;
+}
+.studio-page .school-entrance .school-book {
+  width: 135px;
+  height: 205px;
+  max-width: 100%;
+  margin: 0;
+  transform: rotateY(-6deg);
+  filter: drop-shadow(3px 6px 3px #0009);
+}
+.studio-page .school-entrance .book-cover {
+  padding: 16px 7px;
+}
+.studio-page .school-entrance .book-title {
+  min-height: 42px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.studio-page .school-entrance .book-cover svg {
+  width: 75px;
+  height: 75px;
+}
+.studio-page .school-entrance .book-edition {
+  font-size: 5px;
+}
+.studio-page .school-entrance .book-footer {
+  font-size: 6px;
+}
+.studio-page .school-entrance > span:last-child {
+  text-align: center;
+  gap: 4px;
+}
+.studio-page .school-entrance strong {
+  color: #f1d3a5;
+  font-size: 1.15rem;
+}
+.studio-page .school-entrance > span:last-child > span {
+  color: #e2cfac;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.studio-page .school-entrance small {
+  color: #cbb38e;
+  font-size: 10px;
+}
+.studio-page .section-tabs[data-page="work"] > .section-tab-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 7px;
+  gap: 8px;
+}
+.studio-page .section-tabs[data-page="work"] > .section-tab-list [role="tab"] {
+  flex-direction: column;
+  min-height: 120px;
+  border: 1px solid #ab8b5e77;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-style: italic;
+}
+.studio-page .section-tabs[data-page="work"] > .section-tab-list svg {
+  width: 43px;
+  height: 43px;
+  stroke-width: 1.2;
+}
+.studio-page .section-tabs[data-page="passport"] > .section-tab-list [role="tab"] {
+  flex-direction: column;
+  min-height: 75px;
+}
+.studio-page .section-tabs[data-page="passport"] > .section-tab-list svg {
+  width: 26px;
+  height: 26px;
+  stroke-width: 1.4;
+}
+.app-shell:has(.studio-page) > .primary-navigation {
+  border: 1px solid #b8945d88;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(#21150ff5, #100b08fa);
+}
+.app-shell:has(.studio-page) > .primary-navigation [aria-current="page"] {
+  color: #fff0d0;
+  border-color: #e62239;
+  background: radial-gradient(ellipse at 50% 70%, #ad112b66, transparent 75%);
+}
+.app-shell:has(.studio-page) > .primary-navigation [aria-current="page"] svg {
+  filter: drop-shadow(0 0 5px #ff2b3b);
+}
+@media (max-width: 699px) {
+  .studio-page {
+    background-size:
+      auto,
+      750px auto;
+  }
+  .studio-page > header {
+    padding: 10px 12px;
+  }
+  .studio-page > main {
+    padding: 0 12px 28px;
+  }
+  .studio-page > [role="note"] {
+    font-size: 10px;
+    padding: 7px 12px;
+  }
+  .studio-heading {
+    padding: 20px 18px;
+    min-height: 115px;
+    margin-bottom: 18px;
+  }
+  .studio-heading[data-illustrated="true"] {
+    min-height: 225px;
+  }
+  .studio-heading h1 {
+    font-size: clamp(30px, 9.2vw, 43px);
+  }
+  .studio-heading[data-illustrated="true"] .studio-heading-copy {
+    max-width: 65%;
+  }
+  .studio-eyebrow {
+    font-size: 10px;
+    margin-bottom: 7px;
+    letter-spacing: 0.08em;
+  }
+  .studio-heading-director {
+    width: 58%;
+    height: 109%;
+    right: -7%;
+    bottom: -8%;
+  }
+  .studio-heading-book {
+    right: 8%;
+    bottom: -1%;
+  }
+  .studio-heading-book .school-book-mini {
+    width: 50px;
+    height: 73px;
+  }
+  .studio-heading-book .book-title {
+    font-size: 6px;
+  }
+  .studio-heading-book .book-cover svg {
+    width: 28px;
+    height: 28px;
+  }
+  .studio-page[data-world="stuck"] .studio-heading-director {
+    right: -27%;
+    width: 75%;
+    object-position: 12% top;
+  }
+  .studio-passport-cover {
+    right: 3%;
+    width: 68px;
+    height: 100px;
+    bottom: 2%;
+    padding: 8px 4px;
+    gap: 4px;
+    border-width: 3px;
+  }
+  .studio-passport-cover svg {
+    width: 30px;
+    height: 30px;
+  }
+  .studio-passport-cover strong {
+    font-size: 17px;
+  }
+  .studio-passport-cover small {
+    font-size: 5px;
+  }
+  .studio-page .section-intro {
+    font-size: 1.2rem;
+  }
+  .studio-page .section-tab-list {
+    gap: 3px;
+    padding: 4px;
+  }
+  .studio-page .section-tab-list [role="tab"] {
+    padding: 8px;
+    font-size: 0.8125rem;
+  }
+  .studio-page .panel,
+  .studio-page .studio-sheet,
+  .studio-page .availability-note,
+  .studio-page [aria-label="Audition preparation"] form {
+    padding: 18px 15px;
+  }
+  .studio-page .school-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 12px;
+  }
+  .studio-page .school-entrance .school-book {
+    width: 130px;
+    height: 195px;
+  }
+  .studio-page .school-entrance > span:last-child > span {
+    font-size: 12px;
+  }
+  .studio-page .school-entrance .book-cover svg {
+    width: 65px;
+    height: 65px;
+  }
+  .studio-page .section-tabs[data-page="work"] > .section-tab-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .studio-page .section-tabs[data-page="work"] > .section-tab-list [role="tab"] {
+    min-height: 112px;
+  }
+  .studio-page .section-tabs[data-page="passport"] > .section-tab-list [role="tab"] {
+    gap: 4px;
+    padding: 6px;
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-page *,
+  .studio-page *::before,
+  .studio-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

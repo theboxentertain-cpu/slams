@@ -71,6 +71,22 @@ describe("The interactive office", () => {
     );
     expect(container.querySelector(".save-attention")).toBeNull();
   });
+  it("shows actual local records and unknown milestones without a completion percentage", () => {
+    render(<DirectorsOffice />);
+    const journey = within(screen.getByRole("link", { name: "Your progress — view saved work" }));
+    expect(journey.getByText("0", { exact: true })).toBeInTheDocument();
+    expect(journey.getByText("—", { exact: true })).toBeInTheDocument();
+    expect(journey.getByText("Rehearsals on this device")).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/\d+%/);
+  });
+  it("never renders stale rehearsal counts in the journey after a load failure", () => {
+    state.entries = [{ id: "stale" }];
+    state.error = "Unavailable";
+    render(<DirectorsOffice />);
+    const journey = within(screen.getByRole("link", { name: "Your progress — view saved work" }));
+    expect(journey.getAllByText("—", { exact: true })).toHaveLength(2);
+    expect(journey.queryByText("1", { exact: true })).toBeNull();
+  });
   it("exposes a real save error through the progress link", () => {
     state.error = "Denied";
     const { container } = render(<DirectorsOffice />);

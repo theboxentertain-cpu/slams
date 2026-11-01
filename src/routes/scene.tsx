@@ -59,7 +59,12 @@ function Scene() {
   }
 
   return (
-    <Page title={`“${SCENE.title}”`} eyebrow="Demonstration Living Scene" backTo="/rehearsal">
+    <Page
+      title={`“${SCENE.title}”`}
+      eyebrow="Demonstration Living Scene"
+      backTo="/rehearsal"
+      world="scene"
+    >
       {stageIdx >= 0 && (
         <ol aria-label="Progress" className="mb-4 flex gap-1 text-[10px] uppercase">
           {STAGES.map((s, i) => (
