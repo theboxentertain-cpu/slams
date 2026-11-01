@@ -1,0 +1,31 @@
+{
+  "environment": "Chromium 390x844 @2x, 4x CPU slowdown, 80ms latency, 750KB/s download; synthetic lab sample, not physical Android",
+  "paints": [
+    {
+      "name": "first-paint",
+      "ms": 532
+    },
+    {
+      "name": "first-contentful-paint",
+      "ms": 532
+    }
+  ],
+  "loadMs": 2103,
+  "artwork": [
+    {
+      "asset": "office-reference-I8ZTr9kP.webp",
+      "bytes": 272784,
+      "durationMs": 1617
+    },
+    {
+      "asset": "director-portrait-CcJuDMXV.webp",
+      "bytes": 511804,
+      "durationMs": 1932
+    },
+    {
+      "asset": "aged-paper-CTnscrRI.webp",
+      "bytes": 266116,
+      "durationMs": 1390
+    }
+  ]
+}

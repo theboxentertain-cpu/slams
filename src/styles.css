@@ -4,6 +4,7 @@
 @import "./office.css";
 @import "./office-reference.css";
 @import "./foundation.css";
+@import "./welcome.css";
 
 @custom-variant dark (&:is(.dark *));
 

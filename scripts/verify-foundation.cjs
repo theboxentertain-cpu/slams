@@ -47,6 +47,8 @@ const pages = [
       hasTouch: true,
       isMobile: true,
     });
+    // Existing-studio regression: this context represents a returning visitor.
+    await context.addCookies([{ name: "slams_studio_entered", value: "1", url: base }]);
     const page = await context.newPage();
     page.setDefaultTimeout(15000);
     page.setDefaultNavigationTimeout(20000);
@@ -153,7 +155,7 @@ const pages = [
     await go("/");
     await page.getByRole("button", { name: "Open profile menu" }).click();
     check(
-      (await page.getByRole("menuitem").count()) === 9,
+      (await page.getByRole("menuitem").count()) === 10,
       "Profile menu exposes all supporting/account destinations",
     );
     await page.keyboard.press("Escape");

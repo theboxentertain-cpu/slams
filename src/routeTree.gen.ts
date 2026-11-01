@@ -25,6 +25,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SceneRouteImport } from './routes/scene'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StuckRouteImport } from './routes/stuck'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as ConservatoryIndexRouteImport } from './routes/conservatory.index'
 import { Route as ConservatorySchoolRouteImport } from './routes/conservatory.$school'
@@ -33,6 +34,9 @@ import { Route as StuckDiagnosisRouteImport } from './routes/stuck.diagnosis'
 import { Route as StuckInterventionRouteImport } from './routes/stuck.intervention'
 import { Route as StuckRetryRouteImport } from './routes/stuck.retry'
 import { Route as StuckSavedRouteImport } from './routes/stuck.saved'
+import { Route as WelcomeIndexRouteImport } from './routes/welcome.index'
+import { Route as WelcomeAccountRouteImport } from './routes/welcome.account'
+import { Route as WelcomeSetupRouteImport } from './routes/welcome.setup'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkAuditionRouteImport } from './routes/work.audition'
 import { Route as WorkBreakdownRouteImport } from './routes/work.breakdown'
@@ -124,6 +128,11 @@ const StuckRoute = StuckRouteImport.update({
   path: '/stuck',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorkRoute = WorkRouteImport.update({
   id: '/work',
   path: '/work',
@@ -163,6 +172,21 @@ const StuckSavedRoute = StuckSavedRouteImport.update({
   id: '/saved',
   path: '/saved',
   getParentRoute: () => StuckRoute,
+} as any)
+const WelcomeIndexRoute = WelcomeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WelcomeRoute,
+} as any)
+const WelcomeAccountRoute = WelcomeAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => WelcomeRoute,
+} as any)
+const WelcomeSetupRoute = WelcomeSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => WelcomeRoute,
 } as any)
 const WorkIndexRoute = WorkIndexRouteImport.update({
   id: '/',
@@ -235,12 +259,15 @@ export interface FileRoutesByFullPath {
   '/scene': typeof SceneRoute
   '/settings': typeof SettingsRoute
   '/stuck': typeof StuckRouteWithChildren
+  '/welcome': typeof WelcomeRouteWithChildren
   '/work': typeof WorkRouteWithChildren
   '/conservatory/$school': typeof ConservatorySchoolRouteWithChildren
   '/stuck/diagnosis': typeof StuckDiagnosisRoute
   '/stuck/intervention': typeof StuckInterventionRoute
   '/stuck/retry': typeof StuckRetryRoute
   '/stuck/saved': typeof StuckSavedRoute
+  '/welcome/account': typeof WelcomeAccountRoute
+  '/welcome/setup': typeof WelcomeSetupRoute
   '/work/audition': typeof WorkAuditionRoute
   '/work/breakdown': typeof WorkBreakdownRoute
   '/work/character': typeof WorkCharacterRoute
@@ -248,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/work/self-tape': typeof WorkSelfTapeRoute
   '/conservatory/': typeof ConservatoryIndexRoute
   '/stuck/': typeof StuckIndexRoute
+  '/welcome/': typeof WelcomeIndexRoute
   '/work/': typeof WorkIndexRoute
   '/conservatory/$school/': typeof ConservatorySchoolIndexRoute
   '/conservatory/$school/years/$year': typeof ConservatorySchoolYearsYearRoute
@@ -273,6 +301,8 @@ export interface FileRoutesByTo {
   '/stuck/intervention': typeof StuckInterventionRoute
   '/stuck/retry': typeof StuckRetryRoute
   '/stuck/saved': typeof StuckSavedRoute
+  '/welcome/account': typeof WelcomeAccountRoute
+  '/welcome/setup': typeof WelcomeSetupRoute
   '/work/audition': typeof WorkAuditionRoute
   '/work/breakdown': typeof WorkBreakdownRoute
   '/work/character': typeof WorkCharacterRoute
@@ -280,6 +310,7 @@ export interface FileRoutesByTo {
   '/work/self-tape': typeof WorkSelfTapeRoute
   '/conservatory': typeof ConservatoryIndexRoute
   '/stuck': typeof StuckIndexRoute
+  '/welcome': typeof WelcomeIndexRoute
   '/work': typeof WorkIndexRoute
   '/conservatory/$school': typeof ConservatorySchoolIndexRoute
   '/conservatory/$school/years/$year': typeof ConservatorySchoolYearsYearRoute
@@ -304,12 +335,15 @@ export interface FileRoutesById {
   '/scene': typeof SceneRoute
   '/settings': typeof SettingsRoute
   '/stuck': typeof StuckRouteWithChildren
+  '/welcome': typeof WelcomeRouteWithChildren
   '/work': typeof WorkRouteWithChildren
   '/conservatory/$school': typeof ConservatorySchoolRouteWithChildren
   '/stuck/diagnosis': typeof StuckDiagnosisRoute
   '/stuck/intervention': typeof StuckInterventionRoute
   '/stuck/retry': typeof StuckRetryRoute
   '/stuck/saved': typeof StuckSavedRoute
+  '/welcome/account': typeof WelcomeAccountRoute
+  '/welcome/setup': typeof WelcomeSetupRoute
   '/work/audition': typeof WorkAuditionRoute
   '/work/breakdown': typeof WorkBreakdownRoute
   '/work/character': typeof WorkCharacterRoute
@@ -317,6 +351,7 @@ export interface FileRoutesById {
   '/work/self-tape': typeof WorkSelfTapeRoute
   '/conservatory/': typeof ConservatoryIndexRoute
   '/stuck/': typeof StuckIndexRoute
+  '/welcome/': typeof WelcomeIndexRoute
   '/work/': typeof WorkIndexRoute
   '/conservatory/$school/': typeof ConservatorySchoolIndexRoute
   '/conservatory/$school/years/$year': typeof ConservatorySchoolYearsYearRoute
@@ -342,12 +377,15 @@ export interface FileRouteTypes {
     | '/scene'
     | '/settings'
     | '/stuck'
+    | '/welcome'
     | '/work'
     | '/conservatory/$school'
     | '/stuck/diagnosis'
     | '/stuck/intervention'
     | '/stuck/retry'
     | '/stuck/saved'
+    | '/welcome/account'
+    | '/welcome/setup'
     | '/work/audition'
     | '/work/breakdown'
     | '/work/character'
@@ -355,6 +393,7 @@ export interface FileRouteTypes {
     | '/work/self-tape'
     | '/conservatory/'
     | '/stuck/'
+    | '/welcome/'
     | '/work/'
     | '/conservatory/$school/'
     | '/conservatory/$school/years/$year'
@@ -380,6 +419,8 @@ export interface FileRouteTypes {
     | '/stuck/intervention'
     | '/stuck/retry'
     | '/stuck/saved'
+    | '/welcome/account'
+    | '/welcome/setup'
     | '/work/audition'
     | '/work/breakdown'
     | '/work/character'
@@ -387,6 +428,7 @@ export interface FileRouteTypes {
     | '/work/self-tape'
     | '/conservatory'
     | '/stuck'
+    | '/welcome'
     | '/work'
     | '/conservatory/$school'
     | '/conservatory/$school/years/$year'
@@ -410,12 +452,15 @@ export interface FileRouteTypes {
     | '/scene'
     | '/settings'
     | '/stuck'
+    | '/welcome'
     | '/work'
     | '/conservatory/$school'
     | '/stuck/diagnosis'
     | '/stuck/intervention'
     | '/stuck/retry'
     | '/stuck/saved'
+    | '/welcome/account'
+    | '/welcome/setup'
     | '/work/audition'
     | '/work/breakdown'
     | '/work/character'
@@ -423,6 +468,7 @@ export interface FileRouteTypes {
     | '/work/self-tape'
     | '/conservatory/'
     | '/stuck/'
+    | '/welcome/'
     | '/work/'
     | '/conservatory/$school/'
     | '/conservatory/$school/years/$year'
@@ -447,6 +493,7 @@ export interface RootRouteChildren {
   SceneRoute: typeof SceneRoute
   SettingsRoute: typeof SettingsRoute
   StuckRoute: typeof StuckRouteWithChildren
+  WelcomeRoute: typeof WelcomeRouteWithChildren
   WorkRoute: typeof WorkRouteWithChildren
 }
 
@@ -564,6 +611,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StuckRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/work': {
       id: '/work'
       path: '/work'
@@ -619,6 +673,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/stuck/saved'
       preLoaderRoute: typeof StuckSavedRouteImport
       parentRoute: typeof StuckRoute
+    }
+    '/welcome/': {
+      id: '/welcome/'
+      path: '/'
+      fullPath: '/welcome/'
+      preLoaderRoute: typeof WelcomeIndexRouteImport
+      parentRoute: typeof WelcomeRoute
+    }
+    '/welcome/account': {
+      id: '/welcome/account'
+      path: '/account'
+      fullPath: '/welcome/account'
+      preLoaderRoute: typeof WelcomeAccountRouteImport
+      parentRoute: typeof WelcomeRoute
+    }
+    '/welcome/setup': {
+      id: '/welcome/setup'
+      path: '/setup'
+      fullPath: '/welcome/setup'
+      preLoaderRoute: typeof WelcomeSetupRouteImport
+      parentRoute: typeof WelcomeRoute
     }
     '/work/': {
       id: '/work/'
@@ -744,6 +819,21 @@ const StuckRouteChildren: StuckRouteChildren = {
 
 const StuckRouteWithChildren = StuckRoute._addFileChildren(StuckRouteChildren)
 
+interface WelcomeRouteChildren {
+  WelcomeAccountRoute: typeof WelcomeAccountRoute
+  WelcomeSetupRoute: typeof WelcomeSetupRoute
+  WelcomeIndexRoute: typeof WelcomeIndexRoute
+}
+
+const WelcomeRouteChildren: WelcomeRouteChildren = {
+  WelcomeAccountRoute: WelcomeAccountRoute,
+  WelcomeSetupRoute: WelcomeSetupRoute,
+  WelcomeIndexRoute: WelcomeIndexRoute,
+}
+
+const WelcomeRouteWithChildren =
+  WelcomeRoute._addFileChildren(WelcomeRouteChildren)
+
 interface WorkRouteChildren {
   WorkAuditionRoute: typeof WorkAuditionRoute
   WorkBreakdownRoute: typeof WorkBreakdownRoute
@@ -781,6 +871,7 @@ const rootRouteChildren: RootRouteChildren = {
   SceneRoute: SceneRoute,
   SettingsRoute: SettingsRoute,
   StuckRoute: StuckRouteWithChildren,
+  WelcomeRoute: WelcomeRouteWithChildren,
   WorkRoute: WorkRouteWithChildren,
 }
 export const routeTree = rootRouteImport

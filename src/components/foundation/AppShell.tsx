@@ -1,9 +1,10 @@
 import { useEffect, useRef, type ReactNode } from "react";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useMatches } from "@tanstack/react-router";
 import { BookOpen, Clapperboard, Drama, House, ScrollText, CircleUserRound } from "lucide-react";
 import { PRIMARY_NAVIGATION, primarySection } from "@/lib/foundation";
 import { useOfficePreferences } from "@/lib/office-preferences";
 import { useSession } from "@/lib/session";
+import { enterStudio, useStudioEntry } from "@/lib/studio-entry";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,8 +21,26 @@ const icons = {
 };
 export function AppShell({ children }: { children: ReactNode }) {
   const nav = useRef<HTMLElement>(null);
-  const active = primarySection(useLocation({ select: (location) => location.pathname }));
+  const location = useLocation();
+  const active = primarySection(location.pathname);
+  const serverEntered = useMatches({
+    select: (matches) =>
+      (
+        matches.find((m) => m.routeId === "/")?.loaderData as
+          { studioEntered?: boolean } | undefined
+      )?.studioEntered ?? false,
+  });
+  const entered = useStudioEntry(serverEntered);
+  const { user } = useSession();
+  const cinematic =
+    location.pathname.startsWith("/welcome") ||
+    ((location.pathname === "/auth" || location.pathname === "/baseline") &&
+      location.search["flow"] === "welcome") ||
+    (location.pathname === "/" && !entered && !user);
   const { animate } = useOfficePreferences();
+  useEffect(() => {
+    if (!cinematic) enterStudio();
+  }, [cinematic]);
   useEffect(() => {
     const node = nav.current;
     if (!node) return;
@@ -37,24 +56,34 @@ export function AppShell({ children }: { children: ReactNode }) {
       observer?.disconnect();
       document.documentElement.style.removeProperty("--primary-nav-height");
     };
-  }, []);
+  }, [cinematic]);
   return (
-    <div className="app-shell" data-motion={animate ? "on" : "off"}>
+    <div
+      className="app-shell"
+      data-motion={animate ? "on" : "off"}
+      data-welcome={cinematic ? "true" : "false"}
+    >
       <a className="skip-link" href="#page-content">
         Skip to content
       </a>
       {children}
-      <nav ref={nav} className="primary-navigation" aria-label="Main studio navigation">
-        {PRIMARY_NAVIGATION.map((item) => {
-          const Icon = icons[item.icon];
-          return (
-            <Link key={item.to} to={item.to} aria-current={active === item.to ? "page" : undefined}>
-              <Icon aria-hidden="true" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      {!cinematic && (
+        <nav ref={nav} className="primary-navigation" aria-label="Main studio navigation">
+          {PRIMARY_NAVIGATION.map((item) => {
+            const Icon = icons[item.icon];
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                aria-current={active === item.to ? "page" : undefined}
+              >
+                <Icon aria-hidden="true" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      )}
     </div>
   );
 }
@@ -98,6 +127,9 @@ export function ProfileMenu({ className = "" }: { className?: string }) {
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/help">Help</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/welcome">Welcome & actor setup</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/auth">{user ? "Manage account / sign out" : "Sign in"}</Link>

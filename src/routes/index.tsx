@@ -1,13 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DirectorsOffice } from "@/components/office/DirectorsOffice";
+import { WelcomeLanding } from "@/components/welcome/WelcomePages";
+import { getStudioEntry } from "@/lib/studio-entry.functions";
+import { useStudioEntry } from "@/lib/studio-entry";
+import { useSession } from "@/lib/session";
+import welcomeDirector from "@/assets/welcome/director-reclining.webp";
+import welcomePortrait from "@/assets/welcome/director-portrait.webp";
 import panorama from "@/assets/office/office-reference.webp";
 import director from "@/assets/office/director-reference.webp";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
+  loader: async () => ({ studioEntered: await getStudioEntry() }),
+  head: ({ loaderData }) => ({
     links: [
       { rel: "preload", as: "image", href: panorama },
-      { rel: "preload", as: "image", href: director },
+      ...(loaderData?.studioEntered
+        ? [{ rel: "preload", as: "image", href: director }]
+        : [
+            { rel: "preload", as: "image", href: welcomePortrait, media: "(max-width:699px)" },
+            { rel: "preload", as: "image", href: welcomeDirector, media: "(min-width:700px)" },
+          ]),
     ],
     meta: [
       { property: "og:type", content: "website" },
@@ -21,5 +33,12 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Scene · Listening · Action · Movement · Stakes." },
     ],
   }),
-  component: DirectorsOffice,
+  component: HomeEntry,
 });
+
+function HomeEntry() {
+  const { studioEntered } = Route.useLoaderData();
+  const entered = useStudioEntry(studioEntered);
+  const { user } = useSession();
+  return entered || user ? <DirectorsOffice /> : <WelcomeLanding />;
+}

@@ -26,6 +26,8 @@ function check(value, label) {
       hasTouch: true,
       isMobile: true,
     });
+    // Existing-studio regression: this context represents a returning visitor.
+    await context.addCookies([{ name: "slams_studio_entered", value: "1", url: base }]);
     const page = await context.newPage();
     async function settle() {
       await page.locator(".office-world").evaluate(async (n) => {
