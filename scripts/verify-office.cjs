@@ -70,59 +70,51 @@ function check(value, label) {
         });
     }
     await page.setViewportSize({ width: 390, height: 844 });
-    const progressButton = page.getByRole("button", {
-      name: "Progress — open your progress summary",
-    });
-    await progressButton.click();
-    let summary = page.getByRole("dialog");
+    const primary = page.getByRole("navigation", { name: "Main studio navigation" });
+    check(
+      (await primary.getByRole("link").count()) === 5,
+      "Exactly one five-destination primary navigation",
+    );
+    await page.getByRole("link", { name: "Progress and save status" }).click();
+    let summary = page.getByRole("main");
+    await summary.getByText("0", { exact: true }).waitFor();
     check(
       (await summary.getByText("0", { exact: true }).count()) === 1,
-      "Progress shows the actual zero saved rehearsal count",
+      "Progress shows actual zero local rehearsals",
     );
     check(
       (await summary.getByText("—", { exact: true }).count()) === 1,
-      "Unknown cloud milestones are not fabricated as zero",
+      "Unknown account milestones are not fabricated as zero",
     );
-    await page.keyboard.press("Escape");
-    await page.waitForFunction(
-      () =>
-        document.activeElement?.getAttribute("aria-label") ===
-        "Progress — open your progress summary",
-    );
-    check(true, "Progress dialog returns focus to its navigation opener");
-    const globalBooks = page.getByRole("button", {
-      name: "Conservatory — open the acting-school library",
-    });
-    await globalBooks.click();
+    await primary.getByRole("link", { name: "Schools", exact: true }).click();
+    await page.locator(".school-selector").waitFor();
     check(
-      (await page
-        .getByRole("dialog")
-        .getByRole("link", { name: /^Open .+ school$/ })
-        .count()) === 8,
-      "Bottom navigation opens the real eight-book library",
+      (await page.locator(".school-selector > li").count()) === 8,
+      "Schools navigation opens eight real school entrances",
     );
-    await page.keyboard.press("Escape");
-    await page.waitForFunction(
-      () =>
-        document.activeElement?.getAttribute("aria-label") ===
-        "Conservatory — open the acting-school library",
-    );
-    check(true, "Library returns focus to the bottom-nav opener");
-    await page.locator(".reference-account").click();
-    await page.waitForURL(base + "/auth");
+    await primary.getByRole("link", { name: "Office", exact: true }).click();
+    await page.getByRole("button", { name: "Open profile menu" }).click();
+    await page.getByRole("menuitem", { name: "Sign in", exact: true }).click();
+    await page.getByLabel("Email", { exact: true }).waitFor();
     check(
       (await page.getByLabel("Email", { exact: true }).count()) === 1,
-      "Reference account icon opens real account management",
+      "Profile menu preserves real account management",
     );
     await page.getByRole("link", { name: "SLAMS home" }).click();
-    await page.locator(".office-world").waitFor();
+    await page.getByRole("button", { name: /The Director —/ }).click();
+    check(
+      (await page.getByRole("dialog").count()) === 1,
+      "Director object opens real coaching controls",
+    );
+    await page.getByRole("link", { name: /Meet the Director/ }).click();
+    await page.getByRole("heading", { name: "The Director", exact: true }).waitFor();
+    await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
     const routes = [
       [
         "The desk",
         [
           ["Start rehearsal", "/scene"],
           ["The Stuck Desk", "/stuck"],
-          ["The Director —", "/director"],
         ],
       ],
       [
@@ -145,11 +137,13 @@ function check(value, label) {
     for (const [view, objects] of routes) {
       await chooseView(view);
       for (const [label, route] of objects) {
-        const link = page.locator(".office-world").getByRole("link", { name: new RegExp(label) });
+        const link = page
+          .locator(".office-world")
+          .getByRole("link", { name: new RegExp("^" + label + " —") });
         await link.waitFor({ state: "visible" });
         check((await link.getAttribute("href")) === route, `${label} maps to ${route}`);
         await link.click();
-        await page.waitForURL(base + route);
+        await page.waitForURL((url) => url.pathname === route);
         check((await page.locator("h1").count()) > 0, `${route} renders its real page`);
         await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
         await page.getByRole("tab", { name: new RegExp(view), selected: true }).waitFor();
@@ -251,6 +245,42 @@ function check(value, label) {
     await page.getByRole("tab", { name: /Work wall/, selected: true }).waitFor();
     check(true, "Touch swipe moves to connected work wall");
     check(new URL(page.url()).pathname === "/", "Swiping a prop does not accidentally navigate");
+    // Exercise labels as well as object centers at both narrow and desktop widths.
+    for (const width of [320, 1440]) {
+      await page.setViewportSize({ width, height: width > 600 ? 1000 : 844 });
+      for (const [view, objects] of routes) {
+        await chooseView(view);
+        for (const [label, route] of objects) {
+          const link = page
+            .locator(".office-world")
+            .getByRole("link", { name: new RegExp("^" + label + " —") });
+          await link
+            .locator(".object-label")
+            .evaluate((n) => n.scrollIntoView({ block: "center" }));
+          await link.locator(".object-label").click();
+          await page.waitForURL((url) => url.pathname === route);
+          check(true, `${label} label is unobstructed and functional at ${width}px`);
+          await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
+          await page.getByRole("tab", { name: new RegExp(view), selected: true }).waitFor();
+        }
+      }
+      for (const [view, selector, destination] of [
+        ["The desk", ".reference-rehearsal-sign", "/rehearsal"],
+        ["Work wall", ".wall-progress-sheet", "/progress"],
+        ["Work wall", ".wall-scene-notes", "/work"],
+        ["Work wall", ".bad-acting-wall", "/stuck"],
+        ["Rehearsal corner", ".corner-stage-link", "/scene"],
+      ]) {
+        await chooseView(view);
+        const link = page.locator(`.office-room:not([hidden]) ${selector}`);
+        await link.evaluate((n) => n.scrollIntoView({ block: "center" }));
+        await link.click();
+        await page.waitForURL((url) => url.pathname === destination);
+        check(true, `${selector} navigates to ${destination} at ${width}px`);
+        await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
+      }
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
     // Browser-only scripted rehearsal: exercise all 3x3 existing branches.
     const obstacles = new Set();
     const tactics = ["To plead", "To tease", "To confront"];
@@ -306,8 +336,9 @@ function check(value, label) {
       (await page.getByText(/1 rehearsal record saved/).count()) === 1,
       "Office shows a factual saved-record count",
     );
-    await page.getByRole("button", { name: "Progress — open your progress summary" }).click();
-    summary = page.getByRole("dialog");
+    await page.getByRole("link", { name: "Progress and save status" }).click();
+    summary = page.getByRole("main");
+    await summary.getByText("1", { exact: true }).waitFor();
     check(
       (await summary.getByText("1", { exact: true }).count()) === 1,
       "Progress reflects the actually persisted rehearsal",
@@ -316,8 +347,7 @@ function check(value, label) {
       !/\d+%/.test(await summary.innerText()),
       "Progress does not invent a training percentage",
     );
-    await page.keyboard.press("Escape");
-    await page.goto(base + "/work", { waitUntil: "networkidle" });
+    await page.goto(base + "/work/audition?tab=preparation", { waitUntil: "networkidle" });
     await page.getByLabel("Role & project").fill("Browser regression fixture");
     await page.getByRole("button", { name: "Save audition prep" }).click();
     await page.getByRole("status").filter({ hasText: "Saved in this browser." }).waitFor();

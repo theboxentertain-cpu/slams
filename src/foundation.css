@@ -1,0 +1,520 @@
+:root {
+  --primary-nav-height: calc(76px + env(safe-area-inset-bottom, 0px));
+}
+.app-shell {
+  min-height: 100dvh;
+  padding-bottom: calc(var(--primary-nav-height) + 24px);
+}
+.primary-navigation {
+  position: fixed;
+  z-index: 40;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 6px 4px max(6px, env(safe-area-inset-bottom));
+  border-top: 1px solid #9f86515c;
+  background: #100e0bf5;
+  box-shadow: 0 -8px 25px #0005;
+}
+.primary-navigation a {
+  display: flex;
+  min-width: 0;
+  min-height: 64px;
+  padding: 4px 2px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  color: #ddcfb5;
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.primary-navigation svg {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+.primary-navigation a[aria-current="page"] {
+  color: #ff6676;
+  border-bottom-color: #df3348;
+  background: #481c2029;
+}
+.primary-navigation a:hover {
+  background: #ffffff0a;
+}
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  left: 12px;
+  top: 8px;
+  transform: translateY(-150%);
+  background: #f2dfbb;
+  color: #20170e;
+  padding: 12px;
+}
+.skip-link:focus {
+  transform: none;
+}
+.profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 50%;
+  color: #f1dfbd;
+  background: transparent;
+  cursor: pointer;
+}
+.profile-menu {
+  z-index: 60;
+  width: min(290px, calc(100vw - 24px));
+}
+.profile-menu [role="menuitem"] {
+  min-height: 48px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.section-intro {
+  font-size: 1.1rem;
+  margin: 0 0 16px;
+  color: #ddc5a0;
+}
+.section-tabs {
+  margin: 24px 0;
+}
+.section-tab-list {
+  display: flex;
+  width: 100%;
+  height: auto;
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-radius: 0;
+  background: transparent;
+  padding: 0 0 8px;
+  border-bottom: 1px solid #bca37b44;
+}
+.section-tab-list [role="tab"] {
+  min-height: 48px;
+  white-space: normal;
+  font-size: 0.875rem;
+  padding: 9px 12px;
+  border-bottom: 2px solid transparent;
+}
+.section-tab-list [role="tab"][data-state="active"] {
+  border-bottom-color: #d54956;
+  background: #352a23;
+  color: #fff1d7;
+}
+.section-tabs [role="tabpanel"] {
+  padding: 16px 0;
+}
+.foundation-stack {
+  display: grid;
+  gap: 16px;
+}
+.foundation-stack h2,
+.availability-note h2,
+.training-summary h2 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+.foundation-stack a:not(.school-entrance),
+.availability-note a,
+.training-summary a,
+.section-tabs p a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: #eed09e;
+}
+.availability-note {
+  border-left: 2px solid #aa8657;
+  background: #27211c;
+  padding: 18px;
+  margin: 12px 0 20px;
+  line-height: 1.6;
+}
+.availability-note h2 {
+  color: #e8c58d;
+  margin-bottom: 8px;
+}
+.preference-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid #b9a07c6b;
+  border-radius: 4px;
+  background: #322821;
+  color: #f7e6ca;
+  cursor: pointer;
+}
+.preference-button[aria-pressed="true"] {
+  border-color: #dab470;
+  background: #47382b;
+}
+.context-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.context-links a {
+  display: inline-flex;
+  min-height: 48px;
+  padding: 9px 12px;
+  align-items: center;
+  border: 1px solid #9d825a66;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.progress-counts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.progress-counts > div {
+  border: 1px solid #9d825a66;
+  padding: 16px;
+  background: #221c17;
+}
+.progress-counts dt {
+  font-size: 0.875rem;
+  color: #dac4a4;
+}
+.progress-counts dd {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+}
+.school-progress-list {
+  display: grid;
+  gap: 10px;
+}
+.school-progress-list li {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #9d825a44;
+}
+.school-progress-list span {
+  font-size: 0.8rem;
+  color: #dac4a4;
+}
+.training-summary {
+  max-width: 944px;
+  margin: 18px auto;
+  border: 1px solid #b79a6c66;
+  background: #211b14;
+  padding: 18px;
+}
+.training-summary a {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+}
+.training-summary p {
+  font-size: 0.875rem;
+  color: #dcc5a3;
+  margin: 8px 0;
+}
+.saved-choices > div {
+  padding: 10px 0;
+  border-bottom: 1px solid #9d825a44;
+}
+.saved-choices dt {
+  color: #d5b888;
+  font-size: 0.875rem;
+}
+.saved-choices dd {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.school-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 16px;
+}
+.school-entrance {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--school);
+}
+.school-entrance > span:last-child {
+  display: grid;
+  gap: 8px;
+}
+.school-entrance strong {
+  font-family: var(--font-display);
+  color: var(--school);
+  font-size: 1.2rem;
+}
+.school-entrance small {
+  color: #c9b594;
+}
+.school-entrance .school-book {
+  width: 90px;
+  height: 130px;
+}
+.school-entrance .book-title {
+  font-size: 11px;
+}
+.school-entrance .book-edition,
+.school-entrance .book-footer {
+  font-size: 5px;
+}
+.school-entrance .book-cover {
+  padding: 10px 5px;
+}
+.school-entrance .book-cover svg {
+  width: 52px;
+  height: 52px;
+}
+.app-shell .office-shell {
+  padding-bottom: 0;
+}
+.office-portals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 944px;
+  margin: 6px auto 12px;
+  padding: 0 10px;
+}
+.office-portals a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 112px;
+  padding: 14px 6px;
+  gap: 6px;
+  color: #281b11;
+  border: 6px solid transparent;
+  border-image: url("./assets/office/aged-paper.webp") 150 fill / 10px stretch;
+}
+.office-portals strong {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(14px, 3.8vw, 23px);
+  line-height: 1.1;
+}
+.office-portals span {
+  font-size: clamp(10px, 2.6vw, 13px);
+  line-height: 1.2;
+}
+.office-portals svg {
+  width: 26px;
+  height: 26px;
+}
+.office-reference > .training-summary {
+  margin: 12px 14px;
+}
+.office-reference .director-figure {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+.coach-panel {
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  background: #211b16;
+  color: #f0dfc0;
+}
+.coach-panel > .director-portrait {
+  width: 120px;
+  height: 160px;
+  justify-self: center;
+}
+.coach-panel button {
+  min-height: 48px;
+}
+.office-reference .reference-rehearsal-sign {
+  border-radius: 45% 45% 3px 3px / 30% 30% 3px 3px;
+  padding-top: 20px;
+}
+.wall-progress-sheet,
+.wall-scene-notes,
+.corner-stage-link {
+  position: absolute;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-height: 64px;
+  padding: 14px;
+  color: #e9d5b3;
+  background: #251d14eb;
+  border: 1px solid #bd995f;
+  z-index: 8;
+}
+.wall-progress-sheet {
+  right: 4%;
+  top: 8%;
+  width: 32%;
+}
+.wall-scene-notes {
+  left: 4%;
+  bottom: 5%;
+  width: 39%;
+}
+.corner-stage-link {
+  left: 22%;
+  top: 38%;
+  width: 56%;
+  text-align: center;
+}
+.corner-stage-link span,
+.wall-progress-sheet span {
+  font-size: 0.8rem;
+}
+.office-reference .office-room-wall .bad-acting-wall {
+  width: 155px;
+  min-height: 0;
+  top: 37%;
+  left: 2%;
+  transform: rotate(-4deg) scale(0.8);
+  transform-origin: left top;
+}
+.office-reference .office-room-wall .bad-acting-wall .wall-topics {
+  display: none;
+}
+.office-reference .office-room-wall .room-heading {
+  max-width: 55%;
+}
+.office-reference .office-room-wall .wall-pin-note {
+  display: none;
+}
+.app-shell[data-motion="off"] *,
+.app-shell[data-motion="off"] *::before,
+.app-shell[data-motion="off"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+body [data-school="stanislavski"] {
+  --school: #e9b57c;
+  --school-surface: #431e28;
+}
+body [data-school="meisner"] {
+  --school: #8abbe0;
+  --school-surface: #1c344c;
+}
+body [data-school="adler"] {
+  --school: #9ed9b6;
+  --school-surface: #1d4035;
+}
+body [data-school="practical-aesthetics"] {
+  --school: #ebc758;
+  --school-surface: #28271f;
+}
+body [data-school="chekhov"] {
+  --school: #d1b0ed;
+  --school-surface: #3d284d;
+}
+body [data-school="laban"] {
+  --school: #f0b17a;
+  --school-surface: #482c22;
+}
+body [data-school="strasberg"] {
+  --school: #ef9ca7;
+  --school-surface: #431f2c;
+}
+body [data-school="viewpoints"] {
+  --school: #9cded5;
+  --school-surface: #1e3e40;
+}
+[data-school] > main {
+  background: linear-gradient(180deg, var(--school-surface, transparent), transparent 320px);
+}
+@media (max-width: 600px) {
+  .school-selector {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .school-entrance {
+    grid-template-columns: 105px minmax(0, 1fr);
+  }
+  .school-entrance .school-book {
+    width: 100px;
+    height: 145px;
+  }
+  .office-library:not(.office-progress-dialog) {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+  .office-portals {
+    gap: 5px;
+    padding: 0 6px;
+  }
+  .office-portals a {
+    min-height: 108px;
+    padding: 10px 3px;
+  }
+  .wall-progress-sheet {
+    font-size: 0.8rem;
+    width: 39%;
+    right: 3%;
+  }
+  .wall-scene-notes {
+    font-size: 0.8rem;
+    width: 50%;
+    bottom: 5%;
+  }
+  .school-progress-list li {
+    flex-wrap: wrap;
+  }
+}
+/* Give each work-wall object a distinct touch area, including its label. */
+.wall-scene-notes {
+  left: auto;
+  right: 4%;
+  top: 34%;
+  bottom: auto;
+  width: 30%;
+}
+.corner-stage-link {
+  left: 4%;
+  top: 30%;
+  width: 46%;
+}
+@media (max-width: 600px) {
+  .office-reference .office-world[data-view="wall"] {
+    height: 740px;
+  }
+  .office-reference .office-room-wall .bad-acting-wall {
+    left: auto;
+    right: 4%;
+    top: 30%;
+  }
+  .office-reference .office-room-wall .prop-portfolio {
+    bottom: 130px;
+  }
+  .wall-scene-notes {
+    top: auto;
+    bottom: 2%;
+    right: 4%;
+    width: 44%;
+  }
+}
+/* Keep the studio entrance actionable above the character's transparent bounds. */
+.office-reference .reference-rehearsal-sign {
+  z-index: 9;
+}

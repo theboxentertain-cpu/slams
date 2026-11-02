@@ -1,4 +1,7 @@
 import { OfficeObject } from "./OfficeObject";
+import { Link } from "@tanstack/react-router";
+import { BadActingWall } from "./BadActingWall";
+import { OFFICE_CONTROLS } from "./office-data";
 
 export default function WorkWall({ savedCount }: { savedCount: number | null }) {
   return (
@@ -26,6 +29,16 @@ export default function WorkWall({ savedCount }: { savedCount: number | null }) 
         }
       />
       <OfficeObject destination="matrix" />
+      <BadActingWall />
+      <Link className="wall-progress-sheet" to={OFFICE_CONTROLS.progress.to}>
+        <strong>Progress, on record</strong>
+        <span>
+          {savedCount === null ? "Records unavailable" : `${savedCount} rehearsals saved`}
+        </span>
+      </Link>
+      <Link className="wall-scene-notes" to="/work">
+        Scene & character notes · Actor at Work
+      </Link>
       <div className="wall-pin-note" aria-hidden="true">
         The part is yours.
         <br />

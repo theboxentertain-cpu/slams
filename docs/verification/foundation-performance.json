@@ -1,0 +1,47 @@
+{
+  "environment": "Chromium desktop host, mobile viewport 390x844 @2x, 4x CPU slowdown, 80ms latency and 750KB/s download; lab sample, not physical Android",
+  "paints": [
+    {
+      "name": "first-paint",
+      "ms": 716
+    },
+    {
+      "name": "first-contentful-paint",
+      "ms": 716
+    }
+  ],
+  "navigation": [
+    {
+      "domContentLoadedMs": 771,
+      "loadMs": 2364
+    }
+  ],
+  "artwork": [
+    {
+      "asset": "desk-reference-DtXSDwYu.webp",
+      "bytes": 323388,
+      "durationMs": 1653
+    },
+    {
+      "asset": "office-reference-I8ZTr9kP.webp",
+      "bytes": 272784,
+      "durationMs": 2022
+    },
+    {
+      "asset": "director-reference-iwUTba8b.webp",
+      "bytes": 392390,
+      "durationMs": 2208
+    },
+    {
+      "asset": "aged-paper-CTnscrRI.webp",
+      "bytes": 266116,
+      "durationMs": 1758
+    }
+  ],
+  "transitionFrames": {
+    "samples": 90,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 33.30000000000018,
+    "over50ms": 2
+  }
+}
