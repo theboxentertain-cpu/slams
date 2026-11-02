@@ -22,7 +22,7 @@
 .section-coach .section-coach-portrait {
   display: block;
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 3 / 4;
   height: auto;
   border-radius: 8px;
 }
