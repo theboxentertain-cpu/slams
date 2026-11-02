@@ -709,4 +709,3 @@
 
 ✖ 658 problems (652 errors, 6 warnings)
   652 errors and 0 warnings potentially fixable with the `--fix` option.
-

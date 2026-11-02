@@ -720,4 +720,3 @@
 
 ✖ 667 problems (661 errors, 6 warnings)
   661 errors and 0 warnings potentially fixable with the `--fix` option.
-
