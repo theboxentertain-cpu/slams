@@ -2,7 +2,9 @@
 
 ## A — New actor
 
-Current: fresh `/` → welcome → account choice (guest is supported) → optional device-local setup → honest baseline introduction or skip → authored `/scene` → intervention/practice/retake → reflection → existing save. Setup can be skipped, but the direct path remains more layered than the new product target. **PR B**, not PR A, owns simplifying entry to meaningful rehearsal. No assessment is inferred from preferences.
+After PR B: fresh `/` → **Enter the Studio** → authored `/scene` → **Begin take** → acting choice → fixed partner response → intervention/practice/retake → reflection → confirmed save **or continue to the Office without saving**. Two activations reach the acting choices; account/profile/baseline are not gates. The optional settings page contains only existing motion/sound controls, which change the immediate studio experience. Optional sign-in uses the same SDK and continues to rehearsal; normal returning-account sign-in continues to Office.
+
+The eight-book collection remains inside optional welcome exploration. `/welcome/account` is still a working optional account entrance, and `/baseline?flow=welcome` still discloses that assessment is unavailable. Earlier account-namespaced setup records remain intact and readable there. No acting ability, personalization or completion is inferred from them. Saved guest reflections survive reload in the same browser; leaving without saving creates no record. Guest browser storage can be cleared or fail; it is not cloud synchronization.
 
 ## B — Acting student
 

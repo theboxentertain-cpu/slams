@@ -1,0 +1,13 @@
+
+> test
+> vitest run
+
+
+ RUN  v4.1.11 /workspace/slams
+
+
+ Test Files  20 passed (20)
+      Tests  155 passed (155)
+   Start at  03:32:53
+   Duration  15.58s (transform 2.10s, setup 4.25s, import 6.67s, tests 13.20s, environment 14.53s)
+

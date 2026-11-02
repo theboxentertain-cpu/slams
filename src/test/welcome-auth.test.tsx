@@ -25,9 +25,9 @@ vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => mock.navigate,
   Link: ({ to, children }: { to: string; children: ReactNode }) => <a href={to}>{children}</a>,
 }));
-function Host({ initial = "signup" }: { initial?: AuthMode }) {
+function Host({ initial = "signup", welcome = true }: { initial?: AuthMode; welcome?: boolean }) {
   const [mode, setMode] = useState(initial);
-  return <AccountForm mode={mode} onModeChange={setMode} welcome />;
+  return <AccountForm mode={mode} onModeChange={setMode} welcome={welcome} />;
 }
 beforeEach(() => {
   vi.resetAllMocks();
@@ -70,12 +70,12 @@ it("preserves the confirmation redirect and optional name without inventing a si
   expect(screen.getByRole("heading", { name: "Sign in" })).toBeInTheDocument();
   expect(screen.getByLabelText("Password")).toHaveValue("");
 });
-it("continues to the bounded setup route after successful email sign-in", async () => {
+it("continues to the first rehearsal after successful email sign-in", async () => {
   render(<Host initial="signin" />);
   fireEvent.change(screen.getByLabelText("Email"), { target: { value: "actor@example.test" } });
   fireEvent.change(screen.getByLabelText("Password"), { target: { value: "FixturePassword1" } });
   fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
-  await waitFor(() => expect(mock.navigate).toHaveBeenCalledWith({ to: "/welcome/setup" }));
+  await waitFor(() => expect(mock.navigate).toHaveBeenCalledWith({ to: "/scene" }));
 });
 it("retains recovery behavior and exposes password visibility accessibly", async () => {
   render(<Host initial="signin" />);
@@ -103,4 +103,12 @@ it("preserves SDK callback parameters and ignores external flow destinations", (
     mode: "signup",
     flow: "welcome",
   });
+});
+
+it("keeps ordinary sign-in returning to the Office", async () => {
+  render(<Host initial="signin" welcome={false} />);
+  fireEvent.change(screen.getByLabelText("Email"), { target: { value: "actor@example.test" } });
+  fireEvent.change(screen.getByLabelText("Password"), { target: { value: "FixturePassword1" } });
+  fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+  await waitFor(() => expect(mock.navigate).toHaveBeenCalledWith({ to: "/" }));
 });

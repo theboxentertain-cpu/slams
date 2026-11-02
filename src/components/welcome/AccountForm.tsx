@@ -40,8 +40,8 @@ export function AccountForm({
   }
   async function finish() {
     if (!active.current) return;
-    if (!welcome) enterStudio();
-    await navigate({ to: welcome ? "/welcome/setup" : "/" });
+    enterStudio();
+    await navigate({ to: welcome ? "/scene" : "/" });
   }
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -102,12 +102,12 @@ export function AccountForm({
         <p>{user.email}</p>
         <Link
           className={welcome ? "welcome-primary" : "account-submit"}
-          to={welcome ? "/welcome/setup" : "/"}
+          to={welcome ? "/scene" : "/"}
           onClick={() => {
-            if (!welcome) enterStudio();
+            enterStudio();
           }}
         >
-          {welcome ? "Continue to actor setup" : "Back to the studio"}
+          {welcome ? "Start a first rehearsal" : "Back to the studio"}
         </Link>
         <button
           className="account-secondary"
@@ -267,7 +267,7 @@ export function AccountForm({
           <p className="account-provider-note">
             Email sign-in is available. Social sign-in is not enabled.
           </p>
-          <Link className="account-guest" to="/welcome/setup">
+          <Link className="account-guest" to="/scene" onClick={enterStudio}>
             Continue as guest
           </Link>
         </>

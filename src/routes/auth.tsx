@@ -35,7 +35,6 @@ function Auth() {
   );
   return flow === "welcome" ? (
     <WelcomeFrame
-      step={3}
       title={
         mode === "signup"
           ? "Create Your Account"

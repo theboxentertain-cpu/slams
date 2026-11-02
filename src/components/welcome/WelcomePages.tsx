@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   BookOpen,
@@ -8,13 +8,12 @@ import {
   ScrollText,
   IdCard,
   Play,
-  Check,
   Volume2,
   MoveHorizontal,
 } from "lucide-react";
 import { useSession } from "@/lib/session";
 import { enterStudio } from "@/lib/studio-entry";
-import { useActorSetup, EXPERIENCES, ACTOR_GOALS } from "@/lib/actor-setup";
+import { useActorSetup } from "@/lib/actor-setup";
 import { useOfficePreferences } from "@/lib/office-preferences";
 import { BOOK_DESIGNS } from "@/components/office/office-data";
 import { BookCover, SchoolBooks } from "@/components/office/SchoolBooks";
@@ -26,68 +25,73 @@ export function WelcomeLanding() {
   const { animate } = useOfficePreferences();
   return (
     <WelcomeFrame
-      step={1}
       title="Welcome to SLAMS"
       subtitle="A serious acting conservatory in your pocket."
       variant="landing"
     >
-      <button
-        ref={bookTrigger}
-        className="welcome-books"
-        onClick={() => setBooks(true)}
-        aria-label="Explore the eight acting-school books"
-        aria-haspopup="dialog"
-      >
-        <span aria-hidden="true">
-          {BOOK_DESIGNS.map((book) => (
-            <BookCover key={book.slug} book={book} mini />
-          ))}
-        </span>
-        <strong>Eight schools. Find your way in.</strong>
-      </button>
-      <nav className="welcome-features" aria-label="Inside the studio">
-        <Link to="/conservatory">
-          <BookOpen aria-hidden="true" />
-          <span>Eight acting schools</span>
+      <section className="welcome-entry" aria-labelledby="first-rehearsal-title">
+        <h2 id="first-rehearsal-title">Your first rehearsal starts here.</h2>
+        <p>
+          SLAMS is your acting practice studio. Try a short, text-only scene, change your approach
+          and reflect on your retake.
+        </p>
+        <Link to="/scene" onClick={enterStudio} className="welcome-primary">
+          <Play aria-hidden="true" />
+          Enter the Studio
+          <ArrowRight aria-hidden="true" />
         </Link>
-        <Link to="/rehearsal">
-          <Clapperboard aria-hidden="true" />
-          <span>Rehearsal Studio</span>
+        <p className="welcome-entry-note">
+          No account or profile needed. Guest reflections stay in this browser.
+        </p>
+        <div className="welcome-account-links">
+          <Link to="/auth" search={{ mode: "signin", flow: "welcome" }}>
+            Sign in
+          </Link>
+          <Link to="/welcome/setup">Studio settings · optional</Link>
+        </div>
+        <Link className="welcome-skip" to="/" onClick={enterStudio}>
+          Explore the Office
         </Link>
-        <Link to="/work">
-          <Drama aria-hidden="true" />
-          <span>Actor at Work</span>
-        </Link>
-        <Link to="/stuck">
-          <ScrollText aria-hidden="true" />
-          <span>The Stuck Desk</span>
-        </Link>
-        <Link to="/passport">
-          <IdCard aria-hidden="true" />
-          <span>Your Passport</span>
-        </Link>
-      </nav>
-      <Link to="/welcome/account" className="welcome-primary">
-        <Play aria-hidden="true" />
-        Enter the Studio
-        <ArrowRight aria-hidden="true" />
-      </Link>
-      <div className="welcome-account-links">
-        <Link to="/auth" search={{ mode: "signup", flow: "welcome" }}>
-          Create account
-        </Link>
-        <Link to="/auth" search={{ mode: "signin", flow: "welcome" }}>
-          Sign in
-        </Link>
-      </div>
-      <p className="welcome-paper-quote">
-        “A serious acting conservatory
-        <br />
-        in your pocket.”
-      </p>
-      <Link className="welcome-skip" to="/" onClick={enterStudio}>
-        Explore the Office now
-      </Link>
+      </section>
+      <details className="welcome-explore">
+        <summary>Explore more of the studio</summary>
+        <button
+          ref={bookTrigger}
+          className="welcome-books"
+          onClick={() => setBooks(true)}
+          aria-label="Explore the eight acting-school books"
+          aria-haspopup="dialog"
+        >
+          <span aria-hidden="true">
+            {BOOK_DESIGNS.map((book) => (
+              <BookCover key={book.slug} book={book} mini />
+            ))}
+          </span>
+          <strong>Eight schools. Find your way in.</strong>
+        </button>
+        <nav className="welcome-features" aria-label="Inside the studio">
+          <Link to="/conservatory">
+            <BookOpen aria-hidden="true" />
+            <span>Eight acting schools</span>
+          </Link>
+          <Link to="/rehearsal">
+            <Clapperboard aria-hidden="true" />
+            <span>Rehearsal Studio</span>
+          </Link>
+          <Link to="/work">
+            <Drama aria-hidden="true" />
+            <span>Actor at Work</span>
+          </Link>
+          <Link to="/stuck">
+            <ScrollText aria-hidden="true" />
+            <span>The Stuck Desk</span>
+          </Link>
+          <Link to="/passport">
+            <IdCard aria-hidden="true" />
+            <span>Your Passport</span>
+          </Link>
+        </nav>
+      </details>
       <SchoolBooks
         open={books}
         onOpenChange={setBooks}
@@ -101,48 +105,38 @@ export function WelcomeAccount() {
   const { user, loading } = useSession();
   return (
     <WelcomeFrame
-      step={2}
       title="Welcome, Actor."
-      subtitle="Serious training. Real practice. No hand-holding."
+      subtitle="Start rehearsing now. An account is optional."
       back="/welcome"
     >
       <section className="welcome-choice-list" aria-label="Choose how to enter">
+        <Link className="welcome-primary" to="/scene" onClick={enterStudio}>
+          <Play aria-hidden="true" />
+          Start a first rehearsal
+          <ArrowRight aria-hidden="true" />
+        </Link>
+        <p className="welcome-storage-note">
+          No account needed. Guest reflections stay in this browser.
+        </p>
         {loading ? (
-          <p role="status">Checking account…</p>
+          <p role="status">Checking account… You can rehearse while we check.</p>
         ) : user ? (
-          <>
-            <Link className="welcome-primary" to="/welcome/setup">
-              Continue with your account
-              <ArrowRight aria-hidden="true" />
-            </Link>
-            <Link className="welcome-outline" to="/auth">
-              Manage your account
-            </Link>
-          </>
+          <Link className="welcome-outline" to="/auth">
+            Manage your account
+          </Link>
         ) : (
-          <>
-            <Link
-              className="welcome-primary"
-              to="/auth"
-              search={{ mode: "signin", flow: "welcome" }}
-            >
-              Sign in to your account
+          <div className="welcome-account-links">
+            <Link to="/auth" search={{ mode: "signin", flow: "welcome" }}>
+              Sign in
             </Link>
-            <Link
-              className="welcome-outline"
-              to="/auth"
-              search={{ mode: "signup", flow: "welcome" }}
-            >
+            <Link to="/auth" search={{ mode: "signup", flow: "welcome" }}>
               Create a new account
             </Link>
-            <Link className="welcome-outline" to="/welcome/setup">
-              <Play aria-hidden="true" />
-              <span>
-                Explore as Guest<small>Rehearsals and notes stay in this browser</small>
-              </span>
-            </Link>
-          </>
+          </div>
         )}
+        <Link className="welcome-outline" to="/welcome/setup">
+          Studio settings · optional
+        </Link>
         <p className="welcome-planned">
           Email sign-in is available. Google and Apple sign-in are not available yet.
         </p>
@@ -162,129 +156,49 @@ export function WelcomeAccount() {
   );
 }
 export function ActorSetupPage() {
-  const setup = useActorSetup();
   const { preferences, updatePreferences, reducedMotion } = useOfficePreferences();
-  const navigate = useNavigate();
   return (
     <WelcomeFrame
-      step={4}
-      title="Actor Setup"
-      subtitle="A few choices, in your own words. No auditions at the door."
+      title="Studio Settings"
+      subtitle="Optional controls. Start rehearsing whenever you’re ready."
       variant="setup"
-      back="/welcome/account"
+      back="/welcome"
     >
-      {!setup.ready ? (
-        <p role="status">Loading your setup…</p>
-      ) : (
-        <form
-          className="actor-setup-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (setup.save())
-              void navigate({ to: "/baseline", search: { flow: "welcome", tab: "prepare" } });
-          }}
-        >
-          <fieldset className="welcome-paper">
-            <legend>Your experience</legend>
-            <p>How would you describe your acting experience? Optional.</p>
-            <div className="experience-options">
-              {EXPERIENCES.map((experience) => (
-                <label key={experience}>
-                  <input
-                    type="radio"
-                    name="experience"
-                    checked={setup.data.experience === experience}
-                    onChange={() => setup.update((value) => ({ ...value, experience }))}
-                  />
-                  <span>{experience}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <fieldset className="welcome-paper">
-            <legend>Your goals</legend>
-            <p>What would you like to work on? Select any that apply.</p>
-            <div className="goal-options">
-              {ACTOR_GOALS.map((goal) => (
-                <label key={goal}>
-                  <input
-                    type="checkbox"
-                    checked={setup.data.goals.includes(goal)}
-                    onChange={() =>
-                      setup.update((value) => ({
-                        ...value,
-                        goals: value.goals.includes(goal)
-                          ? value.goals.filter((g) => g !== goal)
-                          : [...value.goals, goal],
-                      }))
-                    }
-                  />
-                  <span>{goal}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <section className="welcome-paper">
-            <h2>Language</h2>
-            <p>English is available. Arabic translation and RTL support are in development.</p>
-            <span className="available-language">
-              <Check aria-hidden="true" />
-              English
-            </span>
-          </section>
-          <fieldset className="welcome-paper">
-            <legend>Your experience of the studio</legend>
-            <div className="setup-preferences">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={!preferences.motion}
-                  onChange={() =>
-                    updatePreferences({ ...preferences, motion: !preferences.motion })
-                  }
-                />
-                <MoveHorizontal aria-hidden="true" />
-                Reduce motion
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={preferences.sound}
-                  onChange={() => updatePreferences({ ...preferences, sound: !preferences.sound })}
-                />
-                <Volume2 aria-hidden="true" />
-                Office sounds
-              </label>
-            </div>
-            {reducedMotion && <p>Motion is also reduced by your device preference.</p>}
-            <p>
-              Recording, captions for recordings and coach audio are not available yet. No camera or
-              microphone access is requested.
-            </p>
-          </fieldset>
-          <p className="welcome-storage-note">
-            Optional setup is saved on this device, separately{" "}
-            {setup.signedIn ? "for your account" : "for guests"}. It does not assess your acting or
-            unlock unpublished training.
-          </p>
-          {setup.error && (
-            <p role="alert" className="welcome-error">
-              {setup.error}
-            </p>
-          )}
-          <button type="submit" className="welcome-primary">
-            Continue to Baseline
-            <ArrowRight aria-hidden="true" />
-          </button>
-          <Link
-            className="welcome-skip"
-            to="/baseline"
-            search={{ flow: "welcome", tab: "prepare" }}
-          >
-            Skip setup for now
-          </Link>
-        </form>
-      )}
+      <fieldset className="welcome-paper">
+        <legend>Your experience of the studio</legend>
+        <div className="setup-preferences">
+          <label>
+            <input
+              type="checkbox"
+              checked={!preferences.motion}
+              onChange={() => updatePreferences({ ...preferences, motion: !preferences.motion })}
+            />
+            <MoveHorizontal aria-hidden="true" />
+            Reduce motion
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={preferences.sound}
+              onChange={() => updatePreferences({ ...preferences, sound: !preferences.sound })}
+            />
+            <Volume2 aria-hidden="true" />
+            Office sounds
+          </label>
+        </div>
+        {reducedMotion && <p>Motion is also reduced by your device preference.</p>}
+        <p>
+          Changes apply immediately. This browser remembers them when local storage is available.
+        </p>
+      </fieldset>
+      <Link className="welcome-primary" to="/scene" onClick={enterStudio}>
+        <Play aria-hidden="true" />
+        Start a first rehearsal
+        <ArrowRight aria-hidden="true" />
+      </Link>
+      <Link className="welcome-skip" to="/" onClick={enterStudio}>
+        Explore the Office
+      </Link>
     </WelcomeFrame>
   );
 }
@@ -292,7 +206,6 @@ export function BaselineWelcome() {
   const setup = useActorSetup();
   return (
     <WelcomeFrame
-      step={5}
       title="Your Actor’s Baseline"
       subtitle="A starting point. Not a judgment. Your observations belong to you."
       variant="setup"
