@@ -39,11 +39,11 @@ export function CurriculumUnit({
     },
   });
   const published = unit.status === "published" && unit.reviewed && !!unit.content.trim();
-  async function save(status: "started" | "completed") {
+  async function saveStarted() {
     setBusy(true);
     setError("");
     try {
-      await saveUnitProgress({ unit_kind: kind, unit_id: unit.id, status });
+      await saveUnitProgress({ unit_kind: kind, unit_id: unit.id, status: "started" });
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: key }),
         queryClient.invalidateQueries({ queryKey: ["training-progress", user?.id] }),
@@ -67,24 +67,17 @@ export function CurriculumUnit({
           <p className="mt-2 whitespace-pre-wrap">{unit.content}</p>
           {user ? (
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="text-sm">{progress.data ?? "Not started"}</span>
+              <span className="text-sm">{progress.data === "completed" ? "Legacy recorded completion (not assessed)" : progress.data ?? "Not started"}</span>
               <Button
                 variant="secondary"
                 disabled={
                   busy || progress.isPending || !!progress.error || progress.data === "completed"
                 }
-                onClick={() => save("started")}
+                onClick={() => void saveStarted()}
               >
                 Start unit
               </Button>
-              <Button
-                disabled={
-                  busy || progress.isPending || !!progress.error || progress.data === "completed"
-                }
-                onClick={() => save("completed")}
-              >
-                Mark complete
-              </Button>
+              <p className="text-xs text-muted-foreground">Starting records activity only. Academic completion needs evidence and authorized assessment; no self-awarded credit.</p>
             </div>
           ) : (
             <Link to="/auth" className="underline">
