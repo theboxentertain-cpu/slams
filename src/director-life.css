@@ -65,11 +65,11 @@
 .studio-heading:has(.section-coach) .studio-heading-book,
 .studio-heading:has(.section-coach) .studio-passport-cover { right: 37%; width: 62px; height: 90px; bottom: 8px; opacity: 0.8; }
 .studio-heading:has(.section-coach) .studio-passport-cover strong { font-size: 16px; }
-.app-shell[data-motion="on"] .section-coach[data-speaking="true"] .section-coach-trigger {
+.app-shell[data-motion="on"] .section-coach[data-speaking="true"] .section-coach-portrait {
   animation: coach-arrive 600ms ease-out both, coach-breathe 7s ease-in-out 600ms infinite;
 }
-.app-shell[data-motion="on"] .section-coach-trigger:hover,
-.app-shell[data-motion="on"] .section-coach-trigger:focus-visible { animation-play-state: paused; transform: rotate(-2deg) translateY(-3px); }
+.app-shell[data-motion="on"] .section-coach-trigger:hover .section-coach-portrait,
+.app-shell[data-motion="on"] .section-coach-trigger:focus-visible .section-coach-portrait { animation-play-state: paused; }
 .app-shell[data-motion="on"] .section-coach-note { animation: coach-arrive 240ms ease-out both; }
 .app-shell[data-motion="on"] .studio-page .studio-action-primary,
 .app-shell[data-motion="on"] .studio-page .studio-action-secondary,
