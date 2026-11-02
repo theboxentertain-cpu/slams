@@ -9,7 +9,7 @@ export function MeisnerAcademicPreview() {
   return (
     <section className="studio-sheet foundation-stack" aria-label="Meisner first term editorial preview">
       <div className="availability-note">
-        <h2>Foundations of repetition · editorial preview</h2>
+        <h2>{pilot.title} · editorial preview</h2>
         <p>
           This original SLAMS term draft contains nine lessons and six exercises across three
           workshops. It is not official Neighborhood Playhouse coursework, is awaiting qualified
