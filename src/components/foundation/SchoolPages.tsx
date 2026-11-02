@@ -4,6 +4,7 @@ import { SCHOOLS, getSchool, totalTerms } from "@/data/schools";
 import { BOOK_DESIGNS } from "@/components/office/office-data";
 import { BookCover } from "@/components/office/SchoolBooks";
 import { CurriculumUnit } from "@/components/CurriculumUnit";
+import { MeisnerAcademicPreview } from "./MeisnerAcademicPreview";
 import {
   useCatalog,
   useTrainingProgress,
@@ -247,6 +248,9 @@ export function TermPage({ school, year, term }: { school: string; year: string;
         Term outcomes, prerequisites and advancement requirements remain provisional until reviewed
         material is supplied.
       </p>
+      {school === "meisner" && year === "1" && term === "1" && (
+        <MeisnerAcademicPreview />
+      )}
       <CatalogState catalog={catalog} />
       <UnitList
         units={catalog.units.filter(
