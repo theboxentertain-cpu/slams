@@ -16,21 +16,20 @@ const pages = [
   ["/conservatory", ["All Schools", "In Progress", "Completed"]],
   ["/conservatory/meisner", ["Overview", "Curriculum", "Practice", "Assessments", "Progress"]],
   ["/rehearsal", ["My Scenes", "New Scene", "Sessions"]],
-  ["/work", ["Auditions", "Projects", "Characters", "Self-Tapes"]],
+  ["/work", []],
   ["/work/audition", ["Brief", "Script", "Character", "Preparation"]],
-  ["/work/character", ["Biography", "Relationships", "Objectives", "Behavior", "Notes"]],
-  ["/work/breakdown", ["Beats", "Objectives", "Obstacles", "Tactics"]],
-  ["/work/self-tape", ["Setup", "Takes", "Review", "Export"]],
-  ["/work/journal", ["Scenes", "Notes", "History"]],
-  ["/stuck", ["Describe", "Scene", "Identify"]],
-  ["/stuck/diagnosis", ["Observations", "Possible Causes"]],
-  ["/stuck/intervention", ["Technique Options", "Instructions"]],
-  ["/stuck/retry", ["First Attempt", "New Attempt", "Compare"]],
-  ["/stuck/saved", ["History", "Useful Exercises"]],
-  ["/baseline", ["Prepare", "Perform", "Reflect", "Next Steps"]],
-  ["/lab", ["Takes", "Compare", "Notes"]],
-  ["/matrix", ["Compare", "Apply", "Cautions"]],
-  ["/lounge", ["Sessions", "Partners", "Shared Scenes"]],
+  ["/work/character", []],
+  ["/work/breakdown", []],
+  ["/work/self-tape", []],
+  ["/work/journal", []],
+  ["/stuck", []],
+  ["/stuck/diagnosis", []],
+  ["/stuck/retry", []],
+  ["/stuck/saved", []],
+  ["/baseline", []],
+  ["/lab", []],
+  ["/matrix", []],
+  ["/lounge", []],
   ["/passport", ["Journey", "Evidence", "Portfolio", "Badges"]],
   ["/progress", ["By School", "By Skill", "History"]],
   ["/settings", ["Account", "Privacy", "Language", "Accessibility"]],
@@ -70,9 +69,9 @@ const pages = [
       );
       check(
         (await page.getByRole("tab").allTextContents()).join("|") === tabs.join("|"),
-        `${route} has directive tabs in order`,
+        `${route} has only its supported tab interface`,
       );
-      for (const label of [...tabs.slice(1), tabs[0]]) {
+      for (const label of tabs.length ? [...tabs.slice(1), tabs[0]] : []) {
         await page.getByRole("tab", { name: label, exact: true }).click();
         await page.getByRole("tab", { name: label, exact: true, selected: true }).waitFor();
         const key = label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -87,6 +86,54 @@ const pages = [
         `${route} stays within portrait width`,
       );
     }
+    // Old support bookmarks still render a truthful status and one useful next step.
+    const legacy = [
+      [
+        "/work/character",
+        ["biography", "relationships", "objectives", "behavior", "notes"],
+        "/work/audition",
+      ],
+      ["/work/breakdown", ["beats", "objectives", "obstacles", "tactics"], "/scene"],
+      ["/work/self-tape", ["setup", "takes", "review", "export"], "/scene"],
+      ["/work/journal", ["scenes", "notes", "history"], "/passport"],
+      ["/stuck/diagnosis", ["observations", "possible-causes"], "/stuck"],
+      ["/stuck/retry", ["first-attempt", "new-attempt", "compare"], "/scene"],
+      ["/stuck/saved", ["history", "useful-exercises"], "/passport"],
+      ["/baseline", ["prepare", "perform", "reflect", "next-steps"], "/scene"],
+      ["/lab", ["takes", "compare", "notes"], "/scene"],
+      ["/matrix", ["compare", "apply", "cautions"], "/conservatory"],
+      ["/lounge", ["sessions", "partners", "shared-scenes"], "/scene"],
+    ];
+    for (const [route, values, action] of legacy) {
+      for (const tab of values) {
+        await go(route + "?tab=" + tab);
+        check((await page.getByRole("tab").count()) === 0, `${route}/${tab} avoids empty controls`);
+        check(
+          (await page.getByRole("heading", { name: "In development", exact: true }).count()) === 1,
+          `${route}/${tab} retains honest availability`,
+        );
+        const next = page.locator("main a.studio-action-primary");
+        check(
+          (await next.getAttribute("href")) === action,
+          `${route}/${tab} has a working next destination`,
+        );
+        check(
+          new URL(page.url()).searchParams.get("tab") === tab,
+          `${route}/${tab} preserves its bookmark`,
+        );
+      }
+    }
+    for (const tab of ["technique-options", "instructions"]) {
+      await go("/stuck/intervention?tab=" + tab);
+      check(
+        new URL(page.url()).pathname === "/stuck",
+        `Legacy ${tab} consolidates on the Stuck Desk`,
+      );
+      check(
+        (await page.getByRole("link", { name: "Try the Living Scene", exact: true }).count()) === 1,
+        `Legacy ${tab} has a practical next action`,
+      );
+    }
     await go("/work/audition?tab=preparation");
     await page.getByLabel("Role & project").fill("Unsaved browser tab regression");
     await page.getByRole("tab", { name: "Brief", exact: true }).click();
@@ -95,11 +142,11 @@ const pages = [
       (await page.getByLabel("Role & project").inputValue()) === "Unsaved browser tab regression",
       "Unsaved audition preparation survives section changes",
     );
-    await go("/work/character?tab=notes");
-    await page.getByRole("tab", { name: "Biography", exact: true }).click();
+    await go("/work/audition?tab=brief");
+    await page.getByRole("tab", { name: "Character", exact: true }).click();
     await page.goBack();
-    await page.getByRole("tab", { name: "Notes", exact: true, selected: true }).waitFor();
-    check(true, "Browser Back restores tab state");
+    await page.getByRole("tab", { name: "Brief", exact: true, selected: true }).waitFor();
+    check(true, "Browser Back restores a working audition tab");
     await go("/conservatory/meisner?tab=not-a-section");
     check(
       (await page.getByRole("tab", { name: "Overview", selected: true }).count()) === 1,

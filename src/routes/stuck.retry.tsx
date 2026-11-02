@@ -6,9 +6,5 @@ export const Route = createFileRoute("/stuck/retry")({
   component: Screen,
 });
 function Screen() {
-  const { tab } = Route.useSearch();
-  const navigate = Route.useNavigate();
-  return (
-    <SupportPage id="retry" tab={tab} onTabChange={(tab) => void navigate({ search: { tab } })} />
-  );
+  return <SupportPage id="retry" />;
 }

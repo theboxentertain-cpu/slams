@@ -6,13 +6,5 @@ export const Route = createFileRoute("/work/character")({
   component: Screen,
 });
 function Screen() {
-  const { tab } = Route.useSearch();
-  const navigate = Route.useNavigate();
-  return (
-    <SupportPage
-      id="character"
-      tab={tab}
-      onTabChange={(tab) => void navigate({ search: { tab } })}
-    />
-  );
+  return <SupportPage id="character" />;
 }

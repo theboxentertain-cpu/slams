@@ -1,13 +1,8 @@
-import { createFileRoute, type SearchSchemaInput } from "@tanstack/react-router";
-import { validateTab } from "@/lib/foundation";
-import { StuckIntervention } from "@/components/foundation/WorkspacePages";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
+/** Both old intervention tabs repeated the same authored list. Keep bookmarks. */
 export const Route = createFileRoute("/stuck/intervention")({
-  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) =>
-    validateTab("intervention", input),
-  component: Screen,
+  beforeLoad: () => {
+    throw redirect({ to: "/stuck", search: { tab: "describe" }, replace: true });
+  },
 });
-function Screen() {
-  const { tab } = Route.useSearch();
-  const navigate = Route.useNavigate();
-  return <StuckIntervention tab={tab} onTabChange={(tab) => void navigate({ search: { tab } })} />;
-}

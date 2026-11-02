@@ -159,6 +159,33 @@
   color: #f7e6ca;
   cursor: pointer;
 }
+.planned-tools {
+  margin-top: 24px;
+  padding: 12px 16px;
+  border: 1px solid #b9a07c6b;
+  border-radius: 7px;
+  background: #20160ee8;
+  color: #f2dfbb;
+}
+.planned-tools summary {
+  min-height: 48px;
+  padding: 12px 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+.planned-tools p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.planned-tools a {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .preference-button[aria-pressed="true"] {
   border-color: #dab470;
   background: #47382b;
