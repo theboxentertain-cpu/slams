@@ -42,6 +42,7 @@ export type ExerciseAcademicRecord = {
   id: string;
   schoolId: string;
   version: string;
+  requiredMode: "solo" | "human_partner" | "partner_or_group" | "facilitated_group";
   content: Partial<Record<RequiredExerciseText, string>>;
   howSteps: string[];
   solo: ModePlan;
@@ -73,6 +74,17 @@ export function inspectExerciseForReview(record: ExerciseAcademicRecord) {
         (!mode.steps.length || mode.steps.some((step) => !step.trim())))
       blockers.push(name + " requires real steps or a non-suitable designation.");
   }
+  if (record.requiredMode === "human_partner" && record.solo.use === "qualifying")
+    blockers.push("Solo practice cannot qualify a partner-required exercise.");
+  if (record.requiredMode === "human_partner" && record.partner.use !== "qualifying")
+    blockers.push("Partner-required exercise needs a qualifying real-partner protocol.");
+  if (record.requiredMode === "facilitated_group" && record.group.use !== "qualifying")
+    blockers.push("Group-required exercise needs a qualifying ensemble protocol.");
+  if (record.requiredMode === "partner_or_group" &&
+      record.partner.use !== "qualifying" && record.group.use !== "qualifying")
+    blockers.push("Partner-or-group exercise needs a genuine qualifying human activity.");
+  if (record.requiredMode === "solo" && record.solo.use !== "qualifying")
+    blockers.push("Solo-required exercise needs a qualifying independent protocol.");
   if (!record.sourceRefs.length || record.sourceRefs.some((source) => !source.trim()))
     blockers.push("Sources or original SLAMS authorship provenance are required.");
   if (record.practiceRequirement.kind === "unapproved")
@@ -99,6 +111,7 @@ export function inspectExerciseForReview(record: ExerciseAcademicRecord) {
 /** Reporting only. User-submitted activity is NOT a competency or unlock record. */
 export type PracticeEvent = {
   id: string;
+  attemptId: string;
   schoolId: string;
   exerciseId: string;
   mode: TrainingMode;
@@ -111,7 +124,9 @@ export function summarizePracticeEvents(
   const matching = events.filter((e) =>
     e.schoolId === schoolId && e.exerciseId === exerciseId
   );
-  const distinct = [...new Map(matching.map((e) => [e.id, e])).values()];
+  // Latest event for each practice attempt wins. Events arrive in chronological order.
+  // This is a display helper; authoritative ordering and integrity are enforced server-side.
+  const distinct = [...new Map(matching.map((e) => [e.attemptId, e])).values()];
   return {
     recordedAttempts: distinct.length,
     soloPreparation: distinct.filter((e) => e.mode === "solo").length,
