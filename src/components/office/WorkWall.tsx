@@ -2,7 +2,6 @@ import { OfficeObject } from "./OfficeObject";
 import { Link } from "@tanstack/react-router";
 import { BadActingWall } from "./BadActingWall";
 import { OFFICE_CONTROLS } from "./office-data";
-import director from "@/assets/office/director-work-wall.webp";
 
 export default function WorkWall({ savedCount }: { savedCount: number | null }) {
   return (
@@ -13,14 +12,6 @@ export default function WorkWall({ savedCount }: { savedCount: number | null }) 
         <p>Plan. Practice. Track. Grow.</p>
       </div>
       <div className="work-wall-cork" aria-hidden="true" />
-      <img
-        className="work-wall-director"
-        src={director}
-        alt=""
-        width={1536}
-        height={1024}
-        loading="lazy"
-      />
       <OfficeObject destination="work" />
       <OfficeObject
         destination="passport"

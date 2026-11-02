@@ -41,6 +41,12 @@ function check(value, label) {
       await tab.evaluate((node) => node.scrollIntoView({ block: "center" }));
       await tab.click();
     }
+    function officeLink(label) {
+      if (label === "Get Unstuck") return page.locator(".office-portals [data-task=stuck]");
+      return page
+        .locator(".office-world")
+        .getByRole("link", { name: new RegExp("^" + label + " —") });
+    }
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(base, { waitUntil: "networkidle" });
     for (const width of [320, 360, 390, 412, 768, 1440]) {
@@ -116,7 +122,7 @@ function check(value, label) {
         "The desk",
         [
           ["Start rehearsal", "/scene"],
-          ["The Stuck Desk", "/stuck"],
+          ["Get Unstuck", "/stuck"],
         ],
       ],
       [
@@ -139,9 +145,7 @@ function check(value, label) {
     for (const [view, objects] of routes) {
       await chooseView(view);
       for (const [label, route] of objects) {
-        const link = page
-          .locator(".office-world")
-          .getByRole("link", { name: new RegExp("^" + label + " —") });
+        const link = officeLink(label);
         await link.waitFor({ state: "visible" });
         check((await link.getAttribute("href")) === route, `${label} maps to ${route}`);
         await link.click();
@@ -253,13 +257,11 @@ function check(value, label) {
       for (const [view, objects] of routes) {
         await chooseView(view);
         for (const [label, route] of objects) {
-          const link = page
-            .locator(".office-world")
-            .getByRole("link", { name: new RegExp("^" + label + " —") });
-          await link
-            .locator(".object-label")
-            .evaluate((n) => n.scrollIntoView({ block: "center" }));
-          await link.locator(".object-label").click();
+          const link = officeLink(label);
+          const caption = link.locator(".object-label, strong").first();
+          const target = (await caption.count()) ? caption : link;
+          await target.evaluate((n) => n.scrollIntoView({ block: "center" }));
+          await target.click();
           await page.waitForURL((url) => url.pathname === route);
           check(true, `${label} label is unobstructed and functional at ${width}px`);
           await page.getByRole("link", { name: "Return to the Director’s Office" }).click();

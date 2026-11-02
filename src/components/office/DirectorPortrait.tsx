@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
-import atlas from "@/assets/office/director-reference-atlas.webp";
-import referenceHero from "@/assets/office/director-reference.webp";
+import atlas from "@/assets/premium/director-expressions.webp";
+import referenceHero from "@/assets/premium/director-studio.webp";
 import { DIRECTOR_EXPRESSIONS, type DirectorExpression } from "./office-data";
 
 /** One consistent illustrated character; seven expressions and a full-body master. */
@@ -23,8 +23,9 @@ export function DirectorPortrait({
       style={
         {
           backgroundImage: `url(${useHero ? referenceHero : atlas})`,
+          backgroundSize: useHero ? "250% auto" : "400% 200%",
           backgroundPosition: useHero
-            ? "center 10%"
+            ? "43% 35%"
             : `${((cell % 4) * 100) / 3}% ${cell < 4 ? 0 : 100}%`,
         } as CSSProperties
       }

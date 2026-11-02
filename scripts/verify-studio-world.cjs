@@ -92,7 +92,9 @@ const pages = [
         );
         for (let i = 0; i < (await objects.count()); i++) {
           const object = objects.nth(i);
-          await object.scrollIntoViewIfNeeded();
+          // Center the control before hit-testing: nearest-edge scrolling can
+          // leave a fully in-viewport control beneath the fixed studio bar.
+          await object.evaluate((node) => node.scrollIntoView({ block: "center" }));
           const result = await object.evaluate((n) => {
             const r = n.getBoundingClientRect();
             const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);

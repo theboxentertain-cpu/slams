@@ -121,9 +121,9 @@ export function DeskBooks({
       </span>
       <span className="object-label">
         <strong>
-          The Conservatory <ArrowUpRight aria-hidden="true" size={12} />
+          Explore the eight schools <ArrowUpRight aria-hidden="true" size={14} />
         </strong>
-        <span className="book-shelf-subtitle">Eight Schools of Acting Technique</span>
+        <span className="book-shelf-subtitle">Open the actor’s library</span>
       </span>
     </button>
   );
@@ -176,6 +176,8 @@ export function SchoolBooks({
                 <span>
                   {book.school.years} years · {totalTerms(book.school)} terms
                 </span>
+                <span className="library-school-focus">{book.school.focus}</span>
+                <small>Provisional structure · Open school for availability</small>
               </span>
             </Link>
           ))}

@@ -1,21 +1,22 @@
 # SLAMS visual and UX contract
 
-The [blueprint](SLAMS-47-PAGE-TRACEABILITY.md) governs page responsibilities. This pass preserves the mrahmostudios SLAMS identity, ivory lettering/crimson A, charcoal/burgundy foundation, amber light, paper/leather/wood/brass surfaces and the approved illustrated Director, Office rooms and school books. No asset is replaced, regenerated or flattened into a replacement interface.
+The [blueprint](SLAMS-47-PAGE-TRACEABILITY.md) governs page responsibilities. The November 2 premium pass follows the user’s first reference for a more naturalistic illustrated Director and the remaining references for composition. It preserves the mrahmostudios SLAMS identity, ivory lettering/crimson A, charcoal/burgundy foundation, amber light and paper/leather/wood/brass surfaces. Two new WebP assets supply the hero and matching expressions; original source art and canonical school-book identities remain. The interface stays real HTML rather than flattened artwork.
 
 ## Existing owners
 
-| Responsibility                                        | Owner                                                              |
-| ----------------------------------------------------- | ------------------------------------------------------------------ |
-| Brand tokens, import order and base typography        | `src/styles.css` and existing local fonts                          |
-| Bodoni Moda / Karla / handwriting accents             | Existing font declarations and fallbacks; no new font dependency   |
-| Five-item bar, location, profile and bottom clearance | `AppShell`, `foundation.css`                                       |
-| Functional page / heading / actions                   | `Page`, `StudioHeading`, existing primary/secondary action tokens  |
-| Cinematic shared surfaces                             | `studio-world.css`; existing scenic assets                         |
-| Office rooms, objects and books                       | Existing Office components, `office-data.ts`, Office styles/assets |
-| Welcome scene and account surfaces                    | Existing welcome components and `welcome.css`                      |
-| Director modes / motion / sound                       | Existing store/preference hooks                                    |
+| Responsibility                                        | Owner                                                             |
+| ----------------------------------------------------- | ----------------------------------------------------------------- |
+| Brand tokens, import order and base typography        | `src/styles.css` and existing local fonts                         |
+| Bodoni Moda / Karla / handwriting accents             | Existing font declarations and fallbacks; no new font dependency  |
+| Five-item bar, location, profile and bottom clearance | `AppShell`, `foundation.css`                                      |
+| Functional page / heading / actions                   | `Page`, `StudioHeading`, existing primary/secondary action tokens |
+| Cinematic shared surfaces                             | `studio-world.css`; existing scenic assets                        |
+| Office composition                                    | `DirectorsOffice`, `premium-office.css`                           |
+| Shared books, dialogs and portraits                   | Existing Office components, `office-data.ts`, `office.css`        |
+| Welcome scene and account surfaces                    | Existing welcome components and `welcome.css`                     |
+| Director modes / motion / sound                       | Existing store/preference hooks                                   |
 
-Office styling still has accumulated layers; this focused PR does not claim a complete CSS consolidation. Approved art remains independently actionable through real HTML links/buttons, accessible names and keyboard interaction.
+The reference/cinematic Office stylesheet imports are retired. Current composition has one owner, with shared book/dialog styles retained separately. Director mode, motion and sound still use their existing stores. Art remains independently actionable through real HTML links/buttons, accessible names and keyboard interaction.
 
 ## Screen anatomy and behavior
 
@@ -29,4 +30,4 @@ Help's four task entrances use real links and existing secondary-action styling.
 
 Compiled Chromium checks cover 320, 360, 390, 412, 768 and 1440px, reflow, touch targets, keyboard focus, modal focus restoration, safe-area/bottom-bar behavior, reduced motion and enlarged root text. Screenshots are actual compiled output. Desktop/phone viewport emulation does not establish physical Android, TalkBack, OS text scaling, camera behavior, production font delivery or human usability.
 
-Manual human first-five-minutes research, representative production performance and physical-device acceptance remain NOT RUN. The original welcome hierarchy still needs a shorter, clearer first-action presentation. No commercial-ready claim follows from the layout checks. See [release verification](SLAMS-RELEASE-VERIFICATION.md).
+Manual human first-five-minutes research, representative production performance and physical-device acceptance remain NOT RUN. Welcome retains its working account-choice/setup flow with the new illustration and surface treatment. No commercial-ready claim follows from layout checks. See [release verification](SLAMS-RELEASE-VERIFICATION.md) and the [premium verification report](../slams-premium-verification.md).

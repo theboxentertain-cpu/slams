@@ -1,0 +1,1085 @@
+/* Office composition owner. Replaces the retired reference/cinematic layout layers. */
+.office-premium {
+  --brass: #c5a16a;
+  --ink: #23170f;
+  color: #f0e3c8;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-bottom: 22px;
+  background: radial-gradient(ellipse at 50% 0, #42271566, transparent 65%), #100b08;
+}
+.office-premium .office-masthead {
+  position: relative;
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 110px;
+  align-items: center;
+  padding: 18px 28px 14px;
+  gap: 12px;
+  border-bottom: 1px solid #aa835a66;
+  background: linear-gradient(#090705ef, #100b08dd);
+}
+.office-premium .office-brand {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  text-align: center;
+}
+.office-premium .studio-credit {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: #c6ad83;
+}
+.office-premium .office-brand .wordmark {
+  font-size: clamp(48px, 8vw, 92px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-style: italic;
+}
+.office-premium .office-tagline {
+  font-family: "SLAMS Hand", cursive;
+  font-size: clamp(16px, 2.6vw, 27px);
+  line-height: 1.25;
+}
+.office-premium .office-brand::after {
+  content: "";
+  width: 65%;
+  height: 3px;
+  margin-top: 4px;
+  background: #a51f2a;
+  transform: rotate(-2deg);
+}
+.office-premium .office-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.office-premium .office-icon-button,
+.office-premium .profile-trigger {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: #ead7ac;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+}
+.office-premium .office-icon-button:hover,
+.office-premium .profile-trigger:hover {
+  background: #c5a16a16;
+  border-color: #c5a16a55;
+}
+.office-premium .save-attention {
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d52832;
+}
+.office-premium .office-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 24px;
+  border-bottom: 1px solid #8a684255;
+  background: #22160f;
+}
+.office-premium .office-settings > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #a28150;
+  border-radius: 6px;
+}
+.office-premium .office-world {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  background: transparent;
+  touch-action: pan-y;
+}
+.office-premium .office-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 18px;
+}
+.office-premium .office-tabs {
+  display: flex;
+  flex: 1;
+  max-width: 700px;
+  gap: 4px;
+}
+.office-premium .office-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #ad997c;
+  font-size: 12px;
+}
+.office-premium .office-tabs button span {
+  color: #8c6a46;
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+.office-premium .office-tabs button[aria-selected="true"] {
+  background: #40271b88;
+  border-color: #b18c535e;
+  color: #f1ddba;
+}
+.office-premium .office-icon-button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.office-premium .office-room {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  overflow: visible;
+}
+.office-premium .office-room[hidden] {
+  display: none;
+}
+.premium-office-scene {
+  position: relative;
+  isolation: isolate;
+  height: 550px;
+  overflow: hidden;
+}
+.premium-office-scene::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, #0d080600 55%, #100b08 100%);
+}
+.premium-office-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 45% 43%;
+}
+.office-premium .desk-casting-sign,
+.office-premium .reference-rehearsal-sign {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 9px 15px;
+  color: #f0dfba;
+  border: 1px solid #b18b5d99;
+  background: #160c08dc;
+  box-shadow:
+    0 3px 12px #0008,
+    inset 0 0 0 3px #b18b5d1a;
+  border-radius: 3px;
+  text-decoration: none;
+}
+.office-premium .desk-casting-sign {
+  top: 22px;
+  left: 24px;
+  transform: rotate(-3deg);
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+.office-premium .desk-casting-sign svg {
+  width: 20px;
+  height: 20px;
+}
+.office-premium .reference-rehearsal-sign {
+  right: 30px;
+  top: 115px;
+  font-family: "SLAMS Hand", cursive;
+  font-size: 30px;
+  transform: rotate(-4deg);
+}
+.office-premium .director-figure {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  left: auto;
+  right: 24px;
+  bottom: 72px;
+  width: auto;
+  max-width: calc(100% - 48px);
+  min-height: 64px;
+  padding: 6px 12px 6px 6px;
+  color: #eeddbb;
+  border: 1px solid #bc945e88;
+  border-radius: 35px 7px 7px 35px;
+  background: #130b08d9;
+  transform: none;
+  text-align: left;
+}
+.office-premium .director-figure .premium-coach-seal {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 50%;
+  border: 1px solid #ba925c;
+}
+.office-premium .director-figure strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-style: italic;
+}
+.office-premium .director-figure small {
+  display: block;
+  font-size: 10px;
+  color: #c7af87;
+}
+.office-training-card {
+  position: relative;
+  z-index: 4;
+  width: min(700px, calc(100% - 48px));
+  margin: -48px auto 22px;
+  padding: 23px 28px;
+  color: #28180f;
+  border: 1px solid #b28c54;
+  border-radius: 6px 12px 5px 9px;
+  background:
+    radial-gradient(ellipse at 30% 10%, #fff3d499, transparent 80%),
+    linear-gradient(100deg, #d8bb85, #f2e1bb 45%, #d8bc8c);
+  box-shadow:
+    0 8px 22px #0008,
+    inset 0 0 0 4px #95713d22;
+  text-align: center;
+}
+.office-training-card .office-kicker {
+  display: inline-block;
+  padding: 5px 18px;
+  color: #fff0d1;
+  background: #8e1724;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+.office-training-card h2 {
+  margin: 12px 0 5px;
+  font-size: clamp(25px, 3.4vw, 36px);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.12;
+}
+.office-training-card p {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #654a2c;
+}
+.office-training-card > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 50px;
+  margin-top: 15px;
+  padding: 11px 16px;
+  border: 1px solid #be874d;
+  border-radius: 9px;
+  box-shadow:
+    inset 0 2px 1px #ffb9a347,
+    0 3px 7px #58271344;
+  background: linear-gradient(175deg, #cc2b36, #9d1021 55%, #610a14);
+  color: #fff0d5;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+}
+.office-training-card small {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #6e4f30;
+}
+.office-premium .office-portals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 24px;
+  margin: 24px auto;
+}
+.office-premium .office-portals > a {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 180px;
+  padding: 18px;
+  color: #ead7af;
+  background: radial-gradient(ellipse at top left, #70402555, transparent 80%), #1c120d;
+  border: 1px solid #ac8758;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 0 3px #b9935b16,
+    0 4px 10px #0008;
+  text-decoration: none;
+  overflow: hidden;
+}
+.office-premium .office-portals [data-task="rehearse"] {
+  background-color: #0e1c22;
+  border-color: #799d9b;
+}
+.office-premium .office-portals [data-task="stuck"] {
+  background-color: #142018;
+  border-color: #8c9a6d;
+}
+.office-premium .office-portals [data-task="train"] {
+  background-color: #2a1014;
+}
+.office-premium .portal-art {
+  position: absolute;
+  top: -16px;
+  right: -20px;
+  width: 160px;
+  height: 125px;
+  opacity: 0.24;
+  transform: rotate(-8deg);
+}
+.office-premium .portal-art svg {
+  width: 100%;
+  height: 100%;
+}
+.office-premium .office-portals strong {
+  position: relative;
+  margin-top: auto;
+  font-family: var(--font-display);
+  font-size: clamp(25px, 2.8vw, 34px);
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.office-premium .office-portals > a > span:not(.portal-art) {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #dbc7a1;
+}
+.office-premium .office-portals small {
+  margin-top: 8px;
+  font-size: 10px;
+  color: #aa997f;
+}
+.office-premium .portal-arrow {
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  right: 14px;
+  bottom: 18px;
+}
+.premium-bookcase {
+  margin: 30px 24px;
+  padding: 21px 18px 8px;
+  text-align: center;
+  border-top: 1px solid #b38b584d;
+  background: radial-gradient(ellipse at 50% 100%, #60331d35, transparent 80%);
+}
+.premium-section-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-family: var(--font-display);
+  font-size: 29px;
+  font-style: italic;
+}
+.premium-section-label > span {
+  width: 55px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #a98953);
+}
+.premium-section-label > span:last-child {
+  transform: rotate(180deg);
+}
+.premium-bookcase > p {
+  font-size: 12px;
+  color: #c1aa85;
+  margin: 6px 0 18px;
+}
+.office-premium .desk-books {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 850px;
+  min-height: 150px;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #ecd9b1;
+  transform: none;
+}
+.office-premium .mini-book-row {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  align-items: end;
+  gap: 5px;
+  perspective: 1000px;
+  padding: 0 5px 8px;
+  border-bottom: 5px ridge #775035;
+}
+.office-premium .desk-books .school-book-mini {
+  display: block;
+  width: 100%;
+  height: 145px;
+  margin: 0;
+  transform: rotateY(-7deg);
+}
+.office-premium .desk-books .school-book-mini:nth-child(2n) {
+  height: 139px;
+}
+.office-premium .desk-books .book-cover {
+  padding: 12px 4px;
+}
+.office-premium .desk-books .book-title {
+  font-size: clamp(7px, 1vw, 11px);
+  writing-mode: horizontal-tb;
+  white-space: normal;
+  letter-spacing: -0.04em;
+}
+.office-premium .desk-books .book-cover svg {
+  display: block;
+  width: 100%;
+  height: 50px;
+  margin-top: 15px;
+}
+.office-premium .desk-books .book-edition,
+.office-premium .desk-books .book-footer {
+  display: none;
+}
+.office-premium .desk-books .object-label {
+  display: block;
+  margin: 12px auto 0;
+  font-size: 13px;
+}
+.office-premium .desk-books.office-object .object-label strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-size: 17px;
+}
+.office-premium .book-shelf-subtitle {
+  display: block;
+  margin-top: 4px;
+  color: #b9a07a;
+  font-size: 10px;
+}
+.office-premium .office-journey {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px;
+  padding: 19px 22px;
+  color: #e8d5ae;
+  border: 1px solid #9b78496b;
+  border-radius: 12px;
+  background: linear-gradient(110deg, #311d1288, #100b08);
+  text-decoration: none;
+}
+.office-premium .office-journey > svg:first-child {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  color: #c8a46c;
+}
+.office-premium .journey-title {
+  flex: 1;
+  min-width: 0;
+}
+.office-premium .journey-title strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 23px;
+}
+.office-premium .journey-title small {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  color: #b9a483;
+}
+.office-premium .office-journey dl {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  text-align: center;
+}
+.office-premium .office-journey dd {
+  font-family: var(--font-display);
+  font-size: 27px;
+}
+.office-premium .office-journey dt {
+  max-width: 100px;
+  font-size: 9px;
+  line-height: 1.3;
+  color: #b9a483;
+}
+.office-premium .office-journey > svg:last-child {
+  width: 18px;
+  flex-shrink: 0;
+}
+.premium-studio-tools {
+  margin: 24px;
+  border-top: 1px solid #9b784966;
+}
+.premium-studio-tools > summary {
+  cursor: pointer;
+  min-height: 56px;
+  padding: 18px 4px;
+  color: #dec79f;
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+.premium-studio-tools > summary > span {
+  margin-left: 12px;
+  color: #a99475;
+  font-family: var(--font-sans);
+  font-size: 11px;
+}
+.premium-studio-tools nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+.premium-studio-tools nav a {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-height: 85px;
+  padding: 16px;
+  border: 1px solid #98784d88;
+  border-radius: 9px;
+  background: #1b120c;
+}
+.premium-studio-tools nav a > svg:first-child {
+  width: 23px;
+  height: 23px;
+  color: #c4a36b;
+}
+.premium-studio-tools nav a > svg:last-child {
+  margin-left: auto;
+  width: 15px;
+  height: 15px;
+}
+.premium-studio-tools nav strong {
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+.premium-studio-tools nav span {
+  flex: 0 0 100%;
+  font-size: 10px;
+  color: #bfa884;
+}
+.office-premium .office-understage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 28px 22px;
+}
+.office-premium .office-director-note {
+  max-width: 640px;
+}
+.office-premium .office-kicker {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #c4a06a;
+}
+.office-premium .office-director-note p {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-style: italic;
+  color: #cbb48f;
+}
+.office-premium .office-swipe-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: #927b60;
+}
+.office-premium .office-footer {
+  text-align: center;
+  border-top: 1px solid #84634033;
+}
+.office-premium .office-footer > [role="note"] {
+  padding: 12px 20px;
+  color: #baa17d;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 400;
+}
+.office-premium .office-footer > p:last-child {
+  padding: 12px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: #8f775b;
+}
+/* The two secondary views keep their real objects and availability boundaries. */
+.office-premium .office-room-wall,
+.office-premium .office-room-corner {
+  padding: 34px 28px;
+  background:
+    linear-gradient(90deg, #0d0805ee, #0d0805a8),
+    url("./assets/premium/director-studio.webp") center 45% / cover;
+}
+.office-premium .room-heading {
+  position: relative;
+  padding: 0 0 26px;
+}
+.office-premium .room-heading h2 {
+  font-family: var(--font-display);
+  font-size: 44px;
+  margin: 8px 0;
+}
+.office-premium .room-heading p {
+  font-family: "SLAMS Hand", cursive;
+  font-size: 23px;
+  color: #bd9e6a;
+}
+.office-premium .office-room-wall .office-object,
+.office-premium .office-room-corner .office-object {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  vertical-align: top;
+  width: calc(50% - 12px);
+  min-height: 180px;
+  margin: 0 12px 16px 0;
+  padding: 20px;
+  transform: none;
+  border: 1px solid #bc935f99;
+  border-radius: 10px;
+  background: #1c110bdd;
+  overflow: hidden;
+}
+.office-premium .office-room-wall .prop-illustration,
+.office-premium .office-room-corner .prop-illustration {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 110px;
+  height: 110px;
+  opacity: 0.35;
+}
+.office-premium .office-object .prop-illustration svg {
+  width: 100%;
+  height: 100%;
+}
+.office-premium .office-object .object-label {
+  position: relative;
+  display: block;
+  background: transparent;
+  color: #edd9af;
+}
+.office-premium .office-object .object-label strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 24px;
+}
+.office-premium .office-object .object-label > span {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #bba17c;
+}
+.office-premium .work-wall-director,
+.office-premium .work-wall-cork,
+.office-premium .rehearsal-spotlight {
+  display: none;
+}
+.office-premium .bad-acting-wall {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 160px;
+  margin: 8px 0 18px;
+  padding: 22px;
+  border: 2px solid #94703f;
+  border-radius: 5px;
+  background: linear-gradient(110deg, #eedab0, #d7b77e);
+  color: #351d13;
+  box-shadow:
+    inset 0 0 0 3px #fff1cc44,
+    0 6px 20px #0005;
+}
+.office-premium .bad-acting-wall > strong {
+  font-family: var(--font-display);
+  font-size: 27px;
+}
+.office-premium .bad-acting-wall .wall-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  grid-row: 2;
+  font-size: 12px;
+}
+.office-premium .bad-acting-wall em {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  padding-left: 12px;
+  border-left: 1px solid #85542677;
+  color: #8f1925;
+  font-family: "SLAMS Hand", cursive;
+  font-size: 27px;
+}
+.office-premium .bad-acting-wall .wall-clip,
+.office-premium .bad-acting-wall .wall-rule {
+  display: none;
+}
+.office-premium .wall-progress-sheet,
+.office-premium .wall-scene-notes,
+.office-premium .corner-stage-link {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  min-height: 60px;
+  margin: 8px 0;
+  padding: 16px 20px;
+  border: 1px solid #ae8a5688;
+  border-radius: 8px;
+  background: #140d09e8;
+  transform: none;
+  font-size: 15px;
+  color: #ead5ad;
+}
+.office-premium .wall-progress-sheet span,
+.office-premium .corner-stage-link span {
+  font-size: 11px;
+  color: #b69b75;
+}
+.office-premium .corner-stage-link {
+  background: linear-gradient(150deg, #b32531, #710e1b);
+  color: #fff0d2;
+  font-weight: 700;
+}
+.office-premium .corner-stage-link span {
+  color: #ead6b2;
+}
+.office-premium .corner-development {
+  position: relative;
+  padding: 14px 0;
+  color: #bca47f;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.office-premium .office-wall-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 24px;
+}
+.office-premium .office-wall-shortcuts > * {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 110px;
+  gap: 8px;
+  padding: 15px;
+  border: 1px solid #ac875655;
+  border-radius: 9px;
+  background: #24160d;
+  text-align: left;
+}
+.office-premium .office-wall-shortcuts svg {
+  width: 23px;
+  height: 23px;
+  color: #c29c61;
+}
+.office-premium .office-wall-shortcuts strong {
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+.office-premium .office-wall-shortcuts span {
+  width: 100%;
+  font-size: 10px;
+  color: #b49c79;
+}
+.office-premium a:hover,
+.office-premium button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+@media (max-width: 699px) {
+  .office-premium .office-masthead {
+    grid-template-columns: 42px minmax(0, 1fr) 88px;
+    padding: 15px 12px 12px;
+    gap: 4px;
+  }
+  .office-premium .office-brand .wordmark {
+    font-size: clamp(42px, 10.5vw, 67px);
+  }
+  .office-premium .studio-credit {
+    font-size: 8px;
+  }
+  .office-premium .office-tagline {
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .office-premium .office-header-actions {
+    gap: 0;
+  }
+  .office-premium .office-navigation {
+    gap: 0;
+    padding: 6px;
+  }
+  .office-premium .office-tabs button {
+    gap: 5px;
+    padding: 6px 3px;
+    font-size: 10px;
+  }
+  .office-premium .office-tabs button span {
+    font-size: 11px;
+  }
+  .office-premium .room-arrow {
+    min-width: 44px;
+  }
+  .premium-office-scene {
+    height: 405px;
+  }
+  .premium-office-art {
+    object-position: 43% 45%;
+  }
+  .office-premium .desk-casting-sign {
+    left: 12px;
+    top: 14px;
+    padding: 7px 10px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .office-premium .desk-casting-sign svg {
+    width: 16px;
+    height: 16px;
+  }
+  .office-premium .reference-rehearsal-sign {
+    right: 12px;
+    top: 74px;
+    padding: 7px 11px;
+    font-size: 23px;
+    gap: 6px;
+  }
+  .office-premium .director-figure {
+    left: auto;
+    right: 12px;
+    bottom: 65px;
+    min-height: 52px;
+    max-width: calc(100% - 24px);
+  }
+  .office-premium .director-figure .premium-coach-seal {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+  .office-premium .director-figure strong {
+    font-size: 14px;
+  }
+  .office-premium .director-figure small {
+    font-size: 8px;
+  }
+  .office-training-card {
+    width: calc(100% - 28px);
+    padding: 18px 18px 17px;
+    margin-top: -45px;
+  }
+  .office-training-card h2 {
+    font-size: clamp(23px, 6.4vw, 30px);
+  }
+  .office-training-card p {
+    font-size: 12px;
+  }
+  .office-training-card > a {
+    margin-top: 12px;
+  }
+  .office-premium .office-portals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0 14px;
+    margin: 20px 0;
+  }
+  .office-premium .office-portals > a {
+    min-height: 154px;
+    padding: 16px 13px;
+  }
+  .office-premium .office-portals strong {
+    font-size: 27px;
+  }
+  .office-premium .office-portals > a > span:not(.portal-art) {
+    font-size: 11px;
+  }
+  .office-premium .office-portals small {
+    font-size: 9px;
+    padding-right: 10px;
+  }
+  .office-premium .portal-art {
+    width: 130px;
+    right: -20px;
+  }
+  .premium-bookcase {
+    margin: 24px 14px 10px;
+    padding: 18px 0 8px;
+  }
+  .premium-section-label {
+    font-size: 27px;
+    gap: 10px;
+  }
+  .premium-section-label > span {
+    width: 25px;
+  }
+  .office-premium .mini-book-row {
+    gap: 2px;
+    padding: 0 2px 6px;
+  }
+  .office-premium .desk-books .school-book-mini {
+    height: 103px;
+  }
+  .office-premium .desk-books .school-book-mini:nth-child(2n) {
+    height: 98px;
+  }
+  .office-premium .desk-books .book-cover {
+    padding: 8px 2px;
+  }
+  .office-premium .desk-books .book-title {
+    font-size: 6px;
+  }
+  .office-premium .desk-books .book-cover svg {
+    height: 35px;
+    margin-top: 10px;
+  }
+  .office-premium .office-journey {
+    margin: 16px 14px;
+    padding: 15px 12px;
+    gap: 9px;
+  }
+  .office-premium .office-journey > svg:first-child {
+    width: 25px;
+    height: 25px;
+  }
+  .office-premium .journey-title strong {
+    font-size: 20px;
+  }
+  .office-premium .journey-title small {
+    font-size: 9px;
+  }
+  .office-premium .office-journey dl {
+    gap: 11px;
+  }
+  .office-premium .office-journey dd {
+    font-size: 23px;
+  }
+  .office-premium .office-journey dt {
+    max-width: 67px;
+    font-size: 8px;
+  }
+  .premium-studio-tools {
+    margin: 18px 14px;
+  }
+  .premium-studio-tools > summary > span {
+    display: block;
+    margin: 4px 0 0 16px;
+  }
+  .premium-studio-tools nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .premium-studio-tools nav a {
+    min-height: 80px;
+  }
+  .office-premium .office-understage {
+    padding: 10px 18px 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .office-premium .office-director-note p {
+    font-size: 16px;
+  }
+  .office-premium .office-room-wall,
+  .office-premium .office-room-corner {
+    padding: 26px 14px 20px;
+  }
+  .office-premium .room-heading h2 {
+    font-size: 34px;
+  }
+  .office-premium .office-room-wall .office-object,
+  .office-premium .office-room-corner .office-object {
+    width: calc(50% - 6px);
+    margin-right: 6px;
+    padding: 15px 12px;
+    min-height: 164px;
+  }
+  .office-premium .office-object .object-label strong {
+    font-size: 22px;
+  }
+  .office-premium .office-object .object-label > span {
+    font-size: 10px;
+  }
+  .office-premium .office-wall-shortcuts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 18px 14px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .office-premium[data-motion="on"] .office-portals a,
+  .office-premium[data-motion="on"] .office-object {
+    transition:
+      transform 160ms ease,
+      filter 160ms ease;
+  }
+  .office-premium[data-motion="on"] .office-portals a:hover {
+    transform: translateY(-3px);
+  }
+}
+.office-premium .reference-account {
+  position: relative;
+}
+.office-premium .office-profile-identity {
+  position: absolute;
+  right: 0;
+  top: 44px;
+  width: 110px;
+  text-align: right;
+  font-size: 9px;
+  color: #c6ad83;
+  pointer-events: none;
+}
+.office-premium .office-profile-identity strong {
+  font-weight: 400;
+}
+.office-premium .office-profile-identity small,
+.office-premium .reference-account > svg:last-child:not(:first-child) {
+  display: none;
+}
