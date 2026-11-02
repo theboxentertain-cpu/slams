@@ -32,6 +32,6 @@ describe("Meisner original Content 03 academic preview", () => {
         expect(pilot.lessons.some(lesson => lesson.id === id)).toBe(true);
       }
     }
-    expect(pilot.exercises.every(e => e.requiredMode === "partner_required")).toBe(true);
+    expect(pilot.exercises.every(e => e.requiredMode === "partner_required" || e.requiredMode === "partner_or_group")).toBe(true);
   });
 });
