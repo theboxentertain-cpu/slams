@@ -50,3 +50,15 @@ Original source files:
 7. Run TypeScript, Vitest, production build, browser/device checks and live backend tests. They are **not executed by this connector-based PR authoring run**.
 
 **No migrations or credential changes. No existing progression gates bypassed.**
+
+## Workshop 1 interactive training preview (second development increment)
+
+Five guided stages: three original SLAMS lesson briefs → four explicit classification questions → solo/consenting-human-partner mode → observation-based practice → reflection and an optional user-triggered clipboard copy.
+
+Original stable IDs are preserved: `meisner-t01-w01-l01`–`l03` and `meisner-t01-w01-e01`–`e02`. Partner exercise E02 is not available from solo mode. The app does not record partners, verify consent, assess acting, save progress, store a draft, contact another actor, or certify a skill.
+
+Director notes use the existing ON/QUIET/OFF implementation and do not interrupt the actual partner practice phase. Private text remains in component memory and resets when signed-in identity changes. Clipboard export is only by explicit user action. The source manuscripts remain private; only condensed educational prompts are in the public repository.
+
+**Review requirements:** independent qualified Meisner educator, safety/accessibility, source/provenance review and an approved assessment policy. All publication and term-graduation gates remain closed.
+
+**Tests NOT executed here:** Vitest, TypeScript, production build, Playwright/mobile browser and live backend checks. Codex/CI must run and report them before merge.

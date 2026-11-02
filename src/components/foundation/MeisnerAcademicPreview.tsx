@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { MEISNER_EDITORIAL_TERM_ONE as pilot } from "@/data/meisner-editorial-term-one";
+import { MeisnerWorkshopOne } from "./MeisnerWorkshopOne";
 
 /**
- * Read-only review preview. It does not call progress APIs or persist responses.
- * The solo prompt is a non-assessed preparation exercise, not Meisner partner work.
+ * Academic editorial preview; optional guided practice is session-only and cannot
+ * award verified curriculum progress or replace real partner training.
  */
 export function MeisnerAcademicPreview() {
   const [observation, setObservation] = useState("");
@@ -60,57 +60,7 @@ export function MeisnerAcademicPreview() {
           </section>
         );
       })}
-      <section className="panel p-4" aria-label="Optional observation preparation">
-        <h3>Try a solo observation preparation</h3>
-        <p>
-          This short written reflection practices separating a checkable observation from an
-          interpretation. It is not the partner-repetition exercise, an assessment, or a saved record.
-        </p>
-        <label htmlFor="meisner-observation" className="mt-3 block font-semibold">
-          Describe one visible or audible event, without stating why it happened.
-        </label>
-        <textarea
-          id="meisner-observation"
-          className="mt-2 w-full rounded border border-border bg-background p-3 text-foreground"
-          rows={3}
-          value={observation}
-          onChange={(value) => {
-            setObservation(value.target.value);
-            setShowReflection(false);
-          }}
-        />
-        <label htmlFor="meisner-inference" className="mt-3 block font-semibold">
-          What unverified interpretation might someone attach to that event?
-        </label>
-        <textarea
-          id="meisner-inference"
-          className="mt-2 w-full rounded border border-border bg-background p-3 text-foreground"
-          rows={3}
-          value={inference}
-          onChange={(value) => {
-            setInference(value.target.value);
-            setShowReflection(false);
-          }}
-        />
-        <button
-          type="button"
-          className="btn-primary mt-3"
-          disabled={!observation.trim() || !inference.trim()}
-          onClick={() => setShowReflection(true)}
-        >
-          Reflect on the distinction
-        </button>
-        {showReflection && (
-          <div role="status" className="availability-note mt-3">
-            <p>
-              Ask yourself: Could an observer independently verify the first sentence?
-              Could the second have several possible explanations? If unsure, revise your
-              wording. No software assessment or competence claim is made.
-            </p>
-            <p>These responses stay only in this open screen and are not saved.</p>
-          </div>
-        )}
-      </section>
+      <MeisnerWorkshopOne />
       <p className="text-sm text-muted-foreground">
         Term assessment: instructor review required; pass threshold unset. No term
         graduation or accreditation is available.
