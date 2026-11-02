@@ -13,7 +13,12 @@ export function SupportPage({
 }) {
   const page = SUPPORT_PAGES[id];
   return (
-    <Page title={page.title} eyebrow="Studio · Foundation" backTo={page.parent}>
+    <Page
+      title={page.title}
+      eyebrow="Studio · Foundation"
+      backTo={page.parent}
+      world={page.parent === "/work" ? "work" : page.parent === "/stuck" ? "stuck" : "studio"}
+    >
       <SectionTabs page={id} value={tab} onChange={onTabChange}>
         {(current) => (
           <Unavailable

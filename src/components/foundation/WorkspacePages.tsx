@@ -10,7 +10,7 @@ type TabProps = { tab: string; onTabChange: (tab: string) => void };
 export function WorkHub({ tab, onTabChange }: TabProps) {
   const prep = useAuditionPrep();
   return (
-    <Page title="Actor at Work" eyebrow="DO THE WORK" backTo="/">
+    <Page title="Actor at Work" eyebrow="DO THE WORK" backTo="/" world="work">
       <p className="section-intro">
         Practical preparation for the room. Start with your own circumstances and playable choices.
       </p>
@@ -64,7 +64,7 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
 export function AuditionFile({ tab, onTabChange }: TabProps) {
   const prep = useAuditionPrep();
   return (
-    <Page title="Audition File" eyebrow="Actor at Work" backTo="/work">
+    <Page title="Audition File" eyebrow="Actor at Work" backTo="/work" world="work">
       <SectionTabs page="audition" value={tab} onChange={onTabChange} keepMounted>
         {(current) =>
           current === "preparation" ? (
@@ -125,7 +125,7 @@ export function AuditionFile({ tab, onTabChange }: TabProps) {
 export function RehearsalHub({ tab, onTabChange }: TabProps) {
   const passport = usePassport();
   return (
-    <Page title="Rehearsal Studio" eyebrow="MAKE THE WORK ACTIVE" backTo="/">
+    <Page title="Rehearsal Studio" eyebrow="MAKE THE WORK ACTIVE" backTo="/" world="rehearsal">
       <SectionTabs page="rehearsal" value={tab} onChange={onTabChange}>
         {(current) =>
           current === "my-scenes" ? (
@@ -214,7 +214,7 @@ export function DraftInterventions() {
 }
 export function StuckIntake({ tab, onTabChange }: TabProps) {
   return (
-    <Page title="The Stuck Desk" eyebrow="FIX WHAT ISN’T WORKING" backTo="/">
+    <Page title="The Stuck Desk" eyebrow="FIX WHAT ISN’T WORKING" backTo="/" world="stuck">
       <SectionTabs page="stuck" value={tab} onChange={onTabChange}>
         {(current) =>
           current === "describe" ? (
@@ -243,6 +243,7 @@ export function StuckIntervention({ tab, onTabChange }: TabProps) {
       title="Stuck Desk · Interventions"
       eyebrow="Draft · Pending faculty review"
       backTo="/stuck"
+      world="stuck"
     >
       <SectionTabs page="intervention" value={tab} onChange={onTabChange}>
         {() => <DraftInterventions />}

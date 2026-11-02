@@ -5,7 +5,10 @@ import {
   ArrowRight,
   ArrowUpRight,
   Bell,
-  Menu,
+  Settings,
+  Clapperboard,
+  IdCard,
+  NotebookPen,
   Play,
   MoveHorizontal,
   Volume2,
@@ -16,8 +19,8 @@ import { DemoBanner, DirectorToggle, Wordmark } from "@/components/slams";
 import { useDirectorMode, usePassport } from "@/lib/store";
 import panorama from "@/assets/office/office-reference.webp";
 import desk from "@/assets/office/desk-reference.webp";
-import { DirectorPortrait } from "./DirectorPortrait";
-import { BadActingWall } from "./BadActingWall";
+import { OfficeDirector } from "./OfficeDirector";
+import { OfficeJourney } from "./OfficeJourney";
 import { OfficeDirectory } from "./OfficeDirectory";
 import { ProfileMenu } from "@/components/foundation/AppShell";
 import { TrainingSummary } from "@/components/foundation/TrainingSummary";
@@ -141,7 +144,13 @@ export function DirectorsOffice() {
           : "You’re here. Good. Let’s get to work.";
 
   return (
-    <div className="office-shell office-reference" data-motion={animate ? "on" : "off"}>
+    <div
+      className="office-shell office-reference office-cinematic"
+      data-motion={animate ? "on" : "off"}
+      style={{ "--office-room-image": `url(${panorama})` } as React.CSSProperties}
+    >
+      <div className="office-drape office-drape-left" aria-hidden="true" />
+      <div className="office-drape office-drape-right" aria-hidden="true" />
       <header className="office-masthead">
         <h1 className="sr-only">The Director’s Office</h1>
         <div className="office-brand">
@@ -158,7 +167,7 @@ export function DirectorsOffice() {
             aria-controls="office-settings"
             onClick={() => setSettingsOpen(!settingsOpen)}
           >
-            {settingsOpen ? <X size={25} /> : <Menu size={29} />}
+            {settingsOpen ? <X size={25} /> : <Settings size={26} />}
           </button>
           <Link
             to={OFFICE_CONTROLS.progress.to}
@@ -172,7 +181,7 @@ export function DirectorsOffice() {
             <Bell size={25} />
             {passport.error && <span className="save-attention" aria-hidden="true" />}
           </Link>
-          <ProfileMenu className="office-icon-button reference-account" />
+          <ProfileMenu className="reference-account" identity />
         </div>
       </header>
       {settingsOpen && (
@@ -199,10 +208,6 @@ export function DirectorsOffice() {
           </button>
         </section>
       )}
-      <div className="office-section-line">
-        <span>THE STUDIO IS OPEN</span>
-        <span>YOUR NEXT TAKE STARTS HERE</span>
-      </div>
       <main
         id="page-content"
         tabIndex={-1}
@@ -255,7 +260,14 @@ export function DirectorsOffice() {
           >
             {item.id === "desk" ? (
               <>
-                <BadActingWall />
+                <Link
+                  to="/work"
+                  className="desk-casting-sign"
+                  aria-label="Actor at Work — open audition preparation"
+                >
+                  <Clapperboard aria-hidden="true" /> Actor at Work{" "}
+                  <ArrowUpRight aria-hidden="true" />
+                </Link>
                 <Link
                   to={OFFICE_CONTROLS.studio.to}
                   className="reference-rehearsal-sign"
@@ -265,16 +277,14 @@ export function DirectorsOffice() {
                   <br />
                   Studio <Play size={16} aria-hidden="true" />
                 </Link>
-                <div className="room-heading">
-                  <span className="office-kicker">01 / THE DIRECTOR’S DESK</span>
-                  <h2>
-                    Leave your ego.
-                    <br />
-                    <em>Take a seat.</em>
-                  </h2>
+                <div className="desk-welcome-board" aria-hidden="true">
+                  <span>Welcome back.</span>
                   <p>
-                    Eight schools. One room.
-                    <br />A lifetime of better questions.
+                    Train.
+                    <br />
+                    Rehearse.
+                    <br />
+                    Perform.
                   </p>
                 </div>
                 <button
@@ -284,7 +294,7 @@ export function DirectorsOffice() {
                   className="director-figure office-object"
                   aria-label="The Director — Acting Coach, meet your studio guide"
                 >
-                  <DirectorPortrait expression={expression} hero />
+                  <OfficeDirector expression={expression} />
                   <span className="object-label">
                     <strong>
                       Acting Coach <ArrowUpRight aria-hidden="true" size={12} />
@@ -303,6 +313,10 @@ export function DirectorsOffice() {
                   </span>
                 )}
                 <OfficeObject destination="stuck" onIntent={() => setIntent("script")} />
+                <OfficeObject
+                  destination="passport"
+                  detail={count === null ? "Your rehearsal records" : `${count} rehearsals saved`}
+                />
                 <div className="office-coffee" aria-hidden="true">
                   <span>
                     Not your
@@ -377,12 +391,33 @@ export function DirectorsOffice() {
           <ArrowRight size={19} />
         </button>
       </div>
-      {view === "desk" && (
-        <>
-          <OfficeDirectory />
-          <TrainingSummary />
-        </>
+      {view === "desk" && <OfficeDirectory />}
+      {view === "wall" && (
+        <nav className="office-wall-shortcuts" aria-label="Continue from the Work Wall">
+          <button type="button" onClick={() => selectView("corner", true)}>
+            <Clapperboard aria-hidden="true" />
+            <strong>Rehearsal Corner</strong>
+            <span>Practice · Partner · Perform</span>
+          </button>
+          <Link to="/scene">
+            <Play aria-hidden="true" />
+            <strong>Living Scene</strong>
+            <span>Step into a real rehearsal</span>
+          </Link>
+          <Link to="/passport">
+            <IdCard aria-hidden="true" />
+            <strong>Rehearsal notes</strong>
+            <span>Your saved reflections</span>
+          </Link>
+          <Link to="/work/audition">
+            <NotebookPen aria-hidden="true" />
+            <strong>Audition desk</strong>
+            <span>Prepare your next audition</span>
+          </Link>
+        </nav>
       )}
+      <OfficeJourney rehearsals={count} milestones={milestones} signedIn={passport.signedIn} />
+      <TrainingSummary />
       <div className="office-understage">
         <div className="office-director-note" aria-live="polite">
           {mode !== "off" && (
@@ -411,6 +446,7 @@ export function DirectorsOffice() {
         onOpenChange={setCoachOpen}
         motion={animate}
         onReturnFocus={() => coachTrigger.current?.focus()}
+        expression={expression}
       />
     </div>
   );

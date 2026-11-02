@@ -47,7 +47,7 @@ function Passport() {
   }
 
   return (
-    <Page title="Actor's Passport" eyebrow="Studio system">
+    <Page title="Actor's Passport" eyebrow="Studio system" world="passport">
       <SectionTabs
         page="passport"
         value={tab}

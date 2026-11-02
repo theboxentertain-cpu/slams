@@ -1,6 +1,17 @@
 import type { ReactNode } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PAGE_TABS, tabId, type PageId } from "@/lib/foundation";
+import { BookOpen, FolderOpen, Users, Clapperboard, Footprints, Files, Award } from "lucide-react";
+const WORLD_TAB_ICONS = {
+  Auditions: BookOpen,
+  Projects: FolderOpen,
+  Characters: Users,
+  "Self-Tapes": Clapperboard,
+  Journey: Footprints,
+  Evidence: Files,
+  Portfolio: FolderOpen,
+  Badges: Award,
+};
 export function SectionTabs({
   page,
   value,
@@ -15,13 +26,20 @@ export function SectionTabs({
   keepMounted?: boolean;
 }) {
   return (
-    <Tabs value={value} onValueChange={onChange} className="section-tabs">
+    <Tabs value={value} onValueChange={onChange} className="section-tabs" data-page={page}>
       <TabsList aria-label={`${page} sections`} className="section-tab-list">
-        {PAGE_TABS[page].map((label) => (
-          <TabsTrigger key={label} value={tabId(label)}>
-            {label}
-          </TabsTrigger>
-        ))}
+        {PAGE_TABS[page].map((label) => {
+          const Icon =
+            page === "work" || page === "passport"
+              ? WORLD_TAB_ICONS[label as keyof typeof WORLD_TAB_ICONS]
+              : undefined;
+          return (
+            <TabsTrigger key={label} value={tabId(label)}>
+              {Icon && <Icon aria-hidden="true" />}
+              {label}
+            </TabsTrigger>
+          );
+        })}
       </TabsList>
       {PAGE_TABS[page].map((label) => (
         <TabsContent

@@ -7,19 +7,14 @@ import { useSession } from "@/lib/session";
 import welcomeDirector from "@/assets/welcome/director-reclining.webp";
 import welcomePortrait from "@/assets/welcome/director-portrait.webp";
 import panorama from "@/assets/office/office-reference.webp";
-import director from "@/assets/office/director-reference.webp";
 
 export const Route = createFileRoute("/")({
   loader: async () => ({ studioEntered: await getStudioEntry() }),
-  head: ({ loaderData }) => ({
+  head: () => ({
     links: [
       { rel: "preload", as: "image", href: panorama },
-      ...(loaderData?.studioEntered
-        ? [{ rel: "preload", as: "image", href: director }]
-        : [
-            { rel: "preload", as: "image", href: welcomePortrait, media: "(max-width:699px)" },
-            { rel: "preload", as: "image", href: welcomeDirector, media: "(min-width:700px)" },
-          ]),
+      { rel: "preload", as: "image", href: welcomePortrait, media: "(max-width:699px)" },
+      { rel: "preload", as: "image", href: welcomeDirector, media: "(min-width:700px)" },
     ],
     meta: [
       { property: "og:type", content: "website" },

@@ -5,6 +5,7 @@ import { useSession } from "@/lib/session";
 import { useDirectorMode, type DirectorMode } from "@/lib/store";
 import { DirectorPortrait } from "@/components/office/DirectorPortrait";
 import { ProfileMenu } from "@/components/foundation/AppShell";
+import { StudioHeading, type StudioWorld } from "./StudioHeading";
 
 export function Wordmark({ small = false }: { small?: boolean }) {
   return (
@@ -23,14 +24,14 @@ export function DemoBanner() {
         role="note"
         className="bg-secondary px-3 py-1.5 text-center text-xs font-bold text-foreground"
       >
-        Signed in as {user.email} — Passport and audition saves use Lovable Cloud. Director settings
-        stay in this browser.
+        Signed in as {user.email}. Passport and audition notes save to your account. Director
+        settings stay on this device.
       </p>
     );
   }
   return (
     <p role="note" className="bg-warning px-3 py-1.5 text-center text-xs font-bold text-charcoal">
-      DEMO MODE — progress is saved only in this browser (local-only).{" "}
+      GUEST STUDIO — rehearsal reflections and audition notes stay in this browser.{" "}
       <Link to="/auth" className="underline">
         Sign in to save to your account.
       </Link>
@@ -160,15 +161,17 @@ export function Page({
   children,
   school,
   backTo = "/",
+  world = school ? "school" : "studio",
 }: {
   title: string;
   eyebrow?: string;
   children: ReactNode;
   school?: string;
   backTo?: "/" | "/work" | "/stuck" | "/rehearsal" | "/conservatory";
+  world?: StudioWorld;
 }) {
   return (
-    <div data-school={school} className="min-h-screen">
+    <div data-school={school} data-world={world} className="studio-page min-h-screen">
       <DemoBanner />
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-3">
         <Link to={backTo} className="page-back-button rounded bg-secondary px-3 py-2 text-sm">
@@ -181,10 +184,7 @@ export function Page({
         <ProfileMenu />
       </header>
       <main id="page-content" tabIndex={-1} className="rise mx-auto max-w-3xl px-4 pb-8">
-        {eyebrow && (
-          <p className="text-xs font-bold tracking-widest text-school uppercase">{eyebrow}</p>
-        )}
-        <h1 className="mb-4 text-3xl font-bold">{title}</h1>
+        <StudioHeading title={title} eyebrow={eyebrow} school={school} world={world} />
         {children}
       </main>
     </div>
@@ -200,6 +200,6 @@ export function InDev({ children }: { children?: ReactNode }) {
 }
 
 export const btnPrimary =
-  "inline-flex min-h-12 items-center justify-center rounded-md bg-primary px-6 py-3 font-bold tracking-wide text-primary-foreground hover:brightness-110 disabled:opacity-40";
+  "studio-action-primary inline-flex min-h-12 items-center justify-center rounded-md bg-primary px-6 py-3 font-bold tracking-wide text-primary-foreground hover:brightness-110 disabled:opacity-40";
 export const btnSecondary =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-secondary px-4 py-2 text-sm hover:brightness-125 disabled:opacity-40";
+  "studio-action-secondary inline-flex min-h-11 items-center justify-center rounded-md bg-secondary px-4 py-2 text-sm hover:brightness-125 disabled:opacity-40";

@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { totalTerms } from "@/data/schools";
 import { BOOK_DESIGNS } from "./office-data";
 
-function CoverDrawing({ motif }: { motif: string }) {
+export function CoverDrawing({ motif }: { motif: string }) {
   return (
     <svg
       viewBox="0 0 100 100"

@@ -41,7 +41,7 @@ export function ConservatoryPage({ tab, onTabChange }: TabProps) {
         schoolHasProgress(book.slug, catalog.units, progress.records)),
   );
   return (
-    <Page title="The Conservatory" eyebrow="LEARN THE CRAFT" backTo="/">
+    <Page title="The Conservatory" eyebrow="LEARN THE CRAFT" backTo="/" world="conservatory">
       <p className="section-intro">Eight Schools of Acting Technique</p>
       <p>
         Provisional SLAMS structure, subject to academic review. Not official institutional
@@ -141,7 +141,7 @@ export function SchoolPage({ school, tab, onTabChange }: TabProps & { school: st
       <SectionTabs page="school" value={tab} onChange={onTabChange}>
         {(current) =>
           current === "overview" ? (
-            <section className="foundation-stack">
+            <section className="studio-sheet foundation-stack">
               <p>
                 This independently designed SLAMS school structure remains subject to academic
                 review. Detailed principles, history, demonstrations and school-specific teaching
