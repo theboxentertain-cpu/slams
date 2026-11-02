@@ -101,3 +101,10 @@ Placement Page: purpose and prerequisite domains, accessible demonstration requi
 No claim "exact institutional curriculum" or "full school alternative" until authorization/rights and scope are documented; no academic completion until a qualified instructor validates the content, assessment policy, and actual learner evidence. Code passing tests ≠ learning being valid.
 
 **Next engineering tasks:** remove client-side arbitrary "Mark complete", protect the backend from direct completed writes, implement server-authoritative practice events and assessor permissions, create a placement assessment case workflow, and run two-account security tests. The present code change does NOT apply destructive migrations or unlock any unpublished path.
+
+## Implementation checkpoint — PR C02
+**Implemented in branch:** a strict metadata audit for exercise fields and method-dependent solo/partner/group suitability; explicit null/unapproved practice policies; deduplicated activity summaries that cannot award mastery; a display-only placement status model; client-side removal of arbitrary **Mark complete** and client requests for `completed` statuses. Tests have been written but **not run** in the connector environment.
+
+**Not implemented:** a live per-actor practice ledger, user-visible practice tracker, completed placement application, verified assessor queue, server-authoritative advancement transaction, RLS migration to prevent forged `completed` writes, faculty-vetted thresholds, and actual school-credential equivalence. Therefore **no advanced target is unlocked and no training completion may be claimed**. Existing legacy `completed` progress rows remain historic activity only; their authenticity is not automatically verified.
+
+**Release review:** Run the tests, TypeScript, build, browser/mobile checks, security review and human academic approval. Keep PR open until all applicable checks pass.
