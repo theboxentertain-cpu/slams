@@ -1,4 +1,5 @@
 import { OfficeObject } from "./OfficeObject";
+import { Link } from "@tanstack/react-router";
 
 export default function RehearsalCorner() {
   return (
@@ -19,6 +20,9 @@ export default function RehearsalCorner() {
       <OfficeObject destination="baseline" />
       <OfficeObject destination="lab" />
       <OfficeObject destination="lounge" />
+      <Link to="/scene" className="corner-stage-link">
+        Step onto the stage <span>Start the Living Scene</span>
+      </Link>
       <p className="corner-development">
         These studio systems are in development.
         <br />

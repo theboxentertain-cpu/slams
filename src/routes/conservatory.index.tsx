@@ -1,27 +1,23 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Page } from "@/components/slams";
-import { SCHOOLS, totalTerms } from "@/data/schools";
-
+import { createFileRoute, type SearchSchemaInput } from "@tanstack/react-router";
+import { validateTab } from "@/lib/foundation";
+import { ConservatoryPage } from "@/components/foundation/SchoolPages";
 export const Route = createFileRoute("/conservatory/")({
-  head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { title: "The Conservatory — SLAMS" }, { name: "description", content: "Eight schools of acting technique." }, { property: "og:title", content: "The Conservatory — SLAMS" }, { property: "og:description", content: "Eight schools of acting technique." }] }),
-  component: Conservatory,
+  head: () => ({
+    meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { title: "The Conservatory — SLAMS" },
+      { name: "description", content: "Eight schools of acting technique." },
+      { property: "og:title", content: "The Conservatory — SLAMS" },
+      { property: "og:description", content: "Eight schools of acting technique." },
+    ],
+  }),
+  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) =>
+    validateTab("conservatory", input),
+  component: Screen,
 });
-
-function Conservatory() {
-  return (
-    <Page title="The Conservatory" eyebrow="Portal">
-      <p className="mb-4 text-sm text-muted-foreground">Provisional curriculum map, independently designed for SLAMS and subject to academic review. Not official institutional curricula.</p>
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {SCHOOLS.map((s) => (
-          <li key={s.slug} data-school={s.slug}>
-            <Link to="/conservatory/$school" params={{ school: s.slug }} className="panel block border-l-4 border-l-school p-4">
-              <h2 className="text-xl font-bold text-school">{s.name}</h2>
-              <p className="text-sm">{s.focus}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{s.years} years · {totalTerms(s)} terms · In development</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </Page>
-  );
+function Screen() {
+  const { tab } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  return <ConservatoryPage tab={tab} onTabChange={(tab) => void navigate({ search: { tab } })} />;
 }

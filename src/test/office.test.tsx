@@ -10,6 +10,7 @@ const state = vi.hoisted(() => ({
   error: null as string | null,
   loaded: true,
   milestones: null as number | null,
+  signedIn: false,
 }));
 vi.mock("@tanstack/react-router", () => ({
   Link: ({
@@ -22,7 +23,12 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 vi.mock("@/lib/store", () => ({
   useDirectorMode: () => [state.mode, vi.fn()],
-  usePassport: () => ({ entries: state.entries, loaded: state.loaded, error: state.error }),
+  usePassport: () => ({
+    entries: state.entries,
+    loaded: state.loaded,
+    error: state.error,
+    signedIn: state.signedIn,
+  }),
 }));
 vi.mock("@/components/office/useOfficeMilestones", () => ({
   useOfficeMilestones: () => state.milestones,
@@ -34,6 +40,13 @@ vi.mock("@/components/slams", () => ({
   Wordmark: () => <span>SLAMS</span>,
 }));
 
+vi.mock("@/components/foundation/AppShell", () => ({
+  ProfileMenu: () => <button aria-label="Open profile menu">Profile</button>,
+}));
+vi.mock("@/components/foundation/TrainingSummary", () => ({
+  TrainingSummary: () => <section aria-label="Current training">Training summary</section>,
+}));
+
 beforeEach(() => {
   localStorage.clear();
   sessionStorage.clear();
@@ -42,6 +55,7 @@ beforeEach(() => {
   state.error = null;
   state.loaded = true;
   state.milestones = null;
+  state.signedIn = false;
 });
 afterEach(() => {
   cleanup();
@@ -49,14 +63,80 @@ afterEach(() => {
 });
 
 describe("The interactive office", () => {
+  it("routes progress to its real destination and marks only an actual error", () => {
+    const { container } = render(<DirectorsOffice />);
+    expect(screen.getByRole("link", { name: "Progress and save status" })).toHaveAttribute(
+      "href",
+      "/progress",
+    );
+    expect(container.querySelector(".save-attention")).toBeNull();
+  });
+  it("shows actual local records and unknown milestones without a completion percentage", () => {
+    render(<DirectorsOffice />);
+    const journey = within(screen.getByRole("link", { name: "Your progress — view saved work" }));
+    expect(journey.getByText("0", { exact: true })).toBeInTheDocument();
+    expect(journey.getByText("—", { exact: true })).toBeInTheDocument();
+    expect(journey.getByText("Rehearsals on this device")).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/\d+%/);
+  });
+  it("never renders stale rehearsal counts in the journey after a load failure", () => {
+    state.entries = [{ id: "stale" }];
+    state.error = "Unavailable";
+    render(<DirectorsOffice />);
+    const journey = within(screen.getByRole("link", { name: "Your progress — view saved work" }));
+    expect(journey.getAllByText("—", { exact: true })).toHaveLength(2);
+    expect(journey.queryByText("1", { exact: true })).toBeNull();
+  });
+  it("exposes a real save error through the progress link", () => {
+    state.error = "Denied";
+    const { container } = render(<DirectorsOffice />);
+    expect(
+      screen.getByRole("link", { name: "Progress and save status — records unavailable" }),
+    ).toHaveAttribute("href", "/progress");
+    expect(container.querySelector(".save-attention")).toBeInTheDocument();
+  });
+  it("offers exactly three equally ranked worlds and no second primary bar", () => {
+    render(<DirectorsOffice />);
+    const worlds = within(screen.getByRole("navigation", { name: "The three SLAMS worlds" }));
+    expect(worlds.getAllByRole("link")).toHaveLength(3);
+    expect(worlds.getByRole("link", { name: /Conservatory/ })).toHaveAttribute(
+      "href",
+      "/conservatory",
+    );
+    expect(worlds.getByRole("link", { name: /Actor at Work/ })).toHaveAttribute("href", "/work");
+    expect(worlds.getByRole("link", { name: /Stuck Desk/ })).toHaveAttribute("href", "/stuck");
+    expect(screen.queryByRole("navigation", { name: "Main studio navigation" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Go to the rehearsal studio" })).toHaveAttribute(
+      "href",
+      "/rehearsal",
+    );
+  });
+  it("opens a coaching panel, respects motion and restores the exact trigger", async () => {
+    localStorage.setItem(
+      "slams.office.preferences.v1",
+      JSON.stringify({ motion: false, sound: false }),
+    );
+    render(<DirectorsOffice />);
+    const trigger = screen.getByRole("button", { name: /The Director —/ });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog")).toHaveAttribute("data-motion", "off");
+    expect(
+      within(screen.getByRole("dialog")).getByRole("link", { name: /Meet the Director/ }),
+    ).toHaveAttribute("href", "/director");
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(trigger).toHaveFocus());
+  });
   it("connects the desk props to existing functionality and renders all eight physical books", () => {
     const { container } = render(<DirectorsOffice />);
-    expect(screen.getByRole("link", { name: /Start rehearsal/ })).toHaveAttribute("href", "/scene");
-    expect(screen.getByRole("link", { name: /The Stuck Desk/ })).toHaveAttribute("href", "/stuck");
-    expect(screen.getByRole("link", { name: /The Director —/ })).toHaveAttribute(
-      "href",
-      "/director",
-    );
+    expect(
+      within(screen.getByRole("main")).getByRole("link", { name: /Start rehearsal/ }),
+    ).toHaveAttribute("href", "/scene");
+    expect(
+      within(screen.getByRole("main")).getByRole("link", { name: /The Stuck Desk/ }),
+    ).toHaveAttribute("href", "/stuck");
+    expect(
+      within(screen.getByRole("main")).getByRole("button", { name: /The Director —/ }),
+    ).toHaveAttribute("type", "button");
     expect(container.querySelectorAll(".school-book-mini")).toHaveLength(8);
     expect(screen.getByRole("tab", { name: /The desk/ })).toHaveAttribute("aria-selected", "true");
   });
@@ -87,21 +167,25 @@ describe("The interactive office", () => {
       ["Passport", "/passport"],
       ["Technique Matrix", "/matrix"],
     ])
-      expect(await screen.findByRole("link", { name: new RegExp(name!) })).toHaveAttribute(
-        "href",
-        route,
-      );
-    expect(screen.queryByRole("link", { name: /Start rehearsal/ })).toBeNull();
+      expect(
+        await within(screen.getByRole("main")).findByRole("link", {
+          name: new RegExp("^" + name! + " —"),
+        }),
+      ).toHaveAttribute("href", route);
+    expect(
+      within(screen.getByRole("main")).queryByRole("link", { name: /Start rehearsal/ }),
+    ).toBeNull();
     fireEvent.click(screen.getByRole("tab", { name: /Rehearsal corner/ }));
     for (const [name, route] of [
       ["Baseline", "/baseline"],
       ["Performance Lab", "/lab"],
       ["Rehearsal Lounge", "/lounge"],
     ])
-      expect(await screen.findByRole("link", { name: new RegExp(name!) })).toHaveAttribute(
-        "href",
-        route,
-      );
+      expect(
+        await within(screen.getByRole("main")).findByRole("link", {
+          name: new RegExp("^" + name! + " —"),
+        }),
+      ).toHaveAttribute("href", route);
     expect(screen.getByText(/These studio systems are in development/)).toBeInTheDocument();
   });
 
@@ -124,7 +208,9 @@ describe("The interactive office", () => {
     sessionStorage.setItem("slams.office.view.v1", "wall");
     localStorage.setItem("slams.passport.v1", "preserve this data");
     render(<DirectorsOffice />);
-    expect(await screen.findByRole("link", { name: /Actor at Work/ })).toBeInTheDocument();
+    expect(
+      await within(screen.getByRole("main")).findByRole("link", { name: /^Actor at Work —/ }),
+    ).toBeInTheDocument();
     expect(localStorage.getItem("slams.passport.v1")).toBe("preserve this data");
   });
 
@@ -185,6 +271,8 @@ describe("The interactive office", () => {
     state.mode = "off";
     render(<DirectorsOffice />);
     expect(screen.queryByText("A WORD FROM THE DIRECTOR")).toBeNull();
-    expect(screen.getByRole("link", { name: /The Director —/ })).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("main")).getByRole("button", { name: /The Director —/ }),
+    ).toBeInTheDocument();
   });
 });

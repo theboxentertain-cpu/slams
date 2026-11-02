@@ -26,6 +26,8 @@ function check(value, label) {
       hasTouch: true,
       isMobile: true,
     });
+    // Existing-studio regression: this context represents a returning visitor.
+    await context.addCookies([{ name: "slams_studio_entered", value: "1", url: base }]);
     const page = await context.newPage();
     async function settle() {
       await page.locator(".office-world").evaluate(async (n) => {
@@ -33,6 +35,11 @@ function check(value, label) {
           n.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {})),
         );
       });
+    }
+    async function chooseView(name) {
+      const tab = page.getByRole("tab", { name: new RegExp(name) });
+      await tab.evaluate((node) => node.scrollIntoView({ block: "center" }));
+      await tab.click();
     }
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(base, { waitUntil: "networkidle" });
@@ -65,13 +72,51 @@ function check(value, label) {
         });
     }
     await page.setViewportSize({ width: 390, height: 844 });
+    const primary = page.getByRole("navigation", { name: "Main studio navigation" });
+    check(
+      (await primary.getByRole("link").count()) === 5,
+      "Exactly one five-destination primary navigation",
+    );
+    await page.getByRole("link", { name: "Progress and save status" }).click();
+    let summary = page.getByRole("main");
+    await summary.getByText("0", { exact: true }).waitFor();
+    check(
+      (await summary.getByText("0", { exact: true }).count()) === 1,
+      "Progress shows actual zero local rehearsals",
+    );
+    check(
+      (await summary.getByText("—", { exact: true }).count()) === 1,
+      "Unknown account milestones are not fabricated as zero",
+    );
+    await primary.getByRole("link", { name: "Schools", exact: true }).click();
+    await page.locator(".school-selector").waitFor();
+    check(
+      (await page.locator(".school-selector > li").count()) === 8,
+      "Schools navigation opens eight real school entrances",
+    );
+    await primary.getByRole("link", { name: "Office", exact: true }).click();
+    await page.getByRole("button", { name: "Open profile menu" }).click();
+    await page.getByRole("menuitem", { name: "Sign in", exact: true }).click();
+    await page.getByLabel("Email", { exact: true }).waitFor();
+    check(
+      (await page.getByLabel("Email", { exact: true }).count()) === 1,
+      "Profile menu preserves real account management",
+    );
+    await page.getByRole("link", { name: "SLAMS home" }).click();
+    await page.getByRole("button", { name: /The Director —/ }).click();
+    check(
+      (await page.getByRole("dialog").count()) === 1,
+      "Director object opens real coaching controls",
+    );
+    await page.getByRole("link", { name: /Meet the Director/ }).click();
+    await page.getByRole("heading", { name: "The Director", exact: true }).waitFor();
+    await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
     const routes = [
       [
         "The desk",
         [
           ["Start rehearsal", "/scene"],
           ["The Stuck Desk", "/stuck"],
-          ["The Director —", "/director"],
         ],
       ],
       [
@@ -92,13 +137,15 @@ function check(value, label) {
       ],
     ];
     for (const [view, objects] of routes) {
-      await page.getByRole("tab", { name: new RegExp(view) }).click();
+      await chooseView(view);
       for (const [label, route] of objects) {
-        const link = page.getByRole("link", { name: new RegExp(label) });
+        const link = page
+          .locator(".office-world")
+          .getByRole("link", { name: new RegExp("^" + label + " —") });
         await link.waitFor({ state: "visible" });
         check((await link.getAttribute("href")) === route, `${label} maps to ${route}`);
         await link.click();
-        await page.waitForURL(base + route);
+        await page.waitForURL((url) => url.pathname === route);
         check((await page.locator("h1").count()) > 0, `${route} renders its real page`);
         await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
         await page.getByRole("tab", { name: new RegExp(view), selected: true }).waitFor();
@@ -117,7 +164,7 @@ function check(value, label) {
         fullPage: true,
       });
     }
-    await page.getByRole("tab", { name: /The desk/ }).click();
+    await chooseView("The desk");
     await page.getByRole("tab", { name: /The desk/ }).focus();
     await page.keyboard.press("ArrowRight");
     check(
@@ -152,10 +199,10 @@ function check(value, label) {
       );
     await page.screenshot({ path: path.join(out, "books-mobile.png"), fullPage: true });
     await page.keyboard.press("Escape");
-    await page.waitForFunction(
-      () =>
-        document.activeElement?.getAttribute("aria-label") ===
-        "Explore the eight acting-school books",
+    await page.waitForFunction(() =>
+      document.activeElement
+        ?.getAttribute("aria-label")
+        ?.startsWith("Explore the eight acting-school books"),
     );
     check(
       await page
@@ -186,7 +233,7 @@ function check(value, label) {
       "Reduced-motion media is respected",
     );
     await page.getByRole("button", { name: "Office preferences" }).click();
-    // Actual touch events, beginning on the background instead of an interactive prop.
+    // Actual touch events: a swipe may begin on a prop without activating its link.
     await page.locator(".office-world").scrollIntoViewIfNeeded();
     const rect = await page.locator(".office-world").boundingBox();
     const cdp = await context.newCDPSession(page);
@@ -199,6 +246,43 @@ function check(value, label) {
     await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
     await page.getByRole("tab", { name: /Work wall/, selected: true }).waitFor();
     check(true, "Touch swipe moves to connected work wall");
+    check(new URL(page.url()).pathname === "/", "Swiping a prop does not accidentally navigate");
+    // Exercise labels as well as object centers at both narrow and desktop widths.
+    for (const width of [320, 1440]) {
+      await page.setViewportSize({ width, height: width > 600 ? 1000 : 844 });
+      for (const [view, objects] of routes) {
+        await chooseView(view);
+        for (const [label, route] of objects) {
+          const link = page
+            .locator(".office-world")
+            .getByRole("link", { name: new RegExp("^" + label + " —") });
+          await link
+            .locator(".object-label")
+            .evaluate((n) => n.scrollIntoView({ block: "center" }));
+          await link.locator(".object-label").click();
+          await page.waitForURL((url) => url.pathname === route);
+          check(true, `${label} label is unobstructed and functional at ${width}px`);
+          await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
+          await page.getByRole("tab", { name: new RegExp(view), selected: true }).waitFor();
+        }
+      }
+      for (const [view, selector, destination] of [
+        ["The desk", ".reference-rehearsal-sign", "/rehearsal"],
+        ["Work wall", ".wall-progress-sheet", "/progress"],
+        ["Work wall", ".wall-scene-notes", "/work"],
+        ["Work wall", ".bad-acting-wall", "/stuck"],
+        ["Rehearsal corner", ".corner-stage-link", "/scene"],
+      ]) {
+        await chooseView(view);
+        const link = page.locator(`.office-room:not([hidden]) ${selector}`);
+        await link.evaluate((n) => n.scrollIntoView({ block: "center" }));
+        await link.click();
+        await page.waitForURL((url) => url.pathname === destination);
+        check(true, `${selector} navigates to ${destination} at ${width}px`);
+        await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
+      }
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
     // Browser-only scripted rehearsal: exercise all 3x3 existing branches.
     const obstacles = new Set();
     const tactics = ["To plead", "To tease", "To confront"];
@@ -245,7 +329,7 @@ function check(value, label) {
       "Local Passport record survives reload",
     );
     await page.getByRole("link", { name: "Return to the Director’s Office" }).click();
-    await page.getByRole("tab", { name: /The desk/ }).click();
+    await chooseView("The desk");
     check(
       (await page.locator("[data-expression=proud]").count()) === 1,
       "Office reacts to an actual persisted rehearsal",
@@ -254,7 +338,18 @@ function check(value, label) {
       (await page.getByText(/1 rehearsal record saved/).count()) === 1,
       "Office shows a factual saved-record count",
     );
-    await page.goto(base + "/work", { waitUntil: "networkidle" });
+    await page.getByRole("link", { name: "Progress and save status" }).click();
+    summary = page.getByRole("main");
+    await summary.getByText("1", { exact: true }).waitFor();
+    check(
+      (await summary.getByText("1", { exact: true }).count()) === 1,
+      "Progress reflects the actually persisted rehearsal",
+    );
+    check(
+      !/\d+%/.test(await summary.innerText()),
+      "Progress does not invent a training percentage",
+    );
+    await page.goto(base + "/work/audition?tab=preparation", { waitUntil: "networkidle" });
     await page.getByLabel("Role & project").fill("Browser regression fixture");
     await page.getByRole("button", { name: "Save audition prep" }).click();
     await page.getByRole("status").filter({ hasText: "Saved in this browser." }).waitFor();

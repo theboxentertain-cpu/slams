@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { totalTerms } from "@/data/schools";
 import { BOOK_DESIGNS } from "./office-data";
 
-function CoverDrawing({ motif }: { motif: string }) {
+export function CoverDrawing({ motif }: { motif: string }) {
   return (
     <svg
       viewBox="0 0 100 100"
@@ -112,7 +112,7 @@ export function DeskBooks({
       className="desk-books office-object"
       onClick={onOpen}
       aria-haspopup="dialog"
-      aria-label="Explore the eight acting-school books"
+      aria-label="Explore the eight acting-school books — The Conservatory"
     >
       <span className="mini-book-row" aria-hidden="true">
         {BOOK_DESIGNS.map((book) => (
@@ -120,10 +120,10 @@ export function DeskBooks({
         ))}
       </span>
       <span className="object-label">
-        <span className="object-eyebrow">EIGHT BOOKS. EIGHT WAYS IN.</span>
         <strong>
           The Conservatory <ArrowUpRight aria-hidden="true" size={12} />
         </strong>
+        <span className="book-shelf-subtitle">Eight Schools of Acting Technique</span>
       </span>
     </button>
   );

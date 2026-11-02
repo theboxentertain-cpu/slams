@@ -2,6 +2,11 @@
 @source "../src";
 @import "tw-animate-css";
 @import "./office.css";
+@import "./office-reference.css";
+@import "./foundation.css";
+@import "./welcome.css";
+@import "./office-cinematic.css";
+@import "./studio-world.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -69,25 +74,53 @@
 }
 
 /* Distinct per-school accents, unified palette family */
-[data-school="stanislavski"] { --school: oklch(0.7 0.13 55); }
-[data-school="meisner"] { --school: oklch(0.62 0.19 25); }
-[data-school="adler"] { --school: oklch(0.78 0.12 95); }
-[data-school="strasberg"] { --school: oklch(0.6 0.1 330); }
-[data-school="chekhov"] { --school: oklch(0.7 0.1 230); }
-[data-school="laban"] { --school: oklch(0.72 0.13 150); }
-[data-school="practical-aesthetics"] { --school: oklch(0.72 0.03 250); }
-[data-school="viewpoints"] { --school: oklch(0.74 0.14 185); }
+[data-school="stanislavski"] {
+  --school: oklch(0.7 0.13 55);
+}
+[data-school="meisner"] {
+  --school: oklch(0.62 0.19 25);
+}
+[data-school="adler"] {
+  --school: oklch(0.78 0.12 95);
+}
+[data-school="strasberg"] {
+  --school: oklch(0.6 0.1 330);
+}
+[data-school="chekhov"] {
+  --school: oklch(0.7 0.1 230);
+}
+[data-school="laban"] {
+  --school: oklch(0.72 0.13 150);
+}
+[data-school="practical-aesthetics"] {
+  --school: oklch(0.72 0.03 250);
+}
+[data-school="viewpoints"] {
+  --school: oklch(0.74 0.14 185);
+}
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html, body { overflow-x: hidden; }
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    overflow-x: hidden;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
-  h1, h2, h3 { font-family: var(--font-display); }
-  :focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
+  :focus-visible {
+    outline: 3px solid var(--amber);
+    outline-offset: 2px;
+  }
 }
 
 @utility wordmark {
@@ -114,10 +147,21 @@
 }
 
 @keyframes rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

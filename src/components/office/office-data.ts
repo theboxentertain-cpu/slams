@@ -7,6 +7,13 @@ export const OFFICE_VIEWS = [
 ] as const;
 export type OfficeView = (typeof OFFICE_VIEWS)[number]["id"];
 
+export const OFFICE_CONTROLS = {
+  books: { type: "dialog", label: "The Conservatory" },
+  coach: { type: "dialog", label: "The Acting Coach" },
+  progress: { type: "link", to: "/progress", label: "Training progress" },
+  studio: { type: "link", to: "/rehearsal", label: "Rehearsal Studio" },
+} as const;
+
 // Actual file routes only. No new navigation paths or curriculum identities.
 export const OFFICE_DESTINATIONS = {
   director: {
