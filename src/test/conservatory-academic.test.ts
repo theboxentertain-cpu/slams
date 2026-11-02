@@ -9,6 +9,7 @@ const exercise: ExerciseAcademicRecord = {
   id: "meisner-e01",
   schoolId: "meisner",
   version: "draft-v1",
+  requiredMode: "human_partner",
   content: {},
   howSteps: [],
   solo: { use: "preparation_only", explanation: "Not a partner exercise.", steps: ["Observe your own notes."] },
@@ -28,6 +29,7 @@ describe("SLAMS academic integrity controls", () => {
     expect(audit.blockers.some((error) => error.includes("Missing required section"))).toBe(true);
     expect(audit.blockers.some((error) => error.includes("Practice quota"))).toBe(true);
     expect(audit.blockers.some((error) => error.includes("faculty content approval"))).toBe(true);
+    expect(audit.blockers.some((error) => error.includes("Partner-required"))).toBe(false);
   });
   it("requires provenance and approval when a numeric practice target is proposed", () => {
     const record: ExerciseAcademicRecord = {
@@ -40,13 +42,21 @@ describe("SLAMS academic integrity controls", () => {
     expect(blockers.some((error) => error.includes("verifiable provenance"))).toBe(true);
     expect(blockers.some((error) => error.includes("authenticated faculty release"))).toBe(true);
   });
+  it("prohibits false solo equivalence for a partner-required Meisner exercise", () => {
+    const modified: ExerciseAcademicRecord = {
+      ...exercise,
+      solo: { use: "qualifying", explanation: "Incorrectly promises equivalent practice.", steps: ["Read alone."] }
+    };
+    expect(inspectExerciseForReview(modified).blockers)
+      .toContain("Solo practice cannot qualify a partner-required exercise.");
+  });
   it("tracks honest activity without granting competence from solo work or submissions", () => {
     const events: PracticeEvent[] = [
-      { id: "1", schoolId: "meisner", exerciseId: "e1",
+      { id: "1", attemptId: "attempt-1", schoolId: "meisner", exerciseId: "e1",
         mode: "solo", state: "attempted", facultyReviewId: null },
-      { id: "2", schoolId: "meisner", exerciseId: "e1",
+      { id: "2", attemptId: "attempt-2", schoolId: "meisner", exerciseId: "e1",
         mode: "human_partner", state: "evidence_submitted", facultyReviewId: null },
-      { id: "3", schoolId: "meisner", exerciseId: "e1",
+      { id: "3", attemptId: "attempt-3", schoolId: "meisner", exerciseId: "e1",
         mode: "human_partner", state: "faculty_accepted", facultyReviewId: "review-123" }
     ];
     const result = summarizePracticeEvents(events, "meisner", "e1");
@@ -56,6 +66,13 @@ describe("SLAMS academic integrity controls", () => {
     });
     expect("unlocked" in result).toBe(false);
     expect("mastered" in result).toBe(false);
+    const duplicateStatus: PracticeEvent = {
+      id: "4", attemptId: "attempt-2", schoolId: "meisner", exerciseId: "e1",
+      mode: "human_partner", state: "review_pending", facultyReviewId: null
+    };
+    const deduplicated = summarizePracticeEvents([...events, duplicateStatus], "meisner", "e1");
+    expect(deduplicated.recordedAttempts).toBe(3);
+    expect(deduplicated.pendingReview).toBe(1);
   });
   it("never unlocks advanced placement from a client-side decision", () => {
     const approved = { schoolId: "meisner", targetId: "term-2", policyVersion: "p1",
