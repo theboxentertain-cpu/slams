@@ -4,7 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 export const progressInput = z.object({
   unit_kind: z.enum(["course", "workshop", "lesson", "exercise", "assessment"]),
   unit_id: z.string().uuid(),
-  status: z.enum(["started", "completed"]),
+  // Public client can record only that a lesson was opened/started.
+  // Reviewed completion must use a separate server-authorized academic gate.
+  status: z.literal("started"),
 }).strict();
 
 export async function saveUnitProgress(input: unknown) {

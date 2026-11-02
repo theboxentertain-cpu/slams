@@ -34,13 +34,14 @@ it("refreshes the unit, account summary and office milestones only after a confi
     </QueryClientProvider>,
   );
   fireEvent.click(screen.getByText(/Test fixture, not curriculum/));
-  await waitFor(() => expect(screen.getByRole("button", { name: "Mark complete" })).toBeEnabled());
+  await waitFor(() => expect(screen.getByRole("button", { name: "Start unit" })).toBeEnabled());
+  expect(screen.queryByRole("button", { name: "Mark complete" })).toBeNull();
   mock.save.mockRejectedValueOnce(new Error("Rejected"));
-  fireEvent.click(screen.getByRole("button", { name: "Mark complete" }));
+  fireEvent.click(screen.getByRole("button", { name: "Start unit" }));
   await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Rejected"));
   expect(invalidate).not.toHaveBeenCalled();
   mock.save.mockResolvedValueOnce(undefined);
-  fireEvent.click(screen.getByRole("button", { name: "Mark complete" }));
+  fireEvent.click(screen.getByRole("button", { name: "Start unit" }));
   await waitFor(() =>
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ["training-progress", "owner"] }),
   );
