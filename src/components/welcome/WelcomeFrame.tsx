@@ -4,14 +4,12 @@ import { ArrowLeft } from "lucide-react";
 import { Wordmark } from "@/components/slams";
 import director from "@/assets/premium/director-studio.webp";
 export function WelcomeFrame({
-  step,
   title,
   subtitle,
   children,
   variant = "standard",
   back,
 }: {
-  step: number;
   title: string;
   subtitle: string;
   children: ReactNode;
@@ -24,7 +22,7 @@ export function WelcomeFrame({
       <div className="welcome-curtain curtain-right" aria-hidden="true" />
       <header className="welcome-brand">
         {back && (
-          <Link className="welcome-back" to={back} aria-label="Back to previous welcome step">
+          <Link className="welcome-back" to={back} aria-label="Back to welcome">
             <ArrowLeft aria-hidden="true" />
           </Link>
         )}
@@ -32,14 +30,6 @@ export function WelcomeFrame({
         <Wordmark />
         <span className="welcome-tagline">The Actor’s Pocket Studio</span>
         <span className="welcome-motto">TRAIN. REHEARSE. EXPERIMENT. PERFORM.</span>
-        <span className="welcome-step" aria-label={`Welcome step ${step} of 5`}>
-          Step {step} of 5
-          <span aria-hidden="true">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <i key={n} data-active={n === step} />
-            ))}
-          </span>
-        </span>
       </header>
       <main id="page-content" tabIndex={-1}>
         <section className="welcome-scene" aria-label="The Director’s welcome">

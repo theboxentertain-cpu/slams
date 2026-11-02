@@ -272,6 +272,13 @@ function Scene() {
             >
               {saving ? "Saving…" : "Save to Passport"}
             </button>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Saving is optional. Leaving without saving discards this rehearsal’s notes.
+            </p>
+            {!saving && (
+              <Link to="/" className={`${btnSecondary} mt-2 w-full`}>
+                Continue to the Office without saving
+              </Link>
             {!saving && (
               <>
                 <button

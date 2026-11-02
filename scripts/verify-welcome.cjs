@@ -53,6 +53,7 @@ const screens = [
       (await page.getByRole("navigation", { name: "Main studio navigation" }).count()) === 0,
       "Welcome is immersive with no competing studio bar",
     );
+    await page.getByText("Explore more of the studio", { exact: true }).click();
     const books = page.getByRole("button", { name: "Explore the eight acting-school books" });
     await books.click();
     check(
@@ -70,8 +71,9 @@ const screens = [
     );
     check(true, "Welcome library restores opener focus");
     await page.getByRole("link", { name: "Enter the Studio", exact: true }).click();
-    await page.getByRole("heading", { name: "Welcome, Actor.", exact: true }).waitFor();
-    check(true, "Enter the Studio opens account choice");
+    await page.getByRole("button", { name: "Begin take", exact: true }).waitFor();
+    check(new URL(page.url()).pathname === "/scene", "Enter the Studio opens rehearsal directly");
+    await go("/welcome/account");
     await page.getByText("Why create an account?", { exact: true }).click();
     check(
       (await page.locator(".welcome-why[open]").count()) === 1,
@@ -100,9 +102,9 @@ const screens = [
       (await page.getByLabel("Password", { exact: true }).getAttribute("type")) === "text",
       "Password visibility toggle functions",
     );
-    await page.getByRole("link", { name: "Back to previous welcome step" }).click();
-    await page.getByRole("link", { name: /Explore as Guest/ }).click();
-    await page.getByRole("heading", { name: "Actor Setup", exact: true }).waitFor();
+    await page.getByRole("link", { name: "Back to welcome" }).click();
+    await page.getByRole("link", { name: "Studio settings · optional", exact: true }).click();
+    await page.getByRole("heading", { name: "Studio Settings", exact: true }).waitFor();
     check(
       (await page.getByRole("radio", { checked: true }).count()) === 0,
       "Experience is not fabricated or preselected",
@@ -129,8 +131,18 @@ const screens = [
         JSON.stringify({ role: "Existing browser preparation" }),
       );
     });
-    await page.getByRole("radio", { name: "Working actor", exact: true }).check();
-    await page.getByRole("checkbox", { name: "Prepare for auditions", exact: true }).check();
+    // Preserve a pre-PR-B saved setup without asking these questions again.
+    await page.evaluate(() =>
+      localStorage.setItem(
+        "slams.actor-setup.v1.guest",
+        JSON.stringify({
+          version: 1,
+          experience: "Working actor",
+          goals: ["Prepare for auditions"],
+          language: "en",
+        }),
+      ),
+    );
     await page.getByRole("checkbox", { name: "Reduce motion", exact: true }).check();
     check(
       (await page.locator(".app-shell").getAttribute("data-motion")) === "off",
@@ -140,13 +152,16 @@ const screens = [
       (await page.getByRole("checkbox", { name: /Recording|Captions|Coach audio/ }).count()) === 0,
       "Unsupported media capabilities have no fake enabled switches",
     );
-    await page.getByRole("button", { name: "Continue to Baseline", exact: true }).click();
+    await page.getByRole("link", { name: "Start a first rehearsal", exact: true }).click();
+    await page.getByRole("button", { name: "Begin take", exact: true }).waitFor();
+    check(true, "Optional settings lead directly to rehearsal without a setup save or assessment");
+    await go("/baseline?tab=prepare&flow=welcome");
     await page.getByRole("heading", { name: "Your Actor’s Baseline", exact: true }).waitFor();
     check(
       (await page.evaluate(
         () => JSON.parse(localStorage.getItem("slams.actor-setup.v1.guest")).experience,
       )) === "Working actor",
-      "Guest actor setup is genuinely saved",
+      "Existing guest actor setup remains readable",
     );
     check(
       (await page.getByText("Prepare for auditions", { exact: true }).count()) === 1,
@@ -263,7 +278,7 @@ const screens = [
           browser: await browser.version(),
           limitations: [
             "No live signup, confirmation email, OAuth or authenticated backend write.",
-            "Setup is device-local and account namespaced, not cloud profile synchronization.",
+            "Studio controls are device-local; earlier account-namespaced actor setup records are preserved.",
             "Baseline is an introduction to existing practice, not a completed assessment.",
             "Chromium emulation is not physical Android/TalkBack.",
           ],

@@ -65,6 +65,7 @@ it("preserves branching, retake, reflection and shows success only after a confi
   );
 });
 
+it("offers unsaved continuation, but not while an explicit save is pending", async () => {
 const combinations = TACTICS.flatMap((tactic) =>
   INTERVENTIONS.map((intervention) => ({ tactic, intervention })),
 );
@@ -134,6 +135,28 @@ it("hides unsaved/retry actions while a confirmed save is pending", async () => 
     target: { value: "Stay here with me" },
   });
   fireEvent.click(screen.getByText("Cut — end take"));
+  expect(
+    screen.getByRole("link", { name: "Continue to the Office without saving" }),
+  ).toHaveAttribute("href", "/");
+  expect(screen.getByText(/Leaving without saving discards/)).toBeInTheDocument();
+  expect(mocks.add).not.toHaveBeenCalled();
+  expect(screen.queryByText("Saved to your Passport")).not.toBeInTheDocument();
+  let complete: (result: { error?: string }) => void = () => undefined;
+  mocks.add.mockImplementationOnce(
+    () =>
+      new Promise<{ error?: string }>((resolve) => {
+        complete = resolve;
+      }),
+  );
+  fireEvent.change(screen.getByLabelText("Reflection"), {
+    target: { value: "Listening changed my action" },
+  });
+  fireEvent.click(screen.getByText("Save to Passport"));
+  expect(
+    screen.queryByRole("link", { name: "Continue to the Office without saving" }),
+  ).not.toBeInTheDocument();
+  complete({});
+  await waitFor(() => expect(screen.getByText("Saved to your Passport")).toBeInTheDocument());
   fireEvent.change(screen.getByLabelText("Reflection"), {
     target: { value: "Listening changed the action" },
   });

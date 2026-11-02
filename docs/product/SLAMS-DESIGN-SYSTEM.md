@@ -1,5 +1,6 @@
 # SLAMS design system and ownership
 
+Identity remains mrahmostudios presents **SLAMS — The Actor’s Pocket Studio**, with the ivory wordmark/crimson A, charcoal foundation, warm amber, burgundy, tactile paper/leather/wood/brass and the same approved illustrated Director. PR A and PR B add no artwork and replace none.
 Identity remains mrahmostudios presents **SLAMS — The Actor’s Pocket Studio**, with the ivory wordmark/crimson A, charcoal foundation, warm amber, burgundy and tactile paper/leather/wood/brass. The user’s November 2 visual request authorizes the new naturalistic Director illustration and matching expression atlas. Original source artwork remains in the repository. See [premium art direction](SLAMS-PREMIUM-ART-DIRECTION.md).
 
 Typography: existing Bodoni Moda display, Karla body and locally licensed Caveat handwriting; preserve existing fallbacks and verify actual delivery in production. Handwriting is an accent, not the only way to read a functional label.
@@ -24,3 +25,5 @@ Functional controls use real HTML, descriptive names, keyboard focus and approxi
 Illustrations must never imply recording, skill analysis or progress. Keep interactive text outside flattened artwork. New artwork follows the user’s supplied pose, character, lighting and environment references. Future additions need the same continuity and intrinsic-size specification; do not substitute a generic character.
 
 Outstanding design verification: physical Android/TalkBack, device text scaling/orientation, production font/asset delivery, content/illustration rights and representative performance constraints. Chromium emulation alone does not establish these.
+
+PR B welcome composition: existing Director portrait/wide assets and masthead, one dominant entry CTA above optional exploration, a readable dark entry panel, and native disclosure for the eight books. `welcome.css` remains the owner; obsolete step/experience/goal styles and competing landing sizes are removed there. Standard account/settings/baseline art is retained. Automated entry visibility is checked at 320/360/390/412 × 844 and 768/1440 × 1000; smaller-height or enlarged-text layouts may require vertical scrolling.

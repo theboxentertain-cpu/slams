@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-02",
+  "base": "755f5ba16ef9cd941be73af683c18f69d43ebc32",
+  "branch": "feat/pr-b-first-rehearsal",
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "result": "155 tests / 20 files"
+    },
+    {
+      "command": "npm exec tsc -- --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "npm exec eslint -- <all eight changed TS/TSX files>",
+      "exitCode": 0
+    },
+    {
+      "command": "npm exec prettier -- --check <11 changed source/CSS/browser files>",
+      "exitCode": 0
+    },
+    {
+      "command": "clean .output then npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 1,
+      "result": "652 formatting errors; 6 warnings"
+    },
+    {
+      "command": "node scripts/verify-pr-b.cjs",
+      "exitCode": 0,
+      "checks": 75
+    },
+    {
+      "command": "node scripts/verify-welcome.cjs",
+      "exitCode": 0,
+      "checks": 148
+    },
+    {
+      "command": "node scripts/verify-pr-a.cjs",
+      "exitCode": 0,
+      "checks": 140
+    },
+    {
+      "command": "node scripts/verify-foundation.cjs",
+      "exitCode": 0,
+      "checks": 336
+    },
+    {
+      "command": "node scripts/verify-office.cjs",
+      "exitCode": 0,
+      "checks": 115
+    },
+    {
+      "command": "node scripts/verify-studio-world.cjs",
+      "exitCode": 0,
+      "checks": 449
+    }
+  ],
+  "browserTotal": 1263,
+  "browser": "154.0.8037.57",
+  "localRuntime": {
+    "wrangler": "4.156.0",
+    "compatibilityDateOverride": "2026-10-30",
+    "port": 3101,
+    "productionVerified": false
+  },
+  "sourceSHA256": {
+    "scripts/verify-pr-b.cjs": "a04fd151f40d4431e483c64edc8a02de039ff8e735cca84e43ac5b413e89326e",
+    "scripts/verify-welcome.cjs": "2eb72606cdf1619b091cbeedc773d943025e8143e2658a263098a121a60b8ba8",
+    "src/components/welcome/AccountForm.tsx": "dcd72bf15308b679bed8f1403ac6947fb52ddcc7f73c97638e8fce7dd7c7fbec",
+    "src/components/welcome/WelcomeFrame.tsx": "2ac06a8057e7a3cf5f061872cb22f64d45dcf15e1d6fdc3bbee6f9bd4a9fd680",
+    "src/components/welcome/WelcomePages.tsx": "b486c0016beca4c9419742eaf5e88671881d05f8d0d8bafd0e81e10c91e3e970",
+    "src/routes/auth.tsx": "680a4792b5e573635ffe8282689f4cc7ce464b694012a94cd88f1cc086f390d6",
+    "src/routes/scene.tsx": "c27576a3eafb2aaa1280883bdda750123a34a593c5eeed6a9ec78a6d94885a5e",
+    "src/test/first-use.test.tsx": "d61d287e606256af84ab3ab8f6bf7cd7b46fb0c9a8bf5461600c218bcc1bc103",
+    "src/test/scene-regression.test.tsx": "c2de7a2d14c105598274b023a16436ace1c89f5e794d8a365b2bea890b059248",
+    "src/test/welcome-auth.test.tsx": "db81d756ab026ad20eca80b3a297d2ad832a393941b4ebb5d4f1ef31e7150db1",
+    "src/welcome.css": "5f21552d0c6eb40a0e396a379773e8093714780a1a6f90a9c079685e8ec0133b"
+  },
+  "separateObservedFailure": {
+    "scenario": "localStorage getter throws SecurityError at startup",
+    "result": "application error page",
+    "source": "unchanged src/integrations/supabase/previewAuthStorage.ts:57",
+    "fixed": false
+  },
+  "notRun": [
+    "live authenticated backend/email/deployed RLS/cross-device writes",
+    "physical Android/TalkBack",
+    "human completion-time research",
+    "merge/deployment"
+  ]
+}
