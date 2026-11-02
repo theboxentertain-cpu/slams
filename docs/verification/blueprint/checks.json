@@ -121,5 +121,18 @@
     "physical Android/TalkBack and OS text scaling",
     "manual human five-minute usability or production performance",
     "merge/deployment/live database mutation"
-  ]
+  ],
+  "delivery": {
+    "implementationCommit": "f74c604",
+    "branchPublished": true,
+    "pullRequest": {
+      "status": "BLOCKED",
+      "command": "gh pr create --repo theboxentertain-cpu/slams --base main --head feat/blueprint-page-contracts --body-file /tmp/slams-blueprint-pr-body.md",
+      "exitCode": 1,
+      "error": "Post https://api.github.com/graphql: Forbidden",
+      "url": null
+    },
+    "merged": false,
+    "deployed": false
+  }
 }
