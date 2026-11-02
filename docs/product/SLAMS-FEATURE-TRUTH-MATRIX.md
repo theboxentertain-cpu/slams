@@ -34,3 +34,23 @@ Statuses describe actual capabilities. Source behavior and current executed evid
 PR A changes navigation ownership and availability presentation. It does not upgrade an unavailable feature to working merely by simplifying its page. Exact checks and remaining failures are in [release gates](SLAMS-RELEASE-GATES.md).
 
 PR B changes first-use navigation and optional settings, using the existing authored scene and save owners. Complete browser denial of the `localStorage` getter currently produces the application error page in the unchanged auth storage adapter; quota/write failure does not gate entry. See [PR B verification](SLAMS-PR-B-VERIFICATION.md) for the bounded evidence and remaining reliability work.
+
+## Shared engines and signature experience status
+
+The [product contract](SLAMS-PRODUCT-CONTRACT.md) retains all nine sections and ten signature names as final-product requirements. An unavailable capability remains in the architecture; a retained name or route does not make it functional.
+
+| Engine / experience        | Current status                     | Evidence / requirement before a stronger claim                                                                                                                               |
+| -------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Living Scene Engine        | PARTIAL IMPLEMENTATION             | `src/routes/scene.tsx` and `src/data/scene.ts`: one authored text scene with the full practice/retake/reflection/save cycle; no arbitrary script or section-wide integration |
+| Actor Development Engine   | PARTIAL FOUNDATION                 | Existing stores, reviewed-unit progress guards and eligible resume; no unified cross-section learning-evidence/mastery/advancement system                                    |
+| The Unpredictable Director | CONCEPT; RELATED SCRIPTED PARTS    | Fixed retake obstacles and current Director notes exist; no implemented variable direction experience or observation-based feedback                                          |
+| The Listening Trap         | CONCEPT; RELATED SCRIPTED EXERCISE | Existing Meisner observation/repetition prompt; no implemented test exposing predetermined responses or measuring listening                                                  |
+| The Bullsh*t Detector      | CONCEPT                            | No supported observation/evaluation of forced emotion or behavior justification; requires evidence boundaries and reviewed criteria                                          |
+| No Tears Required          | CONCEPT                            | Existing action-focused prompts are related; no distinct reviewed experience under this name                                                                                 |
+| Do the Damn Note           | CONCEPT; RELATED RETAKE WORKFLOW   | An authored intervention and actor retake work; no dedicated note-application/comparison experience                                                                          |
+| The Set From Hell          | CONCEPT                            | Authored changing circumstances are related; no implemented controlled pressure-simulation workflow                                                                          |
+| The 60-Second Rescue       | CONCEPT; RELATED STUCK SUGGESTIONS | Draft authored Stuck options exist; no timed rescue experience, saved-solution loop or verified outcome                                                                      |
+| Three Takes, Three Tactics | CONCEPT                            | Current scene offers three alternative tactics and one retake; no connected three-take comparison                                                                            |
+| Unpredictable Partner      | CONCEPT; RELATED FIXED RESPONSES   | Partner responses are predetermined by tactic; no adaptive partner service or live Lounge connection                                                                         |
+
+The structure remains **36 provisional terms across eight schools**, not complete reviewed curricula. Practice evidence → assessment → advancement and the final graduation requirements remain target responsibilities subject to reviewed material. No current saved reflection, raw count or authored response is promoted to a competence assessment by this documentation update.

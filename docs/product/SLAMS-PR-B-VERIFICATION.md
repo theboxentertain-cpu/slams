@@ -8,6 +8,8 @@ Branch **`feat/pr-b-first-rehearsal`**, based on refreshed `main` **`755f5ba`**,
 
 Exact changed paths: [file inventory](SLAMS-PR-B-FILES.txt).
 
+Owner clarification, 2026-11-02: the [product contract](SLAMS-PRODUCT-CONTRACT.md) now explicitly preserves all nine sections, both engines, the eight school durations and ten contextual signature experiences. Architecture/truth/checkpoint documents distinguish the final requirements from current implementation. This follow-up changes documentation only; the executed application verification below applies to the unchanged runtime source. Formatting, relative links, the complete file inventory and school counts are checked again for this clarification.
+
 ## Before and after
 
 | Area              | Before                                                                                  | After / reason                                                                                                                                                                                    |
@@ -73,17 +75,17 @@ To reproduce the separate full-storage-denial failure, inject a throwing getter 
 
 ## Files and ownership
 
-| Files                                                                               | Reason                                                                                                             |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `src/components/welcome/WelcomePages.tsx`                                           | Direct first action, optional account/settings, retained book modal, legacy baseline URL                           |
-| `src/components/welcome/WelcomeFrame.tsx`, `src/routes/auth.tsx`                    | Remove obsolete step API/counter and clarify welcome back control                                                  |
-| `src/components/welcome/AccountForm.tsx`                                            | Bounded welcome continuation to scene; existing auth SDK and ordinary account destination retained                 |
-| `src/routes/scene.tsx`                                                              | Explicit unsaved exit and pending-save guard only; authored content and save owner unchanged                       |
-| `src/welcome.css`                                                                   | Entry hierarchy/legibility/height, native disclosure, removal of retired question/counter/competing landing styles |
-| `src/test/first-use.test.tsx`, `welcome-auth.test.tsx`, `scene-regression.test.tsx` | Behavioral regression coverage above                                                                               |
-| `scripts/verify-pr-b.cjs`, `scripts/verify-welcome.cjs`                             | Actual compiled first-use journeys; updated compatibility acceptance                                               |
-| Product checkpoint, journeys, architecture, truth/design/commercial/gate documents  | Match current behavior and preserve outstanding release boundaries                                                 |
-| PR B report, file inventory, screenshots and verification receipts                  | Concrete review evidence                                                                                           |
+| Files                                                                                        | Reason                                                                                                             |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `src/components/welcome/WelcomePages.tsx`                                                    | Direct first action, optional account/settings, retained book modal, legacy baseline URL                           |
+| `src/components/welcome/WelcomeFrame.tsx`, `src/routes/auth.tsx`                             | Remove obsolete step API/counter and clarify welcome back control                                                  |
+| `src/components/welcome/AccountForm.tsx`                                                     | Bounded welcome continuation to scene; existing auth SDK and ordinary account destination retained                 |
+| `src/routes/scene.tsx`                                                                       | Explicit unsaved exit and pending-save guard only; authored content and save owner unchanged                       |
+| `src/welcome.css`                                                                            | Entry hierarchy/legibility/height, native disclosure, removal of retired question/counter/competing landing styles |
+| `src/test/first-use.test.tsx`, `welcome-auth.test.tsx`, `scene-regression.test.tsx`          | Behavioral regression coverage above                                                                               |
+| `scripts/verify-pr-b.cjs`, `scripts/verify-welcome.cjs`                                      | Actual compiled first-use journeys; updated compatibility acceptance                                               |
+| Product contract, checkpoint, journeys, architecture, truth/design/commercial/gate documents | Match current behavior and preserve outstanding release boundaries                                                 |
+| PR B report, file inventory, screenshots and verification receipts                           | Concrete review evidence                                                                                           |
 
 ## Data/security, limitations and rollback
 

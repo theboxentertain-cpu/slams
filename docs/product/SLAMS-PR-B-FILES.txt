@@ -6,6 +6,7 @@ docs/product/SLAMS-FEATURE-TRUTH-MATRIX.md
 docs/product/SLAMS-INFORMATION-ARCHITECTURE.md
 docs/product/SLAMS-PR-B-FILES.txt
 docs/product/SLAMS-PR-B-VERIFICATION.md
+docs/product/SLAMS-PRODUCT-CONTRACT.md
 docs/product/SLAMS-RELEASE-GATES.md
 docs/screenshots/pr-b/after-account-mobile.png
 docs/screenshots/pr-b/after-landing-desktop.png
