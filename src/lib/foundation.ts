@@ -9,13 +9,15 @@ export const PRIMARY_NAVIGATION = [
 
 export function primarySection(path: string) {
   if (path === "/") return "/";
-  if (/^\/conservatory(?:\/|$)/.test(path)) return "/conservatory";
+  if (/^\/(conservatory|matrix)(?:\/|$)/.test(path)) return "/conservatory";
   if (/^\/(rehearsal|scene|baseline|lab|lounge)(?:\/|$)/.test(path)) return "/rehearsal";
   if (/^\/work(?:\/|$)/.test(path)) return "/work";
   if (/^\/stuck(?:\/|$)/.test(path)) return "/stuck";
   return null;
 }
 
+// Includes legacy query values for bookmarked URLs. Fully unavailable support
+// pages validate these values but no longer render empty tab controls.
 export const PAGE_TABS = {
   conservatory: ["All Schools", "In Progress", "Completed"],
   school: ["Overview", "Curriculum", "Practice", "Assessments", "Progress"],
@@ -28,7 +30,6 @@ export const PAGE_TABS = {
   journal: ["Scenes", "Notes", "History"],
   stuck: ["Describe", "Scene", "Identify"],
   diagnosis: ["Observations", "Possible Causes"],
-  intervention: ["Technique Options", "Instructions"],
   retry: ["First Attempt", "New Attempt", "Compare"],
   fixes: ["History", "Useful Exercises"],
   baseline: ["Prepare", "Perform", "Reflect", "Next Steps"],
@@ -52,6 +53,7 @@ export function validateTab(page: PageId, input: Record<string, unknown>) {
 
 export const SUPPORT_PAGES = {
   character: {
+    to: "/work/character",
     title: "Character File",
     parent: "/work",
     message:
@@ -60,6 +62,7 @@ export const SUPPORT_PAGES = {
     label: "Open audition preparation",
   },
   breakdown: {
+    to: "/work/breakdown",
     title: "Scene Breakdown",
     parent: "/work",
     message:
@@ -68,6 +71,7 @@ export const SUPPORT_PAGES = {
     label: "Rehearse the demonstration scene",
   },
   selfTape: {
+    to: "/work/self-tape",
     title: "Self-Tape Studio",
     parent: "/work",
     message:
@@ -76,6 +80,7 @@ export const SUPPORT_PAGES = {
     label: "Run a text-only take",
   },
   journal: {
+    to: "/work/journal",
     title: "Project Journal",
     parent: "/work",
     message:
@@ -84,6 +89,7 @@ export const SUPPORT_PAGES = {
     label: "Open saved reflections",
   },
   diagnosis: {
+    to: "/stuck/diagnosis",
     title: "Stuck Desk · Diagnosis",
     parent: "/stuck",
     message:
@@ -92,6 +98,7 @@ export const SUPPORT_PAGES = {
     label: "Explore existing draft interventions",
   },
   retry: {
+    to: "/stuck/retry",
     title: "Stuck Desk · Retry",
     parent: "/stuck",
     message:
@@ -100,6 +107,7 @@ export const SUPPORT_PAGES = {
     label: "Try the Living Scene",
   },
   fixes: {
+    to: "/stuck/saved",
     title: "Saved Fixes",
     parent: "/stuck",
     message:
@@ -108,6 +116,7 @@ export const SUPPORT_PAGES = {
     label: "Open rehearsal records",
   },
   baseline: {
+    to: "/baseline",
     title: "Actor’s Baseline",
     parent: "/",
     message:
@@ -116,6 +125,7 @@ export const SUPPORT_PAGES = {
     label: "Skip to a first rehearsal",
   },
   lab: {
+    to: "/lab",
     title: "Performance Lab",
     parent: "/rehearsal",
     message:
@@ -124,6 +134,7 @@ export const SUPPORT_PAGES = {
     label: "Run a text-only take",
   },
   lounge: {
+    to: "/lounge",
     title: "Rehearsal Lounge",
     parent: "/rehearsal",
     message:
@@ -132,6 +143,7 @@ export const SUPPORT_PAGES = {
     label: "Rehearse solo",
   },
   matrix: {
+    to: "/matrix",
     title: "Technique Matrix",
     parent: "/conservatory",
     message:

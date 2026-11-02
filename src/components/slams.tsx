@@ -81,34 +81,6 @@ export function AccountLink() {
   );
 }
 
-const SYSTEMS = [
-  { to: "/baseline", label: "Baseline" },
-  { to: "/lab", label: "Performance Lab" },
-  { to: "/matrix", label: "Technique Matrix" },
-  { to: "/lounge", label: "Rehearsal Lounge" },
-  { to: "/passport", label: "Passport" },
-  { to: "/director", label: "Director" },
-] as const;
-
-export function SystemsNav() {
-  return (
-    <nav aria-label="Studio systems" className="mt-8">
-      <h2 className="mb-2 text-xs font-bold tracking-widest text-muted-foreground uppercase">
-        Studio systems
-      </h2>
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {SYSTEMS.map((s) => (
-          <li key={s.to}>
-            <Link to={s.to} className="panel block px-3 py-3 text-sm hover:border-amber">
-              {s.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}
-
 export function DirectorToggle() {
   const [mode, setMode] = useDirectorMode();
   return (
@@ -188,14 +160,6 @@ export function Page({
         {children}
       </main>
     </div>
-  );
-}
-
-export function InDev({ children }: { children?: ReactNode }) {
-  return (
-    <span className="inline-block rounded border border-warning px-2 py-0.5 text-xs font-bold text-warning">
-      {children ?? "In development"}
-    </span>
   );
 }
 

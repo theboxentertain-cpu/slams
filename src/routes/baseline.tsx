@@ -28,14 +28,7 @@ export const Route = createFileRoute("/baseline")({
   component: Screen,
 });
 function Screen() {
-  const { tab, flow } = Route.useSearch();
-  const navigate = Route.useNavigate();
+  const { flow } = Route.useSearch();
   if (flow === "welcome") return <BaselineWelcome />;
-  return (
-    <SupportPage
-      id="baseline"
-      tab={tab}
-      onTabChange={(tab) => void navigate({ search: { tab } })}
-    />
-  );
+  return <SupportPage id="baseline" />;
 }

@@ -22,9 +22,5 @@ export const Route = createFileRoute("/lounge")({
   component: Screen,
 });
 function Screen() {
-  const { tab } = Route.useSearch();
-  const navigate = Route.useNavigate();
-  return (
-    <SupportPage id="lounge" tab={tab} onTabChange={(tab) => void navigate({ search: { tab } })} />
-  );
+  return <SupportPage id="lounge" />;
 }

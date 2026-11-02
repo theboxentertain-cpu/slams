@@ -1,0 +1,345 @@
+CREATE ROLE
+CREATE ROLE
+CREATE ROLE
+CREATE SCHEMA
+CREATE TABLE
+CREATE FUNCTION
+GRANT
+CREATE TABLE
+GRANT
+GRANT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TABLE
+CREATE INDEX
+GRANT
+GRANT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+GRANT
+GRANT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+GRANT
+GRANT
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+GRANT
+GRANT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+BEGIN
+INSERT 0 2
+SET
+SET
+ audit_assert
+--------------
+
+(1 row)
+
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+SET
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+RESET
+ALTER TABLE
+INSERT 0 1
+ALTER TABLE
+SET
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+SET
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+SET
+SET
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ audit_assert
+--------------
+
+(1 row)
+
+ audit_denied
+--------------
+
+(1 row)
+
+ROLLBACK
+RLS audit passed: ownership, spoofing, collision, anonymous access, content guard

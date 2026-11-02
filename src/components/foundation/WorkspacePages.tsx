@@ -5,6 +5,7 @@ import { useAuditionPrep, usePassport } from "@/lib/store";
 import { DRAFT_INTERVENTIONS } from "@/data/stuck";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 import { AuditionWorkspace } from "./AuditionWorkspace";
+import { SUPPORT_PAGES } from "@/lib/foundation";
 type TabProps = { tab: string; onTabChange: (tab: string) => void };
 
 export function WorkHub({ tab, onTabChange }: TabProps) {
@@ -14,50 +15,51 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
       <p className="section-intro">
         Practical preparation for the room. Start with your own circumstances and playable choices.
       </p>
-      <SectionTabs page="work" value={tab} onChange={onTabChange}>
-        {(current) =>
-          current === "auditions" ? (
-            <section className="foundation-stack">
-              <h2>Your audition preparation</h2>
-              {!prep.loaded ? (
-                <p role="status">Loading audition notes…</p>
-              ) : prep.error ? (
-                <p role="alert">
-                  Your audition notes could not be loaded. Open preparation to retry.
-                </p>
-              ) : (
-                <p>{prep.data["role"] || "Your personal audition-preparation workspace."}</p>
-              )}
-              <Link to="/work/audition" search={{ tab: "preparation" }} className={btnPrimary}>
-                Open audition preparation
-              </Link>
-              <p className="text-sm text-muted-foreground">
-                Multiple audition files and deadlines are in development.
-              </p>
-            </section>
+      {tab === "auditions" ? (
+        <section className="foundation-stack">
+          <h2>Your audition preparation</h2>
+          {!prep.loaded ? (
+            <p role="status">Loading audition notes…</p>
+          ) : prep.error ? (
+            <p role="alert">Your audition notes could not be loaded. Open preparation to retry.</p>
           ) : (
-            <section className="foundation-stack">
-              <Unavailable>
-                {current === "projects"
-                  ? "Project files, saved scripts and revision history are in development."
-                  : current === "characters"
-                    ? "Dedicated character files are in development. Existing audition notes remain available."
-                    : "Recording, playback and export are not implemented."}
-              </Unavailable>
-              {current === "projects" ? (
-                <>
-                  <Link to="/work/journal">Open Project Journal</Link>
-                  <Link to="/work/breakdown">Open Scene Breakdown</Link>
-                </>
-              ) : current === "characters" ? (
-                <Link to="/work/character">Open Character File</Link>
-              ) : (
-                <Link to="/work/self-tape">Open Self-Tape Studio</Link>
-              )}
-            </section>
-          )
-        }
-      </SectionTabs>
+            <p>{prep.data["role"] || "Your personal audition-preparation workspace."}</p>
+          )}
+          <Link to="/work/audition" search={{ tab: "preparation" }} className={btnPrimary}>
+            Open audition preparation
+          </Link>
+          <p className="text-sm text-muted-foreground">
+            Multiple audition files and deadlines are in development.
+          </p>
+        </section>
+      ) : (
+        <section className="foundation-stack">
+          <Unavailable>
+            {tab === "projects"
+              ? "Project files, saved scripts and revision history are in development."
+              : tab === "characters"
+                ? "Dedicated character files are in development. Existing audition notes remain available."
+                : "Recording, playback and export are not implemented."}
+          </Unavailable>
+          <button className={btnPrimary} onClick={() => onTabChange("auditions")}>
+            Back to audition preparation
+          </button>
+        </section>
+      )}
+      <details className="planned-tools">
+        <summary>Tools in development</summary>
+        <p>These tools are not available yet. Your audition preparation remains available.</p>
+        <ul>
+          {(["character", "breakdown", "selfTape", "journal"] as const).map((id) => {
+            const tool = SUPPORT_PAGES[id];
+            return (
+              <li key={id}>
+                <Link to={tool.to}>View {tool.title} availability</Link>
+              </li>
+            );
+          })}
+        </ul>
+      </details>
     </Page>
   );
 }
@@ -215,39 +217,24 @@ export function DraftInterventions() {
 export function StuckIntake({ tab, onTabChange }: TabProps) {
   return (
     <Page title="The Stuck Desk" eyebrow="FIX WHAT ISN’T WORKING" backTo="/" world="stuck">
-      <SectionTabs page="stuck" value={tab} onChange={onTabChange}>
-        {(current) =>
-          current === "describe" ? (
-            <DraftInterventions />
-          ) : (
-            <Unavailable>
-              {current === "scene"
-                ? "Saving a scene-specific problem intake is in development. Use the existing draft suggestions or run the demonstration scene."
-                : "Structured problem intake and diagnosis are in development. No cause has been inferred from your performance."}
-            </Unavailable>
-          )
-        }
-      </SectionTabs>
-      <nav className="context-links" aria-label="Stuck Desk workflow">
-        <Link to="/stuck/diagnosis">Diagnosis</Link>
-        <Link to="/stuck/intervention">Draft interventions</Link>
-        <Link to="/stuck/retry">Retry</Link>
-        <Link to="/stuck/saved">Saved fixes</Link>
-      </nav>
-    </Page>
-  );
-}
-export function StuckIntervention({ tab, onTabChange }: TabProps) {
-  return (
-    <Page
-      title="Stuck Desk · Interventions"
-      eyebrow="Draft · Pending faculty review"
-      backTo="/stuck"
-      world="stuck"
-    >
-      <SectionTabs page="intervention" value={tab} onChange={onTabChange}>
-        {() => <DraftInterventions />}
-      </SectionTabs>
+      {tab === "describe" ? (
+        <DraftInterventions />
+      ) : (
+        <Unavailable>
+          {tab === "scene"
+            ? "Saving a scene-specific problem intake is in development. Use the existing draft suggestions or run the demonstration scene."
+            : "Structured problem intake and diagnosis are in development. No cause has been inferred from your performance."}
+        </Unavailable>
+      )}
+      {tab !== "describe" ? (
+        <button className={btnPrimary} onClick={() => onTabChange("describe")}>
+          View draft interventions
+        </button>
+      ) : (
+        <Link to="/scene" className={btnPrimary}>
+          Try the Living Scene
+        </Link>
+      )}
     </Page>
   );
 }

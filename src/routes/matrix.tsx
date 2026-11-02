@@ -24,9 +24,5 @@ export const Route = createFileRoute("/matrix")({
   component: Screen,
 });
 function Screen() {
-  const { tab } = Route.useSearch();
-  const navigate = Route.useNavigate();
-  return (
-    <SupportPage id="matrix" tab={tab} onTabChange={(tab) => void navigate({ search: { tab } })} />
-  );
+  return <SupportPage id="matrix" />;
 }

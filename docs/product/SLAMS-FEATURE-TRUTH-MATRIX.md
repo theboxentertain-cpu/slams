@@ -1,0 +1,34 @@
+# Feature truth matrix
+
+Statuses describe actual capabilities. Source behavior and current executed evidence are distinguished from live deployment verification.
+
+| Feature                                                | Status                     | Supported result / remaining boundary                                                                         |
+| ------------------------------------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Three Office views/hotspots/eight books                | WORKING                    | Actual routes/dialogs, keyboard/touch controls; existing approved artwork retained                            |
+| Welcome/guest entry                                    | LIMITED                    | Existing entry works; simplified first-five-minutes journey is PR B                                           |
+| Actor setup                                            | LIMITED                    | Optional device/account-namespaced preferences, not cloud profile sync or assessment                          |
+| Five-route studio navigation                           | WORKING                    | Single owner; safe-area clearance and focus behavior retained                                                 |
+| Eight school hierarchy                                 | WORKING STRUCTURE          | Existing canonical slugs and provisional 36 terms; not completed teaching                                     |
+| Reviewed-unit progression/resume                       | REVIEWED-CONTENT-DEPENDENT | Existing published/reviewed/ancestor gates and genuine saved starts; no invented pilot                        |
+| Meisner pilot                                          | BLOCKED                    | Expert-reviewed instructional substance/criteria and live availability still required                         |
+| Scripted `Stay` rehearsal                              | WORKING                    | Authored choice/intervention/practice/retake/reflection; fixed partner responses                              |
+| Rehearsal save/Passport                                | WORKING, LIVE LIMITED      | Existing guest saves and mocked owner/failed-import tests; real cloud behavior needs live verification        |
+| Rehearsal draft resume / own scripts                   | UNAVAILABLE                | Completed reflections are not resumable sessions                                                              |
+| Audition preparation                                   | WORKING, LIVE LIMITED      | Existing six-field note save/edit/import; one record, no multi-project library                                |
+| Character files/project journal/breakdowns             | UNAVAILABLE                | Explicit statuses and useful alternatives; no disconnected replacement storage                                |
+| Self-tape capture/playback/export                      | UNAVAILABLE                | No capture permission, working recording control or export claim                                              |
+| Stuck Desk suggestions                                 | LIMITED                    | Existing draft authored options, review disclaimer and real scene link                                        |
+| Saved intake/diagnosis/retry/fixes                     | UNAVAILABLE                | No observation/evaluation claimed; compatibility routes retained                                              |
+| Baseline                                               | LIMITED INTRODUCTION       | Skippable welcome introduction; no guided diagnostic or talent/personality classification                     |
+| Lab / Matrix / Lounge                                  | UNAVAILABLE                | No media comparison, reviewed comparison content or live partner service                                      |
+| Passport evidence/portfolio/badges                     | UNAVAILABLE                | Text reflections work; no invented competence achievements                                                    |
+| Progress                                               | LIMITED                    | Genuine record counts and available history; unknown counts are not zero, school completion is not inferred   |
+| Director                                               | LIMITED                    | Existing expressions, authored/factual comments, ON/QUIET/OFF and silence during takes; no evaluation service |
+| English/accessibility controls                         | WORKING SUBSET             | Existing motion/sound/Director preferences; physical assistive-technology checks outstanding                  |
+| Arabic/RTL/captions/coach voice/mature-language filter | UNAVAILABLE                | Not offered as working settings                                                                               |
+| Email login/confirmation/recovery                      | BLOCKED LIVE VERIFICATION  | Existing SDK paths and unit contracts remain; no live success claimed                                         |
+| Independent live account/RLS isolation                 | BLOCKED                    | Unit mocks and two simulated local DB identities do not establish live two-account verification               |
+| Auth-user deletion cleanup                             | MISSING ESSENTIAL POLICY   | Orphan-retention issue remains; no destructive live action in PR A                                            |
+| Standard preview command                               | BROKEN                     | HTTP 500 from missing Node preview entry; compiled local worker is a separately documented verification path  |
+
+PR A changes navigation ownership and availability presentation. It does not upgrade an unavailable feature to working merely by simplifying its page. Exact checks and remaining failures are in [release gates](SLAMS-RELEASE-GATES.md).

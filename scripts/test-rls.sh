@@ -12,7 +12,9 @@ trap '"${docker_cmd[@]}" rm -fv "$container" >/dev/null 2>&1 || true' EXIT
   postgres:17-alpine >/dev/null
 ready=false
 for _ in {1..30}; do
-  if "${docker_cmd[@]}" exec "$container" pg_isready -U postgres >/dev/null 2>&1; then
+  # The image's temporary init server accepts Unix-socket connections before
+  # shutting down. TCP readiness identifies the final server, avoiding that race.
+  if "${docker_cmd[@]}" exec "$container" pg_isready -h 127.0.0.1 -U postgres >/dev/null 2>&1; then
     ready=true
     break
   fi
@@ -22,4 +24,4 @@ if [ "$ready" != true ]; then
   "${docker_cmd[@]}" logs "$container"
   exit 1
 fi
-"${docker_cmd[@]}" exec "$container" psql -U postgres -v ON_ERROR_STOP=1 -f /audit/rls.sql
+"${docker_cmd[@]}" exec "$container" psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /audit/rls.sql
