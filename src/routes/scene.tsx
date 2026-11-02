@@ -64,6 +64,7 @@ function Scene() {
       eyebrow="Demonstration Living Scene"
       backTo="/rehearsal"
       world="scene"
+      performing={performing}
     >
       <div className="mb-4">
         <DirectorToggle />
@@ -326,9 +327,11 @@ function Scene() {
           </>
         )}
       </div>
-      <DirectorNote performing={performing} short="Play the action, not the result.">
+      <DirectorNote performing={performing} expression={step === "saved" ? "proud" : step === "intervene" ? "critical" : step === "reflect" ? "observant" : "master"} short={step === "saved" ? "Your reflection is saved." : "Play the action, not the result."}>
         {step === "intervene"
           ? "Each intervention gives you a different retake problem. Pick the one you want to train."
+          : step === "saved" ? "Your reflection is saved. Evidence of the work, not a verdict on your talent."
+          : step === "reflect" ? "What changed? Be specific. Your observation matters more than my approval."
           : "Play the action, not the result. I'll stay silent during takes."}
       </DirectorNote>
     </Page>

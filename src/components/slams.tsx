@@ -6,6 +6,7 @@ import { useDirectorMode, type DirectorMode } from "@/lib/store";
 import { DirectorPortrait } from "@/components/office/DirectorPortrait";
 import { ProfileMenu } from "@/components/foundation/AppShell";
 import { StudioHeading, type StudioWorld } from "./StudioHeading";
+import type { DirectorExpression } from "./office/office-data";
 
 export function Wordmark({ small = false }: { small?: boolean }) {
   return (
@@ -109,16 +110,18 @@ export function DirectorNote({
   children,
   short,
   performing = false,
+  expression = "observant",
 }: {
   children: ReactNode;
   short?: string;
   performing?: boolean;
+  expression?: DirectorExpression;
 }) {
   const [mode] = useDirectorMode();
   if (performing || mode === "off") return null;
   return (
     <aside aria-label="The Director" className="panel mt-4 flex gap-3 border-amber/40 p-3 text-sm">
-      <DirectorPortrait className="director-note-portrait" />
+      <DirectorPortrait expression={expression} className="director-note-portrait" />
       <p>
         <span className="font-bold text-amber">The Director: </span>
         {mode === "quiet" ? (short ?? children) : children}
@@ -134,6 +137,7 @@ export function Page({
   school,
   backTo = "/",
   world = school ? "school" : "studio",
+  performing = false,
 }: {
   title: string;
   eyebrow?: string;
@@ -141,6 +145,7 @@ export function Page({
   school?: string;
   backTo?: "/" | "/work" | "/stuck" | "/rehearsal" | "/conservatory";
   world?: StudioWorld;
+  performing?: boolean;
 }) {
   return (
     <div data-school={school} data-world={world} className="studio-page min-h-screen">
@@ -156,7 +161,7 @@ export function Page({
         <ProfileMenu />
       </header>
       <main id="page-content" tabIndex={-1} className="rise mx-auto max-w-3xl px-4 pb-8">
-        <StudioHeading title={title} eyebrow={eyebrow} school={school} world={world} />
+        <StudioHeading title={title} eyebrow={eyebrow} school={school} world={world} performing={performing} />
         {children}
       </main>
     </div>

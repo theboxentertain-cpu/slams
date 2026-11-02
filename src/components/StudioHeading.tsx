@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Drama } from "lucide-react";
-import readingDirector from "@/assets/office/director-reading.webp";
-import pointingDirector from "@/assets/office/director-work-wall.webp";
+import { SectionCoach } from "./office/SectionCoach";
 import { BOOK_DESIGNS } from "./office/office-data";
 import { BookCover } from "./office/SchoolBooks";
 import { OfficeArt } from "./office/OfficeArt";
@@ -23,15 +22,16 @@ export function StudioHeading({
   eyebrow,
   school,
   world,
+  performing = false,
 }: {
   title: ReactNode;
   eyebrow?: string | undefined;
   school?: string | undefined;
   world: StudioWorld;
+  performing?: boolean;
 }) {
   const book = BOOK_DESIGNS.find((item) => item.slug === school);
-  const director = world === "stuck" ? pointingDirector : readingDirector;
-  const hasDirector = !!book || ["conservatory", "work", "stuck", "passport"].includes(world);
+  const hasDirector = !performing;
   return (
     <header
       className="studio-heading"
@@ -45,21 +45,14 @@ export function StudioHeading({
         <span className="studio-title-stroke" aria-hidden="true" />
       </div>
       {hasDirector && (
-        <img
-          className="studio-heading-director"
-          src={director}
-          alt=""
-          width={world === "stuck" ? 1536 : 1086}
-          height={world === "stuck" ? 1024 : 1448}
-          decoding="async"
-        />
+        <SectionCoach key={world} section={world} />
       )}
       {book && (
         <span className="studio-heading-book" aria-hidden="true">
           <BookCover book={book} mini />
         </span>
       )}
-      {(world === "rehearsal" || world === "scene") && (
+      {(world === "rehearsal" || world === "scene") && performing && (
         <span className="studio-heading-prop" aria-hidden="true">
           <OfficeArt kind="clapper" />
         </span>

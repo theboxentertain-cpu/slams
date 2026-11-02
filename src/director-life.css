@@ -1,0 +1,96 @@
+/* Reuse the studio palette and original expression atlas. */
+.section-coach {
+  position: relative;
+  z-index: 3;
+  width: 38%;
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: center;
+}
+.section-coach-trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  transform-origin: center bottom;
+}
+.section-coach-trigger:hover { background: transparent; }
+.section-coach .section-coach-portrait {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  height: auto;
+  border-radius: 8px;
+}
+.section-coach-cue {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border: 1px solid var(--border);
+}
+.section-coach-note {
+  margin-top: 10px;
+  padding: 12px;
+  border-left: 2px solid var(--accent);
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.section-coach-note strong {
+  display: block;
+  color: var(--accent);
+  font-family: "SLAMS Hand", cursive;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.studio-heading:has(.section-coach) {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.studio-heading:has(.section-coach) .studio-heading-copy { max-width: 58%; }
+.studio-heading:has(.section-coach) .studio-heading-book,
+.studio-heading:has(.section-coach) .studio-passport-cover { right: 37%; width: 62px; height: 90px; bottom: 8px; opacity: 0.8; }
+.studio-heading:has(.section-coach) .studio-passport-cover strong { font-size: 16px; }
+.app-shell[data-motion="on"] .section-coach[data-speaking="true"] .section-coach-portrait {
+  animation: coach-arrive 600ms ease-out both, coach-breathe 7s ease-in-out 600ms infinite;
+}
+.app-shell[data-motion="on"] .section-coach-trigger:hover .section-coach-portrait,
+.app-shell[data-motion="on"] .section-coach-trigger:focus-visible .section-coach-portrait { animation-play-state: paused; }
+.app-shell[data-motion="on"] .section-coach-note { animation: coach-arrive 240ms ease-out both; }
+.app-shell[data-motion="on"] .studio-page .studio-action-primary,
+.app-shell[data-motion="on"] .studio-page .studio-action-secondary,
+.app-shell[data-motion="on"] .primary-navigation a { transition: transform 180ms ease, filter 180ms ease; }
+.app-shell[data-motion="on"] .studio-page .studio-action-primary:hover,
+.app-shell[data-motion="on"] .studio-page .studio-action-secondary:hover { transform: translateY(-2px); }
+.app-shell[data-motion="on"] .studio-page .studio-action-primary:active,
+.app-shell[data-motion="on"] .studio-page .studio-action-secondary:active { transform: translateY(1px); }
+.app-shell[data-motion="on"] .studio-heading .studio-title-stroke { transform-origin: left center; animation: coach-underline 550ms ease-out both; }
+@keyframes coach-arrive { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes coach-breathe { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-4px) rotate(0.7deg); } }
+@keyframes coach-underline { from { transform: rotate(-3deg) scaleX(0); } to { transform: rotate(-3deg) scaleX(1); } }
+@media (max-width: 600px) {
+  .studio-heading:has(.section-coach) { flex-wrap: wrap; gap: 12px; }
+  .studio-heading:has(.section-coach) .studio-heading-copy { width: 100%; max-width: 100%; }
+  .section-coach { width: 100%; display: flex; align-items: center; gap: 12px; }
+  .section-coach-trigger { width: 108px; flex: 0 0 108px; }
+  .section-coach-note { margin: 0; flex: 1; min-width: 0; font-size: 13px; padding: 9px; }
+  .studio-heading:has(.section-coach) .studio-heading-book,
+  .studio-heading:has(.section-coach) .studio-passport-cover { right: 16px; bottom: 18px; }
+  .studio-heading:has(.section-coach[aria-label]) .studio-heading-book { pointer-events: none; }
+  .studio-heading:has(.section-coach-note) .studio-heading-book,
+  .studio-heading:has(.section-coach-note) .studio-passport-cover { display: none; }
+}
