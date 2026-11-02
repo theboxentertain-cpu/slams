@@ -4,18 +4,12 @@ import { WelcomeLanding } from "@/components/welcome/WelcomePages";
 import { getStudioEntry } from "@/lib/studio-entry.functions";
 import { useStudioEntry } from "@/lib/studio-entry";
 import { useSession } from "@/lib/session";
-import welcomeDirector from "@/assets/welcome/director-reclining.webp";
-import welcomePortrait from "@/assets/welcome/director-portrait.webp";
-import panorama from "@/assets/office/office-reference.webp";
+import panorama from "@/assets/premium/director-studio.webp";
 
 export const Route = createFileRoute("/")({
   loader: async () => ({ studioEntered: await getStudioEntry() }),
   head: () => ({
-    links: [
-      { rel: "preload", as: "image", href: panorama },
-      { rel: "preload", as: "image", href: welcomePortrait, media: "(max-width:699px)" },
-      { rel: "preload", as: "image", href: welcomeDirector, media: "(min-width:700px)" },
-    ],
+    links: [{ rel: "preload", as: "image", href: panorama }],
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

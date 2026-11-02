@@ -3,13 +3,13 @@
   position: relative;
   isolation: isolate;
   color: #f4e5c9;
-  background-color: #100c09;
+  background-color: #0d0907;
   background-image:
-    linear-gradient(#100b0877, #100b08d9 580px, #100b08 1100px),
-    url("./assets/office/office-reference.webp");
+    linear-gradient(#0b0806d9, #0d0907f5 420px, #0d0907 900px),
+    url("./assets/premium/director-studio.webp");
   background-size:
     auto,
-    1100px auto;
+    1300px auto;
   background-position: center top;
   background-repeat: no-repeat;
   padding-bottom: 28px;
@@ -21,10 +21,11 @@
   pointer-events: none;
   z-index: -1;
   top: 0;
-  width: min(17vw, 210px);
-  height: 260px;
+  width: min(9vw, 100px);
+  height: 170px;
   background: repeating-linear-gradient(105deg, #230408, #7b1420 16%, #37070d 35%);
   filter: drop-shadow(3px 3px 6px #0009);
+  opacity: 0.7;
 }
 .studio-page::before {
   left: 0;
@@ -43,9 +44,9 @@
 }
 .studio-page > header {
   position: relative;
-  max-width: 940px;
-  padding: 16px 20px;
-  min-height: 84px;
+  max-width: 1040px;
+  padding: 15px 24px;
+  min-height: 82px;
 }
 .studio-page .page-back-button {
   display: inline-flex;
@@ -69,7 +70,7 @@
   font-size: 9px;
 }
 .studio-page > main {
-  max-width: 900px;
+  max-width: 1040px;
   padding: 0 24px 36px;
 }
 .studio-heading {
@@ -77,17 +78,19 @@
   isolation: isolate;
   overflow: hidden;
   margin-bottom: 24px;
-  padding: 22px 26px;
-  min-height: 130px;
-  border: 1px solid #bca06a88;
-  border-radius: 13px 13px 3px 3px;
-  background: linear-gradient(95deg, #120b07f5, #2d1b10ca, #1c100566);
+  padding: 25px 27px;
+  min-height: 150px;
+  border: 1px solid #b4915a77;
+  border-radius: 12px;
+  background:
+    radial-gradient(ellipse at top left, #5e362540, transparent 80%),
+    linear-gradient(110deg, #1f130df2, #130d09ed);
   box-shadow:
-    0 5px 16px #0007,
-    inset 0 0 0 4px #5d392244;
+    0 6px 20px #0005,
+    inset 0 0 0 4px #97733d12;
 }
 .studio-heading[data-illustrated="true"] {
-  min-height: 275px;
+  min-height: 200px;
   display: flex;
   align-items: center;
 }
@@ -101,29 +104,29 @@
   max-width: 59%;
 }
 .studio-eyebrow {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #e7c58c;
+  color: #bca077;
   line-height: 1.4;
   margin-bottom: 10px;
 }
 .studio-heading h1 {
   font-family: var(--font-display);
-  font-size: clamp(34px, 5vw, 57px);
-  font-weight: 600;
-  line-height: 1.03;
+  font-size: clamp(30px, 4.7vw, 52px);
+  font-weight: 700;
+  line-height: 1.06;
   font-style: italic;
   text-shadow: 0 2px 8px #000;
   color: #f7e5c0;
 }
 .studio-title-stroke {
   display: block;
-  width: 70%;
+  width: 80px;
   height: 3px;
-  background: #b32636;
-  margin-top: 14px;
+  background: #aa2830;
+  margin-top: 16px;
   transform: rotate(-3deg);
   box-shadow: 0 2px 4px #0007;
 }
@@ -272,16 +275,16 @@
 .studio-page .studio-sheet,
 .studio-page .availability-note,
 .studio-page [aria-label="Audition preparation"] form {
-  padding: 22px;
+  padding: 23px;
   color: #322214;
   background:
-    linear-gradient(100deg, #b18a5355, #f6e2bc77 30%, #cba26544),
-    url("./assets/office/aged-paper.webp") center / 100% 100%;
-  border: 1px solid #b58f52;
-  border-radius: 7px;
+    radial-gradient(ellipse at 25% 0, #fff5d578, transparent 75%),
+    linear-gradient(108deg, #d6ba88, #efddb6 45%, #dec28f);
+  border: 1px solid #b8965e;
+  border-radius: 6px 11px 5px 8px;
   box-shadow:
-    0 3px 10px #0006,
-    inset 0 0 15px #88603122;
+    0 4px 15px #0005,
+    inset 0 0 0 4px #94703b12;
 }
 .studio-page .panel h2,
 .studio-page .studio-sheet h2,
@@ -322,12 +325,12 @@
 .studio-action-primary {
   color: #fff0d0;
   text-decoration: none;
-  background: linear-gradient(175deg, #cf293c, #9f0d21 52%, #5a0913);
-  border: 1px solid #d0a365;
-  border-radius: 12px;
+  background: linear-gradient(175deg, #c72b36, #970f20 55%, #630c16);
+  border: 1px solid #c29a62;
+  border-radius: 9px;
   box-shadow:
-    inset 0 2px 2px #f2917d66,
-    0 3px 7px #0007;
+    inset 0 2px 1px #ffbd9e3b,
+    0 4px 9px #0005;
   min-height: 50px;
 }
 .studio-page .studio-action-secondary,
@@ -372,10 +375,10 @@
   min-height: 48px;
   max-width: 100%;
   padding: 12px;
-  border: 1px solid #98764a;
+  border: 1px solid #ad8b5c;
   border-radius: 5px;
   color: #2c1b0e;
-  background: #f8e8c9;
+  background: #f8ecd2;
   font-size: 16px;
   line-height: 1.5;
 }
@@ -560,28 +563,45 @@
   .studio-page {
     background-size:
       auto,
-      750px auto;
+      1300px auto;
+    background-image:
+      linear-gradient(#0b0806d9, #0d0907f5 420px, #0d0907 900px),
+      url("./assets/premium/director-studio.webp");
+    background-color: #0d0907;
   }
   .studio-page > header {
-    padding: 10px 12px;
+    padding: 15px 24px;
+    max-width: 1040px;
+    min-height: 82px;
   }
   .studio-page > main {
-    padding: 0 12px 28px;
+    padding: 0 24px 36px;
+    max-width: 1040px;
   }
   .studio-page > [role="note"] {
     font-size: 10px;
     padding: 7px 12px;
   }
   .studio-heading {
-    padding: 20px 18px;
-    min-height: 115px;
+    padding: 25px 27px;
+    min-height: 150px;
     margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid #b4915a77;
+    background:
+      radial-gradient(ellipse at top left, #5e362540, transparent 80%),
+      linear-gradient(110deg, #1f130df2, #130d09ed);
+    box-shadow:
+      0 6px 20px #0005,
+      inset 0 0 0 4px #97733d12;
   }
   .studio-heading[data-illustrated="true"] {
-    min-height: 225px;
+    min-height: 200px;
   }
   .studio-heading h1 {
-    font-size: clamp(30px, 9.2vw, 43px);
+    font-size: clamp(30px, 4.7vw, 52px);
+    font-weight: 700;
+    line-height: 1.06;
   }
   .studio-heading[data-illustrated="true"] .studio-heading-copy {
     max-width: 65%;
@@ -589,7 +609,8 @@
   .studio-eyebrow {
     font-size: 10px;
     margin-bottom: 7px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.16em;
+    color: #bca077;
   }
   .studio-heading-director {
     width: 58%;
