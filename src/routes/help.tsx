@@ -1,11 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Page } from "@/components/slams";
+import { Page, btnSecondary } from "@/components/slams";
 export const Route = createFileRoute("/help")({ component: Help });
 function Help() {
   return (
     <Page title="Your studio, explained" eyebrow="Help" backTo="/">
       <div className="foundation-stack">
         <h2>Learn. Work. Get unstuck.</h2>
+        <nav aria-label="Choose your studio task" className="grid grid-cols-2 gap-2">
+          <Link to="/conservatory" className={btnSecondary}>
+            Train
+          </Link>
+          <Link to="/rehearsal" className={btnSecondary}>
+            Rehearse
+          </Link>
+          <Link to="/work" className={btnSecondary}>
+            Work
+          </Link>
+          <Link to="/stuck" className={btnSecondary}>
+            Get Unstuck
+          </Link>
+        </nav>
         <p>
           The Conservatory holds eight provisional school structures. Only reviewed, published
           material can be completed. Actor at Work saves your audition preparation. The Stuck Desk

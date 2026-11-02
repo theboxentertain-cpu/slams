@@ -1,5 +1,7 @@
 # SLAMS information architecture
 
+Current page-by-page ownership and open requirements: [47-page traceability](SLAMS-47-PAGE-TRACEABILITY.md). The [navigation contract](SLAMS-NAVIGATION-CONTRACT.md) supplies the five-tab/object/return map; [release verification](SLAMS-RELEASE-VERIFICATION.md) records the first blueprint implementation.
+
 `src/routes/__root.tsx` owns the root layout. `AppShell` owns the sole persistent five-item studio bar. `SessionProvider` owns identity, and existing stores own private persistence. Cinematic entry routes intentionally omit the studio bar. Layout-only route files render `Outlet`; they are not additional competing departments.
 
 | Primary destination | Canonical route | Responsibility                                                                                     |
@@ -50,7 +52,9 @@ flowchart TD
   Work --> Prep[Existing audition preparation]
   Prep --> Save[Verified save or visible error]
   Scene --> Reflect[Retake and reflection]
-  Reflect --> Passport[Passport]
+  Reflect -->|Confirmed save| Passport[Passport]
+  Reflect -->|Practice again; input retained| Scene
+  Reflect -->|Continue without saving| Rehearse
   Legacy[Old intervention bookmark] --> Stuck
   Planned[Explicit planned-tool disclosure or old support link] --> Status[Honest availability page]
   Status --> Rehearse

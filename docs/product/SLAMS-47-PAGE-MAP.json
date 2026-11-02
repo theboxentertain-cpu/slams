@@ -1,0 +1,3469 @@
+{
+  "schemaVersion": 1,
+  "blueprint": {
+    "filename": "SLAMS_Page_by_Page_Codex_Blueprint.docx",
+    "sha256": "407f1011d479bee731141f3cf0b76f797b075ac65e6840aead6797c94c4211da",
+    "version": "1.0"
+  },
+  "baselineCommit": "755f5ba16ef9cd941be73af683c18f69d43ebc32",
+  "branch": "feat/blueprint-page-contracts",
+  "primaryNavigation": [
+    {
+      "label": "Office",
+      "route": "/"
+    },
+    {
+      "label": "Schools",
+      "route": "/conservatory"
+    },
+    {
+      "label": "Rehearse",
+      "route": "/rehearsal"
+    },
+    {
+      "label": "Work",
+      "route": "/work"
+    },
+    {
+      "label": "Stuck Desk",
+      "route": "/stuck"
+    }
+  ],
+  "verificationPolicy": "Source audit and bounded browser surface verification are separate. FAIL/BLOCKED remain explicit; no future feature becomes PASS because its availability page renders.",
+  "pages": [
+    {
+      "id": "P01",
+      "title": "Cinematic Welcome",
+      "contract": {
+        "location": "LOCATION: / (first visit); /welcome     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Hero scene: SLAMS masthead; reclining Director; single-sentence product proposition; ENTER THE STUDIO as dominant CTA; secondary sign-in path; real feature links only.",
+        "requiredClicks": [
+          "Enter the Studio  →  Page 02 Account Choice for first-time visitor; returning users enter Office directly",
+          "Sign In  →  Page 03 Authentication",
+          "Explore valid feature  →  Corresponding live destination, preserving first-entry handling"
+        ],
+        "acceptance": "On a new phone, a user immediately understands SLAMS and reaches the studio without mandatory explanatory tours."
+      },
+      "owner": {
+        "route": "/welcome",
+        "forms": [
+          "route"
+        ],
+        "component": "WelcomeLanding",
+        "sourceFiles": [
+          "src/components/welcome/WelcomePages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Enter the Studio → /welcome/account",
+      "entrances": [
+        "P01 fresh / or /welcome"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P02 account choice",
+          "targetPageIds": [
+            "P02"
+          ]
+        },
+        {
+          "label": "P03 auth",
+          "targetPageIds": [
+            "P03"
+          ]
+        },
+        {
+          "label": "P11/P21/P31/P38/P43 feature links",
+          "targetPageIds": [
+            "P11",
+            "P21",
+            "P31",
+            "P38",
+            "P43"
+          ]
+        },
+        {
+          "label": "P06 Office",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Dominant entry follows books/features; short first-action hierarchy still needs work."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P01",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/studio-entry.test.ts"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Fresh visitor receives welcome",
+          "Blueprint Enter opens Account Choice"
+        ]
+      }
+    },
+    {
+      "id": "P02",
+      "title": "Account Choice",
+      "contract": {
+        "location": "LOCATION: /welcome/account     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Three unambiguous choices: Continue as Guest; Create Account; Sign In. Brief disclosure of browser-only versus cloud persistence and import consent.",
+        "requiredClicks": [
+          "Continue as Guest  →  Page 04 Meet the Actor or skip to Office",
+          "Create Account  →  Page 03 signup",
+          "Sign In  →  Page 03 sign-in",
+          "Skip setup  →  Page 06 Office"
+        ],
+        "acceptance": "Guest mode cannot imply secure cloud persistence. Auth is optional for first demo unless security requires it."
+      },
+      "owner": {
+        "route": "/welcome/account",
+        "forms": [
+          "route"
+        ],
+        "component": "WelcomeAccount",
+        "sourceFiles": [
+          "src/components/welcome/WelcomePages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Explore as Guest → /welcome/setup",
+      "entrances": [
+        "P01 Enter the Studio"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P03 signup/signin",
+          "targetPageIds": [
+            "P03"
+          ]
+        },
+        {
+          "label": "P04 guest/account continuation",
+          "targetPageIds": [
+            "P04"
+          ]
+        },
+        {
+          "label": "P06 skip",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Account choice omits an explicit explanation that signing in does not automatically import browser records."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P02",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/welcome-auth.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Guest is a real optional account choice",
+          "Guest storage disclosed",
+          "Account/setup can be skipped to Office"
+        ]
+      }
+    },
+    {
+      "id": "P03",
+      "title": "Authentication",
+      "contract": {
+        "location": "LOCATION: /auth; /reset-password     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Accessible email/password signup, sign-in, confirmation pending state, password recovery, callback errors, and explicit account-switch behavior.",
+        "requiredClicks": [
+          "Create Account  →  Supabase signup then confirmation instruction; authenticated route only after real confirmation",
+          "Sign In  →  Page 04 or Office according to actual state",
+          "Forgot Password  →  Password recovery flow",
+          "Return to Studio  →  Office or saved entry route"
+        ],
+        "acceptance": "No invented confirmation. Actual security and live email flow are separately verified."
+      },
+      "owner": {
+        "route": "/auth",
+        "forms": [
+          "route"
+        ],
+        "component": "AccountForm / Auth / ResetPassword",
+        "sourceFiles": [
+          "src/components/welcome/AccountForm.tsx",
+          "src/routes/auth.tsx",
+          "src/routes/reset-password.tsx",
+          "src/lib/session.ts"
+        ],
+        "routeAliases": [
+          "/reset-password"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Sign in / Create account / Send reset link",
+      "entrances": [
+        "P01/P02/P46 account links"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P04 welcome auth continuation",
+          "targetPageIds": [
+            "P04"
+          ]
+        },
+        {
+          "label": "P06 ordinary auth",
+          "targetPageIds": [
+            "P06"
+          ]
+        },
+        {
+          "label": "recovery /reset-password",
+          "targetPageIds": []
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Live confirmation, callback-error handling, recovery and independent account transitions require live verification."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P03",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/welcome-auth.test.tsx",
+          "src/test/session-isolation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Existing signup confirmation field remains",
+          "Recovery path remains available",
+          "No fake OAuth provider enabled"
+        ]
+      }
+    },
+    {
+      "id": "P04",
+      "title": "Meet the Actor",
+      "contract": {
+        "location": "LOCATION: /welcome/setup     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Brief optional experience, goal, starting preference and accessible motion/sound settings; no unnecessary profile questionnaire.",
+        "requiredClicks": [
+          "Start Training  →  Available reviewed exercise or Page 23 Scene Briefing",
+          "Explore Studio  →  Page 06 Office",
+          "Skip  →  Page 06 Office"
+        ],
+        "acceptance": "Input only changes supported routing/preferences. No fabricated personalized training advice."
+      },
+      "owner": {
+        "route": "/welcome/setup",
+        "forms": [
+          "route"
+        ],
+        "component": "ActorSetupPage",
+        "sourceFiles": [
+          "src/components/welcome/WelcomePages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Continue to Baseline → /baseline?flow=welcome",
+      "entrances": [
+        "P02 guest/auth continuation"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P05 continue/skip",
+          "targetPageIds": [
+            "P05"
+          ]
+        },
+        {
+          "label": "P02 back",
+          "targetPageIds": [
+            "P02"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Training goes through another optional introduction; no direct training or Office skip on this page."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P04",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/welcome-setup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Optional actor setup owner exists",
+          "Real motion preference offered",
+          "Setup skip remains available"
+        ]
+      }
+    },
+    {
+      "id": "P05",
+      "title": "Actor’s Baseline",
+      "contract": {
+        "location": "LOCATION: /baseline     •     BASELINE: TARGET / GATED",
+        "layout": "Optional introduction, practical first exercise instructions, observation/reflection prompts, and appropriately qualified development starting point.",
+        "requiredClicks": [
+          "Start Exercise  →  Page 21 Rehearsal Hub or Page 23",
+          "Explore Methods  →  Page 11 Conservatory",
+          "Skip  →  Page 06 Office"
+        ],
+        "acceptance": "When true baseline tasks are absent, show a transparent introduction and real rehearsal link; no fake score or diagnosis."
+      },
+      "owner": {
+        "route": "/baseline",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "BaselineWelcome / SupportPage",
+        "sourceFiles": [
+          "src/routes/baseline.tsx",
+          "src/components/welcome/WelcomePages.tsx",
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Skip to a first rehearsal → /scene",
+      "entrances": [
+        "P04 welcome flow or P10 mirror"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 rehearsal",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "welcome variant P11/P31/P06",
+          "targetPageIds": [
+            "P11",
+            "P31",
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Practical diagnostic tasks and justified development pathways unavailable; welcome variant is an introduction only."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P05",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Baseline explicitly gated",
+          "Baseline has a real supported next step",
+          "No invented baseline diagnostic"
+        ]
+      }
+    },
+    {
+      "id": "P06",
+      "title": "Main Director’s Office",
+      "contract": {
+        "location": "LOCATION: /     •     BASELINE: EXISTING / VERIFY",
+        "layout": "One cinematic home with visible central Director, physical school books, clapperboard, annotated script, casting wall, rehearsal entrance, portfolio, progress sheet; three connected room views: Desk, Work Wall, Rehearsal Corner. Clear Train / Rehearse / Work entrances remain visible without swiping.",
+        "requiredClicks": [
+          "Eight stacked books  →  Page 08 Bookcase",
+          "Director figure  →  Page 07 Master’s Chair",
+          "Clapperboard  →  Page 21 Rehearsal Hub or Page 23 active scene",
+          "Casting/headshot wall  →  Page 09 Work Wall / Page 31 Work",
+          "Annotated script  →  Page 38 Stuck Desk",
+          "Rehearsal entrance  →  Page 21 Rehearsal Hub",
+          "Camera  →  Page 29 Performance Lab",
+          "Mirror  →  Page 05 Baseline",
+          "Technique board  →  Page 20 Matrix",
+          "Portfolio  →  Page 43 Passport",
+          "Empty chair  →  Page 30 Lounge",
+          "Progress sheet/bell  →  Page 44 Progress"
+        ],
+        "acceptance": "Every physical object has an accessible name, meaningful target and no tappable obstruction. Last room view may restore; core routing works without swipe."
+      },
+      "owner": {
+        "route": "/",
+        "forms": [
+          "route"
+        ],
+        "component": "DirectorsOffice",
+        "sourceFiles": [
+          "src/components/office/DirectorsOffice.tsx"
+        ]
+      },
+      "functionalStatus": "WORKING",
+      "primaryCta": "Start rehearsal → /scene; visible book/work entrances",
+      "entrances": [
+        "P02 skip",
+        "persistent Office",
+        "remembered entry"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P07 coach dialog",
+          "targetPageIds": [
+            "P07"
+          ]
+        },
+        {
+          "label": "P08 books",
+          "targetPageIds": [
+            "P08"
+          ]
+        },
+        {
+          "label": "P09/P10 room views",
+          "targetPageIds": [
+            "P09",
+            "P10"
+          ]
+        },
+        {
+          "label": "P21/P24 rehearsal",
+          "targetPageIds": [
+            "P21",
+            "P24"
+          ]
+        },
+        {
+          "label": "P31 work",
+          "targetPageIds": [
+            "P31"
+          ]
+        },
+        {
+          "label": "P38 script",
+          "targetPageIds": [
+            "P38"
+          ]
+        },
+        {
+          "label": "P43/P44 records",
+          "targetPageIds": [
+            "P43",
+            "P44"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "PASS",
+        "result": "PASS",
+        "findings": [],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P06",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/office.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Exactly five studio destinations",
+          "Office has explicit desk room entrance",
+          "Rehearsal entrance needs no swipe"
+        ]
+      }
+    },
+    {
+      "id": "P07",
+      "title": "The Director / Master’s Chair",
+      "contract": {
+        "location": "LOCATION: /director + office coaching panel     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "One coherent mentor identity; character states; ON / QUIET / OFF; context for active lesson or scene; distinguishes scripted guidance, reflections and observed evidence.",
+        "requiredClicks": [
+          "Explain This Technique  →  Page 16 relevant reviewed lesson",
+          "Give Me a Note  →  Page 25 supported intervention",
+          "I’m Stuck  →  Page 38 Stuck Desk",
+          "Back  →  Page 06 Office"
+        ],
+        "acceptance": "Do not infer acting quality from record counts. Never present fictional observation as measured coaching."
+      },
+      "owner": {
+        "route": "/director",
+        "forms": [
+          "route",
+          "modal"
+        ],
+        "component": "CoachPanel / Director",
+        "sourceFiles": [
+          "src/components/office/CoachPanel.tsx",
+          "src/routes/director.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Meet the Director and explore controls → /director",
+      "entrances": [
+        "P06 Director figure",
+        "profile menu"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P45 Director profile",
+          "targetPageIds": [
+            "P45"
+          ]
+        },
+        {
+          "label": "ON/QUIET/OFF",
+          "targetPageIds": []
+        },
+        {
+          "label": "P06 close with focus restoration",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Contextual reviewed-lesson explanation and intervention task binding are not implemented."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P07",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/office.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Coach modal uses existing Director modes",
+          "Coach points to single Director profile"
+        ]
+      }
+    },
+    {
+      "id": "P08",
+      "title": "Conservatory Bookcase",
+      "contract": {
+        "location": "LOCATION: Office dialog/view     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Eight tactile individually styled school books; short description, canonical method name, term overview and availability indicator; accessible modal/open-book interaction.",
+        "requiredClicks": [
+          "Tap School Book  →  Page 12 selected school",
+          "View All Schools  →  Page 11 Conservatory",
+          "Close  →  Page 06 Office; restore focus"
+        ],
+        "acceptance": "All eight are accessible, distinct and point to their real school slugs; no fake published units."
+      },
+      "owner": {
+        "route": "/",
+        "forms": [
+          "modal"
+        ],
+        "component": "SchoolBooks",
+        "sourceFiles": [
+          "src/components/office/SchoolBooks.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Open selected school → /conservatory/$school",
+      "entrances": [
+        "P06 eight-book button",
+        "P01 book collection"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P12 eight canonical school links",
+          "targetPageIds": [
+            "P12"
+          ]
+        },
+        {
+          "label": "P11 all schools",
+          "targetPageIds": [
+            "P11"
+          ]
+        },
+        {
+          "label": "P06 close/focus restore",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Eight canonical books, term metadata and focus restoration work; per-school short descriptions and individual availability indicators are absent from the dialog."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P08",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/office.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Bookcase has eight real school destinations",
+          "Closing bookcase restores trigger focus"
+        ]
+      }
+    },
+    {
+      "id": "P09",
+      "title": "Work Wall",
+      "contract": {
+        "location": "LOCATION: Office wall view     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Casting board, headshots, annotated scripts, audition folder, scene notes, portfolio object and professional action labels.",
+        "requiredClicks": [
+          "Casting folder  →  Page 31 Work or Page 32 Audition",
+          "Character notes  →  Page 34 Character Laboratory",
+          "Script pages  →  Page 35 Breakdown",
+          "Passport  →  Page 43 Passport",
+          "Return to Desk  →  Page 06 Office"
+        ],
+        "acceptance": "All destinations clearly indicate real working features versus gated future tools."
+      },
+      "owner": {
+        "route": "/",
+        "forms": [
+          "subview"
+        ],
+        "component": "WorkWall",
+        "sourceFiles": [
+          "src/components/office/WorkWall.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Actor at Work → /work",
+      "entrances": [
+        "P06 Work wall tab/swipe"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P31 work",
+          "targetPageIds": [
+            "P31"
+          ]
+        },
+        {
+          "label": "P43 Passport",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P20 Matrix",
+          "targetPageIds": [
+            "P20"
+          ]
+        },
+        {
+          "label": "P38 Stuck",
+          "targetPageIds": [
+            "P38"
+          ]
+        },
+        {
+          "label": "P44 progress",
+          "targetPageIds": [
+            "P44"
+          ]
+        },
+        {
+          "label": "desk tab",
+          "targetPageIds": []
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Character/script notes currently open Work, rather than distinct character/breakdown tools; gated tools remain disclosed."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P09",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/office.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Casting wall leads to actual Work owner",
+          "Wall technique board retains gated Matrix entrance"
+        ]
+      }
+    },
+    {
+      "id": "P10",
+      "title": "Rehearsal Corner",
+      "contract": {
+        "location": "LOCATION: Office corner view     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Rehearsal arch, clapperboard, mirror, vintage camera, empty chair and scene/technique objects.",
+        "requiredClicks": [
+          "Clapperboard  →  Page 24 Living Scene or Page 21 rehearsal",
+          "Camera  →  Page 29 Performance Lab",
+          "Mirror  →  Page 05 Baseline",
+          "Empty chair  →  Page 30 Lounge",
+          "Doorway  →  Page 21 Hub"
+        ],
+        "acceptance": "No fake recording or live partners. Scene entry preserves task context."
+      },
+      "owner": {
+        "route": "/",
+        "forms": [
+          "subview"
+        ],
+        "component": "RehearsalCorner",
+        "sourceFiles": [
+          "src/components/office/RehearsalCorner.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Step onto the stage → /scene",
+      "entrances": [
+        "P06 Rehearsal corner tab/swipe"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P05 mirror",
+          "targetPageIds": [
+            "P05"
+          ]
+        },
+        {
+          "label": "P29 camera",
+          "targetPageIds": [
+            "P29"
+          ]
+        },
+        {
+          "label": "P30 chair",
+          "targetPageIds": [
+            "P30"
+          ]
+        },
+        {
+          "label": "P24 stage",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P06 desk tab",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Mirror/camera/chair and the scene-stage entrance work; the specified corner clapper/doorway Hub entrance is absent."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P10",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/office.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Corner object points to /baseline",
+          "Corner object points to /lab",
+          "Corner object points to /lounge"
+        ]
+      }
+    },
+    {
+      "id": "P11",
+      "title": "Conservatory Library",
+      "contract": {
+        "location": "LOCATION: /conservatory     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Eight school books and three useful states: All Schools, In Progress, Completed; availability and actual user progress; optional direct resume.",
+        "requiredClicks": [
+          "Select School  →  Page 12 School Overview",
+          "In Progress  →  Resume eligible reviewed unit",
+          "Completed  →  Actually verified completed units",
+          "Return Office  →  Page 06"
+        ],
+        "acceptance": "Counts and completion statements must come from reviewed eligible data, not static curriculum outline."
+      },
+      "owner": {
+        "route": "/conservatory",
+        "forms": [
+          "route",
+          "tab"
+        ],
+        "component": "ConservatoryPage",
+        "sourceFiles": [
+          "src/components/foundation/SchoolPages.tsx",
+          "src/lib/training.ts"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Select school → /conservatory/$school",
+      "entrances": [
+        "primary Schools",
+        "P08 all schools",
+        "P47 Train"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P12 selected school",
+          "targetPageIds": [
+            "P12"
+          ]
+        },
+        {
+          "label": "In Progress/Completed tabs",
+          "targetPageIds": []
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "In Progress filters school books rather than directly resuming an eligible unit; whole-school completion criteria/live reviewed material remain unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P11",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Library retains all eight schools",
+          "Library three states remain"
+        ]
+      }
+    },
+    {
+      "id": "P12",
+      "title": "Individual School Overview",
+      "contract": {
+        "location": "LOCATION: /conservatory/$school     •     BASELINE: EXISTING / VERIFY",
+        "layout": "School identity, historical/philosophical context, what it teaches and cautions; five tabs: Overview, Curriculum, Practice, Assessments, Progress.",
+        "requiredClicks": [
+          "Curriculum tab  →  Page 13 School Year",
+          "Practice tab  →  Page 17 eligible exercise",
+          "Assessments tab  →  Page 18 if reviewed",
+          "Progress tab  →  Page 19 school evidence",
+          "School Book/Back  →  Page 11 Library"
+        ],
+        "acceptance": "Canonical eight school names/slugs, provisional terms and honest reviewed-content gates are preserved."
+      },
+      "owner": {
+        "route": "/conservatory/$school",
+        "forms": [
+          "route",
+          "tab"
+        ],
+        "component": "SchoolPage",
+        "sourceFiles": [
+          "src/components/foundation/SchoolPages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Explore the curriculum structure",
+      "entrances": [
+        "P08/P11 selected book"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P13/P14 curriculum links",
+          "targetPageIds": [
+            "P13",
+            "P14"
+          ]
+        },
+        {
+          "label": "P17 practice",
+          "targetPageIds": [
+            "P17"
+          ]
+        },
+        {
+          "label": "P18 assessments",
+          "targetPageIds": [
+            "P18"
+          ]
+        },
+        {
+          "label": "P19 progress",
+          "targetPageIds": [
+            "P19"
+          ]
+        },
+        {
+          "label": "P11 back",
+          "targetPageIds": [
+            "P11"
+          ]
+        },
+        {
+          "label": "P24 demo",
+          "targetPageIds": [
+            "P24"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Historical/philosophical teaching and cautions are absent pending reviewed material."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P12",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "School retains five actual tabs",
+          "School curriculum resolves real Year 1"
+        ]
+      }
+    },
+    {
+      "id": "P13",
+      "title": "School Year",
+      "contract": {
+        "location": "LOCATION: /conservatory/$school/years/$year     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Year title, learning goals, terms, actual available course links, prerequisites if reviewed, and next eligible action.",
+        "requiredClicks": [
+          "Select Term  →  Page 14 Term Dashboard",
+          "Continue Eligible Training  →  Page 16 or 17 real unit",
+          "School Overview  →  Page 12"
+        ],
+        "acceptance": "No invented prerequisites or fabricated year-level educational promises."
+      },
+      "owner": {
+        "route": "/conservatory/$school/years/$year",
+        "forms": [
+          "route"
+        ],
+        "component": "YearPage",
+        "sourceFiles": [
+          "src/components/foundation/SchoolPages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Select Term → term route",
+      "entrances": [
+        "P12 curriculum year"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P14 terms",
+          "targetPageIds": [
+            "P14"
+          ]
+        },
+        {
+          "label": "P12 inline curriculum return",
+          "targetPageIds": [
+            "P12"
+          ]
+        },
+        {
+          "label": "P11 header back",
+          "targetPageIds": [
+            "P11"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Reviewed goals/prerequisites absent; header back skips school while inline return preserves it."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P13",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Year resolves canonical term",
+          "Year preserves school curriculum return"
+        ]
+      }
+    },
+    {
+      "id": "P14",
+      "title": "Term Dashboard",
+      "contract": {
+        "location": "LOCATION: /conservatory/$school/years/$year/terms/$term     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Term purpose, reviewed courses, workshops, exercises, prerequisites, assessments and unavailable-state explanations.",
+        "requiredClicks": [
+          "Select Course  →  Page 15 Course/Workshop",
+          "Select Exercise  →  Page 17 Exercise",
+          "Select Assessment  →  Page 18 if published",
+          "Back to Year  →  Page 13"
+        ],
+        "acceptance": "No link claims a unit exists unless it resolves to reviewed and published data."
+      },
+      "owner": {
+        "route": "/conservatory/$school/years/$year/terms/$term",
+        "forms": [
+          "route"
+        ],
+        "component": "TermPage",
+        "sourceFiles": [
+          "src/components/foundation/SchoolPages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Select actual available course",
+      "entrances": [
+        "P13 term",
+        "P12 curriculum term"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P15 actual course links if catalog exists",
+          "targetPageIds": [
+            "P15"
+          ]
+        },
+        {
+          "label": "P13 inline Year return",
+          "targetPageIds": [
+            "P13"
+          ]
+        },
+        {
+          "label": "P11 header back",
+          "targetPageIds": [
+            "P11"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Reviewed outcomes/prerequisites/advancement absent; primary back skips Year; direct exercise/assessment lists absent."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P14",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Term preserves inline Year return",
+          "Term shell cannot award progress"
+        ]
+      }
+    },
+    {
+      "id": "P15",
+      "title": "Course / Workshop",
+      "contract": {
+        "location": "LOCATION: Published curriculum unit path     •     BASELINE: REVIEW-DEPENDENT",
+        "layout": "Course outcome, workshop/lesson sequence, requirements, verified practical material and appropriate related practice.",
+        "requiredClicks": [
+          "Start Lesson  →  Page 16",
+          "Practice  →  Page 17",
+          "Return to Term  →  Page 14"
+        ],
+        "acceptance": "Unavailable material is not replaced by invented “authoritative” teaching."
+      },
+      "owner": {
+        "route": "/conservatory/$school/units/$kind/$unitId",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "UnitPage / CurriculumUnit (course/workshop)",
+        "sourceFiles": [
+          "src/components/foundation/SchoolPages.tsx",
+          "src/components/CurriculumUnit.tsx"
+        ]
+      },
+      "functionalStatus": "REVIEW-DEPENDENT",
+      "primaryCta": "Open reviewed child unit when available",
+      "entrances": [
+        "P14 actual catalog course",
+        "P15 workshop child"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P16/P17 real children if supplied",
+          "targetPageIds": [
+            "P16",
+            "P17"
+          ]
+        },
+        {
+          "label": "curriculum parents",
+          "targetPageIds": []
+        },
+        {
+          "label": "P14 term",
+          "targetPageIds": [
+            "P14"
+          ]
+        },
+        {
+          "label": "P12 school",
+          "targetPageIds": [
+            "P12"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "No independently reviewed course/workshop supplied or live catalog verified."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P15",
+        "result": "BLOCKED",
+        "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P15 unavailable synthetic unit cannot complete",
+          "P15 missing/unavailable material has a page state"
+        ]
+      }
+    },
+    {
+      "id": "P16",
+      "title": "Individual Lesson",
+      "contract": {
+        "location": "LOCATION: Published curriculum unit path     •     BASELINE: REVIEW-DEPENDENT",
+        "layout": "Six instructional sections: WHY, WHAT, HOW, WHEN, AVOID, APPLICATION; school-specific context, reviewed source/rights and actual exercise relationship.",
+        "requiredClicks": [
+          "Start Exercise  →  Page 17",
+          "Ask Director  →  Page 07 contextual note",
+          "Next Lesson  →  Next eligible published unit",
+          "Back  →  Page 15"
+        ],
+        "acceptance": "Publication and educational-review rules enforced server-side; no unsourced certification claims."
+      },
+      "owner": {
+        "route": "/conservatory/$school/units/$kind/$unitId",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "UnitPage / CurriculumUnit (lesson)",
+        "sourceFiles": [
+          "src/components/CurriculumUnit.tsx",
+          "src/components/foundation/SchoolPages.tsx"
+        ]
+      },
+      "functionalStatus": "REVIEW-DEPENDENT",
+      "primaryCta": "Start unit / reviewed exercise child if supplied",
+      "entrances": [
+        "P15 actual reviewed lesson"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P17 children if supplied",
+          "targetPageIds": [
+            "P17"
+          ]
+        },
+        {
+          "label": "published progress",
+          "targetPageIds": []
+        },
+        {
+          "label": "ancestor/term/school links",
+          "targetPageIds": []
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Reviewed six-section lessons, source/rights and next/contextual Director links are not supplied."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P16",
+        "result": "BLOCKED",
+        "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P16 unavailable synthetic unit cannot complete",
+          "P16 missing/unavailable material has a page state"
+        ]
+      }
+    },
+    {
+      "id": "P17",
+      "title": "Practical Exercise",
+      "contract": {
+        "location": "LOCATION: Published exercise route or linked Rehearsal     •     BASELINE: REVIEW-DEPENDENT",
+        "layout": "Purpose, preparation, instructions, solo/partner applicability, legitimate learning evidence, reflection and completion status.",
+        "requiredClicks": [
+          "Begin  →  Page 21/24 supported rehearsal or exercise runner",
+          "Reflect  →  Page 27",
+          "Submit Evidence  →  Page 43 Passport if supported",
+          "Back  →  Page 16"
+        ],
+        "acceptance": "Never mark unreviewed exercise complete or infer competency from clicking a button."
+      },
+      "owner": {
+        "route": "/conservatory/$school/units/$kind/$unitId",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "UnitPage / CurriculumUnit (exercise)",
+        "sourceFiles": [
+          "src/components/CurriculumUnit.tsx",
+          "src/components/foundation/SchoolPages.tsx"
+        ]
+      },
+      "functionalStatus": "REVIEW-DEPENDENT",
+      "primaryCta": "Start unit / Mark complete only if eligible",
+      "entrances": [
+        "P12 Practice",
+        "P16 real reviewed child"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "Parent curriculum links and signed-in eligible unit progress",
+          "targetPageIds": []
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Reviewed exercise runner, linked scene/evidence/reflection integration unavailable; do not invent material."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P17",
+        "result": "BLOCKED",
+        "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P17 unavailable synthetic unit cannot complete",
+          "P17 missing/unavailable material has a page state"
+        ]
+      }
+    },
+    {
+      "id": "P18",
+      "title": "Term Assessment",
+      "contract": {
+        "location": "LOCATION: Published assessment path     •     BASELINE: REVIEW-DEPENDENT",
+        "layout": "Reviewed tasks, requirements, evaluation method, submission/evidence state and actual advancement logic.",
+        "requiredClicks": [
+          "Begin Assessment  →  Real approved task",
+          "Submit  →  Verified assessment record / human review if specified",
+          "Next Eligible Term  →  Page 14 appropriate term",
+          "Back  →  Page 14"
+        ],
+        "acceptance": "No fake pass/fail, accreditation, mastery score or school graduation."
+      },
+      "owner": {
+        "route": "/conservatory/$school/units/$kind/$unitId",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "UnitPage / CurriculumUnit (assessment)",
+        "sourceFiles": [
+          "src/components/CurriculumUnit.tsx",
+          "src/components/foundation/SchoolPages.tsx"
+        ]
+      },
+      "functionalStatus": "REVIEW-DEPENDENT",
+      "primaryCta": "Eligible reviewed task only",
+      "entrances": [
+        "P12 Assessments",
+        "actual catalog child"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "Parent curriculum and published progress controls when eligible",
+          "targetPageIds": []
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Reviewed assessment tasks, rubrics, evidence submission and advancement unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P18",
+        "result": "BLOCKED",
+        "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P18 unavailable synthetic unit cannot complete",
+          "P18 missing/unavailable material has a page state"
+        ]
+      }
+    },
+    {
+      "id": "P19",
+      "title": "School Progress",
+      "contract": {
+        "location": "LOCATION: School Progress tab     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Actual reviewed unit activity, valid completed evidence, current eligible unit and mapping to Passport; no invented skill proficiency.",
+        "requiredClicks": [
+          "Resume  →  Page 16/17 eligible unit",
+          "View Evidence  →  Page 43",
+          "Return to School  →  Page 12"
+        ],
+        "acceptance": "Owner-scoped queries, truthful loading/error, stable resume logic and no cross-account data leakage."
+      },
+      "owner": {
+        "route": "/conservatory/$school",
+        "forms": [
+          "tab"
+        ],
+        "component": "SchoolPage / TrainingSummary",
+        "sourceFiles": [
+          "src/components/foundation/SchoolPages.tsx",
+          "src/components/foundation/TrainingSummary.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Continue training only for eligible started unit",
+      "entrances": [
+        "P12 Progress tab"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P16/P17 eligible resume",
+          "targetPageIds": [
+            "P16",
+            "P17"
+          ]
+        },
+        {
+          "label": "P44 detailed progress",
+          "targetPageIds": [
+            "P44"
+          ]
+        },
+        {
+          "label": "P12 other school tabs",
+          "targetPageIds": [
+            "P12"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "School evidence link to P43 is indirect through Progress; complete reviewed school pathway not verified live."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P19",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "School Progress is the same school owner",
+          "School progress connects to real activity"
+        ]
+      }
+    },
+    {
+      "id": "P20",
+      "title": "Technique Matrix",
+      "contract": {
+        "location": "LOCATION: /matrix     •     BASELINE: TARGET / GATED",
+        "layout": "Reviewed comparative cards: differences, applications, limitations, cautions, linked exercises and technique-specific use.",
+        "requiredClicks": [
+          "Choose Technique  →  Page 16 appropriate reviewed lesson",
+          "Try Technique  →  Page 17 exercise",
+          "Back to Scene  →  Page 24 active scene when applicable"
+        ],
+        "acceptance": "Only published reviewed comparisons are usable; do not treat techniques as interchangeable."
+      },
+      "owner": {
+        "route": "/matrix",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (matrix)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Explore the schools → /conservatory",
+      "entrances": [
+        "P09 diagram",
+        "profile menu"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P11 available school structure",
+          "targetPageIds": [
+            "P11"
+          ]
+        },
+        {
+          "label": "P11 back",
+          "targetPageIds": [
+            "P11"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Reviewed comparisons and safe active-scene return/context not implemented."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P20",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/training-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Matrix explicitly gated",
+          "Matrix has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P21",
+      "title": "Rehearsal Hub",
+      "contract": {
+        "location": "LOCATION: /rehearsal     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Immediate Start Rehearsal CTA, available authored scene(s), legitimate saved rehearsal records, active work, links to Lab and Lounge.",
+        "requiredClicks": [
+          "Start Rehearsal  →  Page 23 Briefing or Page 24 active supported scene",
+          "My Scenes  →  Page 22 Scene Library",
+          "Performance Lab  →  Page 29",
+          "Rehearsal Lounge  →  Page 30"
+        ],
+        "acceptance": "First practice reachable in one or two deliberate actions, no forced feature tour."
+      },
+      "owner": {
+        "route": "/rehearsal",
+        "forms": [
+          "route",
+          "tab"
+        ],
+        "component": "RehearsalHub",
+        "sourceFiles": [
+          "src/components/foundation/WorkspacePages.tsx"
+        ]
+      },
+      "functionalStatus": "WORKING",
+      "primaryCta": "Start rehearsal → /scene",
+      "entrances": [
+        "primary Rehearse",
+        "P06 studio",
+        "P47 Rehearse"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P22 My Scenes",
+          "targetPageIds": [
+            "P22"
+          ]
+        },
+        {
+          "label": "P23 scene briefing",
+          "targetPageIds": [
+            "P23"
+          ]
+        },
+        {
+          "label": "P43 history",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P29/P30 Sessions links",
+          "targetPageIds": [
+            "P29",
+            "P30"
+          ]
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "PASS",
+        "result": "PASS",
+        "findings": [],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P21",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/foundation.test.ts"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "One action from Hub enters working briefing"
+        ]
+      }
+    },
+    {
+      "id": "P22",
+      "title": "My Scenes / Scene Library",
+      "contract": {
+        "location": "LOCATION: Rehearsal My Scenes tab     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Authored demo scenes, truthful difficulty and purpose, available scripts, saved user scenes only if supported.",
+        "requiredClicks": [
+          "Select Scene  →  Page 23 Briefing",
+          "Create New Scene  →  Functional creation flow only if implemented",
+          "Back to Hub  →  Page 21"
+        ],
+        "acceptance": "Scripted scenes labeled scripted; personal-scene creation stays gated until real storage exists."
+      },
+      "owner": {
+        "route": "/rehearsal",
+        "forms": [
+          "tab"
+        ],
+        "component": "RehearsalHub (My Scenes/New Scene)",
+        "sourceFiles": [
+          "src/components/foundation/WorkspacePages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Select Stay / Start rehearsal → /scene",
+      "entrances": [
+        "P21 My Scenes tab"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P23 scripted scene",
+          "targetPageIds": [
+            "P23"
+          ]
+        },
+        {
+          "label": "New Scene truthful gate",
+          "targetPageIds": []
+        },
+        {
+          "label": "P21 tabs",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Personal scene/script storage and creation unavailable; one authored demonstration only."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P22",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/foundation.test.ts"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Library contains authored Stay demo",
+          "Personal scene creation remains gated"
+        ]
+      }
+    },
+    {
+      "id": "P23",
+      "title": "Scene Briefing",
+      "contract": {
+        "location": "LOCATION: Scene preflight view     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Given circumstances, roles, objective, stakes, obstacle, tactic choices, selected technique and first-take instructions.",
+        "requiredClicks": [
+          "Choose Objective  →  Update prepared objective",
+          "Choose Tactic  →  Update actor choice",
+          "Begin Scene  →  Page 24 Living Scene",
+          "Back  →  Page 21/22"
+        ],
+        "acceptance": "Inputs persist across the immediate rehearsal flow; no pretending a goal was diagnosed."
+      },
+      "owner": {
+        "route": "/scene",
+        "forms": [
+          "subview"
+        ],
+        "component": "Scene (explore)",
+        "sourceFiles": [
+          "src/routes/scene.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Begin take → tactic selection",
+      "entrances": [
+        "P21/P22 Start rehearsal",
+        "Office clapper"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 tactic choice",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P21 back",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Objective/roles are fixed authored circumstances; no preparable objective/technique or persistent scene/session context contract."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P23",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/scene-regression.test.tsx",
+          "src/test/director-presence.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Briefing states actual authored objective",
+          "Briefing declares fixed partner responses"
+        ]
+      }
+    },
+    {
+      "id": "P24",
+      "title": "Living Scene",
+      "contract": {
+        "location": "LOCATION: /scene     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Real playable scripted scene: partner responses, actor-selected tactics, obstacle changes, silent-performing mode, intervention and retake transitions.",
+        "requiredClicks": [
+          "Choose Action  →  Next authored response",
+          "Request Note  →  Page 25 if enabled",
+          "Complete Take  →  Page 27 or Page 25",
+          "Director Mode  →  ON / QUIET / OFF inline"
+        ],
+        "acceptance": "All authored branches work. No claim of live improvising partner or AI observation without service."
+      },
+      "owner": {
+        "route": "/scene",
+        "forms": [
+          "route",
+          "subview"
+        ],
+        "component": "Scene (perform/response)",
+        "sourceFiles": [
+          "src/routes/scene.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Choose tactic → authored response",
+      "entrances": [
+        "P23 Begin take",
+        "P26 retake context"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P25 intervention",
+          "targetPageIds": [
+            "P25"
+          ]
+        },
+        {
+          "label": "Director ON/QUIET/OFF inline",
+          "targetPageIds": []
+        },
+        {
+          "label": "P21 header back",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Inline Director modes now available; stable scene/session/objective persistence is still missing."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities.",
+        "fixedInThisPR": "Inline existing ON/QUIET/OFF controls now use the sole preference owner; takes remain silent."
+      },
+      "verification": {
+        "testId": "BP-P24",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/scene-regression.test.tsx",
+          "src/test/director-presence.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "OFF removes note",
+          "QUIET uses brief note",
+          "Director stays silent during take",
+          "Authored tactic produces its fixed response"
+        ]
+      }
+    },
+    {
+      "id": "P25",
+      "title": "Director Intervention",
+      "contract": {
+        "location": "LOCATION: Scene coaching subview     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Evidence-bounded direction: specific scene choice, possible issue, technique explanation, adjustment and supporting exercise.",
+        "requiredClicks": [
+          "Try the Note  →  Page 26 Retake",
+          "Change Technique  →  Page 20 Matrix",
+          "Continue  →  Page 24 Scene"
+        ],
+        "acceptance": "A note must cite authored rules or actual actor input; no arbitrary grading."
+      },
+      "owner": {
+        "route": "/scene",
+        "forms": [
+          "subview"
+        ],
+        "component": "Scene (intervene/practice)",
+        "sourceFiles": [
+          "src/routes/scene.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Choose technique; exercise → retake",
+      "entrances": [
+        "P24 Cut — call an intervention"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P26 Go to retake after actor input",
+          "targetPageIds": [
+            "P26"
+          ]
+        },
+        {
+          "label": "P21 header back",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "No change-technique via Matrix or in-flow return to take; context round trip absent."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P25",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/scene-regression.test.tsx",
+          "src/test/director-presence.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Practice requires actor input"
+        ]
+      }
+    },
+    {
+      "id": "P26",
+      "title": "Retake Studio",
+      "contract": {
+        "location": "LOCATION: Scene retake subview     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Earlier tactic, changed objective/obstacle, practical adjustment, new take and comparison setup; Three Takes Three Tactics lives here.",
+        "requiredClicks": [
+          "Start Retake  →  Page 24",
+          "Complete  →  Page 27",
+          "Another Tactic  →  Another supported retake",
+          "Back  →  Page 25"
+        ],
+        "acceptance": "Retakes produce distinct evidence where capture exists; no fake video/media."
+      },
+      "owner": {
+        "route": "/scene",
+        "forms": [
+          "subview"
+        ],
+        "component": "Scene (retake)",
+        "sourceFiles": [
+          "src/routes/scene.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Cut — end take → reflection",
+      "entrances": [
+        "P25 completed exercise"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P27 reflection",
+          "targetPageIds": [
+            "P27"
+          ]
+        },
+        {
+          "label": "P25 Back to exercise; inputs retained",
+          "targetPageIds": [
+            "P25"
+          ]
+        },
+        {
+          "label": "P21 header back",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "BLOCKED",
+        "findings": [
+          "Three distinct takes and captured comparison remain unsupported."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities.",
+        "fixedInThisPR": "Earlier tactic/intervention/exercise note now shown; Back to exercise preserves all input."
+      },
+      "verification": {
+        "testId": "BP-P26",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/scene-regression.test.tsx",
+          "src/test/director-presence.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Retake retains earlier tactic context",
+          "Returning to exercise retains draft note",
+          "Exercise round trip retains retake"
+        ]
+      }
+    },
+    {
+      "id": "P27",
+      "title": "Reflection & Review",
+      "contract": {
+        "location": "LOCATION: Scene reflection subview     •     BASELINE: EXISTING / VERIFY",
+        "layout": "What actor chose, scripted responses, meaningful changes, actor-entered reflection, and clear record summary.",
+        "requiredClicks": [
+          "Save  →  Page 28 / Passport",
+          "Practice Again  →  Page 26",
+          "Next Eligible Exercise  →  Page 17",
+          "Back  →  Page 21"
+        ],
+        "acceptance": "Separate self-report from verified behavior; never create skill score with no rubric."
+      },
+      "owner": {
+        "route": "/scene",
+        "forms": [
+          "subview"
+        ],
+        "component": "Scene (reflect)",
+        "sourceFiles": [
+          "src/routes/scene.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Save to Passport",
+      "entrances": [
+        "P26 Cut — end take"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P28 confirmed save",
+          "targetPageIds": [
+            "P28"
+          ]
+        },
+        {
+          "label": "P26 Practice again; inputs retained",
+          "targetPageIds": [
+            "P26"
+          ]
+        },
+        {
+          "label": "P21 Return to rehearsal without saving",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "BLOCKED",
+        "findings": [
+          "Eligible next-exercise navigation requires reviewed available material and is not implemented; summary, repeat, save and Hub return are verified working subsets."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities.",
+        "fixedInThisPR": "Choice/response/retake summary, Practice again and explicit unsaved Hub exit now work; no competence claim."
+      },
+      "verification": {
+        "testId": "BP-P27",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/scene-regression.test.tsx",
+          "src/test/director-presence.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Review shows authored response and actor retake",
+          "Practice again preserves reflection",
+          "Unsaved exit returns to Hub explicitly"
+        ]
+      }
+    },
+    {
+      "id": "P28",
+      "title": "Rehearsal Record",
+      "contract": {
+        "location": "LOCATION: /passport detail or scene save confirmation     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Actual scene identifier, date, technique, chosen tactics, reflections, retakes if stored, and reliable save state.",
+        "requiredClicks": [
+          "Open in Passport  →  Page 43",
+          "Repeat Scene  →  Page 23",
+          "Rehearsal Hub  →  Page 21"
+        ],
+        "acceptance": "Owner-scoped save survives authentic reload/login; signed-out local storage disclosed."
+      },
+      "owner": {
+        "route": "/scene",
+        "forms": [
+          "subview"
+        ],
+        "component": "Scene (saved) / Passport journey record",
+        "sourceFiles": [
+          "src/routes/scene.tsx",
+          "src/routes/passport.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Open Passport → /passport",
+      "entrances": [
+        "P27 successful save",
+        "P43 saved record list"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P43 Open Passport",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P23 Rehearse again",
+          "targetPageIds": [
+            "P23"
+          ]
+        },
+        {
+          "label": "P21 Return to the rehearsal studio",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Stable scene/session/objective identifiers absent; live reload/login still unverified."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities.",
+        "fixedInThisPR": "Explicit saved confirmation → Rehearsal Hub action added; confirmed saves remain required."
+      },
+      "verification": {
+        "testId": "BP-P28",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/scene-regression.test.tsx",
+          "src/test/director-presence.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Save confirms guest storage only",
+          "Saved confirmation connects to Passport",
+          "Saved confirmation returns to Hub"
+        ]
+      }
+    },
+    {
+      "id": "P29",
+      "title": "Performance Lab",
+      "contract": {
+        "location": "LOCATION: /lab     •     BASELINE: TARGET / GATED",
+        "layout": "Future take library, recording metadata, playback, structured actor notes, real comparison and media permissions.",
+        "requiredClicks": [
+          "Select Takes  →  Comparison only if recorded data exists",
+          "Add Note  →  Actual saved annotation",
+          "Retry  →  Page 21/24"
+        ],
+        "acceptance": "Do not expose working Record/Export controls without actual device capture, permissions, storage and playback."
+      },
+      "owner": {
+        "route": "/lab",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (lab)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Run a text-only take → /scene",
+      "entrances": [
+        "P10 camera",
+        "P21 Sessions",
+        "profile menu"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 supported demo",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P21 back",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Capture/playback/comparison/annotation storage and media permissions unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P29",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Lab explicitly gated",
+          "Lab has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P30",
+      "title": "Rehearsal Lounge",
+      "contract": {
+        "location": "LOCATION: /lounge     •     BASELINE: TARGET / GATED",
+        "layout": "Future rehearsal partners, group exercises, invitations, shared scenes, session state and appropriate moderation/privacy controls.",
+        "requiredClicks": [
+          "Find Partner  →  Real search when service exists",
+          "Invite  →  Validated invitation",
+          "Join Session  →  Real shared session"
+        ],
+        "acceptance": "Never simulate real users, matchmaking or live sessions."
+      },
+      "owner": {
+        "route": "/lounge",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (lounge)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Rehearse solo → /scene",
+      "entrances": [
+        "P10 chair",
+        "P21 Sessions",
+        "profile menu"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 supported demo",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P21 back",
+          "targetPageIds": [
+            "P21"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Partner service, invitations, shared scenes/sessions and moderation unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P30",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Lounge explicitly gated",
+          "Lounge has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P31",
+      "title": "Professional Workspace",
+      "contract": {
+        "location": "LOCATION: /work     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Current work first; Auditions, Projects, Characters, Self-Tapes, plus related scene breakdown and project journal, with clear real/gated distinction.",
+        "requiredClicks": [
+          "New Audition  →  Page 32",
+          "Saved Auditions  →  Page 33",
+          "Character File  →  Page 34",
+          "Scene Breakdown  →  Page 35",
+          "Self-Tape  →  Page 36",
+          "Project Journal  →  Page 37"
+        ],
+        "acceptance": "No redundant dashboard shell; real audition prep is the anchor workflow."
+      },
+      "owner": {
+        "route": "/work",
+        "forms": [
+          "route"
+        ],
+        "component": "WorkHub",
+        "sourceFiles": [
+          "src/components/foundation/WorkspacePages.tsx"
+        ]
+      },
+      "functionalStatus": "WORKING",
+      "primaryCta": "Open audition preparation → /work/audition?tab=preparation",
+      "entrances": [
+        "primary Work",
+        "P06 casting",
+        "P09",
+        "P47 Work"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P32 current prep",
+          "targetPageIds": [
+            "P32"
+          ]
+        },
+        {
+          "label": "P33 current single saved role summary",
+          "targetPageIds": [
+            "P33"
+          ]
+        },
+        {
+          "label": "P34/P35/P36/P37 availability disclosure",
+          "targetPageIds": [
+            "P34",
+            "P35",
+            "P36",
+            "P37"
+          ]
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "PASS",
+        "result": "PASS",
+        "findings": [],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P31",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Work anchors actual preparation",
+          "Four professional tools remain availability links"
+        ]
+      }
+    },
+    {
+      "id": "P32",
+      "title": "Audition Workspace",
+      "contract": {
+        "location": "LOCATION: /work/audition     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Four tabs: Brief, Script, Character, Preparation. Fields include role, project, circumstances, objective, obstacles, tactics and practical preparation; save/restore state.",
+        "requiredClicks": [
+          "Prepare Role  →  Page 34 or Character tab",
+          "Break Down Script  →  Page 35 if functional",
+          "Rehearse  →  Page 23/24",
+          "Save  →  Persist real audition data",
+          "Back  →  Page 31"
+        ],
+        "acceptance": "Existing user notes preserved, no phantom autosave or lost edits on tab changes."
+      },
+      "owner": {
+        "route": "/work/audition",
+        "forms": [
+          "route",
+          "tab"
+        ],
+        "component": "AuditionFile / AuditionWorkspace",
+        "sourceFiles": [
+          "src/components/foundation/AuditionWorkspace.tsx",
+          "src/components/foundation/WorkspacePages.tsx",
+          "src/lib/store.ts"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Save audition prep",
+      "entrances": [
+        "P31 preparation",
+        "profile/context links"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "Brief/Script/Character/Preparation tabs",
+          "targetPageIds": []
+        },
+        {
+          "label": "P31 back",
+          "targetPageIds": [
+            "P31"
+          ]
+        },
+        {
+          "label": "explicit import",
+          "targetPageIds": []
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "No context-bound rehearsal action; Script gated; one six-field record rather than linked professional workspace."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P32",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/audition-tabs.test.tsx",
+          "src/test/audition-isolation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Unsaved audition edits survive tabs",
+          "Actual audition save survives reload"
+        ]
+      }
+    },
+    {
+      "id": "P33",
+      "title": "Auditions List",
+      "contract": {
+        "location": "LOCATION: Work Auditions tab     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Actual saved auditions, account/local status, project references and user deadlines only where explicitly supported.",
+        "requiredClicks": [
+          "Select Audition  →  Page 32 populated",
+          "New Audition  →  Page 32 blank",
+          "Return Work  →  Page 31"
+        ],
+        "acceptance": "Do not fabricate audition deadlines or records."
+      },
+      "owner": {
+        "route": "/work",
+        "forms": [
+          "subview"
+        ],
+        "component": "WorkHub / useAuditionPrep",
+        "sourceFiles": [
+          "src/components/foundation/WorkspacePages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Open current audition preparation",
+      "entrances": [
+        "P31 saved/current preparation"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P32 current record",
+          "targetPageIds": [
+            "P32"
+          ]
+        },
+        {
+          "label": "P31 workspace",
+          "targetPageIds": [
+            "P31"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "No multi-audition list/new-record creation; avoid blank New Audition overwriting current notes."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P33",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Single saved workspace is not presented as a multi-audition list"
+        ]
+      }
+    },
+    {
+      "id": "P34",
+      "title": "Human / Character Laboratory",
+      "contract": {
+        "location": "LOCATION: /work/character     •     BASELINE: TARGET / GATED",
+        "layout": "Biography, relationships, objectives, circumstances, contradictions, behavior, playable decisions and non-clinical character questions.",
+        "requiredClicks": [
+          "Relationships  →  Relationship view",
+          "Objectives  →  Playable objectives view",
+          "Behavior  →  Behavior view",
+          "Test in Scene  →  Page 23/24"
+        ],
+        "acceptance": "No psychological diagnosis or made-up saved character file until actual persistence exists."
+      },
+      "owner": {
+        "route": "/work/character",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (character)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Open audition preparation → /work/audition",
+      "entrances": [
+        "P31 planned-tools availability",
+        "legacy links"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P32 existing prep",
+          "targetPageIds": [
+            "P32"
+          ]
+        },
+        {
+          "label": "P31 back",
+          "targetPageIds": [
+            "P31"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Dedicated saved character biography/relationships/behavior and scene testing unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P34",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P34 explicitly gated",
+          "P34 has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P35",
+      "title": "Scene Breakdown",
+      "contract": {
+        "location": "LOCATION: /work/breakdown     •     BASELINE: TARGET / GATED",
+        "layout": "Real script/scene text when supplied, beats, objectives, obstacles, tactics, subtext and annotations.",
+        "requiredClicks": [
+          "Mark Beat  →  Persist annotation when implemented",
+          "Change Objective  →  Update actor choice",
+          "Rehearse  →  Page 23/24"
+        ],
+        "acceptance": "No fake script ingestion, annotation storage or scene analysis."
+      },
+      "owner": {
+        "route": "/work/breakdown",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (breakdown)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Rehearse the demonstration scene → /scene",
+      "entrances": [
+        "P31 planned-tools availability",
+        "legacy links"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 supported demo",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P31 back",
+          "targetPageIds": [
+            "P31"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Script ingestion, beats and persisted annotations unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P35",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P35 explicitly gated",
+          "P35 has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P36",
+      "title": "Self-Tape Studio",
+      "contract": {
+        "location": "LOCATION: /work/self-tape     •     BASELINE: TARGET / GATED",
+        "layout": "Preparation checklist, setup, planned takes, rehearsal notes; recording, review and export only when truly implemented.",
+        "requiredClicks": [
+          "Prepare  →  Working checklist",
+          "Record  →  Camera permission and actual capture if available",
+          "Review  →  Real playback",
+          "Export  →  Supported media file"
+        ],
+        "acceptance": "If camera pipeline is absent, only the preparation section is available. No inert record control."
+      },
+      "owner": {
+        "route": "/work/self-tape",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (selfTape)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Run a text-only take → /scene",
+      "entrances": [
+        "P31 planned-tools availability",
+        "legacy links"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 supported demo",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P31 back",
+          "targetPageIds": [
+            "P31"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Preparation checklist and camera/capture/storage/playback/export pipeline unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P36",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P36 explicitly gated",
+          "P36 has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P37",
+      "title": "Project Journal",
+      "contract": {
+        "location": "LOCATION: /work/journal     •     BASELINE: TARGET / GATED",
+        "layout": "Professional projects, role context, scenes, notes, chronological revisions and links to real rehearsal evidence.",
+        "requiredClicks": [
+          "Select Project  →  Project record",
+          "Add Note  →  Persisted note",
+          "Related Scene  →  Page 22/23",
+          "Character  →  Page 34"
+        ],
+        "acceptance": "Do not imply projects or revision history are saved before implementing storage."
+      },
+      "owner": {
+        "route": "/work/journal",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (journal)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Open saved reflections → /passport",
+      "entrances": [
+        "P31 planned-tools availability",
+        "legacy links"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P43 existing records",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P31 back",
+          "targetPageIds": [
+            "P31"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Project records, revisions, scripts and linked rehearsal history unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P37",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "P37 explicitly gated",
+          "P37 has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P38",
+      "title": "Stuck Desk Home",
+      "contract": {
+        "location": "LOCATION: /stuck     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Clear “What is not working?” intake; common actor-described issue categories; direct quick-rescue entry and previously saved fixes where real.",
+        "requiredClicks": [
+          "Describe Problem  →  Page 39",
+          "Quick Rescue  →  Page 40",
+          "Saved Fixes  →  Page 42",
+          "Return to Scene  →  Page 24"
+        ],
+        "acceptance": "First usable intervention must not require multiple empty tab pages."
+      },
+      "owner": {
+        "route": "/stuck",
+        "forms": [
+          "route"
+        ],
+        "component": "StuckIntake / DraftInterventions",
+        "sourceFiles": [
+          "src/components/foundation/WorkspacePages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Try the Living Scene; expand authored suggestion",
+      "entrances": [
+        "primary Stuck Desk",
+        "P06 script",
+        "P09",
+        "P47 Get Unstuck"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P40 inline suggestions",
+          "targetPageIds": [
+            "P40"
+          ]
+        },
+        {
+          "label": "P24 scripted practice",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Saved intake/issue classification and saved-fix history unavailable; no observed diagnosis."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P38",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Stuck suggestions retain review disclosure",
+          "Supported remedy reaches a real rehearsal"
+        ]
+      }
+    },
+    {
+      "id": "P39",
+      "title": "Identify the Problem",
+      "contract": {
+        "location": "LOCATION: /stuck/diagnosis     •     BASELINE: TARGET / GATED",
+        "layout": "Actor description, selected scene, attempted actions, possible explanations and context; separates self-description from observation.",
+        "requiredClicks": [
+          "Relevant Issue  →  Page 40 Intervention",
+          "Return to Scene  →  Page 24"
+        ],
+        "acceptance": "No diagnosis claim unless a validated, transparent rule/evidence base supports it."
+      },
+      "owner": {
+        "route": "/stuck/diagnosis",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (diagnosis)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Explore existing draft interventions → /stuck",
+      "entrances": [
+        "Legacy bookmarked diagnosis",
+        "contextual availability"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P38/P40 suggestions",
+          "targetPageIds": [
+            "P38",
+            "P40"
+          ]
+        },
+        {
+          "label": "P38 back",
+          "targetPageIds": [
+            "P38"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Transparent validated diagnostic/evidence rules and persistent scene-specific intake unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P39",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Diagnosis explicitly gated",
+          "Diagnosis has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P40",
+      "title": "Intervention Desk",
+      "contract": {
+        "location": "LOCATION: /stuck/intervention or inline     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Reviewed technique-based remedies, why/when, step-by-step practice, cautions and expected observable change.",
+        "requiredClicks": [
+          "Try This  →  Page 41 Retry",
+          "Different Technique  →  Page 20 Matrix",
+          "Save Notes  →  Page 42 when supported"
+        ],
+        "acceptance": "Existing draft suggestions retain faculty-review disclaimer; 60-Second Rescue lives here."
+      },
+      "owner": {
+        "route": "/stuck/intervention",
+        "forms": [
+          "redirect",
+          "subview"
+        ],
+        "component": "DraftInterventions / intervention redirect",
+        "sourceFiles": [
+          "src/components/foundation/WorkspacePages.tsx"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Practice in the scripted demonstration → /scene",
+      "entrances": [
+        "P38 authored issue option",
+        "legacy intervention redirect"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 generic demo",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P38 collapse",
+          "targetPageIds": [
+            "P38"
+          ]
+        },
+        {
+          "label": "legacy route redirects to /stuck?tab=describe",
+          "targetPageIds": []
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Suggestions pending faculty review; no time-bounded rescue, linked retry or saved remedy."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P40",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Legacy intervention redirects to canonical inline owner",
+          "Canonical authored remedy remains reachable"
+        ]
+      }
+    },
+    {
+      "id": "P41",
+      "title": "Retry & Compare",
+      "contract": {
+        "location": "LOCATION: /stuck/retry     •     BASELINE: TARGET / GATED",
+        "layout": "Previous attempt/reference, revised action, practice constraints, actor-observed differences and result.",
+        "requiredClicks": [
+          "Retry  →  Page 24",
+          "Compare  →  Page 27",
+          "Save Solution  →  Page 42"
+        ],
+        "acceptance": "Do not pretend an independent comparison is available without recorded or authored evidence."
+      },
+      "owner": {
+        "route": "/stuck/retry",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (retry)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Try the Living Scene → /scene",
+      "entrances": [
+        "Legacy retry bookmark"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P24 scripted rehearsal",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P38 back",
+          "targetPageIds": [
+            "P38"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Linked prior/new attempt comparison and saved solutions unavailable."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P41",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Retry explicitly gated",
+          "Retry has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P42",
+      "title": "Saved Fixes",
+      "contract": {
+        "location": "LOCATION: /stuck/saved     •     BASELINE: TARGET / GATED",
+        "layout": "Actual problem history, interventions, reflections, exercise links and relevant rehearsal references.",
+        "requiredClicks": [
+          "Open Fix  →  Page 40 relevant remedy",
+          "Repeat Exercise  →  Page 17 or 24",
+          "Open Rehearsal  →  Page 28"
+        ],
+        "acceptance": "No inferred saved fixes from unrelated Passport data."
+      },
+      "owner": {
+        "route": "/stuck/saved",
+        "forms": [
+          "gated-route"
+        ],
+        "component": "SupportPage (fixes)",
+        "sourceFiles": [
+          "src/components/foundation/SupportPage.tsx"
+        ]
+      },
+      "functionalStatus": "GATED",
+      "primaryCta": "Open rehearsal records → /passport",
+      "entrances": [
+        "Legacy saved-fixes bookmark"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P43 actual unrelated rehearsal records with explicit disclosure",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P38 back",
+          "targetPageIds": [
+            "P38"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "No saved problem/remedy history; Passport entries are not inferred fixes."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P42",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Saved fixes explicitly gated",
+          "Saved fixes has a real supported next step"
+        ]
+      }
+    },
+    {
+      "id": "P43",
+      "title": "Actor’s Passport",
+      "contract": {
+        "location": "LOCATION: /passport     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Four views: Journey, Evidence, Portfolio, Badges; authenticated or guest-owned record disclosure, real rehearsal entries and reviewed unit evidence.",
+        "requiredClicks": [
+          "Saved Rehearsal  →  Page 28 record",
+          "Training Evidence  →  Page 19 or 17",
+          "Portfolio  →  Real stored work only",
+          "Progress  →  Page 44"
+        ],
+        "acceptance": "Badges and portfolio unavailable until earned/supported; no fake milestones."
+      },
+      "owner": {
+        "route": "/passport",
+        "forms": [
+          "route",
+          "tab"
+        ],
+        "component": "Passport",
+        "sourceFiles": [
+          "src/routes/passport.tsx",
+          "src/lib/store.ts"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Read saved reflection / Start rehearsal when empty",
+      "entrances": [
+        "P28 saved",
+        "Office portfolio",
+        "profile",
+        "P47"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P28 rendered entry detail",
+          "targetPageIds": [
+            "P28"
+          ]
+        },
+        {
+          "label": "P24 empty-state practice",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "explicit import/deletion",
+          "targetPageIds": []
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "FAIL",
+        "findings": [
+          "Portfolio/badges/evidence uploads unavailable; direct Progress and reviewed-unit evidence links absent; live cloud boundary unverified."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P43",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/passport-import.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Passport stores the revised actual retake",
+          "One actual record survives reload"
+        ]
+      }
+    },
+    {
+      "id": "P44",
+      "title": "My Actor’s Journey / Progress",
+      "contract": {
+        "location": "LOCATION: /progress     •     BASELINE: PARTIAL / COMPLETE",
+        "layout": "Real user activity by school, rehearsal history, reviewed unit records, valid resume links and next eligible work.",
+        "requiredClicks": [
+          "Continue Training  →  Page 16/17 actual eligible unit",
+          "Evidence  →  Page 43",
+          "School Progress  →  Page 19"
+        ],
+        "acceptance": "No invented mastery, badges, completion percentages or qualifications."
+      },
+      "owner": {
+        "route": "/progress",
+        "forms": [
+          "route",
+          "tab"
+        ],
+        "component": "ProgressPage",
+        "sourceFiles": [
+          "src/components/foundation/ProgressPage.tsx",
+          "src/lib/training.ts"
+        ]
+      },
+      "functionalStatus": "PARTIAL",
+      "primaryCta": "Eligible unit resume or school/history review",
+      "entrances": [
+        "Office progress sheet/bell",
+        "P12 Progress",
+        "profile"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P16/P17 eligible resume",
+          "targetPageIds": [
+            "P16",
+            "P17"
+          ]
+        },
+        {
+          "label": "P43 reflections",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P12 schools",
+          "targetPageIds": [
+            "P12"
+          ]
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "BLOCKED",
+        "result": "BLOCKED",
+        "findings": [
+          "Reviewed mastery/advancement evidence unavailable; live owner-scope progression not independently verified."
+        ],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P44",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/progress-foundation.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Progress does not convert counts into mastery",
+          "Completed reflections do not become draft resumes"
+        ]
+      }
+    },
+    {
+      "id": "P45",
+      "title": "Director Profile",
+      "contract": {
+        "location": "LOCATION: /director     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Character identity, available coaching behavior, justified expressions, ON / QUIET / OFF, tone controls where actually functional.",
+        "requiredClicks": [
+          "Mode Toggle  →  Change actual Director behavior",
+          "Return Office  →  Page 06"
+        ],
+        "acceptance": "Character and voice must remain consistent; ability claims match implementation."
+      },
+      "owner": {
+        "route": "/director",
+        "forms": [
+          "route"
+        ],
+        "component": "Director",
+        "sourceFiles": [
+          "src/routes/director.tsx"
+        ]
+      },
+      "functionalStatus": "WORKING",
+      "primaryCta": "ON / QUIET / OFF preferences; Back to the work",
+      "entrances": [
+        "P07 coach panel",
+        "profile menu"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "Mode controls",
+          "targetPageIds": []
+        },
+        {
+          "label": "P24 scene",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P06 header back/Office",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "PASS",
+        "result": "PASS",
+        "findings": [],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities."
+      },
+      "verification": {
+        "testId": "BP-P45",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/director-presence.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Director preference persists through reload"
+        ]
+      }
+    },
+    {
+      "id": "P46",
+      "title": "Settings & Account",
+      "contract": {
+        "location": "LOCATION: /settings; /auth     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Account, privacy, local/cloud storage, accessibility, supported languages, motion/sound, deletion/export only when implemented.",
+        "requiredClicks": [
+          "Account  →  Real account actions",
+          "Accessibility  →  Actual options",
+          "Help  →  Page 47",
+          "Return  →  Previous world"
+        ],
+        "acceptance": "Avoid fake Arabic switches, fake social sign-in, dummy account deletion and unsupported privacy controls."
+      },
+      "owner": {
+        "route": "/settings",
+        "forms": [
+          "route",
+          "tab"
+        ],
+        "component": "SettingsPage",
+        "sourceFiles": [
+          "src/components/foundation/SettingsPage.tsx"
+        ]
+      },
+      "functionalStatus": "WORKING",
+      "primaryCta": "Open account management / actual preferences",
+      "entrances": [
+        "Profile menu",
+        "P47 settings link"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P03 account",
+          "targetPageIds": [
+            "P03"
+          ]
+        },
+        {
+          "label": "P43 privacy records",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P47 Help from all tabs",
+          "targetPageIds": [
+            "P47"
+          ]
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "PASS",
+        "findings": [],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities.",
+        "fixedInThisPR": "Direct Help entrance added from every settings tab; unavailable controls stay disclosed."
+      },
+      "verification": {
+        "testId": "BP-P46",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Help directly reachable from account",
+          "Help directly reachable from privacy",
+          "Help directly reachable from language",
+          "Help directly reachable from accessibility"
+        ]
+      }
+    },
+    {
+      "id": "P47",
+      "title": "Help & Studio Guide",
+      "contract": {
+        "location": "LOCATION: /help     •     BASELINE: EXISTING / VERIFY",
+        "layout": "Task-oriented help: training, rehearsing, saving, Director settings, content gates, privacy boundaries and features not yet available.",
+        "requiredClicks": [
+          "Train  →  Page 11",
+          "Rehearse  →  Page 21",
+          "Work  →  Page 31",
+          "Get Unstuck  →  Page 38",
+          "Passport  →  Page 43"
+        ],
+        "acceptance": "Every help CTA resolves to a real functioning or transparently gated destination."
+      },
+      "owner": {
+        "route": "/help",
+        "forms": [
+          "route"
+        ],
+        "component": "Help",
+        "sourceFiles": [
+          "src/routes/help.tsx"
+        ]
+      },
+      "functionalStatus": "WORKING",
+      "primaryCta": "Try the working, scripted Living Scene",
+      "entrances": [
+        "Profile menu"
+      ],
+      "actualOutgoing": [
+        {
+          "label": "P11 Train",
+          "targetPageIds": [
+            "P11"
+          ]
+        },
+        {
+          "label": "P21 Rehearse",
+          "targetPageIds": [
+            "P21"
+          ]
+        },
+        {
+          "label": "P31 Work",
+          "targetPageIds": [
+            "P31"
+          ]
+        },
+        {
+          "label": "P38 Get Unstuck",
+          "targetPageIds": [
+            "P38"
+          ]
+        },
+        {
+          "label": "P24 working scene",
+          "targetPageIds": [
+            "P24"
+          ]
+        },
+        {
+          "label": "P43 records",
+          "targetPageIds": [
+            "P43"
+          ]
+        },
+        {
+          "label": "P46 settings",
+          "targetPageIds": [
+            "P46"
+          ]
+        },
+        {
+          "label": "P06 back",
+          "targetPageIds": [
+            "P06"
+          ]
+        }
+      ],
+      "sourceAudit": {
+        "baselineResult": "FAIL",
+        "result": "PASS",
+        "findings": [],
+        "scope": "Source inspection of listed owner(s); PASS is bounded to implemented/disclosed capabilities.",
+        "fixedInThisPR": "Train, Rehearse, Work and Get Unstuck task links now resolve to canonical destinations."
+      },
+      "verification": {
+        "testId": "BP-P47",
+        "result": "PASS",
+        "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance.",
+        "unitEvidence": [
+          "src/test/architecture-cleanup.test.tsx"
+        ],
+        "evidence": "docs/verification/blueprint/pages.json",
+        "checks": [
+          "Train opens canonical destination",
+          "Rehearse opens canonical destination",
+          "Work opens canonical destination",
+          "Get Unstuck opens canonical destination"
+        ]
+      }
+    }
+  ]
+}

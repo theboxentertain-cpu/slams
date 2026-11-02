@@ -4,6 +4,8 @@ Brand: **mrahmostudios presents SLAMS — The Actor’s Pocket Studio**. Signatu
 
 SLAMS promises purposeful practical acting work with an identifiable Director, reliable personal notes and transparent training availability. Its currently demonstrable value is a complete **authored, text-only rehearsal/retake/reflection** and an **audition-preparation note workflow**. Eight school outlines are a training architecture, not eight complete courses.
 
+The current [47-page blueprint](SLAMS-47-PAGE-TRACEABILITY.md) locks three worlds (Conservatory, Actor at Work, Stuck Desk), six supporting systems (Baseline, Performance Lab, Technique Matrix, Lounge, Passport/Journey, Director), eight schools, ten contextual signature experiences and two shared engines. Keep the five primary navigation destinations. The [navigation contract](SLAMS-NAVIGATION-CONTRACT.md) distinguishes actual routes and owners from these final requirements; a named system is not a claim that it is implemented.
+
 | Actor            | Available value                                                                                          | Honest boundary                                                              |
 | ---------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | Beginner         | Try the scripted scene as a guest, change a choice, reflect and save                                     | No talent score, personality assessment or verified personalized instruction |

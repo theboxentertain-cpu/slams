@@ -1,0 +1,16 @@
+✔ covers all 47 contracts and every implemented route, with one five-item navigation owner (8.593628ms)
+✔ fails when a page ID is missing or duplicated (5.844859ms)
+✔ fails when documentation invents an unregistered route (3.750386ms)
+✔ fails on orphaned runtime route coverage (4.42835ms)
+✔ fails on unavailable source ownership (6.970378ms)
+✔ fails on unresolved click graph targets (2.753147ms)
+✔ fails if a sixth global navigation destination is documented (3.552626ms)
+✔ never upgrades incomplete contract acceptance when surface coverage passes (6.06646ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.955074
