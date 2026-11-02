@@ -1,7 +1,12 @@
 # SLAMS execution checkpoint
 
-Scope of this delivery: **Phase 00 and PR A only**, based on fetched `main` at `c9d7189`. PRs #1–#6 are present in that ancestry. Later PRs B–F are not declared complete or started on this review branch.
+Current delivery: **47-page blueprint audit and the first verified rehearsal/guide improvements**, from latest fetched main `755f5ba` (PR A #7 merged). PR B remains unmerged at audit time; this is an independent branch `feat/blueprint-page-contracts`, not an unapproved stack.
 
+- [47-page traceability and contract mismatches](SLAMS-47-PAGE-TRACEABILITY.md)
+- [Machine-readable 47-page map](SLAMS-47-PAGE-MAP.json)
+- [Navigation/object/redirect contract](SLAMS-NAVIGATION-CONTRACT.md)
+- [Visual and UX contract](SLAMS-VISUAL-AND-UX-CONTRACT.md)
+- [Current release verification, screenshots and blockers](SLAMS-RELEASE-VERIFICATION.md)
 - [Phase 00 evidence and classification](SLAMS-PHASE-00-AUDIT.md)
 - [Product contract](SLAMS-PRODUCT-CONTRACT.md)
 - [Information architecture and route disposition](SLAMS-INFORMATION-ARCHITECTURE.md)
@@ -12,6 +17,6 @@ Scope of this delivery: **Phase 00 and PR A only**, based on fetched `main` at `
 - [Release gates](SLAMS-RELEASE-GATES.md)
 - [PR A verification, changes and rollback](SLAMS-PR-A-VERIFICATION.md)
 
-The execution directive (`SLAMS_Codex_Master_Execution_Directive.docx`, SHA256 `fda65fe16d975b4ca16329cce7dcf4d8fa63aa84f27cc67f05fbbf841a2d831d`) governs this pass. Its explicit permission to consolidate redundant tabs supersedes the older requirement to render every provisional tab. Existing meaningful URLs, data, artwork and working tools are preserved.
+The latest `SLAMS_Page_by_Page_Codex_Blueprint.docx` v1.0 (SHA256 `407f1011d479bee731141f3cf0b76f797b075ac65e6840aead6797c94c4211da`) governs this pass. Its page IDs describe responsibilities, not 47 required URLs. All nine sections, six supporting systems, ten contextual signatures and both engines remain requirements. Earlier audit/PR A documents are historical evidence.
 
-Continuation: review/merge PR A through the normal owner process. Then create **PR B from refreshed main** to simplify entry into the actual first rehearsal. Do not build a conflicting stack on an unapproved PR A. No automatic merge or deployment.
+Continuation: review this focused PR, then reconcile any independently merged PR B changes from refreshed main. Prioritize the remaining first-action hierarchy and safe stable scene/professional context before claiming a connected development engine. Educational, media, multiplayer, live-cloud, device, legal and commercial gates remain explicit. No automatic merge, deployment or database mutation.

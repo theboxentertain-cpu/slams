@@ -1,0 +1,125 @@
+{
+  "date": "2026-11-02",
+  "baselineCommit": "755f5ba16ef9cd941be73af683c18f69d43ebc32",
+  "branch": "feat/blueprint-page-contracts",
+  "blueprintSHA256": "407f1011d479bee731141f3cf0b76f797b075ac65e6840aead6797c94c4211da",
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "result": "163 tests / 19 files"
+    },
+    {
+      "command": "node scripts/audit-page-contracts.test.cjs",
+      "exitCode": 0,
+      "result": "8 auditor checks"
+    },
+    {
+      "command": "npm exec tsc -- --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "npm exec eslint -- <five changed TS/TSX and three CJS files>",
+      "exitCode": 0
+    },
+    {
+      "command": "npm exec prettier -- --check <eight source/CJS files>",
+      "exitCode": 0
+    },
+    {
+      "command": "clean .output then npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "node scripts/audit-page-contracts.cjs --structure-only",
+      "exitCode": 0,
+      "result": "47/47 owner and route coverage"
+    },
+    {
+      "command": "node scripts/audit-page-contracts.cjs",
+      "exitCode": 1,
+      "result": "15 remaining FAIL / 26 BLOCKED / 6 bounded PASS"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 1,
+      "result": "652 formatting errors / six warnings"
+    },
+    {
+      "command": "npm run preview -- --host 0.0.0.0 --port 3102; actual GET /",
+      "result": "HTTP 500; missing dist/server/server.js"
+    },
+    {
+      "command": "node scripts/verify-blueprint.cjs",
+      "exitCode": 0,
+      "assertions": 161
+    },
+    {
+      "command": "node scripts/verify-pr-a.cjs",
+      "exitCode": 0,
+      "assertions": 140
+    },
+    {
+      "command": "node scripts/verify-foundation.cjs",
+      "exitCode": 0,
+      "assertions": 336
+    },
+    {
+      "command": "node scripts/verify-office.cjs",
+      "exitCode": 0,
+      "assertions": 115
+    },
+    {
+      "command": "node scripts/verify-welcome.cjs",
+      "exitCode": 0,
+      "assertions": 147
+    },
+    {
+      "command": "node scripts/verify-studio-world.cjs",
+      "exitCode": 0,
+      "assertions": 449
+    }
+  ],
+  "pageSurfaceResults": {
+    "PASS": 43,
+    "BLOCKED": 4
+  },
+  "browserAssertions": 1348,
+  "browser": "154.0.8037.57",
+  "localRuntime": {
+    "wrangler": "4.156.0",
+    "compatibilityDateOverride": "2026-10-30",
+    "port": 3101,
+    "productionVerified": false
+  },
+  "sourceSHA256": {
+    "scripts/audit-page-contracts.cjs": "9cee8d7eccedc96d767bf15c859f84726295a73eb774d5155d2d92cbf12b25dc",
+    "scripts/audit-page-contracts.test.cjs": "b8dce13833aa651c8b3e5d7d19db85c92702c5cec9469a3aa759937f39d14073",
+    "scripts/verify-blueprint.cjs": "f38cdc87d01c3457fc52bdea99c0482a9c6a7a582aea6115d54453d33cf71cc0",
+    "src/components/foundation/SettingsPage.tsx": "94331362b8889ccb43630b550aef16e57783925e491bfb132fd4e075c484b6cb",
+    "src/routes/help.tsx": "72d0bf33d61017b15f672f5a0e327b242261effbb34423dcf2f4826920b4957b",
+    "src/routes/scene.tsx": "6bc116ade03b14eefdfac705e2729811d354e90a571a909127be6d91d86b581a",
+    "src/test/architecture-cleanup.test.tsx": "ee88d77b1e2c0b5efda33db7328d306f4fbc7d03658701d0e90f928550627c85",
+    "src/test/scene-regression.test.tsx": "0f4cad4df6a02bf3a779bc1df82e16604bd723218ee35c02ca9b4c7adc165568"
+  },
+  "protectedSourceDiff": {
+    "result": "PASS",
+    "paths": [
+      "src/assets",
+      "src/data",
+      "src/lib",
+      "src/integrations",
+      "drizzle",
+      "supabase",
+      "package.json",
+      "package-lock.json"
+    ],
+    "changes": []
+  },
+  "notRun": [
+    "live confirmed-account auth/email/deployed RLS/cross-device cloud imports",
+    "physical Android/TalkBack and OS text scaling",
+    "manual human five-minute usability or production performance",
+    "merge/deployment/live database mutation"
+  ]
+}

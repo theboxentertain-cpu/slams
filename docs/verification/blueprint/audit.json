@@ -1,0 +1,265 @@
+{
+  "blueprintSHA256": "407f1011d479bee731141f3cf0b76f797b075ac65e6840aead6797c94c4211da",
+  "baselineCommit": "755f5ba16ef9cd941be73af683c18f69d43ebc32",
+  "coverage": "PASS",
+  "mappedPages": 47,
+  "structuralErrors": [],
+  "contractCompliance": "FAIL",
+  "unresolvedFailures": [
+    {
+      "id": "P01",
+      "findings": [
+        "Dominant entry follows books/features; short first-action hierarchy still needs work."
+      ]
+    },
+    {
+      "id": "P02",
+      "findings": [
+        "Account choice omits an explicit explanation that signing in does not automatically import browser records."
+      ]
+    },
+    {
+      "id": "P04",
+      "findings": [
+        "Training goes through another optional introduction; no direct training or Office skip on this page."
+      ]
+    },
+    {
+      "id": "P08",
+      "findings": [
+        "Eight canonical books, term metadata and focus restoration work; per-school short descriptions and individual availability indicators are absent from the dialog."
+      ]
+    },
+    {
+      "id": "P10",
+      "findings": [
+        "Mirror/camera/chair and the scene-stage entrance work; the specified corner clapper/doorway Hub entrance is absent."
+      ]
+    },
+    {
+      "id": "P11",
+      "findings": [
+        "In Progress filters school books rather than directly resuming an eligible unit; whole-school completion criteria/live reviewed material remain unavailable."
+      ]
+    },
+    {
+      "id": "P13",
+      "findings": [
+        "Reviewed goals/prerequisites absent; header back skips school while inline return preserves it."
+      ]
+    },
+    {
+      "id": "P14",
+      "findings": [
+        "Reviewed outcomes/prerequisites/advancement absent; primary back skips Year; direct exercise/assessment lists absent."
+      ]
+    },
+    {
+      "id": "P19",
+      "findings": [
+        "School evidence link to P43 is indirect through Progress; complete reviewed school pathway not verified live."
+      ]
+    },
+    {
+      "id": "P23",
+      "findings": [
+        "Objective/roles are fixed authored circumstances; no preparable objective/technique or persistent scene/session context contract."
+      ]
+    },
+    {
+      "id": "P24",
+      "findings": [
+        "Inline Director modes now available; stable scene/session/objective persistence is still missing."
+      ]
+    },
+    {
+      "id": "P25",
+      "findings": [
+        "No change-technique via Matrix or in-flow return to take; context round trip absent."
+      ]
+    },
+    {
+      "id": "P28",
+      "findings": [
+        "Stable scene/session/objective identifiers absent; live reload/login still unverified."
+      ]
+    },
+    {
+      "id": "P32",
+      "findings": [
+        "No context-bound rehearsal action; Script gated; one six-field record rather than linked professional workspace."
+      ]
+    },
+    {
+      "id": "P43",
+      "findings": [
+        "Portfolio/badges/evidence uploads unavailable; direct Progress and reviewed-unit evidence links absent; live cloud boundary unverified."
+      ]
+    }
+  ],
+  "blocked": [
+    {
+      "id": "P03",
+      "findings": [
+        "Live confirmation, callback-error handling, recovery and independent account transitions require live verification."
+      ]
+    },
+    {
+      "id": "P05",
+      "findings": [
+        "Practical diagnostic tasks and justified development pathways unavailable; welcome variant is an introduction only."
+      ]
+    },
+    {
+      "id": "P07",
+      "findings": [
+        "Contextual reviewed-lesson explanation and intervention task binding are not implemented."
+      ]
+    },
+    {
+      "id": "P09",
+      "findings": [
+        "Character/script notes currently open Work, rather than distinct character/breakdown tools; gated tools remain disclosed."
+      ]
+    },
+    {
+      "id": "P12",
+      "findings": [
+        "Historical/philosophical teaching and cautions are absent pending reviewed material."
+      ]
+    },
+    {
+      "id": "P15",
+      "findings": [
+        "No independently reviewed course/workshop supplied or live catalog verified."
+      ]
+    },
+    {
+      "id": "P16",
+      "findings": [
+        "Reviewed six-section lessons, source/rights and next/contextual Director links are not supplied."
+      ]
+    },
+    {
+      "id": "P17",
+      "findings": [
+        "Reviewed exercise runner, linked scene/evidence/reflection integration unavailable; do not invent material."
+      ]
+    },
+    {
+      "id": "P18",
+      "findings": [
+        "Reviewed assessment tasks, rubrics, evidence submission and advancement unavailable."
+      ]
+    },
+    {
+      "id": "P20",
+      "findings": [
+        "Reviewed comparisons and safe active-scene return/context not implemented."
+      ]
+    },
+    {
+      "id": "P22",
+      "findings": [
+        "Personal scene/script storage and creation unavailable; one authored demonstration only."
+      ]
+    },
+    {
+      "id": "P26",
+      "findings": [
+        "Three distinct takes and captured comparison remain unsupported."
+      ]
+    },
+    {
+      "id": "P27",
+      "findings": [
+        "Eligible next-exercise navigation requires reviewed available material and is not implemented; summary, repeat, save and Hub return are verified working subsets."
+      ]
+    },
+    {
+      "id": "P29",
+      "findings": [
+        "Capture/playback/comparison/annotation storage and media permissions unavailable."
+      ]
+    },
+    {
+      "id": "P30",
+      "findings": [
+        "Partner service, invitations, shared scenes/sessions and moderation unavailable."
+      ]
+    },
+    {
+      "id": "P33",
+      "findings": [
+        "No multi-audition list/new-record creation; avoid blank New Audition overwriting current notes."
+      ]
+    },
+    {
+      "id": "P34",
+      "findings": [
+        "Dedicated saved character biography/relationships/behavior and scene testing unavailable."
+      ]
+    },
+    {
+      "id": "P35",
+      "findings": [
+        "Script ingestion, beats and persisted annotations unavailable."
+      ]
+    },
+    {
+      "id": "P36",
+      "findings": [
+        "Preparation checklist and camera/capture/storage/playback/export pipeline unavailable."
+      ]
+    },
+    {
+      "id": "P37",
+      "findings": [
+        "Project records, revisions, scripts and linked rehearsal history unavailable."
+      ]
+    },
+    {
+      "id": "P38",
+      "findings": [
+        "Saved intake/issue classification and saved-fix history unavailable; no observed diagnosis."
+      ]
+    },
+    {
+      "id": "P39",
+      "findings": [
+        "Transparent validated diagnostic/evidence rules and persistent scene-specific intake unavailable."
+      ]
+    },
+    {
+      "id": "P40",
+      "findings": [
+        "Suggestions pending faculty review; no time-bounded rescue, linked retry or saved remedy."
+      ]
+    },
+    {
+      "id": "P41",
+      "findings": [
+        "Linked prior/new attempt comparison and saved solutions unavailable."
+      ]
+    },
+    {
+      "id": "P42",
+      "findings": [
+        "No saved problem/remedy history; Passport entries are not inferred fixes."
+      ]
+    },
+    {
+      "id": "P44",
+      "findings": [
+        "Reviewed mastery/advancement evidence unavailable; live owner-scope progression not independently verified."
+      ]
+    }
+  ],
+  "browserSurfaceResults": {
+    "PASS": 43,
+    "FAIL": 0,
+    "BLOCKED": 4,
+    "NOT RUN": 0
+  },
+  "commercialReadiness": "BLOCKED"
+}
