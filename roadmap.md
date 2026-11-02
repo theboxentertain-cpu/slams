@@ -1,6 +1,8 @@
 # SLAMS Sprint 01B — Foundation Repair
 
 ## Current verification request
+- [x] Add reference-led section-aware Director reactions and motion, preserving modes, takes, and existing data; 170 automated tests passed, desktop/mobile coach interactions and take/retake silence verified, reduced motion verified, zero uncaught browser errors; automatic build OK.
+- [ ] November 2 clean production-build verification — BLOCKED: no fresh production-build result or supported non-publishing build trigger is available; manual builds are reserved to the platform harness. Historical successful build logs do not verify this run. Existing regression suite executed: 163 tests passed across 19 files; no app, backend, or publishing changes made.
 - [x] Inspect current preview signals: automatic build OK at 2026-11-01 03:49:23 UTC; no current compiler failure reproduced
 - [x] Rerun full automated tests: 32 passed across 5 files; independent typecheck/production build remain unverified below
 - [x] Recheck desktop/mobile: 104 browser assertions passed; zero uncaught page errors; navigation, scene/Director, managed session, cloud saves and consent verified

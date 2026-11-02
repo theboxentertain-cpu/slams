@@ -4,9 +4,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { SupportPage } from "@/components/foundation/SupportPage";
 import { WorkHub, StuckIntake } from "@/components/foundation/WorkspacePages";
 import { SUPPORT_PAGES, validateTab, primarySection, type SupportPageId } from "@/lib/foundation";
+import { Route as HelpRoute } from "@/routes/help";
+import { SettingsPage } from "@/components/foundation/SettingsPage";
 import { DRAFT_INTERVENTIONS } from "@/data/stuck";
 
 vi.mock("@tanstack/react-router", () => ({
+  createFileRoute: () => (options: unknown) => options,
   Link: ({
     to,
     children,
@@ -25,6 +28,8 @@ vi.mock("@/components/slams", () => ({
       {children}
     </main>
   ),
+  DirectorToggle: () => null,
+  AccountLink: () => null,
   btnPrimary: "primary",
   btnSecondary: "secondary",
 }));
@@ -113,6 +118,31 @@ describe("Available work comes first", () => {
       expect(screen.getByRole("heading", { name: "In development" })).toBeInTheDocument();
       fireEvent.click(screen.getByRole("button", { name: "View draft interventions" }));
       expect(change).toHaveBeenCalledWith("describe");
+    },
+  );
+});
+
+describe("Blueprint task navigation", () => {
+  it("provides four canonical task entrances in Help without promoting unavailable services", () => {
+    const Component = (HelpRoute as unknown as { component: React.ComponentType }).component;
+    render(<Component />);
+    const tasks = within(screen.getByRole("navigation", { name: "Choose your studio task" }));
+    for (const [name, path] of [
+      ["Train", "/conservatory"],
+      ["Rehearse", "/rehearsal"],
+      ["Work", "/work"],
+      ["Get Unstuck", "/stuck"],
+    ] as const)
+      expect(tasks.getByRole("link", { name })).toHaveAttribute("href", path);
+  });
+  it.each(["account", "privacy", "language", "accessibility"])(
+    "keeps Help reachable from the %s settings tab",
+    (tab) => {
+      render(<SettingsPage tab={tab} onTabChange={vi.fn()} />);
+      expect(screen.getByRole("link", { name: "Help & Studio Guide" })).toHaveAttribute(
+        "href",
+        "/help",
+      );
     },
   );
 });

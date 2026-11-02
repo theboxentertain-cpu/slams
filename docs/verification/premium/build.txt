@@ -1,0 +1,301 @@
+
+> build
+> vite build
+
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.1.5 building client environment for production...
+[2K
+transforming...✓ 2151 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/caveat-latin-600-zlTlWIYU.woff2                             51.22 kB
+.output/public/assets/aged-paper-CTnscrRI.webp                                   266.11 kB
+.output/public/assets/chalkboard-BHmLaFAk.webp                                   351.00 kB
+.output/public/assets/director-studio-BVjhsASc.webp                              357.65 kB
+.output/public/assets/director-expressions-CeEeMOlz.webp                         376.92 kB
+.output/public/assets/styles-BuMarXCn.css                                        138.30 kB │ gzip:  26.67 kB
+.output/public/assets/conservatory._school-CJbf2bnO.js                             0.07 kB │ gzip:   0.08 kB
+.output/public/assets/stuck-CJbf2bnO.js                                            0.07 kB │ gzip:   0.08 kB
+.output/public/assets/welcome-CJbf2bnO.js                                          0.07 kB │ gzip:   0.08 kB
+.output/public/assets/work-CJbf2bnO.js                                             0.07 kB │ gzip:   0.08 kB
+.output/public/assets/welcome.account-M5RdzY9K.js                                  0.07 kB │ gzip:   0.09 kB
+.output/public/assets/welcome.index-DzGDm_5Q.js                                    0.07 kB │ gzip:   0.09 kB
+.output/public/assets/welcome.setup-D_eAzlnk.js                                    0.07 kB │ gzip:   0.09 kB
+.output/public/assets/conservatory-C7PkFanS.js                                     0.14 kB │ gzip:   0.14 kB
+.output/public/assets/lab-Dm-qutdk.js                                              0.16 kB │ gzip:   0.16 kB
+.output/public/assets/stuck.retry-DjnC4-xd.js                                      0.16 kB │ gzip:   0.16 kB
+.output/public/assets/stuck.saved-CTmhemU0.js                                      0.16 kB │ gzip:   0.16 kB
+.output/public/assets/lounge-BMgq_oHQ.js                                           0.16 kB │ gzip:   0.16 kB
+.output/public/assets/matrix-SG3qJLHE.js                                           0.16 kB │ gzip:   0.16 kB
+.output/public/assets/work.journal-CdmoWS6b.js                                     0.16 kB │ gzip:   0.16 kB
+.output/public/assets/work.self-tape-CdmwvfXD.js                                   0.16 kB │ gzip:   0.16 kB
+.output/public/assets/stuck.diagnosis-DDr_c70S.js                                  0.16 kB │ gzip:   0.16 kB
+.output/public/assets/work.breakdown-Ragwj6ax.js                                   0.16 kB │ gzip:   0.16 kB
+.output/public/assets/work.character-CtiO_DLb.js                                   0.16 kB │ gzip:   0.16 kB
+.output/public/assets/conservatory._school.years._year_.terms._term-Dtyj62cX.js    0.21 kB │ gzip:   0.18 kB
+.output/public/assets/conservatory._school.units._kind._unitId-CgMfOnXO.js         0.21 kB │ gzip:   0.17 kB
+.output/public/assets/conservatory._school.years._year-w_lWg6ae.js                 0.21 kB │ gzip:   0.18 kB
+.output/public/assets/rehearsal-CLzN8KSi.js                                        0.28 kB │ gzip:   0.22 kB
+.output/public/assets/conservatory.index-Hp3kbulC.js                               0.28 kB │ gzip:   0.22 kB
+.output/public/assets/stuck.index-BLlcKZas.js                                      0.29 kB │ gzip:   0.22 kB
+.output/public/assets/work.audition-C35NARa7.js                                    0.29 kB │ gzip:   0.22 kB
+.output/public/assets/work.index-DnCE0up8.js                                       0.29 kB │ gzip:   0.22 kB
+.output/public/assets/auth-utils-OLA_PjfB.js                                       0.30 kB │ gzip:   0.23 kB
+.output/public/assets/baseline-BvAEPvwn.js                                         0.31 kB │ gzip:   0.24 kB
+.output/public/assets/conservatory._school.index-BdZGeMNI.js                       0.31 kB │ gzip:   0.24 kB
+.output/public/assets/SupportPage-OA9hNV35.js                                      0.54 kB │ gzip:   0.35 kB
+.output/public/assets/OfficeObject-BYlmaPS4.js                                     0.65 kB │ gzip:   0.39 kB
+.output/public/assets/RehearsalCorner-DE8AWMc1.js                                  1.05 kB │ gzip:   0.51 kB
+.output/public/assets/help-Dv-FiWTZ.js                                             1.75 kB │ gzip:   0.85 kB
+.output/public/assets/director-C1qJPYj1.js                                         1.92 kB │ gzip:   0.97 kB
+.output/public/assets/WelcomeFrame-CrwnXZGj.js                                     1.94 kB │ gzip:   0.84 kB
+.output/public/assets/WorkWall-LrJKytQU.js                                         2.00 kB │ gzip:   0.80 kB
+.output/public/assets/TrainingSummary-Dl7s4OkQ.js                                  2.29 kB │ gzip:   1.02 kB
+.output/public/assets/reset-password-DAiK3UFT.js                                   2.57 kB │ gzip:   1.16 kB
+.output/public/assets/settings-SFKrvL5V.js                                         2.69 kB │ gzip:   1.14 kB
+.output/public/assets/progress-DSjqQ-Nf.js                                         3.48 kB │ gzip:   1.44 kB
+.output/public/assets/passport-Bw6ubO83.js                                         3.66 kB │ gzip:   1.54 kB
+.output/public/assets/Match-BDVC-hSy.js                                            4.54 kB │ gzip:   1.78 kB
+.output/public/assets/SectionTabs-BEtrxBb6.js                                      5.63 kB │ gzip:   2.46 kB
+.output/public/assets/auth-BPrnxMoH.js                                             6.97 kB │ gzip:   2.59 kB
+.output/public/assets/WorkspacePages-y7fIoOeV.js                                   9.73 kB │ gzip:   3.39 kB
+.output/public/assets/SchoolPages-3arJJI76.js                                     10.03 kB │ gzip:   3.43 kB
+.output/public/assets/useSelector-BnRwIYQX.js                                     10.53 kB │ gzip:   3.95 kB
+.output/public/assets/WelcomePages-CGGo-ZXJ.js                                    11.15 kB │ gzip:   3.88 kB
+.output/public/assets/schools-BUwdv5YS.js                                         11.61 kB │ gzip:   5.31 kB
+.output/public/assets/scene-DE3uGSrR.js                                           13.17 kB │ gzip:   4.01 kB
+.output/public/assets/routes-DV76T0LQ.js                                          16.35 kB │ gzip:   5.61 kB
+.output/public/assets/slams-WbnRMtKk.js                                           37.68 kB │ gzip:  12.46 kB
+.output/public/assets/types-Ch8FUAJ-.js                                           56.32 kB │ gzip:  12.88 kB
+.output/public/assets/index-BwNFi2oh.js                                          289.99 kB │ gzip:  89.96 kB
+.output/public/assets/director-studio-DUQ1zDrH.js                                409.97 kB │ gzip: 120.34 kB
+
+✓ built in 1.44s
+vite v8.1.5 building ssr environment for production...
+[2K
+transforming...✓ 195 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/caveat-latin-600-zlTlWIYU.woff2                             51.22 kB
+node_modules/.nitro/vite/services/ssr/assets/aged-paper-CTnscrRI.webp                                   266.11 kB
+node_modules/.nitro/vite/services/ssr/assets/chalkboard-BHmLaFAk.webp                                   351.00 kB
+node_modules/.nitro/vite/services/ssr/assets/director-studio-BVjhsASc.webp                              357.65 kB
+node_modules/.nitro/vite/services/ssr/assets/director-expressions-CeEeMOlz.webp                         376.92 kB
+node_modules/.nitro/vite/services/ssr/assets/styles-BuMarXCn.css                                        138.30 kB │ gzip: 26.67 kB
+node_modules/.nitro/vite/services/ssr/assets/work-CIg9CqOk.js                                             0.18 kB │ gzip:  0.14 kB
+node_modules/.nitro/vite/services/ssr/assets/stuck-4OmDNGL5.js                                            0.18 kB │ gzip:  0.14 kB
+node_modules/.nitro/vite/services/ssr/assets/welcome-DGK1hj8W.js                                          0.18 kB │ gzip:  0.14 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school-CTod2ncI.js                             0.19 kB │ gzip:  0.15 kB
+node_modules/.nitro/vite/services/ssr/assets/welcome.index-CKUsNm09.js                                    0.21 kB │ gzip:  0.16 kB
+node_modules/.nitro/vite/services/ssr/assets/welcome.setup-C0slk7t2.js                                    0.21 kB │ gzip:  0.16 kB
+node_modules/.nitro/vite/services/ssr/assets/welcome.account-1MpHVYy5.js                                  0.21 kB │ gzip:  0.16 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-D9UWiqvJ.js                            0.22 kB │ gzip:  0.16 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory-B4xcoL3F.js                                     0.26 kB │ gzip:  0.19 kB
+node_modules/.nitro/vite/services/ssr/assets/lab-KQkFNpPB.js                                              0.27 kB │ gzip:  0.21 kB
+node_modules/.nitro/vite/services/ssr/assets/lounge-DET4bAJA.js                                           0.28 kB │ gzip:  0.21 kB
+node_modules/.nitro/vite/services/ssr/assets/matrix-DhZrbDm9.js                                           0.28 kB │ gzip:  0.21 kB
+node_modules/.nitro/vite/services/ssr/assets/stuck.retry-DMpwAGm8.js                                      0.28 kB │ gzip:  0.21 kB
+node_modules/.nitro/vite/services/ssr/assets/stuck.saved-CC2rFQON.js                                      0.28 kB │ gzip:  0.22 kB
+node_modules/.nitro/vite/services/ssr/assets/work.journal-CC-IcWHw.js                                     0.28 kB │ gzip:  0.22 kB
+node_modules/.nitro/vite/services/ssr/assets/work.self-tape-DKHxOhhG.js                                   0.29 kB │ gzip:  0.22 kB
+node_modules/.nitro/vite/services/ssr/assets/work.breakdown-BAJulO0T.js                                   0.29 kB │ gzip:  0.22 kB
+node_modules/.nitro/vite/services/ssr/assets/work.character-Xak8Wpp7.js                                   0.29 kB │ gzip:  0.22 kB
+node_modules/.nitro/vite/services/ssr/assets/stuck.diagnosis-DImuNCmY.js                                  0.29 kB │ gzip:  0.22 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.years._year-CBel2RyF.js                 0.38 kB │ gzip:  0.26 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-CxD4EZ5P.js                                  0.40 kB │ gzip:  0.27 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.units._kind._unitId-Bm6jUOfF.js         0.40 kB │ gzip:  0.27 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.years._year_.terms._term-ILJfajsu.js    0.41 kB │ gzip:  0.27 kB
+node_modules/.nitro/vite/services/ssr/assets/work.index-DvpmyZ7C.js                                       0.45 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-C0sFlG6R.js                                         0.46 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/settings-0iPLbqBV.js                                         0.46 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/stuck.index-DlytklqF.js                                      0.46 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/work.index-Dutah9G3.js                                       0.46 kB │ gzip:  0.31 kB
+node_modules/.nitro/vite/services/ssr/assets/rehearsal-oirOzY_u.js                                        0.46 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/rehearsal-DYTapeoq.js                                        0.47 kB │ gzip:  0.30 kB
+node_modules/.nitro/vite/services/ssr/assets/stuck.index-CNyOERwv.js                                      0.47 kB │ gzip:  0.31 kB
+node_modules/.nitro/vite/services/ssr/assets/work.audition-DM2OU8fb.js                                    0.47 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/work.audition-Brk0FBin.js                                    0.48 kB │ gzip:  0.31 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory.index-D620m2S2.js                               0.49 kB │ gzip:  0.31 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.index-Bbe9S4Ax.js                       0.50 kB │ gzip:  0.30 kB
+node_modules/.nitro/vite/services/ssr/assets/baseline-DdR4RgSk.js                                         0.51 kB │ gzip:  0.30 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.index-CM1YsJc1.js                       0.54 kB │ gzip:  0.33 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.years._year-Cxoq3rFG.js                 0.61 kB │ gzip:  0.36 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.units._kind._unitId-CcjbgfGr.js         0.68 kB │ gzip:  0.40 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory._school.years._year_.terms._term-BMQhnLHP.js    0.71 kB │ gzip:  0.39 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-utils-DhSUGZ7l.js                                       0.79 kB │ gzip:  0.46 kB
+node_modules/.nitro/vite/services/ssr/assets/studio-entry.functions-B9Ep-Nhv.js                           0.89 kB │ gzip:  0.46 kB
+node_modules/.nitro/vite/services/ssr/assets/passport-Cod778Wz.js                                         0.92 kB │ gzip:  0.46 kB
+node_modules/.nitro/vite/services/ssr/assets/SupportPage-ORzAqqk-.js                                      0.93 kB │ gzip:  0.53 kB
+node_modules/.nitro/vite/services/ssr/assets/conservatory.index-_yVJt-nX.js                               0.93 kB │ gzip:  0.46 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-C3ZVeXG_.js            0.99 kB │ gzip:  0.51 kB
+node_modules/.nitro/vite/services/ssr/assets/baseline-D5qkSVsP.js                                         1.08 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/OfficeObject-BNRsc0Hs.js                                     1.11 kB │ gzip:  0.54 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-v_1HFl42.js                                             1.24 kB │ gzip:  0.60 kB
+node_modules/.nitro/vite/services/ssr/assets/studio-entry-CgCmZKmR.js                                     1.34 kB │ gzip:  0.67 kB
+node_modules/.nitro/vite/services/ssr/assets/routes-hUoX6yFb.js                                           1.52 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/curriculum.functions-9hhfmLFd.js                             1.55 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/RehearsalCorner-DOp-G-TI.js                                  1.59 kB │ gzip:  0.63 kB
+node_modules/.nitro/vite/services/ssr/assets/schools-CUMbzXrT.js                                          1.80 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/start-DuahSmzr.js                                            2.00 kB │ gzip:  0.88 kB
+node_modules/.nitro/vite/services/ssr/assets/help-8PYHzlMj.js                                             2.44 kB │ gzip:  0.99 kB
+node_modules/.nitro/vite/services/ssr/assets/director-CCLhD-4a.js                                         2.83 kB │ gzip:  1.18 kB
+node_modules/.nitro/vite/services/ssr/assets/WelcomeFrame-Dpn4ysYG.js                                     2.94 kB │ gzip:  1.02 kB
+node_modules/.nitro/vite/services/ssr/assets/SectionTabs-CLRCqlxG.js                                      3.14 kB │ gzip:  1.19 kB
+node_modules/.nitro/vite/services/ssr/assets/createCsrfMiddleware-B2To0gPJ.js                             3.19 kB │ gzip:  1.01 kB
+node_modules/.nitro/vite/services/ssr/assets/WorkWall-BLtamnO_.js                                         3.21 kB │ gzip:  1.06 kB
+node_modules/.nitro/vite/services/ssr/assets/TrainingSummary-D1f-xF3R.js                                  3.51 kB │ gzip:  1.28 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-CrTD5JNp.js                                 3.69 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/reset-password-s9ebcnfM.js                                   4.04 kB │ gzip:  1.47 kB
+node_modules/.nitro/vite/services/ssr/assets/settings-DVTM2dGV.js                                         4.06 kB │ gzip:  1.40 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                            4.61 kB │ gzip:  1.92 kB
+node_modules/.nitro/vite/services/ssr/assets/training-B6adOTo8.js                                         4.90 kB │ gzip:  2.00 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-WGOhKmkF.js                                         5.45 kB │ gzip:  1.84 kB
+node_modules/.nitro/vite/services/ssr/assets/passport-BLVmQiM3.js                                         5.81 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/assets/client-D5dLm2RA.js                                           8.00 kB │ gzip:  2.70 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-C3Y_kqcp.js                       8.54 kB │ gzip:  1.57 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerFn-DDDJMFWM.js                                   9.90 kB │ gzip:  3.00 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-nCO2h2_o.js                                            10.48 kB │ gzip:  2.90 kB
+node_modules/.nitro/vite/services/ssr/assets/WorkspacePages-1xfepW9C.js                                  14.28 kB │ gzip:  4.08 kB
+node_modules/.nitro/vite/services/ssr/assets/SchoolPages-DwPqDhpG.js                                     15.44 kB │ gzip:  4.22 kB
+node_modules/.nitro/vite/services/ssr/assets/WelcomePages-Cq8x9fz3.js                                    16.21 kB │ gzip:  4.31 kB
+node_modules/.nitro/vite/services/ssr/assets/scene-B7TePOOh.js                                           18.52 kB │ gzip:  4.72 kB
+node_modules/.nitro/vite/services/ssr/assets/director-studio-Cvra86H3.js                                 20.61 kB │ gzip:  6.02 kB
+node_modules/.nitro/vite/services/ssr/assets/router-Cd5sbbBl.js                                          24.15 kB │ gzip:  5.19 kB
+node_modules/.nitro/vite/services/ssr/assets/routes-GlNKf2VZ.js                                          24.88 kB │ gzip:  6.25 kB
+node_modules/.nitro/vite/services/ssr/assets/slams-Dd3Czfs1.js                                           52.09 kB │ gzip: 13.81 kB
+node_modules/.nitro/vite/services/ssr/assets/server-Dwf52zfb.js                                          60.31 kB │ gzip: 15.51 kB
+
+✓ built in 805ms
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-11-02)
+[nitro] ✔ Generated public .output/public
+vite v8.1.5 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2150 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_ssr/work-CIg9CqOk.mjs                                             0.22 kB │ gzip:   0.18 kB
+.output/server/_ssr/stuck-4OmDNGL5.mjs                                            0.22 kB │ gzip:   0.18 kB
+.output/server/_ssr/empty-plugin-adapters-D9UWiqvJ.mjs                            0.23 kB │ gzip:   0.16 kB
+.output/server/_ssr/welcome-DGK1hj8W.mjs                                          0.23 kB │ gzip:   0.19 kB
+.output/server/_ssr/welcome.index-CKUsNm09.mjs                                    0.23 kB │ gzip:   0.18 kB
+.output/server/_ssr/welcome.setup-C0slk7t2.mjs                                    0.23 kB │ gzip:   0.18 kB
+.output/server/_ssr/welcome.account-1MpHVYy5.mjs                                  0.24 kB │ gzip:   0.18 kB
+.output/server/_ssr/conservatory._school-CTod2ncI.mjs                             0.24 kB │ gzip:   0.19 kB
+.output/server/_ssr/createServerRpc-CxD4EZ5P.mjs                                  0.40 kB │ gzip:   0.28 kB
+.output/server/_ssr/lab-KQkFNpPB.mjs                                              0.42 kB │ gzip:   0.28 kB
+.output/server/_ssr/lounge-DET4bAJA.mjs                                           0.42 kB │ gzip:   0.29 kB
+.output/server/_ssr/matrix-DhZrbDm9.mjs                                           0.42 kB │ gzip:   0.28 kB
+.output/server/_ssr/conservatory-B4xcoL3F.mjs                                     0.42 kB │ gzip:   0.27 kB
+.output/server/_ssr/stuck.retry-DMpwAGm8.mjs                                      0.43 kB │ gzip:   0.29 kB
+.output/server/_ssr/stuck.saved-CC2rFQON.mjs                                      0.43 kB │ gzip:   0.29 kB
+.output/server/_ssr/work.journal-CC-IcWHw.mjs                                     0.43 kB │ gzip:   0.29 kB
+.output/server/_ssr/work.self-tape-DKHxOhhG.mjs                                   0.43 kB │ gzip:   0.29 kB
+.output/server/_ssr/work.breakdown-BAJulO0T.mjs                                   0.43 kB │ gzip:   0.29 kB
+.output/server/_ssr/work.character-Xak8Wpp7.mjs                                   0.43 kB │ gzip:   0.29 kB
+.output/server/_ssr/stuck.diagnosis-DImuNCmY.mjs                                  0.43 kB │ gzip:   0.29 kB
+.output/server/_ssr/conservatory._school.years._year-CBel2RyF.mjs                 0.53 kB │ gzip:   0.32 kB
+.output/server/_ssr/work.index-DvpmyZ7C.mjs                                       0.53 kB │ gzip:   0.33 kB
+.output/server/_ssr/progress-C0sFlG6R.mjs                                         0.53 kB │ gzip:   0.33 kB
+.output/server/_ssr/settings-0iPLbqBV.mjs                                         0.53 kB │ gzip:   0.33 kB
+.output/server/_ssr/stuck.index-DlytklqF.mjs                                      0.53 kB │ gzip:   0.33 kB
+.output/server/_ssr/rehearsal-oirOzY_u.mjs                                        0.53 kB │ gzip:   0.33 kB
+.output/server/_ssr/conservatory._school.units._kind._unitId-Bm6jUOfF.mjs         0.54 kB │ gzip:   0.33 kB
+.output/server/_ssr/work.audition-DM2OU8fb.mjs                                    0.55 kB │ gzip:   0.34 kB
+.output/server/_ssr/conservatory._school.years._year_.terms._term-ILJfajsu.mjs    0.55 kB │ gzip:   0.33 kB
+.output/server/_ssr/conservatory._school.index-Bbe9S4Ax.mjs                       0.58 kB │ gzip:   0.35 kB
+.output/server/_chunks/ssr-renderer.mjs                                           0.60 kB │ gzip:   0.36 kB
+.output/server/_ssr/work.index-Dutah9G3.mjs                                       0.61 kB │ gzip:   0.38 kB
+.output/server/_ssr/rehearsal-DYTapeoq.mjs                                        0.61 kB │ gzip:   0.38 kB
+.output/server/_ssr/stuck.index-CNyOERwv.mjs                                      0.62 kB │ gzip:   0.39 kB
+.output/server/_ssr/work.audition-Brk0FBin.mjs                                    0.62 kB │ gzip:   0.38 kB
+.output/server/_ssr/conservatory.index-D620m2S2.mjs                               0.64 kB │ gzip:   0.38 kB
+.output/server/_ssr/baseline-DdR4RgSk.mjs                                         0.68 kB │ gzip:   0.38 kB
+.output/server/_ssr/conservatory._school.index-CM1YsJc1.mjs                       0.69 kB │ gzip:   0.41 kB
+.output/server/_ssr/conservatory._school.years._year-Cxoq3rFG.mjs                 0.70 kB │ gzip:   0.42 kB
+.output/server/_ssr/conservatory._school.units._kind._unitId-CcjbgfGr.mjs         0.76 kB │ gzip:   0.44 kB
+.output/server/_libs/radix-ui__react-direction.mjs                                0.76 kB │ gzip:   0.40 kB
+.output/server/_ssr/conservatory._school.years._year_.terms._term-BMQhnLHP.mjs    0.79 kB │ gzip:   0.45 kB
+.output/server/_ssr/auth-utils-DhSUGZ7l.mjs                                       0.83 kB │ gzip:   0.49 kB
+.output/server/_ssr/studio-entry.functions-B9Ep-Nhv.mjs                           0.92 kB │ gzip:   0.50 kB
+.output/server/_ssr/passport-Cod778Wz.mjs                                         0.99 kB │ gzip:   0.51 kB
+.output/server/_ssr/conservatory.index-_yVJt-nX.mjs                               1.00 kB │ gzip:   0.51 kB
+.output/server/__23tanstack-start-server-fn-resolver-C3ZVeXG_.mjs                 1.06 kB │ gzip:   0.55 kB
+.output/server/_ssr/SupportPage-ORzAqqk-.mjs                                      1.15 kB │ gzip:   0.61 kB
+.output/server/_ssr/baseline-D5qkSVsP.mjs                                         1.16 kB │ gzip:   0.57 kB
+.output/server/_libs/hookable.mjs                                                 1.16 kB │ gzip:   0.51 kB
+.output/server/_runtime.mjs                                                       1.18 kB │ gzip:   0.57 kB
+.output/server/_ssr/auth-v_1HFl42.mjs                                             1.26 kB │ gzip:   0.64 kB
+.output/server/_ssr/OfficeObject-BNRsc0Hs.mjs                                     1.44 kB │ gzip:   0.62 kB
+.output/server/_ssr/routes-hUoX6yFb.mjs                                           1.54 kB │ gzip:   0.83 kB
+.output/server/_ssr/studio-entry-CgCmZKmR.mjs                                     1.57 kB │ gzip:   0.79 kB
+.output/server/_ssr/curriculum.functions-9hhfmLFd.mjs                             1.65 kB │ gzip:   0.85 kB
+.output/server/_libs/radix-ui__primitive.mjs                                      1.83 kB │ gzip:   0.72 kB
+.output/server/_ssr/start-DuahSmzr.mjs                                            1.90 kB │ gzip:   0.86 kB
+.output/server/_ssr/RehearsalCorner-DOp-G-TI.mjs                                  2.13 kB │ gzip:   0.71 kB
+.output/server/_ssr/help-8PYHzlMj.mjs                                             2.93 kB │ gzip:   1.06 kB
+.output/server/_ssr/createCsrfMiddleware-B2To0gPJ.mjs                             3.11 kB │ gzip:   1.01 kB
+.output/server/_libs/class-variance-authority+clsx.mjs                            3.17 kB │ gzip:   1.24 kB
+.output/server/_ssr/WelcomeFrame-Dpn4ysYG.mjs                                     3.61 kB │ gzip:   1.11 kB
+.output/server/_ssr/director-CCLhD-4a.mjs                                         3.62 kB │ gzip:   1.31 kB
+.output/server/_ssr/SectionTabs-CLRCqlxG.mjs                                      3.65 kB │ gzip:   1.31 kB
+.output/server/_ssr/request-response-CrTD5JNp.mjs                                 3.73 kB │ gzip:   1.30 kB
+.output/server/_ssr/WorkWall-BLtamnO_.mjs                                         4.07 kB │ gzip:   1.14 kB
+.output/server/_ssr/TrainingSummary-D1f-xF3R.mjs                                  4.17 kB │ gzip:   1.36 kB
+.output/server/_ssr/ssr.mjs                                                       4.55 kB │ gzip:   1.92 kB
+.output/server/_ssr/settings-DVTM2dGV.mjs                                         4.76 kB │ gzip:   1.48 kB
+.output/server/_ssr/training-B6adOTo8.mjs                                         4.82 kB │ gzip:   2.00 kB
+.output/server/_ssr/reset-password-s9ebcnfM.mjs                                   4.87 kB │ gzip:   1.61 kB
+.output/server/_libs/radix-ui__react-tabs.mjs                                     6.14 kB │ gzip:   1.77 kB
+.output/server/_ssr/progress-WGOhKmkF.mjs                                         6.40 kB │ gzip:   1.92 kB
+.output/server/_libs/tanstack__react-query.mjs                                    6.40 kB │ gzip:   1.80 kB
+.output/server/_ssr/passport-BLVmQiM3.mjs                                         6.97 kB │ gzip:   2.03 kB
+.output/server/_ssr/client-D5dLm2RA.mjs                                           8.05 kB │ gzip:   2.75 kB
+.output/server/_tanstack-start-manifest_v-C3Y_kqcp.mjs                            8.60 kB │ gzip:   1.61 kB
+.output/server/_ssr/createServerFn-DDDJMFWM.mjs                                   9.47 kB │ gzip:   3.01 kB
+.output/server/_libs/h3-v2+rou3+srvx.mjs                                         11.75 kB │ gzip:   3.63 kB
+.output/server/_ssr/auth-nCO2h2_o.mjs                                            12.15 kB │ gzip:   3.05 kB
+.output/server/_libs/tanstack__history.mjs                                       12.50 kB │ gzip:   3.70 kB
+.output/server/_libs/supabase__functions-js.mjs                                  12.54 kB │ gzip:   3.48 kB
+.output/server/_ssr/WorkspacePages-1xfepW9C.mjs                                  16.48 kB │ gzip:   4.23 kB
+.output/server/_libs/h3+rou3+srvx.mjs                                            16.61 kB │ gzip:   4.80 kB
+.output/server/_ssr/SchoolPages-DwPqDhpG.mjs                                     17.72 kB │ gzip:   4.39 kB
+.output/server/_libs/lucide-react.mjs                                            18.86 kB │ gzip:   4.26 kB
+.output/server/_ssr/WelcomePages-Cq8x9fz3.mjs                                    19.27 kB │ gzip:   4.51 kB
+.output/server/_ssr/scene-B7TePOOh.mjs                                           20.85 kB │ gzip:   4.87 kB
+.output/server/_ssr/director-studio-Cvra86H3.mjs                                 23.67 kB │ gzip:   6.91 kB
+.output/server/_ssr/router-Cd5sbbBl.mjs                                          23.83 kB │ gzip:   5.19 kB
+.output/server/index.mjs                                                         24.03 kB │ gzip:   6.22 kB
+.output/server/_libs/@floating-ui/dom+[...].mjs                                  25.38 kB │ gzip:   6.57 kB
+.output/server/_libs/@floating-ui/core+[...].mjs                                 25.55 kB │ gzip:   6.32 kB
+.output/server/_libs/@radix-ui/react-collection+[...].mjs                        28.50 kB │ gzip:   6.46 kB
+.output/server/_ssr/routes-GlNKf2VZ.mjs                                          29.09 kB │ gzip:   6.44 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                             29.60 kB │ gzip:   7.99 kB
+.output/server/_libs/@floating-ui/react-dom+[...].mjs                            31.30 kB │ gzip:   7.98 kB
+.output/server/_libs/supabase__supabase-js.mjs                                   37.86 kB │ gzip:  11.17 kB
+.output/server/_libs/supabase__phoenix.mjs                                       50.54 kB │ gzip:  12.76 kB
+.output/server/_ssr/slams-Dd3Czfs1.mjs                                           57.29 kB │ gzip:  13.96 kB
+.output/server/_libs/@radix-ui/react-dropdown-menu+[...].mjs                     59.21 kB │ gzip:  11.65 kB
+.output/server/_ssr/server-Dwf52zfb.mjs                                          59.32 kB │ gzip:  15.45 kB
+.output/server/_libs/tanstack__query-core.mjs                                    62.80 kB │ gzip:  13.50 kB
+.output/server/_libs/@radix-ui/react-dialog+[...].mjs                            76.11 kB │ gzip:  17.96 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                             81.93 kB │ gzip:  20.94 kB
+.output/server/_libs/tailwind-merge.mjs                                          88.13 kB │ gzip:  15.66 kB
+.output/server/_libs/zod.mjs                                                     99.95 kB │ gzip:  17.29 kB
+.output/server/_libs/supabase__postgrest-js.mjs                                 110.46 kB │ gzip:  23.20 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                             127.52 kB │ gzip:  23.94 kB
+.output/server/_libs/supabase__auth-js.mjs                                      319.51 kB │ gzip:  64.76 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs                           749.91 kB │ gzip: 158.61 kB
+
+✓ built in 794ms
+[nitro] ℹ Using auto generated worker name: theboxentertain-cpu-slams
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt

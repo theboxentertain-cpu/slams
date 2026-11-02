@@ -1,6 +1,28 @@
 # Release gates — Phase 00 / PR A / PR B
 
 This file distinguishes historical Phase 00 / PR A evidence, current PR B evidence and external release requirements. `PASS` does not expand beyond the stated test boundary.
+# Release gates — Blueprint checkpoint and historical Phase 00 / PR A
+
+Current blueprint evidence is in [release verification](SLAMS-RELEASE-VERIFICATION.md); the Phase 00/PR A table below remains historical. A page-surface PASS does not close its full contract.
+
+| Current blueprint gate                                                      | Status  | Evidence / boundary                                                                            |
+| --------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| Latest main and 47-page ownership coverage                                  | PASS    | `755f5ba`, all 47 IDs/owners/registered routes/test bindings; independent branch               |
+| Full blueprint compliance                                                   | FAIL    | 15 remaining contract failures, 26 blocked contracts; default auditor exits 1                  |
+| Automated application / auditor tests                                       | PASS    | 163 Vitest cases plus eight separate auditor checks                                            |
+| Typecheck / clean build / changed-file lint / formatting                    | PASS    | Independent commands; five changed TS/TSX and three new CJS files                              |
+| Compiled browser assertions                                                 | PASS    | 1,348 checks; all 47 surface cases accounted for, P15–P18 remain BLOCKED for reviewed material |
+| Full repository lint                                                        | FAIL    | 652 formatting errors / six warnings, diagnostics retained                                     |
+| Standard preview root GET                                                   | FAIL    | HTTP 500, missing `dist/server/server.js`                                                      |
+| Reviewed teaching / genuine assessment / graduation                         | BLOCKED | No independently reviewed material or criteria supplied/verified                               |
+| Live confirmed-account auth/RLS/cloud/imports and production hosting        | BLOCKED | No live credentials/accounts/deployment used; simulated tests are a separate scope             |
+| Recording / multiplayer / validated diagnostics                             | BLOCKED | Required services, evidence and approvals absent                                               |
+| Physical Android/TalkBack / manual human usability / production performance | NOT RUN | Browser emulation and screenshot inspection do not establish these                             |
+| Legal/privacy/retention/rights/support/commercial launch                    | BLOCKED | Human/product/operational inputs still required                                                |
+| Protected art/data/auth/schema/dependencies                                 | PASS    | Empty diff for protected source directories and package manifests                              |
+| Merge / deployment / live database mutation                                 | NOT RUN | Explicitly excluded                                                                            |
+
+Historical PR A gates:
 
 | Gate                                                     | Status          | Evidence / boundary                                                                                           |
 | -------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------- |

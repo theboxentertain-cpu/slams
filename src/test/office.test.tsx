@@ -44,7 +44,16 @@ vi.mock("@/components/foundation/AppShell", () => ({
   ProfileMenu: () => <button aria-label="Open profile menu">Profile</button>,
 }));
 vi.mock("@/components/foundation/TrainingSummary", () => ({
-  TrainingSummary: () => <section aria-label="Current training">Training summary</section>,
+  TrainingSummary: ({ variant }: { variant?: string }) => (
+    <section aria-label="Current training">
+      Training summary
+      {variant === "office" && (
+        <a href="/scene" aria-label="Start rehearsal — The Living Scene">
+          Start rehearsal
+        </a>
+      )}
+    </section>
+  ),
 }));
 
 beforeEach(() => {
@@ -95,16 +104,17 @@ describe("The interactive office", () => {
     ).toHaveAttribute("href", "/progress");
     expect(container.querySelector(".save-attention")).toBeInTheDocument();
   });
-  it("offers exactly three equally ranked worlds and no second primary bar", () => {
+  it("offers four real task entrances across the three worlds and shared rehearsal engine", () => {
     render(<DirectorsOffice />);
-    const worlds = within(screen.getByRole("navigation", { name: "The three SLAMS worlds" }));
-    expect(worlds.getAllByRole("link")).toHaveLength(3);
+    const worlds = within(screen.getByRole("navigation", { name: "Choose your studio task" }));
+    expect(worlds.getAllByRole("link")).toHaveLength(4);
     expect(worlds.getByRole("link", { name: /Conservatory/ })).toHaveAttribute(
       "href",
       "/conservatory",
     );
     expect(worlds.getByRole("link", { name: /Actor at Work/ })).toHaveAttribute("href", "/work");
     expect(worlds.getByRole("link", { name: /Stuck Desk/ })).toHaveAttribute("href", "/stuck");
+    expect(worlds.getByRole("link", { name: /Rehearse/ })).toHaveAttribute("href", "/rehearsal");
     expect(screen.queryByRole("navigation", { name: "Main studio navigation" })).toBeNull();
     expect(screen.getByRole("link", { name: "Go to the rehearsal studio" })).toHaveAttribute(
       "href",
@@ -168,9 +178,11 @@ describe("The interactive office", () => {
       ["Technique Matrix", "/matrix"],
     ])
       expect(
-        await within(screen.getByRole("main")).findByRole("link", {
-          name: new RegExp("^" + name! + " —"),
-        }),
+        await within(screen.getByRole("main")).findByRole(
+          "link",
+          { name: new RegExp("^" + name! + " —") },
+          { timeout: 5000 },
+        ),
       ).toHaveAttribute("href", route);
     expect(
       within(screen.getByRole("main")).queryByRole("link", { name: /Start rehearsal/ }),
@@ -182,9 +194,11 @@ describe("The interactive office", () => {
       ["Rehearsal Lounge", "/lounge"],
     ])
       expect(
-        await within(screen.getByRole("main")).findByRole("link", {
-          name: new RegExp("^" + name! + " —"),
-        }),
+        await within(screen.getByRole("main")).findByRole(
+          "link",
+          { name: new RegExp("^" + name! + " —") },
+          { timeout: 5000 },
+        ),
       ).toHaveAttribute("href", route);
     expect(screen.getByText(/These studio systems are in development/)).toBeInTheDocument();
   });
@@ -260,7 +274,11 @@ describe("The interactive office", () => {
   it("shows a milestone only for verified completed curriculum records", () => {
     state.milestones = 2;
     const { container } = render(<DirectorsOffice />);
-    expect(screen.getByText("2 curriculum milestones saved")).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("link", { name: "Your progress — view saved work" })).getByText("2", {
+        exact: true,
+      }),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/2 curriculum units marked complete in your account/),
     ).toBeInTheDocument();

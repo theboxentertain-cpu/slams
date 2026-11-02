@@ -3,6 +3,7 @@
 The [locked product contract](SLAMS-PRODUCT-CONTRACT.md) defines three primary worlds (Conservatory, Actor at Work, Stuck Desk), six supporting systems (Baseline, Lab, Matrix, Lounge, Passport/Journey, Director), ten contextual signature experiences and the two shared engines. All nine original sections remain product responsibilities. This document distinguishes that target architecture from actual runtime routes and capabilities.
 
 Office and Rehearse are shared entrances across the worlds. The Office must visibly lead to **Train, Rehearse, Work and Get Unstuck**. Supporting systems appear at the relevant learning, rehearsal, professional or troubleshooting step; signature experience names do not create extra primary tabs.
+Current page-by-page ownership and open requirements: [47-page traceability](SLAMS-47-PAGE-TRACEABILITY.md). The [navigation contract](SLAMS-NAVIGATION-CONTRACT.md) supplies the five-tab/object/return map; [release verification](SLAMS-RELEASE-VERIFICATION.md) records the first blueprint implementation.
 
 `src/routes/__root.tsx` owns the root layout. `AppShell` owns the sole persistent five-item studio bar. `SessionProvider` owns identity, and existing stores own private persistence. Cinematic entry routes intentionally omit the studio bar. Layout-only route files render `Outlet`; they are not additional competing departments.
 
@@ -59,6 +60,8 @@ flowchart TD
   Scene --> Reflect[Retake and reflection]
   Reflect -->|Confirmed save| Passport[Passport]
   Reflect -->|Continue without saving| Entry
+  Reflect -->|Practice again; input retained| Scene
+  Reflect -->|Continue without saving| Rehearse
   Legacy[Old intervention bookmark] --> Stuck
   Planned[Explicit planned-tool disclosure or old support link] --> Status[Honest availability page]
   Status --> Rehearse

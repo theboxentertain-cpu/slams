@@ -1,0 +1,754 @@
+{
+  "base": "http://localhost:3101",
+  "blueprintSHA256": "407f1011d479bee731141f3cf0b76f797b075ac65e6840aead6797c94c4211da",
+  "browser": "154.0.8037.57",
+  "checks": 161,
+  "passed": [
+    "Fresh visitor receives welcome",
+    "Blueprint Enter opens Account Choice",
+    "Guest is a real optional account choice",
+    "Guest storage disclosed",
+    "Account/setup can be skipped to Office",
+    "Existing signup confirmation field remains",
+    "Recovery path remains available",
+    "No fake OAuth provider enabled",
+    "Optional actor setup owner exists",
+    "Real motion preference offered",
+    "Setup skip remains available",
+    "Baseline explicitly gated",
+    "Baseline has a real supported next step",
+    "No invented baseline diagnostic",
+    "Exactly five studio destinations",
+    "Office has explicit desk room entrance",
+    "Rehearsal entrance needs no swipe",
+    "Coach modal uses existing Director modes",
+    "Coach points to single Director profile",
+    "Bookcase has eight real school destinations",
+    "Closing bookcase restores trigger focus",
+    "Casting wall leads to actual Work owner",
+    "Wall technique board retains gated Matrix entrance",
+    "Corner object points to /baseline",
+    "Corner object points to /lab",
+    "Corner object points to /lounge",
+    "Library retains all eight schools",
+    "Library three states remain",
+    "School retains five actual tabs",
+    "School curriculum resolves real Year 1",
+    "Year resolves canonical term",
+    "Year preserves school curriculum return",
+    "Term preserves inline Year return",
+    "Term shell cannot award progress",
+    "P15 unavailable synthetic unit cannot complete",
+    "P15 missing/unavailable material has a page state",
+    "P16 unavailable synthetic unit cannot complete",
+    "P16 missing/unavailable material has a page state",
+    "P17 unavailable synthetic unit cannot complete",
+    "P17 missing/unavailable material has a page state",
+    "P18 unavailable synthetic unit cannot complete",
+    "P18 missing/unavailable material has a page state",
+    "School Progress is the same school owner",
+    "School progress connects to real activity",
+    "Matrix explicitly gated",
+    "Matrix has a real supported next step",
+    "One action from Hub enters working briefing",
+    "Library contains authored Stay demo",
+    "Personal scene creation remains gated",
+    "Briefing states actual authored objective",
+    "Briefing declares fixed partner responses",
+    "OFF removes note",
+    "QUIET uses brief note",
+    "Director stays silent during take",
+    "Authored tactic produces its fixed response",
+    "Practice requires actor input",
+    "Retake retains earlier tactic context",
+    "Returning to exercise retains draft note",
+    "Exercise round trip retains retake",
+    "Review shows authored response and actor retake",
+    "Practice again preserves reflection",
+    "Unsaved exit returns to Hub explicitly",
+    "Save confirms guest storage only",
+    "Saved confirmation connects to Passport",
+    "Saved confirmation returns to Hub",
+    "Lab explicitly gated",
+    "Lab has a real supported next step",
+    "Lounge explicitly gated",
+    "Lounge has a real supported next step",
+    "Work anchors actual preparation",
+    "Four professional tools remain availability links",
+    "Unsaved audition edits survive tabs",
+    "Actual audition save survives reload",
+    "Single saved workspace is not presented as a multi-audition list",
+    "P34 explicitly gated",
+    "P34 has a real supported next step",
+    "P35 explicitly gated",
+    "P35 has a real supported next step",
+    "P36 explicitly gated",
+    "P36 has a real supported next step",
+    "P37 explicitly gated",
+    "P37 has a real supported next step",
+    "Stuck suggestions retain review disclosure",
+    "Supported remedy reaches a real rehearsal",
+    "Diagnosis explicitly gated",
+    "Diagnosis has a real supported next step",
+    "Legacy intervention redirects to canonical inline owner",
+    "Canonical authored remedy remains reachable",
+    "Retry explicitly gated",
+    "Retry has a real supported next step",
+    "Saved fixes explicitly gated",
+    "Saved fixes has a real supported next step",
+    "Passport stores the revised actual retake",
+    "One actual record survives reload",
+    "Progress does not convert counts into mastery",
+    "Completed reflections do not become draft resumes",
+    "Director preference persists through reload",
+    "Help directly reachable from account",
+    "Help directly reachable from privacy",
+    "Help directly reachable from language",
+    "Help directly reachable from accessibility",
+    "Train opens canonical destination",
+    "Rehearse opens canonical destination",
+    "Work opens canonical destination",
+    "Get Unstuck opens canonical destination",
+    "Four entry activations reach acting choices using optional setup skip",
+    "Unsaved exit creates no Passport entry",
+    "/help: no horizontal overflow at 320",
+    "/help: sole five-item studio bar at 320",
+    "/settings?tab=accessibility: no horizontal overflow at 320",
+    "/settings?tab=accessibility: sole five-item studio bar at 320",
+    "/scene: no horizontal overflow at 320",
+    "/scene: sole five-item studio bar at 320",
+    "Reflection summary wraps at 320",
+    "Reflection actions meet touch target at 320",
+    "/help: no horizontal overflow at 360",
+    "/help: sole five-item studio bar at 360",
+    "/settings?tab=accessibility: no horizontal overflow at 360",
+    "/settings?tab=accessibility: sole five-item studio bar at 360",
+    "/scene: no horizontal overflow at 360",
+    "/scene: sole five-item studio bar at 360",
+    "Reflection summary wraps at 360",
+    "Reflection actions meet touch target at 360",
+    "/help: no horizontal overflow at 390",
+    "/help: sole five-item studio bar at 390",
+    "/settings?tab=accessibility: no horizontal overflow at 390",
+    "/settings?tab=accessibility: sole five-item studio bar at 390",
+    "/scene: no horizontal overflow at 390",
+    "/scene: sole five-item studio bar at 390",
+    "Reflection summary wraps at 390",
+    "Reflection actions meet touch target at 390",
+    "/help: no horizontal overflow at 412",
+    "/help: sole five-item studio bar at 412",
+    "/settings?tab=accessibility: no horizontal overflow at 412",
+    "/settings?tab=accessibility: sole five-item studio bar at 412",
+    "/scene: no horizontal overflow at 412",
+    "/scene: sole five-item studio bar at 412",
+    "Reflection summary wraps at 412",
+    "Reflection actions meet touch target at 412",
+    "/help: no horizontal overflow at 768",
+    "/help: sole five-item studio bar at 768",
+    "/settings?tab=accessibility: no horizontal overflow at 768",
+    "/settings?tab=accessibility: sole five-item studio bar at 768",
+    "/scene: no horizontal overflow at 768",
+    "/scene: sole five-item studio bar at 768",
+    "Reflection summary wraps at 768",
+    "Reflection actions meet touch target at 768",
+    "/help: no horizontal overflow at 1440",
+    "/help: sole five-item studio bar at 1440",
+    "/settings?tab=accessibility: no horizontal overflow at 1440",
+    "/settings?tab=accessibility: sole five-item studio bar at 1440",
+    "/scene: no horizontal overflow at 1440",
+    "/scene: sole five-item studio bar at 1440",
+    "Reflection summary wraps at 1440",
+    "Reflection actions meet touch target at 1440",
+    "Reflection supports enlarged root text without overflow",
+    "Repeat control remains keyboard focusable at enlarged text",
+    "Device reduced motion respected",
+    "All 47 contract cases have results",
+    "Guest suite made no authentication/email requests",
+    "No uncaught page errors"
+  ],
+  "cases": [
+    {
+      "id": "P01",
+      "testId": "BP-P01",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Fresh visitor receives welcome",
+        "Blueprint Enter opens Account Choice"
+      ],
+      "url": "/welcome/account",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P02",
+      "testId": "BP-P02",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Guest is a real optional account choice",
+        "Guest storage disclosed",
+        "Account/setup can be skipped to Office"
+      ],
+      "url": "/",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P03",
+      "testId": "BP-P03",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Existing signup confirmation field remains",
+        "Recovery path remains available",
+        "No fake OAuth provider enabled"
+      ],
+      "url": "/auth?mode=signup&flow=welcome",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P04",
+      "testId": "BP-P04",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Optional actor setup owner exists",
+        "Real motion preference offered",
+        "Setup skip remains available"
+      ],
+      "url": "/welcome/setup",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P05",
+      "testId": "BP-P05",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Baseline explicitly gated",
+        "Baseline has a real supported next step",
+        "No invented baseline diagnostic"
+      ],
+      "url": "/baseline?tab=prepare",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P06",
+      "testId": "BP-P06",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Exactly five studio destinations",
+        "Office has explicit desk room entrance",
+        "Rehearsal entrance needs no swipe"
+      ],
+      "url": "/",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P07",
+      "testId": "BP-P07",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Coach modal uses existing Director modes",
+        "Coach points to single Director profile"
+      ],
+      "url": "/",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P08",
+      "testId": "BP-P08",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Bookcase has eight real school destinations",
+        "Closing bookcase restores trigger focus"
+      ],
+      "url": "/",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P09",
+      "testId": "BP-P09",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Casting wall leads to actual Work owner",
+        "Wall technique board retains gated Matrix entrance"
+      ],
+      "url": "/",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P10",
+      "testId": "BP-P10",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Corner object points to /baseline",
+        "Corner object points to /lab",
+        "Corner object points to /lounge"
+      ],
+      "url": "/",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P11",
+      "testId": "BP-P11",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Library retains all eight schools",
+        "Library three states remain"
+      ],
+      "url": "/conservatory?tab=all-schools",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P12",
+      "testId": "BP-P12",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "School retains five actual tabs",
+        "School curriculum resolves real Year 1"
+      ],
+      "url": "/conservatory/meisner?tab=curriculum",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P13",
+      "testId": "BP-P13",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Year resolves canonical term",
+        "Year preserves school curriculum return"
+      ],
+      "url": "/conservatory/meisner/years/1",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P14",
+      "testId": "BP-P14",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Term preserves inline Year return",
+        "Term shell cannot award progress"
+      ],
+      "url": "/conservatory/meisner/years/1/terms/1",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P15",
+      "testId": "BP-P15",
+      "result": "BLOCKED",
+      "assertionResult": "PASS",
+      "checks": [
+        "P15 unavailable synthetic unit cannot complete",
+        "P15 missing/unavailable material has a page state"
+      ],
+      "url": "/conservatory/meisner/units/course/00000000-0000-4000-8000-000000000001",
+      "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied."
+    },
+    {
+      "id": "P16",
+      "testId": "BP-P16",
+      "result": "BLOCKED",
+      "assertionResult": "PASS",
+      "checks": [
+        "P16 unavailable synthetic unit cannot complete",
+        "P16 missing/unavailable material has a page state"
+      ],
+      "url": "/conservatory/meisner/units/lesson/00000000-0000-4000-8000-000000000001",
+      "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied."
+    },
+    {
+      "id": "P17",
+      "testId": "BP-P17",
+      "result": "BLOCKED",
+      "assertionResult": "PASS",
+      "checks": [
+        "P17 unavailable synthetic unit cannot complete",
+        "P17 missing/unavailable material has a page state"
+      ],
+      "url": "/conservatory/meisner/units/exercise/00000000-0000-4000-8000-000000000001",
+      "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied."
+    },
+    {
+      "id": "P18",
+      "testId": "BP-P18",
+      "result": "BLOCKED",
+      "assertionResult": "PASS",
+      "checks": [
+        "P18 unavailable synthetic unit cannot complete",
+        "P18 missing/unavailable material has a page state"
+      ],
+      "url": "/conservatory/meisner/units/assessment/00000000-0000-4000-8000-000000000001",
+      "scope": "Only unavailable/invalid-unit handling checked; no reviewed unit was supplied."
+    },
+    {
+      "id": "P19",
+      "testId": "BP-P19",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "School Progress is the same school owner",
+        "School progress connects to real activity"
+      ],
+      "url": "/conservatory/meisner?tab=progress",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P20",
+      "testId": "BP-P20",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Matrix explicitly gated",
+        "Matrix has a real supported next step"
+      ],
+      "url": "/matrix?tab=compare",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P21",
+      "testId": "BP-P21",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "One action from Hub enters working briefing"
+      ],
+      "url": "/rehearsal?tab=my-scenes",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P22",
+      "testId": "BP-P22",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Library contains authored Stay demo",
+        "Personal scene creation remains gated"
+      ],
+      "url": "/scene",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P23",
+      "testId": "BP-P23",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Briefing states actual authored objective",
+        "Briefing declares fixed partner responses"
+      ],
+      "url": "/scene",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P24",
+      "testId": "BP-P24",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "OFF removes note",
+        "QUIET uses brief note",
+        "Director stays silent during take",
+        "Authored tactic produces its fixed response"
+      ],
+      "url": "/scene",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P25",
+      "testId": "BP-P25",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Practice requires actor input"
+      ],
+      "url": "/scene",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P26",
+      "testId": "BP-P26",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Retake retains earlier tactic context",
+        "Returning to exercise retains draft note",
+        "Exercise round trip retains retake"
+      ],
+      "url": "/scene",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P27",
+      "testId": "BP-P27",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Review shows authored response and actor retake",
+        "Practice again preserves reflection",
+        "Unsaved exit returns to Hub explicitly"
+      ],
+      "url": "/scene",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P28",
+      "testId": "BP-P28",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Save confirms guest storage only",
+        "Saved confirmation connects to Passport",
+        "Saved confirmation returns to Hub"
+      ],
+      "url": "/rehearsal?tab=my-scenes",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P29",
+      "testId": "BP-P29",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Lab explicitly gated",
+        "Lab has a real supported next step"
+      ],
+      "url": "/lab?tab=takes",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P30",
+      "testId": "BP-P30",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Lounge explicitly gated",
+        "Lounge has a real supported next step"
+      ],
+      "url": "/lounge?tab=sessions",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P31",
+      "testId": "BP-P31",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Work anchors actual preparation",
+        "Four professional tools remain availability links"
+      ],
+      "url": "/work?tab=auditions",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P32",
+      "testId": "BP-P32",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Unsaved audition edits survive tabs",
+        "Actual audition save survives reload"
+      ],
+      "url": "/work/audition?tab=preparation",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P33",
+      "testId": "BP-P33",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Single saved workspace is not presented as a multi-audition list"
+      ],
+      "url": "/work?tab=auditions",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P34",
+      "testId": "BP-P34",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "P34 explicitly gated",
+        "P34 has a real supported next step"
+      ],
+      "url": "/work/character?tab=biography",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P35",
+      "testId": "BP-P35",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "P35 explicitly gated",
+        "P35 has a real supported next step"
+      ],
+      "url": "/work/breakdown?tab=beats",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P36",
+      "testId": "BP-P36",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "P36 explicitly gated",
+        "P36 has a real supported next step"
+      ],
+      "url": "/work/self-tape?tab=setup",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P37",
+      "testId": "BP-P37",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "P37 explicitly gated",
+        "P37 has a real supported next step"
+      ],
+      "url": "/work/journal?tab=scenes",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P38",
+      "testId": "BP-P38",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Stuck suggestions retain review disclosure",
+        "Supported remedy reaches a real rehearsal"
+      ],
+      "url": "/stuck?tab=describe",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P39",
+      "testId": "BP-P39",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Diagnosis explicitly gated",
+        "Diagnosis has a real supported next step"
+      ],
+      "url": "/stuck/diagnosis?tab=observations",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P40",
+      "testId": "BP-P40",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Legacy intervention redirects to canonical inline owner",
+        "Canonical authored remedy remains reachable"
+      ],
+      "url": "/stuck?tab=describe",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P41",
+      "testId": "BP-P41",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Retry explicitly gated",
+        "Retry has a real supported next step"
+      ],
+      "url": "/stuck/retry?tab=first-attempt",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P42",
+      "testId": "BP-P42",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Saved fixes explicitly gated",
+        "Saved fixes has a real supported next step"
+      ],
+      "url": "/stuck/saved?tab=history",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P43",
+      "testId": "BP-P43",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Passport stores the revised actual retake",
+        "One actual record survives reload"
+      ],
+      "url": "/passport?tab=journey",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P44",
+      "testId": "BP-P44",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Progress does not convert counts into mastery",
+        "Completed reflections do not become draft resumes"
+      ],
+      "url": "/progress?tab=by-school",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P45",
+      "testId": "BP-P45",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Director preference persists through reload"
+      ],
+      "url": "/director",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P46",
+      "testId": "BP-P46",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Help directly reachable from account",
+        "Help directly reachable from privacy",
+        "Help directly reachable from language",
+        "Help directly reachable from accessibility"
+      ],
+      "url": "/help",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    },
+    {
+      "id": "P47",
+      "testId": "BP-P47",
+      "result": "PASS",
+      "assertionResult": "PASS",
+      "checks": [
+        "Train opens canonical destination",
+        "Rehearse opens canonical destination",
+        "Work opens canonical destination",
+        "Get Unstuck opens canonical destination"
+      ],
+      "url": "/help",
+      "scope": "Implemented surface and stated clicks only; not full target functionality or live backend acceptance."
+    }
+  ],
+  "authRequests": 0,
+  "uncaughtPageErrors": [],
+  "limitations": [
+    "P15–P18 reviewed material unavailable: BLOCKED; synthetic IDs only test unavailable-unit safety.",
+    "PASS cases are bounded surface/click checks, not complete blueprint acceptance.",
+    "No live email, independently confirmed accounts, deployed RLS, cloud writes or physical Android/TalkBack.",
+    "Manual operator and human five-minute usability/performance study NOT RUN."
+  ]
+}

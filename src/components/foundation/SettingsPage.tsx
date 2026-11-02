@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Page, AccountLink, DirectorToggle } from "@/components/slams";
+import { Page, AccountLink, DirectorToggle, btnSecondary } from "@/components/slams";
 import { useOfficePreferences } from "@/lib/office-preferences";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 export function SettingsPage({
@@ -75,6 +75,9 @@ export function SettingsPage({
           )
         }
       </SectionTabs>
+      <Link to="/help" className={`${btnSecondary} mt-4`}>
+        Help &amp; Studio Guide
+      </Link>
     </Page>
   );
 }

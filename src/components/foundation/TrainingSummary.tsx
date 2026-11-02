@@ -11,7 +11,13 @@ export function UnitLink({ unit, children }: { unit: TrainingUnit; children?: Re
     </Link>
   );
 }
-export function TrainingSummary({ school }: { school?: string }) {
+export function TrainingSummary({
+  school,
+  variant = "default",
+}: {
+  school?: string;
+  variant?: "default" | "office";
+}) {
   const catalog = useCatalog();
   const progress = useTrainingProgress();
   const current = progress.records
@@ -20,6 +26,33 @@ export function TrainingSummary({ school }: { school?: string }) {
         progress.records,
       )
     : null;
+  if (variant === "office")
+    return (
+      <section className="training-summary office-training-card" aria-label="Current training">
+        <span className="office-kicker">
+          {current ? "CURRENT TRAINING" : "YOUR NEXT REHEARSAL"}
+        </span>
+        <h2>{current ? getSchool(current.school)?.name : "Your next scene is waiting."}</h2>
+        <p>
+          {current
+            ? `Year ${current.year} · Term ${current.term} · ${current.title}`
+            : "Make a choice. Try a new approach. See what changes."}
+        </p>
+        {current ? (
+          <UnitLink unit={current}>Continue training: {current.title}</UnitLink>
+        ) : (
+          <Link to="/scene" aria-label="Start rehearsal — The Living Scene">
+            Start rehearsal <span aria-hidden="true">→</span>
+          </Link>
+        )}
+        {!current && (progress.error || catalog.isError) && progress.signedIn && (
+          <small>Curriculum status is unavailable. Your scripted rehearsal is ready.</small>
+        )}
+        {!current && progress.loading && (
+          <small role="status">Checking your account training…</small>
+        )}
+      </section>
+    );
   return (
     <section className="training-summary" aria-label="Current training">
       <span className="office-kicker">YOUR NEXT PAGE</span>

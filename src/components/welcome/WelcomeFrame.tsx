@@ -2,9 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Wordmark } from "@/components/slams";
-import room from "@/assets/office/office-reference.webp";
-import director from "@/assets/welcome/director-reclining.webp";
-import portrait from "@/assets/welcome/director-portrait.webp";
+import director from "@/assets/premium/director-studio.webp";
 export function WelcomeFrame({
   title,
   subtitle,
@@ -19,7 +17,7 @@ export function WelcomeFrame({
   back?: "/welcome" | "/welcome/account" | "/welcome/setup";
 }) {
   return (
-    <div className={`welcome-world welcome-${variant}`} style={{ backgroundImage: `url(${room})` }}>
+    <div className={`welcome-world welcome-${variant}`}>
       <div className="welcome-curtain curtain-left" aria-hidden="true" />
       <div className="welcome-curtain curtain-right" aria-hidden="true" />
       <header className="welcome-brand">
@@ -35,17 +33,14 @@ export function WelcomeFrame({
       </header>
       <main id="page-content" tabIndex={-1}>
         <section className="welcome-scene" aria-label="The Director’s welcome">
-          <picture>
-            <source media="(max-width:699px)" srcSet={portrait} />
-            <img
-              className="welcome-director"
-              src={director}
-              alt="The Director reclining in his worn leather chair, red pencil in hand, with his signature coffee mug."
-              width={1536}
-              height={1024}
-              fetchPriority="high"
-            />
-          </picture>
+          <img
+            className="welcome-director"
+            src={director}
+            alt="The Director in his leather chair, red pencil at his temple, offering his signature coffee mug."
+            width={1536}
+            height={1024}
+            fetchPriority="high"
+          />
           {variant !== "landing" && (
             <div className="welcome-chalkboard">
               <h1>{title}</h1>

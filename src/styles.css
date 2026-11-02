@@ -2,11 +2,11 @@
 @source "../src";
 @import "tw-animate-css";
 @import "./office.css";
-@import "./office-reference.css";
 @import "./foundation.css";
 @import "./welcome.css";
-@import "./office-cinematic.css";
+@import "./premium-office.css";
 @import "./studio-world.css";
+@import "./director-life.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -126,7 +126,8 @@
 @utility wordmark {
   font-family: var(--font-display);
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: -0.035em;
+  font-style: italic;
   color: var(--ivory);
   text-shadow: 0 2px 0 oklch(0 0 0 / 0.4);
 }

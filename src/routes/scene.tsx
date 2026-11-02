@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { DirectorNote, Page, btnPrimary, btnSecondary } from "@/components/slams";
+import { DirectorNote, DirectorToggle, Page, btnPrimary, btnSecondary } from "@/components/slams";
 import { INTERVENTIONS, SCENE, TACTICS, getObstacle } from "@/data/scene";
 import { usePassport } from "@/lib/store";
 
@@ -64,7 +64,11 @@ function Scene() {
       eyebrow="Demonstration Living Scene"
       backTo="/rehearsal"
       world="scene"
+      performing={performing}
     >
+      <div className="mb-4">
+        <DirectorToggle />
+      </div>
       {stageIdx >= 0 && (
         <ol aria-label="Progress" className="mb-4 flex gap-1 text-[10px] uppercase">
           {STAGES.map((s, i) => (
@@ -175,6 +179,17 @@ function Scene() {
           <>
             <h2 className="text-xl font-bold">Take 2 — new obstacle</h2>
             <p className="mt-2 rounded border border-crimson p-3">{obstacle}</p>
+            <div className="mt-3 space-y-2 text-sm">
+              <p>
+                <strong>Earlier tactic:</strong> {t?.verb}
+              </p>
+              <p>
+                <strong>Your intervention:</strong> {iv?.school} — {iv?.label}
+              </p>
+              <p className="whitespace-pre-wrap break-words">
+                <strong>Your exercise note:</strong> {note}
+              </p>
+            </div>
             <label htmlFor="rt" className="mt-3 block text-sm">
               Your new line or action
             </label>
@@ -192,6 +207,13 @@ function Scene() {
             >
               Cut — end take
             </button>
+            <button
+              type="button"
+              className={`${btnSecondary} mt-3 w-full`}
+              onClick={() => setStep("practice")}
+            >
+              Back to exercise
+            </button>
           </>
         )}
         {step === "reflect" && (
@@ -200,6 +222,31 @@ function Scene() {
             <p className="text-sm text-muted-foreground">
               What changed between take 1 and take 2? Only you can judge this.
             </p>
+            <section
+              aria-label="Rehearsal summary"
+              className="my-4 rounded border border-border p-3"
+            >
+              <h3 className="font-bold">Your two takes, on the page</h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                The partner response is scripted. The exercise, retake and reflection are your own
+                notes.
+              </p>
+              <dl className="mt-3 grid gap-3 text-sm">
+                {[
+                  ["First-take tactic", `${t?.verb}: “${t?.line}”`],
+                  ["Scripted partner response", t?.response],
+                  ["Intervention", `${iv?.school} — ${iv?.label}`],
+                  ["Your exercise note", note],
+                  ["Retake obstacle", obstacle],
+                  ["Your retake line or action", retakeLine],
+                ].map(([label, value]) => (
+                  <div key={label}>
+                    <dt className="font-bold text-amber">{label}</dt>
+                    <dd className="whitespace-pre-wrap break-words">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
             <label htmlFor="rf" className="sr-only">
               Reflection
             </label>
@@ -232,6 +279,26 @@ function Scene() {
               <Link to="/" className={`${btnSecondary} mt-2 w-full`}>
                 Continue to the Office without saving
               </Link>
+            {!saving && (
+              <>
+                <button
+                  type="button"
+                  className={`${btnSecondary} mt-3 w-full`}
+                  onClick={() => {
+                    setError("");
+                    setStep("retake");
+                  }}
+                >
+                  Practice again
+                </button>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Practice again edits this retake and keeps your notes. Leaving without saving
+                  discards the unsaved rehearsal.
+                </p>
+                <Link to="/rehearsal" className={`${btnSecondary} mt-2 w-full`}>
+                  Return to rehearsal without saving
+                </Link>
+              </>
             )}
           </>
         )}
@@ -260,13 +327,18 @@ function Scene() {
               >
                 Rehearse again
               </button>
+              <Link to="/rehearsal" className={btnSecondary}>
+                Return to the rehearsal studio
+              </Link>
             </div>
           </>
         )}
       </div>
-      <DirectorNote performing={performing} short="Play the action, not the result.">
+      <DirectorNote performing={performing} expression={step === "saved" ? "proud" : step === "intervene" ? "critical" : step === "reflect" ? "observant" : "master"} short={step === "saved" ? "Your reflection is saved." : "Play the action, not the result."}>
         {step === "intervene"
           ? "Each intervention gives you a different retake problem. Pick the one you want to train."
+          : step === "saved" ? "Your reflection is saved. Evidence of the work, not a verdict on your talent."
+          : step === "reflect" ? "What changed? Be specific. Your observation matters more than my approval."
           : "Play the action, not the result. I'll stay silent during takes."}
       </DirectorNote>
     </Page>

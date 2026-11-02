@@ -120,6 +120,7 @@ This diagram is the target integration, not the current runtime interaction map.
 Page families organize capabilities without adding a bottom-navigation tab for every page. Existing meaningful URLs remain available. Unimplemented tools retain honest statuses and contextual supported alternatives while their final requirements remain in the contract.
 
 ## Currently demonstrable value and evidence boundaries
+The current [47-page blueprint](SLAMS-47-PAGE-TRACEABILITY.md) locks three worlds (Conservatory, Actor at Work, Stuck Desk), six supporting systems (Baseline, Performance Lab, Technique Matrix, Lounge, Passport/Journey, Director), eight schools, ten contextual signature experiences and two shared engines. Keep the five primary navigation destinations. The [navigation contract](SLAMS-NAVIGATION-CONTRACT.md) distinguishes actual routes and owners from these final requirements; a named system is not a claim that it is implemented.
 
 | Actor            | Available value                                                                                          | Honest boundary                                                              |
 | ---------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |

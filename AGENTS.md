@@ -16,3 +16,4 @@
 - Curriculum pack validation precedes trusted imports; parent-scoped slugs and year/term numbers preserve stable database IDs across updates. No browser-admin import endpoint is allowed.
 - Curriculum structure lives in src/data/schools.ts as a typed School>Year>Term>Course>Workshop>Lesson>Exercise model; never mark content complete without reviewed material.
 - Living Scene content is fixed scripted data in src/data/scene.ts; no AI judgment or grading.
+- Section coaching is centralized in a scripted section map and reuses the Director expression atlas; presence follows Director modes and is suppressed during active takes to avoid competing with rehearsal.
