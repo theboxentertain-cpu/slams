@@ -28,7 +28,7 @@ export function ProgressPage({
           <dd>{count ?? "—"}</dd>
         </div>
         <div>
-          <dt>Curriculum units completed</dt>
+          <dt>Legacy unit completion markers (unverified)</dt>
           <dd>{progress.records?.filter((r) => r.status === "completed").length ?? "—"}</dd>
         </div>
       </dl>
@@ -78,7 +78,7 @@ export function ProgressPage({
                               {unit?.title ?? "Curriculum record · details unavailable"}
                             </strong>
                             <p>
-                              {r.status} · {new Date(r.updated_at).toLocaleString()}
+                              {r.status === "completed" ? "Legacy recorded completion (not assessed)" : "Started activity"} · {new Date(r.updated_at).toLocaleString()}
                             </p>
                           </li>
                         );

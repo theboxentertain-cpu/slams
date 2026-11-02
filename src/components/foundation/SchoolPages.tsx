@@ -15,6 +15,7 @@ import {
 } from "@/lib/training";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 import { TrainingSummary, UnitLink } from "./TrainingSummary";
+import { PlacementAssessmentNotice } from "./PlacementAssessmentNotice";
 type TabProps = { tab: string; onTabChange: (tab: string) => void };
 
 function CatalogState({ catalog }: { catalog: ReturnType<typeof useCatalog> }) {
@@ -201,6 +202,7 @@ export function SchoolPage({ school, tab, onTabChange }: TabProps & { school: st
                 Explore the curriculum structure
               </button>
               <Link to="/scene">Try the existing scripted demonstration</Link>
+              <PlacementAssessmentNotice school={school} />
             </section>
           ) : current === "curriculum" ? (
             <TermLinks school={school} />
