@@ -6,10 +6,6 @@ import { MeisnerWorkshopOne } from "./MeisnerWorkshopOne";
  * award verified curriculum progress or replace real partner training.
  */
 export function MeisnerAcademicPreview() {
-  const [observation, setObservation] = useState("");
-  const [inference, setInference] = useState("");
-  const [showReflection, setShowReflection] = useState(false);
-
   return (
     <section className="studio-sheet foundation-stack" aria-label="Meisner first term editorial preview">
       <div className="availability-note">
@@ -24,6 +20,7 @@ export function MeisnerAcademicPreview() {
         Partner observation and repetition require a consenting human partner. Solo preparation
         may help distinguish observations from assumptions, but cannot establish partner competence.
       </p>
+      <MeisnerWorkshopOne />
       {pilot.courses.map((course, index) => {
         const workshop = pilot.workshops.find((w) => w.id === course.workshopId);
         const prefix = workshop?.id ?? "";
@@ -60,7 +57,6 @@ export function MeisnerAcademicPreview() {
           </section>
         );
       })}
-      <MeisnerWorkshopOne />
       <p className="text-sm text-muted-foreground">
         Term assessment: instructor review required; pass threshold unset. No term
         graduation or accreditation is available.
