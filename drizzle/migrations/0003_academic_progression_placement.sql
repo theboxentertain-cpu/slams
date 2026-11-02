@@ -88,6 +88,14 @@ BEGIN
   IF NOT public.academic_target_in_school(NEW.school_id, NEW.target_kind, NEW.target_id) THEN
     RAISE EXCEPTION 'Assessment target is not in the claimed school';
   END IF;
+  IF NEW.status = 'active' AND (
+    EXISTS (SELECT 1 FROM jsonb_array_elements(NEW.criteria) AS c(item)
+      WHERE jsonb_typeof(c.item) <> 'object'
+        OR length(btrim(coalesce(c.item->>'id', ''))) = 0
+        OR length(btrim(coalesce(c.item->>'description', ''))) < 10)
+    OR (SELECT count(DISTINCT c.item->>'id')
+      FROM jsonb_array_elements(NEW.criteria) AS c(item)) <> jsonb_array_length(NEW.criteria)
+  ) THEN RAISE EXCEPTION 'Assessment criteria must have unique IDs and meaningful descriptions'; END IF;
   IF NEW.status = 'active' AND NOT EXISTS (
     SELECT 1 FROM public.academic_reviewers r
     WHERE r.school_id=NEW.school_id AND r.user_id=NEW.signed_by AND r.active
@@ -161,6 +169,7 @@ CREATE TABLE public.academic_placement_requests (
  state TEXT NOT NULL DEFAULT 'submitted' CHECK (state IN ('submitted','revision_requested','approved','declined')),
  reviewer_id UUID REFERENCES auth.users(id),
  reviewer_note TEXT,
+ rubric_result JSONB NOT NULL DEFAULT '{}'::jsonb,
  reviewed_at TIMESTAMPTZ,
  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
  CONSTRAINT review_state_has_reviewer CHECK (state='submitted' OR (reviewer_id IS NOT NULL AND reviewed_at IS NOT NULL))
@@ -215,10 +224,10 @@ $academic$;
 REVOKE ALL ON FUNCTION public.academic_request_placement(UUID,TEXT,JSONB) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.academic_request_placement(UUID,TEXT,JSONB) TO authenticated;
 
-CREATE FUNCTION public.academic_review_placement(p_request UUID,p_decision TEXT,p_note TEXT)
+CREATE FUNCTION public.academic_review_placement(p_request UUID,p_decision TEXT,p_note TEXT,p_rubric JSONB)
 RETURNS VOID LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $academic$
 DECLARE v_reviewer UUID; v_case public.academic_placement_requests%ROWTYPE;
-  v_policy public.academic_policies%ROWTYPE;
+  v_policy public.academic_policies%ROWTYPE; v_criterion JSONB;
 BEGIN
  v_reviewer=auth.uid();
  IF v_reviewer IS NULL OR p_decision NOT IN ('approved','revision_requested','declined')
@@ -235,8 +244,20 @@ BEGIN
  WHERE r.user_id=v_reviewer AND r.school_id=v_policy.school_id AND r.active) THEN
    RAISE EXCEPTION 'Faculty must be assigned to this school';
  END IF;
+ IF p_decision='approved' THEN
+   IF jsonb_typeof(p_rubric) IS DISTINCT FROM 'object'
+      OR jsonb_typeof(p_rubric->'criteria') IS DISTINCT FROM 'object' THEN
+     RAISE EXCEPTION 'Approvals require documented rubric results';
+   END IF;
+   FOR v_criterion IN SELECT c.item FROM jsonb_array_elements(v_policy.criteria) AS c(item) LOOP
+     IF p_rubric->'criteria'->>(v_criterion->>'id') IS DISTINCT FROM 'demonstrated' THEN
+       RAISE EXCEPTION 'Each required published criterion must be demonstrated and documented';
+     END IF;
+   END LOOP;
+ END IF;
  UPDATE public.academic_placement_requests SET state=p_decision,reviewer_id=v_reviewer,
-  reviewer_note=p_note,reviewed_at=now() WHERE id=v_case.id;
+  reviewer_note=p_note,rubric_result=coalesce(p_rubric,'{}'::jsonb),
+  reviewed_at=now() WHERE id=v_case.id;
  IF p_decision='approved' THEN
    INSERT INTO public.academic_placement_grants(user_id,policy_id,request_id,reviewer_id)
    VALUES (v_case.user_id,v_case.policy_id,v_case.id,v_reviewer)
@@ -244,8 +265,8 @@ BEGIN
  END IF;
 END;
 $academic$;
-REVOKE ALL ON FUNCTION public.academic_review_placement(UUID,TEXT,TEXT) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.academic_review_placement(UUID,TEXT,TEXT) TO authenticated;
+REVOKE ALL ON FUNCTION public.academic_review_placement(UUID,TEXT,TEXT,JSONB) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.academic_review_placement(UUID,TEXT,TEXT,JSONB) TO authenticated;
 
 -- Read-only evidence of reviewed placement; not a content-delivery authorization.
 CREATE FUNCTION public.academic_has_placement(p_school UUID,p_kind TEXT,p_target UUID)
