@@ -279,6 +279,7 @@ function Scene() {
               <Link to="/" className={`${btnSecondary} mt-2 w-full`}>
                 Continue to the Office without saving
               </Link>
+            )}
             {!saving && (
               <>
                 <button
