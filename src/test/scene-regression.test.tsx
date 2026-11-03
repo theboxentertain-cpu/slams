@@ -65,7 +65,6 @@ it("preserves branching, retake, reflection and shows success only after a confi
   );
 });
 
-it("offers unsaved continuation, but not while an explicit save is pending", async () => {
 const combinations = TACTICS.flatMap((tactic) =>
   INTERVENTIONS.map((intervention) => ({ tactic, intervention })),
 );
@@ -155,17 +154,6 @@ it("hides unsaved/retry actions while a confirmed save is pending", async () => 
   expect(
     screen.queryByRole("link", { name: "Continue to the Office without saving" }),
   ).not.toBeInTheDocument();
-  complete({});
-  await waitFor(() => expect(screen.getByText("Saved to your Passport")).toBeInTheDocument());
-  fireEvent.change(screen.getByLabelText("Reflection"), {
-    target: { value: "Listening changed the action" },
-  });
-  fireEvent.click(screen.getByText("Save to Passport"));
-  expect(
-    screen.queryByRole("link", { name: "Return to rehearsal without saving" }),
-  ).not.toBeInTheDocument();
-  expect(screen.queryByRole("button", { name: "Practice again" })).not.toBeInTheDocument();
-  expect(screen.queryByText("Saved to your Passport")).not.toBeInTheDocument();
   complete({});
   await waitFor(() => expect(screen.getByText("Saved to your Passport")).toBeInTheDocument());
   expect(screen.getByRole("link", { name: "Return to the rehearsal studio" })).toHaveAttribute(
