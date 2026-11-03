@@ -113,13 +113,6 @@ it.each(combinations)(
   },
 );
 it("hides unsaved/retry actions while a confirmed save is pending", async () => {
-  let complete: (result: { error?: string }) => void = () => undefined;
-  mocks.add.mockImplementation(
-    () =>
-      new Promise<{ error?: string }>((resolve) => {
-        complete = resolve;
-      }),
-  );
   const Component = (Route as unknown as { component: React.ComponentType }).component;
   render(<Component />);
   fireEvent.click(screen.getByText("Begin take"));
@@ -137,7 +130,9 @@ it("hides unsaved/retry actions while a confirmed save is pending", async () => 
   expect(
     screen.getByRole("link", { name: "Continue to the Office without saving" }),
   ).toHaveAttribute("href", "/");
-  expect(screen.getByText(/Leaving without saving discards/)).toBeInTheDocument();
+  expect(
+    screen.getByText(/^Saving is optional\. Leaving without saving discards/),
+  ).toBeInTheDocument();
   expect(mocks.add).not.toHaveBeenCalled();
   expect(screen.queryByText("Saved to your Passport")).not.toBeInTheDocument();
   let complete: (result: { error?: string }) => void = () => undefined;

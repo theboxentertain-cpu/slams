@@ -1,8 +1,10 @@
 import { Link, notFound } from "@tanstack/react-router";
-import { Page } from "@/components/slams";
-import { SCHOOLS, getSchool, totalTerms } from "@/data/schools";
+import { Page, btnPrimary } from "@/components/slams";
+import { ArrowUpRight, CalendarDays, BookOpen, Footprints, Clapperboard } from "lucide-react";
+import { getSchool, totalTerms } from "@/data/schools";
 import { BOOK_DESIGNS } from "@/components/office/office-data";
-import { BookCover } from "@/components/office/SchoolBooks";
+import { CoverDrawing } from "@/components/office/SchoolBooks";
+import { SchoolPortrait } from "./SchoolPortrait";
 import { CurriculumUnit } from "@/components/CurriculumUnit";
 import { MeisnerAcademicPreview } from "./MeisnerAcademicPreview";
 import {
@@ -42,9 +44,13 @@ export function ConservatoryPage({ tab, onTabChange }: TabProps) {
         schoolHasProgress(book.slug, catalog.units, progress.records)),
   );
   return (
-    <Page title="The Conservatory" eyebrow="LEARN THE CRAFT" backTo="/" world="conservatory">
-      <p className="section-intro">Eight Schools of Acting Technique</p>
-      <p>
+    <Page
+      title="The Conservatory"
+      eyebrow="THE EIGHT ACTING SCHOOLS"
+      backTo="/"
+      world="conservatory"
+    >
+      <p className="training-structure-note">
         Provisional SLAMS structure, subject to academic review. Not official institutional
         curricula.
       </p>
@@ -70,7 +76,7 @@ export function ConservatoryPage({ tab, onTabChange }: TabProps) {
                 progress.records &&
                 catalog.isSuccess &&
                 books.length === 0 && <p>No school activity recorded yet.</p>}
-              <ul className="school-selector">
+              <ul className="school-selector school-gallery">
                 {books.map((book) => (
                   <li key={book.slug} data-school={book.slug}>
                     <Link
@@ -78,14 +84,23 @@ export function ConservatoryPage({ tab, onTabChange }: TabProps) {
                       params={{ school: book.slug }}
                       className="school-entrance"
                     >
-                      <BookCover book={book} />
-                      <span>
-                        <strong>{book.school.name}</strong>
-                        <span>{book.school.focus}</span>
-                        <small>
-                          {book.school.years} years · {totalTerms(book.school)} terms · Provisional
-                        </small>
+                      <span className="school-card-art" aria-hidden="true">
+                        <SchoolPortrait school={book.slug} />
+                        <span className="school-card-seal">
+                          <CoverDrawing motif={book.motif} />
+                        </span>
                       </span>
+                      <span className="school-card-copy">
+                        <strong>{book.school.name}</strong>
+                        <span className="school-card-focus">{book.school.focus}</span>
+                        <span className="school-card-duration">
+                          <CalendarDays size={16} aria-hidden="true" />
+                          {book.school.years} {book.school.years === 1 ? "year" : "years"} ·{" "}
+                          {totalTerms(book.school)} terms
+                        </span>
+                        <small>Provisional structure</small>
+                      </span>
+                      <ArrowUpRight className="school-card-arrow" size={18} aria-hidden="true" />
                     </Link>
                   </li>
                 ))}
@@ -94,6 +109,32 @@ export function ConservatoryPage({ tab, onTabChange }: TabProps) {
           )
         }
       </SectionTabs>
+      <nav className="training-next-actions" aria-label="Continue your training">
+        <Link to="/baseline">
+          <Footprints aria-hidden="true" />
+          <span>
+            <strong>Your starting point</strong>
+            <small>Optional Baseline introduction</small>
+          </span>
+          <ArrowUpRight aria-hidden="true" />
+        </Link>
+        <Link to="/rehearsal">
+          <Clapperboard aria-hidden="true" />
+          <span>
+            <strong>Try it in a scene</strong>
+            <small>Explore · Perform · Reflect</small>
+          </span>
+          <ArrowUpRight aria-hidden="true" />
+        </Link>
+        <Link to="/progress">
+          <BookOpen aria-hidden="true" />
+          <span>
+            <strong>The work, on record</strong>
+            <small>View actual saved progress</small>
+          </span>
+          <ArrowUpRight aria-hidden="true" />
+        </Link>
+      </nav>
       <CatalogState catalog={catalog} />
     </Page>
   );
@@ -135,8 +176,7 @@ export function SchoolPage({ school, tab, onTabChange }: TabProps & { school: st
   if (!s) throw notFound();
   return (
     <Page title={s.name} eyebrow="Conservatory school" school={school} backTo="/conservatory">
-      <p className="section-intro">{s.focus}</p>
-      <p>
+      <p className="training-structure-note">
         {s.years} years · {totalTerms(s)} terms (provisional)
       </p>
       <SectionTabs page="school" value={tab} onChange={onTabChange}>
@@ -144,10 +184,19 @@ export function SchoolPage({ school, tab, onTabChange }: TabProps & { school: st
           current === "overview" ? (
             <section className="studio-sheet foundation-stack">
               <p>
-                This independently designed SLAMS school structure remains subject to academic
-                review. Detailed principles, history, demonstrations and school-specific teaching
-                material have not been supplied.
+                {school === "meisner"
+                  ? "Explore the provisional school structure and the first-term SLAMS editorial preview. The preview is awaiting qualified teaching review and does not award academic credit."
+                  : "This independently designed SLAMS school structure remains subject to academic review. Detailed principles, history, demonstrations and school-specific teaching material have not been supplied."}
               </p>
+              {school === "meisner" && (
+                <Link
+                  to="/conservatory/$school/years/$year/terms/$term"
+                  params={{ school, year: "1", term: "1" }}
+                  className={btnPrimary}
+                >
+                  Open the first-term lesson preview
+                </Link>
+              )}
               <button className="preference-button" onClick={() => onTabChange("curriculum")}>
                 Explore the curriculum structure
               </button>
@@ -248,9 +297,7 @@ export function TermPage({ school, year, term }: { school: string; year: string;
         Term outcomes, prerequisites and advancement requirements remain provisional until reviewed
         material is supplied.
       </p>
-      {school === "meisner" && year === "1" && term === "1" && (
-        <MeisnerAcademicPreview />
-      )}
+      {school === "meisner" && year === "1" && term === "1" && <MeisnerAcademicPreview />}
       <CatalogState catalog={catalog} />
       <UnitList
         units={catalog.units.filter(
@@ -290,7 +337,7 @@ export function UnitPage({
       <CatalogState catalog={catalog} />
       {unit && (
         <div className="foundation-stack">
-          <nav className="context-links" aria-label="Curriculum parents">
+          <nav className="context-links curriculum-context" aria-label="Curriculum parents">
             <Link
               to="/conservatory/$school/years/$year/terms/$term"
               params={{ school, year: String(unit.year), term: String(unit.term) }}
@@ -308,7 +355,12 @@ export function UnitPage({
             ))}
           </nav>
           {unit.available ? (
-            <CurriculumUnit key={`${unit.kind}:${unit.id}`} unit={unit} kind={unit.kind} />
+            <CurriculumUnit
+              key={`${unit.kind}:${unit.id}`}
+              unit={unit}
+              kind={unit.kind}
+              presentation="lesson"
+            />
           ) : (
             <Unavailable>
               Reviewed published material is not available for this unit and its curriculum parents.
@@ -316,12 +368,15 @@ export function UnitPage({
             </Unavailable>
           )}
           {catalog.units.some((u) => u.school === school && u.ancestors.at(-1)?.id === unit.id) && (
-            <UnitList
-              units={catalog.units.filter(
-                (u) => u.school === school && u.ancestors.at(-1)?.id === unit.id,
-              )}
-              unavailable={false}
-            />
+            <section className="curriculum-related">
+              <h2>Continue through the material</h2>
+              <UnitList
+                units={catalog.units.filter(
+                  (u) => u.school === school && u.ancestors.at(-1)?.id === unit.id,
+                )}
+                unavailable={false}
+              />
+            </section>
           )}
         </div>
       )}

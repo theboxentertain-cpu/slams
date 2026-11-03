@@ -1,0 +1,40 @@
+
+> test
+> vitest run
+
+
+ RUN  v4.1.11 /workspace/slams
+
+ ❯ src/test/scene-regression.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/test/scene-regression.test.tsx [ src/test/scene-regression.test.tsx ]
+Error: Transform failed with 1 error:
+
+[PARSE_ERROR] Identifier `complete` has already been declared
+     ╭─[ src/test/scene-regression.test.tsx:116:7 ]
+     │
+ 116 │   let complete: (result: { error?: string }) => void = () => undefined;
+     │       ────┬───
+     │           ╰───── `complete` has already been declared here
+     │
+ 143 │   let complete: (result: { error?: string }) => void = () => undefined;
+     │       ────┬───
+     │           ╰───── It can not be redeclared here
+─────╯
+
+  Plugin: vite:oxc
+  File: /workspace/slams/src/test/scene-regression.test.tsx
+ ❯ transformWithOxc node_modules/vite/dist/node/chunks/node.js:4033:19
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:4104:26
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30201:51
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 25 passed (26)
+      Tests  189 passed (189)
+   Start at  21:35:15
+   Duration  18.38s (transform 2.55s, setup 5.60s, import 7.80s, tests 14.29s, environment 18.59s)

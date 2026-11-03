@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
@@ -12,12 +12,14 @@ export function CurriculumUnit({
   unit,
   kind,
   children,
+  presentation = "disclosure",
 }: {
   unit: { id: string; title: string; content: string; reviewed: boolean; status: string };
   kind: Kind;
-  children?: React.ReactNode;
+  children?: ReactNode;
+  presentation?: "disclosure" | "lesson";
 }) {
-  const { user } = useSession();
+  const { user, loading } = useSession();
   const queryClient = useQueryClient();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -55,6 +57,86 @@ export function CurriculumUnit({
       setBusy(false);
     }
   }
+  const progressLabel = progress.isPending
+    ? "Loading saved activity…"
+    : progress.error
+      ? "Saved activity unavailable."
+      : progress.data === "completed"
+        ? "Legacy recorded completion (not assessed)"
+        : progress.data === "started"
+          ? "Started"
+          : "Not started";
+  const activity = (
+    <div
+      className={
+        presentation === "lesson" ? "curriculum-activity" : "mt-2 flex flex-wrap items-center gap-2"
+      }
+      aria-busy={busy || (!!user && progress.isPending)}
+    >
+      {loading ? (
+        <p role="status">Checking your account…</p>
+      ) : user ? (
+        <>
+          <p className="curriculum-activity-status" role="status">
+            {progressLabel}
+          </p>
+          <Button
+            variant="secondary"
+            disabled={
+              busy || progress.isPending || !!progress.error || progress.data === "completed"
+            }
+            onClick={() => void saveStarted()}
+          >
+            Start unit
+          </Button>
+          <p className="curriculum-activity-help text-xs text-muted-foreground">
+            Starting records activity only. Academic completion needs evidence and authorized
+            assessment; no self-awarded credit.
+          </p>
+        </>
+      ) : (
+        <>
+          {presentation === "lesson" && <p>Sign in to keep this unit in your training record.</p>}
+          <Link to="/auth" className="curriculum-signin underline">
+            Sign in to save unit progress
+          </Link>
+        </>
+      )}
+    </div>
+  );
+  const failure = (error || progress.error) && (
+    <p role="alert" className="curriculum-save-error text-destructive">
+      {error || "Could not load progress. Refresh to retry."}
+    </p>
+  );
+  if (presentation === "lesson")
+    return (
+      <article className="curriculum-lesson" aria-label={`${unit.title} — ${kind}`}>
+        <header className="curriculum-lesson-heading">
+          <span className="office-kicker">{kind}</span>
+          <span className="curriculum-publication">
+            {published ? "Reviewed & published" : "Material unavailable"}
+          </span>
+        </header>
+        {published ? (
+          <div className="curriculum-reading-layout">
+            <section className="curriculum-reading-sheet" aria-label="Reviewed unit material">
+              <h2>{kind === "lesson" ? "The lesson" : "The material"}</h2>
+              <p className="curriculum-reading-copy whitespace-pre-wrap">{unit.content}</p>
+            </section>
+            <aside className="curriculum-record" aria-label="Unit activity">
+              <h2>Your training record</h2>
+              {activity}
+              {failure}
+            </aside>
+          </div>
+        ) : (
+          <p className="availability-note">Coming soon — reviewed material is not available.</p>
+        )}
+        {!published && failure}
+        {children}
+      </article>
+    );
   return (
     <details className="mt-3 border-l border-border pl-3">
       <summary className="cursor-pointer font-bold">
@@ -65,32 +147,10 @@ export function CurriculumUnit({
       ) : (
         <>
           <p className="mt-2 whitespace-pre-wrap">{unit.content}</p>
-          {user ? (
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="text-sm">{progress.data === "completed" ? "Legacy recorded completion (not assessed)" : progress.data ?? "Not started"}</span>
-              <Button
-                variant="secondary"
-                disabled={
-                  busy || progress.isPending || !!progress.error || progress.data === "completed"
-                }
-                onClick={() => void saveStarted()}
-              >
-                Start unit
-              </Button>
-              <p className="text-xs text-muted-foreground">Starting records activity only. Academic completion needs evidence and authorized assessment; no self-awarded credit.</p>
-            </div>
-          ) : (
-            <Link to="/auth" className="underline">
-              Sign in to save unit progress
-            </Link>
-          )}
+          {activity}
         </>
       )}
-      {(error || progress.error) && (
-        <p role="alert" className="text-destructive">
-          {error || "Could not load progress. Refresh to retry."}
-        </p>
-      )}
+      {failure}
       {children}
     </details>
   );

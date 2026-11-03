@@ -1,0 +1,24 @@
+src/test/meisner-workshop-ui.test.tsx(30,48): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+    Argument of type '{ name: string | undefined; }' is not assignable to parameter of type 'ByRoleOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'name' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+          Type 'undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+  Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+    Argument of type '{ name: string | undefined; }' is not assignable to parameter of type 'ByRoleOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'name' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+          Type 'undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+src/test/meisner-workshop-ui.test.tsx(31,48): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+    Argument of type '{ name: string | undefined; }' is not assignable to parameter of type 'ByRoleOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'name' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+          Type 'undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+  Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+    Argument of type '{ name: string | undefined; }' is not assignable to parameter of type 'ByRoleOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'name' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+          Type 'undefined' is not assignable to type 'string | RegExp | ((accessibleName: string, element: Element) => boolean)'.
+src/test/scene-regression.test.tsx(116,7): error TS2451: Cannot redeclare block-scoped variable 'complete'.
+src/test/scene-regression.test.tsx(143,7): error TS2451: Cannot redeclare block-scoped variable 'complete'.

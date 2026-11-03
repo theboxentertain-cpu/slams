@@ -452,72 +452,6 @@
 .studio-page[data-world="scene"] .studio-heading {
   min-height: 190px;
 }
-/* Eight physical book covers remain individually selectable; no fabricated completion badges. */
-.studio-page .school-selector {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px 14px;
-  margin: 20px 0;
-}
-.studio-page .school-selector > li {
-  min-width: 0;
-  border-bottom: 4px ridge #87552f;
-  padding: 8px 0;
-  background: linear-gradient(transparent 50%, #482a1844);
-}
-.studio-page .school-entrance {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 13px;
-  padding: 8px 4px 14px;
-  border: 0;
-  min-height: 100%;
-}
-.studio-page .school-entrance .school-book {
-  width: 135px;
-  height: 205px;
-  max-width: 100%;
-  margin: 0;
-  transform: rotateY(-6deg);
-  filter: drop-shadow(3px 6px 3px #0009);
-}
-.studio-page .school-entrance .book-cover {
-  padding: 16px 7px;
-}
-.studio-page .school-entrance .book-title {
-  min-height: 42px;
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  line-height: 1.1;
-}
-.studio-page .school-entrance .book-cover svg {
-  width: 75px;
-  height: 75px;
-}
-.studio-page .school-entrance .book-edition {
-  font-size: 5px;
-}
-.studio-page .school-entrance .book-footer {
-  font-size: 6px;
-}
-.studio-page .school-entrance > span:last-child {
-  text-align: center;
-  gap: 4px;
-}
-.studio-page .school-entrance strong {
-  color: #f1d3a5;
-  font-size: 1.15rem;
-}
-.studio-page .school-entrance > span:last-child > span {
-  color: #e2cfac;
-  font-size: 13px;
-  line-height: 1.4;
-}
-.studio-page .school-entrance small {
-  color: #cbb38e;
-  font-size: 10px;
-}
 .studio-page .section-tabs[data-page="work"] > .section-tab-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -673,21 +607,6 @@
   .studio-page .availability-note,
   .studio-page [aria-label="Audition preparation"] form {
     padding: 18px 15px;
-  }
-  .studio-page .school-selector {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px 12px;
-  }
-  .studio-page .school-entrance .school-book {
-    width: 130px;
-    height: 195px;
-  }
-  .studio-page .school-entrance > span:last-child > span {
-    font-size: 12px;
-  }
-  .studio-page .school-entrance .book-cover svg {
-    width: 65px;
-    height: 65px;
   }
   .studio-page .section-tabs[data-page="work"] > .section-tab-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));

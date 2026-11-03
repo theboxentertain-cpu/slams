@@ -1,0 +1,315 @@
+/* Reviewed-unit pages and the existing, non-credit Meisner editorial workshop. */
+.curriculum-lesson {
+  margin: 8px 0 24px;
+  overflow-wrap: anywhere;
+}
+.curriculum-lesson-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 4px;
+  border-bottom: 1px solid #9b784d77;
+}
+.curriculum-lesson-heading .office-kicker {
+  color: #dbc193;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.curriculum-publication {
+  color: #c7ad80;
+  font-size: 0.75rem;
+}
+.curriculum-reading-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  align-items: start;
+  gap: 18px;
+  margin-top: 18px;
+}
+.studio-page .curriculum-reading-sheet {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid #bc9459;
+  border-radius: 6px 12px 7px 5px;
+  color: #342113;
+  background:
+    radial-gradient(ellipse at 25% 0, #fff7d977, transparent 70%),
+    linear-gradient(110deg, #d8bd8a, #f1dfb7 48%, #dfc28e);
+  box-shadow:
+    inset 0 0 0 4px #98713b16,
+    0 6px 18px #0005;
+}
+.studio-page .curriculum-reading-sheet h2 {
+  display: inline-block;
+  margin: 0 0 19px;
+  padding-bottom: 9px;
+  border-bottom: 3px solid #9f2630;
+  font-family: "SLAMS Hand", cursive;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+.curriculum-reading-copy {
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.curriculum-record {
+  min-width: 0;
+  padding: 22px 18px;
+  border: 1px solid #ac895477;
+  border-radius: 10px;
+  color: #eddbb8;
+  background: linear-gradient(145deg, #2a1a10, #100b08);
+  box-shadow:
+    inset 0 0 0 3px #bd94531a,
+    0 4px 14px #0004;
+}
+.curriculum-record h2 {
+  margin-bottom: 17px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  line-height: 1.25;
+}
+.curriculum-activity {
+  display: grid;
+  gap: 15px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.curriculum-activity-status {
+  padding-left: 11px;
+  border-left: 3px solid #c09b60;
+  color: #efdcb0;
+}
+.curriculum-record .curriculum-activity-help {
+  color: #c7af8a;
+  line-height: 1.65;
+}
+.curriculum-activity > button,
+.curriculum-record .curriculum-signin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  height: auto;
+  padding: 11px 15px;
+  white-space: normal;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid #cfaa6e;
+  border-radius: 7px;
+  background: linear-gradient(155deg, #b91d30, #790f1d);
+  color: #fff0d4;
+  box-shadow:
+    inset 0 0 0 2px #ecbd5f22,
+    0 3px 8px #0005;
+  font-weight: 700;
+}
+.curriculum-lesson .curriculum-save-error {
+  margin-top: 16px;
+  color: #ffb8ad;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.curriculum-lesson > .curriculum-save-error {
+  padding: 14px;
+  border-left: 3px solid #b53c47;
+  background: #2d1412;
+}
+.curriculum-context {
+  padding: 12px 15px;
+  border: 1px solid #ac87564d;
+  border-radius: 8px;
+  background: #1c120ddd;
+}
+.curriculum-context a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: #e9d1a4;
+  line-height: 1.4;
+}
+.curriculum-related {
+  padding-top: 22px;
+  border-top: 1px solid #a0804d66;
+}
+.curriculum-related > h2 {
+  margin-bottom: 15px;
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+}
+/* These class hooks wrap the existing authored stages; they add no training data. */
+.studio-page .meisner-editorial-preview {
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: #e6d2ad;
+}
+.studio-page .meisner-editorial-preview > p {
+  padding: 0 4px;
+  color: #d4bd97;
+  line-height: 1.7;
+}
+.studio-page .meisner-editorial-preview > .panel:not(.meisner-workshop) h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+.studio-page .meisner-editorial-preview summary {
+  min-height: 44px;
+  padding: 9px 0;
+  line-height: 1.5;
+}
+.meisner-term-outline {
+  border: 1px solid #b4935f77;
+  border-radius: 9px;
+  padding: 12px 20px;
+  background: #20140de8;
+}
+.meisner-term-outline > summary {
+  color: #e5c990;
+  font-family: var(--font-display);
+  font-size: 21px;
+  cursor: pointer;
+}
+.meisner-term-outline > section {
+  margin: 18px 0;
+}
+.studio-page .meisner-workshop {
+  padding: 26px;
+  border: 1px solid #c4a268;
+  border-radius: 13px;
+  background: linear-gradient(125deg, #2b1a11, #110b08);
+  color: #f0dfba;
+  box-shadow:
+    inset 0 0 0 3px #ad874324,
+    0 7px 22px #0005;
+}
+.studio-page .meisner-workshop > h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+.studio-page .meisner-workshop > .office-kicker {
+  color: #c8a56e;
+  font-size: 0.68rem;
+  line-height: 1.65;
+  letter-spacing: 0.08em;
+}
+.studio-page .meisner-workshop > .text-muted-foreground {
+  color: #cbb38b;
+}
+.studio-page .meisner-workshop > p[role="status"] {
+  padding: 12px 16px;
+  border-left: 3px solid #d6af67;
+  border-radius: 4px;
+  background: linear-gradient(100deg, #a31f2c, #3c1616);
+  color: #fff1d5;
+  letter-spacing: 0.03em;
+}
+.studio-page .meisner-workshop > section {
+  padding: 24px;
+  border: 1px solid #c5a16a;
+  border-radius: 6px 11px 6px 8px;
+  background:
+    radial-gradient(ellipse at 20% 0, #fff6db66, transparent 70%),
+    linear-gradient(110deg, #dbc18f, #f0dfbb 50%, #dfc495);
+  color: #352315;
+  box-shadow: inset 0 0 0 3px #8b622b12;
+}
+.studio-page .meisner-workshop > section h4 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.studio-page .meisner-workshop > section .text-muted-foreground {
+  color: #694b31;
+}
+.studio-page .meisner-workshop > section > p:has(> strong) {
+  padding: 14px 16px;
+  border-left: 2px solid #a2824c;
+  background: #fff8e13b;
+  border-radius: 3px;
+}
+.studio-page .meisner-workshop > section > p > strong:first-child {
+  display: block;
+  margin-bottom: 4px;
+  color: #8f2430;
+  font-family: "SLAMS Hand", cursive;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+@media (min-width: 780px) {
+  .studio-page .meisner-workshop > section[aria-label="Lesson"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .meisner-workshop > section[aria-label="Lesson"] > :is(p:first-child, h4, aside, div) {
+    grid-column: 1 / -1;
+  }
+  .meisner-workshop > section[aria-label="Lesson"] > p {
+    margin: 0;
+  }
+}
+.studio-page .meisner-workshop aside[aria-label="The Director"] {
+  align-items: flex-start;
+  border-color: #ac875566;
+  background: #21150e;
+  color: #ead7b0;
+}
+.studio-page .meisner-workshop aside[aria-label="The Director"] .text-amber {
+  color: #d8b472;
+}
+.studio-page .meisner-workshop > section textarea {
+  min-height: 110px;
+  padding: 13px;
+  border: 1px solid #a58555;
+  background: #fff8e7;
+  color: #342315;
+  font-size: 1rem;
+}
+.studio-page .meisner-workshop > section pre {
+  border-color: #98794e;
+  background: #fff8e5;
+  color: #342315;
+  line-height: 1.7;
+}
+.studio-page .meisner-workshop .studio-action-secondary {
+  border-color: #89673f;
+  background: #2e1e14;
+  color: #f4e2bd;
+}
+.studio-page .meisner-workshop .studio-action-secondary[aria-pressed="true"] {
+  border-color: #a82b37;
+  background: #87202b;
+}
+.curriculum-lesson a:focus-visible,
+.curriculum-lesson button:focus-visible {
+  outline: 2px solid #e9c384;
+  outline-offset: 3px;
+}
+@media (max-width: 780px) {
+  .curriculum-reading-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .curriculum-record {
+    padding: 20px;
+  }
+}
+@media (max-width: 480px) {
+  .studio-page .curriculum-reading-sheet {
+    padding: 21px 18px;
+  }
+  .studio-page .meisner-workshop {
+    padding: 18px 12px;
+  }
+  .studio-page .meisner-workshop > section {
+    padding: 21px 16px;
+  }
+}
