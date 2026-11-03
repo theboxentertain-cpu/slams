@@ -7,6 +7,9 @@
 @import "./premium-office.css";
 @import "./studio-world.css";
 @import "./director-life.css";
+@import "./training-worlds.css";
+@import "./baseline.css";
+@import "./lesson.css";
 
 @custom-variant dark (&:is(.dark *));
 

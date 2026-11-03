@@ -1,7 +1,7 @@
 import { createFileRoute, type SearchSchemaInput } from "@tanstack/react-router";
 import { BaselineWelcome } from "@/components/welcome/WelcomePages";
 import { validateTab } from "@/lib/foundation";
-import { SupportPage } from "@/components/foundation/SupportPage";
+import { BaselinePage } from "@/components/foundation/BaselinePage";
 export const Route = createFileRoute("/baseline")({
   head: () => ({
     meta: [
@@ -30,5 +30,5 @@ export const Route = createFileRoute("/baseline")({
 function Screen() {
   const { flow } = Route.useSearch();
   if (flow === "welcome") return <BaselineWelcome />;
-  return <SupportPage id="baseline" />;
+  return <BaselinePage />;
 }

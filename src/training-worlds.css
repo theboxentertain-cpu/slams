@@ -1,0 +1,406 @@
+/* Owns the Conservatory gallery and scenic Conservatory, school and Baseline headings. */
+.school-portrait {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  background-size: 400% 200%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+.studio-page .training-heading {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  min-height: 350px;
+  padding: 32px;
+  background: #130c08;
+  border-color: #b8945fbb;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 0 4px #bd995522,
+    0 9px 28px #0007;
+}
+.training-heading-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.training-heading-art > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+.training-heading-art > .school-portrait {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: 100%;
+  max-height: 440px;
+}
+.training-heading::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, #0c080507 20%, #110b08ae 47%, #110b08f2 75%),
+    linear-gradient(0deg, #110b08bf, transparent 30%);
+}
+.studio-page .training-heading .studio-heading-copy {
+  flex: none;
+  width: 54%;
+  max-width: none;
+  margin-left: 46%;
+  z-index: 2;
+}
+.training-heading .studio-eyebrow {
+  color: #d8b376;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.training-heading h1 {
+  font-size: clamp(32px, 4.6vw, 56px);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.training-heading .studio-title-stroke {
+  width: 115px;
+  max-width: 85%;
+  background: #be2434;
+  height: 4px;
+  margin-top: 15px;
+}
+.training-heading-description {
+  margin-top: 18px;
+  color: #e5cfaa;
+  font-family: "SLAMS Hand", cursive;
+  font-size: 23px;
+  line-height: 1.3;
+}
+.studio-page .training-heading .studio-heading-book {
+  display: block;
+  left: 24px;
+  right: auto;
+  bottom: 18px;
+  opacity: 0.9;
+  z-index: 2;
+}
+.training-heading:has(.section-coach-note) .studio-heading-book {
+  display: none;
+}
+.training-heading .section-coach {
+  position: relative;
+  z-index: 2;
+  width: auto;
+  margin: 0 0 0 46%;
+  justify-self: start;
+}
+.training-heading .section-coach .section-coach-trigger {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: fit-content;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.training-heading .section-coach .section-coach-portrait {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #b9945d;
+  border-radius: 8px;
+}
+.training-heading .section-coach-cue {
+  width: 18px;
+  height: 18px;
+  left: 28px;
+  right: auto;
+  bottom: -2px;
+}
+.training-heading .section-coach-cue svg {
+  width: 12px;
+  height: 12px;
+}
+.section-coach-label {
+  font-family: "SLAMS Hand", cursive;
+  font-size: 20px;
+  color: #d3b57d;
+}
+.training-heading .section-coach:has(.section-coach-note) {
+  display: block;
+  justify-self: stretch;
+  margin-left: 0;
+}
+.training-heading .section-coach:has(.section-coach-note) .section-coach-note {
+  margin-top: 12px;
+  background: #20150ff5;
+  border: 1px solid #a07b4d;
+  padding: 16px;
+  font-size: 14px;
+}
+.training-structure-note {
+  margin: 0 0 22px;
+  padding: 13px 17px;
+  border-left: 3px solid #ba965b;
+  background: #291a11b3;
+  color: #d6be98;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.studio-page .school-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+}
+.school-gallery > li {
+  min-width: 0;
+}
+.studio-page .school-gallery .school-entrance {
+  position: relative;
+  display: grid;
+  grid-template-columns: 43% minmax(0, 1fr);
+  align-items: stretch;
+  min-height: 205px;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #bd995f;
+  border-radius: 12px;
+  color: #f5e1b9;
+  background: #160e09;
+  box-shadow:
+    inset 0 0 0 3px #d6ab561f,
+    0 5px 16px #0007;
+  text-decoration: none;
+  isolation: isolate;
+}
+.school-gallery .school-entrance:hover {
+  border-color: #f0d69e;
+  box-shadow:
+    inset 0 0 0 3px #d6ab5644,
+    0 5px 22px #0009;
+}
+.school-card-art {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: #27180d;
+  border-right: 1px solid #b8945f77;
+}
+.school-card-art > .school-portrait {
+  position: absolute;
+  height: 100%;
+  width: auto;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+.school-card-art::after {
+  content: "";
+  position: absolute;
+  inset: 60% 0 0;
+  background: linear-gradient(transparent, #090604b3);
+  pointer-events: none;
+}
+.school-card-seal {
+  position: absolute;
+  z-index: 1;
+  bottom: 10px;
+  left: 10px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border: 1px solid #d5b16a;
+  border-radius: 50%;
+  color: #e8cb88;
+  background: #170c08cf;
+}
+.school-card-seal svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.school-card-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: linear-gradient(145deg, #5d1a26, #2b1018 50%, #1b100b);
+}
+.school-card-copy > strong {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 17px 22px 11px 17px;
+  color: #f8e4b8;
+  font-family: var(--font-display);
+  font-size: clamp(21px, 2.3vw, 27px);
+  font-style: italic;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+.school-card-focus {
+  padding: 0 17px 16px;
+  color: #d6bc9b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.school-card-duration {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px 4px;
+  border-top: 1px solid #c0a16b88;
+  background: linear-gradient(110deg, #d9b97e, #efdbb0);
+  color: #342414;
+  font-weight: 700;
+  font-size: 14px;
+}
+.school-card-copy > small {
+  padding: 0 16px 11px;
+  color: #694b2d;
+  background: linear-gradient(110deg, #d9b97e, #efdbb0);
+  font-size: 10px;
+}
+.school-card-arrow {
+  position: absolute;
+  top: 11px;
+  right: 9px;
+  color: #e1bd7e;
+}
+.training-next-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 30px 0;
+}
+.training-next-actions > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 100px;
+  padding: 18px 15px;
+  border: 1px solid #ae8b5677;
+  border-radius: 9px;
+  background: linear-gradient(130deg, #34201699, #160e09);
+  text-decoration: none;
+}
+.training-next-actions > a > svg:first-child {
+  width: 26px;
+  height: 26px;
+  color: #d4b775;
+  flex-shrink: 0;
+}
+.training-next-actions > a > svg:last-child {
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.training-next-actions strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.25;
+  color: #eed9b0;
+}
+.training-next-actions small {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #baa07c;
+}
+@media (max-width: 700px) {
+  .studio-page .training-heading {
+    padding: 24px 17px;
+    min-height: 330px;
+    gap: 16px;
+  }
+  .training-heading-art > img {
+    object-position: 60% 40%;
+  }
+  .training-heading-art > .school-portrait {
+    left: -60px;
+    max-height: 370px;
+  }
+  .studio-page .training-heading .studio-heading-copy {
+    width: 57%;
+    margin-left: 43%;
+  }
+  .training-heading h1 {
+    font-size: clamp(24px, 7.4vw, 31px);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+  }
+  .training-heading .studio-eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+  .training-heading-description {
+    margin-top: 13px;
+    font-size: 19px;
+    line-height: 1.3;
+  }
+  .training-heading .section-coach {
+    margin-left: 43%;
+  }
+  .section-coach-label {
+    font-size: 18px;
+  }
+  .studio-page .training-heading .studio-heading-book {
+    left: 13px;
+    bottom: 13px;
+  }
+  .studio-page .school-gallery {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+  .studio-page .school-gallery .school-entrance {
+    grid-template-columns: 40% minmax(0, 1fr);
+    min-height: 180px;
+  }
+  .school-card-copy > strong {
+    padding: 17px 23px 10px 14px;
+    font-size: 24px;
+  }
+  .school-card-focus {
+    padding: 0 14px 14px;
+  }
+  .school-card-duration {
+    padding-left: 14px;
+    padding-right: 10px;
+    font-size: 13px;
+  }
+  .school-card-copy > small {
+    padding-left: 14px;
+  }
+  .training-next-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .training-next-actions > a {
+    min-height: 84px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .app-shell[data-motion="on"] .school-gallery .school-entrance {
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease;
+  }
+  .app-shell[data-motion="on"] .school-gallery .school-entrance:hover {
+    transform: translateY(-2px);
+  }
+}

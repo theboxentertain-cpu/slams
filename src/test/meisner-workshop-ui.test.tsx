@@ -4,8 +4,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MeisnerWorkshopOne } from "@/components/foundation/MeisnerWorkshopOne";
 
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ to, children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) =>
-    <a href={to} {...props}>{children}</a>,
+  Link: ({ to, children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }));
 vi.mock("@/lib/session", () => ({
   useSession: () => ({ user: null, loading: false }),
@@ -26,7 +29,7 @@ function reachPracticeChoice() {
     ["Interpretation", "Next example"],
     ["My experience", "Next example"],
     ["Interpretation", "Choose practice mode"],
-  ]) {
+  ] as const) {
     fireEvent.click(screen.getByRole("button", { name: choice }));
     fireEvent.click(screen.getByRole("button", { name: next }));
   }
@@ -38,13 +41,14 @@ function fill(label: string, value: string) {
 describe("Meisner Workshop 1 guided editorial preview", () => {
   it("walks through three authored lessons and accurate knowledge distinctions", () => {
     render(<MeisnerWorkshopOne />);
-    expect(screen.getByRole("heading", { name: "Workshop 1 — Attention on the other person" }))
-      .toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Workshop 1 — Attention on the other person" }),
+    ).toBeInTheDocument();
     reachPracticeChoice();
-    expect(screen.getByRole("heading", { name: "Who can practise with you?" }))
-      .toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /mark complete|certify|award mastery/i }))
-      .not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Who can practise with you?" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /mark complete|certify|award mastery/i }),
+    ).not.toBeInTheDocument();
   });
   it("allows solo preparation but never offers exercise two or progress credit", () => {
     render(<MeisnerWorkshopOne />);
@@ -79,8 +83,7 @@ describe("Meisner Workshop 1 guided editorial preview", () => {
     fill("How can you express this more accurately?", "They looked toward the door.");
     fill("How did your partner reply, confirm or correct you?", "They corrected the wording.");
     fireEvent.click(screen.getByRole("button", { name: "Exercise 02 — Receive" }));
-    expect(screen.getByRole("heading", { name: "Notice → Offer → Receive" }))
-      .toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Notice → Offer → Receive" })).toBeInTheDocument();
     fill("What reply did you originally predict?", "Yes.");
     fill("What did your partner actually say or do?", "I heard a noise.");
     fill("How did your next response change?", "I responded to the noise comment.");
@@ -88,7 +91,8 @@ describe("Meisner Workshop 1 guided editorial preview", () => {
     fill("What surprised you in the actual exchange?", "The reply was different.");
     fill("What specific change will you try next?", "Wait until the reply ends.");
     fireEvent.click(screen.getByRole("button", { name: "Review private practice note" }));
-    expect(screen.getByRole("region", { name: "Private practice note" }))
-      .toHaveTextContent("partner practice (self-reported only)");
+    expect(screen.getByRole("region", { name: "Private practice note" })).toHaveTextContent(
+      "partner practice (self-reported only)",
+    );
   });
 });

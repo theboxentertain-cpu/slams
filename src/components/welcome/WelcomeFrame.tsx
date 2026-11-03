@@ -9,12 +9,14 @@ export function WelcomeFrame({
   children,
   variant = "standard",
   back,
+  artwork,
 }: {
   title: string;
   subtitle: string;
   children: ReactNode;
   variant?: "landing" | "standard" | "setup";
   back?: "/welcome" | "/welcome/account" | "/welcome/setup";
+  artwork?: { src: string; alt: string };
 }) {
   return (
     <div className={`welcome-world welcome-${variant}`}>
@@ -35,8 +37,11 @@ export function WelcomeFrame({
         <section className="welcome-scene" aria-label="The Director’s welcome">
           <img
             className="welcome-director"
-            src={director}
-            alt="The Director in his leather chair, red pencil at his temple, offering his signature coffee mug."
+            src={artwork?.src ?? director}
+            alt={
+              artwork?.alt ??
+              "The Director in his leather chair, red pencil at his temple, offering his signature coffee mug."
+            }
             width={1536}
             height={1024}
             fetchPriority="high"

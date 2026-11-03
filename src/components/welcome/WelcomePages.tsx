@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import { useSession } from "@/lib/session";
 import { enterStudio } from "@/lib/studio-entry";
-import { useActorSetup } from "@/lib/actor-setup";
+import { BaselineContent } from "@/components/foundation/BaselinePage";
+import baselineDirector from "@/assets/premium/baseline-director.webp";
 import { useOfficePreferences } from "@/lib/office-preferences";
 import { BOOK_DESIGNS } from "@/components/office/office-data";
 import { BookCover, SchoolBooks } from "@/components/office/SchoolBooks";
@@ -203,59 +204,18 @@ export function ActorSetupPage() {
   );
 }
 export function BaselineWelcome() {
-  const setup = useActorSetup();
   return (
     <WelcomeFrame
       title="Your Actor’s Baseline"
       subtitle="A starting point. Not a judgment. Your observations belong to you."
       variant="setup"
       back="/welcome/setup"
+      artwork={{
+        src: baselineDirector,
+        alt: "The Director points toward the actor from his warmly lit studio desk.",
+      }}
     >
-      <section className="welcome-paper baseline-introduction">
-        <h2>The Actor’s Baseline</h2>
-        <p>
-          Guided baseline assessments are still in development. You can begin with the working,
-          text-only Living Scene and save your own reflection.
-        </p>
-      </section>
-      <ol className="baseline-path">
-        {[
-          ["Prepare", "Read the scene circumstances and objective."],
-          ["Perform", "Try a scripted choice, then a new approach."],
-          ["Reflect", "Record what you noticed in your Passport."],
-          ["Next steps", "Choose where you want to work next."],
-        ].map(([label, text], i) => (
-          <li className="welcome-paper" key={label}>
-            <span>
-              {i + 1}. {label}
-            </span>
-            <p>{text}</p>
-          </li>
-        ))}
-      </ol>
-      {setup.ready && setup.data.goals.length > 0 && (
-        <section className="welcome-paper">
-          <h2>Your chosen direction</h2>
-          <p>{setup.data.goals.join(" · ")}</p>
-          <p>These are your preferences, not a diagnosis or a training score.</p>
-        </section>
-      )}
-      <Link className="welcome-primary" to="/scene" onClick={enterStudio}>
-        <Play aria-hidden="true" />
-        Start a first rehearsal
-        <ArrowRight aria-hidden="true" />
-      </Link>
-      <div className="welcome-account-links">
-        <Link to="/conservatory" onClick={enterStudio}>
-          Explore the schools
-        </Link>
-        <Link to="/work" onClick={enterStudio}>
-          Prepare an audition
-        </Link>
-      </div>
-      <Link className="welcome-skip" to="/" onClick={enterStudio}>
-        Skip to the Office
-      </Link>
+      <BaselineContent welcome />
     </WelcomeFrame>
   );
 }

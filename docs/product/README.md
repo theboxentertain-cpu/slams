@@ -1,7 +1,9 @@
 # SLAMS execution checkpoint
 
-Current delivery: **PR B — First-Five-Minutes Experience**, branched from refreshed `main` at `755f5ba` after PR A merged as #7. Phase 00 and PR A evidence remains historical. PRs C–F are not implemented by this branch.
-Current delivery: **premium Director artwork and page presentation**, from latest fetched main `844d763` (blueprint PR #8 merged, including subsequent section-aware coaching and team-management changes). The user’s November 2 references govern this visual pass. The 47-page audit below remains the product checkpoint; this visual work does not close unavailable contracts.
+Current delivery: **Conservatory, Baseline and lesson art direction**, continued November 3 from refreshed main `aa06ca6` on `feat/conservatory-baseline-design`. Main already includes the prior premium visuals (PR #12), first-rehearsal flow (PR #9), Meisner editorial pilot (PR #10) and academic safeguards (PR #11). The latest supplied images guide this visual extension. The 47-page audit remains the product checkpoint; styling does not close unavailable contracts.
+
+- [Training artwork, page responsibilities and ownership](SLAMS-TRAINING-ART-DIRECTION.md)
+- [Training design verification and before/after screenshots](../slams-training-design-verification.md)
 
 - [Premium artwork, composition and ownership](SLAMS-PREMIUM-ART-DIRECTION.md)
 - [Premium implementation verification and before/after screenshots](../slams-premium-verification.md)
@@ -26,5 +28,4 @@ The latest `SLAMS_Page_by_Page_Codex_Blueprint.docx` v1.0 (SHA256 `407f1011d479b
 
 The owner’s architecture clarification of 2026-11-02 is recorded in the product contract and contextual route ownership. It preserves all nine sections and all ten signature names without expanding primary navigation. This documentation clarification implements no new engine, curriculum, diagnosis, media or multiplayer capability.
 
-Continuation: review/merge PR B through the normal owner process. Then refresh `main` for **PR C — Rehearsal & Director Quality**, improving only supported scene/retake/guidance behavior. No automatic merge or deployment.
-Continuation: review this focused visual branch, then prioritize the remaining safe stable scene/professional context before claiming a connected development engine. Educational, media, multiplayer, live-cloud, device, legal and commercial gates remain explicit. No automatic merge, deployment or database mutation.
+Continuation: review this focused visual branch, then prioritize supported rehearsal/director quality and stable scene/professional context before claiming a connected development engine. The editorial pilot remains pending qualified teaching review and non-credit. Educational, media, multiplayer, live-cloud, device, legal and commercial gates remain explicit. No automatic merge, deployment or database mutation.
