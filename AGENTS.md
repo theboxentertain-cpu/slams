@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
+- Locale is provided by a shared React context with authored English/Arabic catalogs; translate at presentation boundaries, never mutation inputs, route IDs, or user-authored notes, to preserve data and scene semantics.
 - SessionProvider owns identity state and the identity-transition listener; sign-out cancels and clears queries before clearing the session to avoid stale private data.
 - Progress uses browser-local storage while signed out and user-scoped cloud tables while signed in; writes must confirm success and local imports must retain rejected data.
 - Curriculum reads use a public server function; published material requires review, and database triggers reject progress for nonexistent or unpublished units.
