@@ -1,6 +1,7 @@
 # SLAMS Sprint 01B — Foundation Repair
 
 ## Current verification request
+- [ ] Make the whole app bilingual in English/Arabic: shared language switch, persisted preference, authored translations, RTL layout, and browser/regression verification; preserve all data and behavior.
 - [ ] Match the new SLAMS page-design references through presentation-only changes; preserve navigation, real progress, honest curriculum, and Director modes, then check desktop/mobile and regressions.
 - [x] Add reference-led section-aware Director reactions and motion, preserving modes, takes, and existing data; 170 automated tests passed, desktop/mobile coach interactions and take/retake silence verified, reduced motion verified, zero uncaught browser errors; automatic build OK.
 - [ ] November 2 clean production-build verification — BLOCKED: no fresh production-build result or supported non-publishing build trigger is available; manual builds are reserved to the platform harness. Historical successful build logs do not verify this run. Existing regression suite executed: 163 tests passed across 19 files; no app, backend, or publishing changes made.
