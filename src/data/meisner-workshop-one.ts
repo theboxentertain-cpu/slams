@@ -122,6 +122,71 @@ export function canContinue(mode: Mode, exercise: 0 | 1, notes: Notes) {
 export function canSummarize(notes: Notes) {
   return !!notes.reflection.trim() && !!notes.next.trim();
 }
+/** An editorial rehearsal target, not a Meisner school's published minimum or grading rule. */
+export const EDITORIAL_PRACTICE_ROUNDS = 3;
+
+export type PracticeRep = {
+  exercise: 0 | 1;
+  mode: Mode;
+  /** Copied only into this open session; never stored remotely or in localStorage. */
+  fields: Partial<Notes>;
+  fingerprint: string;
+};
+
+const firstExerciseFields = ["observation", "assumption", "correction"] as const;
+const secondExerciseFields = ["expected", "actual", "adjusted"] as const;
+
+export function practiceFields(mode: Mode, exercise: 0 | 1): (keyof Notes)[] {
+  if (exercise === 1) return mode === "partner" ? [...secondExerciseFields] : [];
+  return mode === "partner" ? [...firstExerciseFields, "partnerReply"] : [...firstExerciseFields];
+}
+
+/** Each logged repetition needs fresh, complete authored reflection, not another button click. */
+export function canLogPracticeRep(
+  mode: Mode,
+  exercise: 0 | 1,
+  notes: Notes,
+  previous: PracticeRep[],
+): boolean {
+  const fields = practiceFields(mode, exercise);
+  if (!fields.length || !canContinue(mode, exercise, notes)) return false;
+  const rounds = previous.filter((r) => r.exercise === exercise && r.mode === mode);
+  if (rounds.length >= EDITORIAL_PRACTICE_ROUNDS) return false;
+  const fingerprint = fields.map((field) => notes[field].trim().replace(/\\s+/g, " ").toLocaleLowerCase()).join("\\u241f");
+  return !rounds.some((r) => r.fingerprint === fingerprint);
+}
+
+export function addPracticeRep(
+  mode: Mode,
+  exercise: 0 | 1,
+  notes: Notes,
+  previous: PracticeRep[],
+): PracticeRep[] {
+  if (!canLogPracticeRep(mode, exercise, notes, previous)) return previous;
+  const fields = practiceFields(mode, exercise);
+  const snapshot: Partial<Notes> = {};
+  for (const field of fields) snapshot[field] = notes[field].trim();
+  return [
+    ...previous,
+    {
+      exercise,
+      mode,
+      fields: snapshot,
+      fingerprint: fields
+        .map((field) => notes[field].trim().replace(/\\s+/g, " ").toLocaleLowerCase())
+        .join("\\u241f"),
+    },
+  ];
+}
+
+export function roundCount(mode: Mode, exercise: 0 | 1, reps: PracticeRep[]) {
+  return reps.filter((rep) => rep.mode === mode && rep.exercise === exercise).length;
+}
+
+export function hasEnoughPracticeRounds(mode: Mode, exercise: 0 | 1, reps: PracticeRep[]) {
+  return roundCount(mode, exercise, reps) >= EDITORIAL_PRACTICE_ROUNDS;
+}
+
 export function practiceNote(mode: Mode, notes: Notes) {
   return [
     "SLAMS · Meisner Workshop 1 · user-authored practice note",
