@@ -499,3 +499,57 @@ body [data-school="viewpoints"] {
 .office-reference .reference-rehearsal-sign {
   z-index: 9;
 }
+
+
+/* Bilingual controls and direction-safe typography; no route or data semantics change. */
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #b38e576e;
+  border-radius: 12px;
+  background: #140c08ed;
+}
+.language-switch button {
+  min-height: 36px;
+  padding-inline: 10px;
+}
+.welcome-language-control {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  z-index: 5;
+}
+.welcome-brand:has(.welcome-language-control) {
+  padding-top: 55px;
+}
+:root[dir="rtl"] body {
+  font-family: "Noto Sans Arabic", system-ui, sans-serif;
+  line-height: 1.65;
+}
+:root[dir="rtl"] h1,
+:root[dir="rtl"] h2,
+:root[dir="rtl"] h3 {
+  font-family: "Noto Sans Arabic", system-ui, sans-serif;
+}
+:root[dir="rtl"] .wordmark,
+:root[dir="rtl"] .studio-credit,
+:root[dir="rtl"] .welcome-credit {
+  direction: ltr;
+}
+:root[dir="rtl"] .skip-link {
+  left: auto;
+  right: 12px;
+}
+:root[dir="rtl"] .welcome-back {
+  left: auto;
+  right: 6px;
+}
+:root[dir="rtl"] :is(textarea, input[type="text"]) {
+  unicode-bidi: plaintext;
+}
+@media (max-width: 420px) {
+  .language-switch button { padding-inline: 7px; }
+}
