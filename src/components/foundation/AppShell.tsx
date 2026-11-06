@@ -122,7 +122,11 @@ export function ProfileMenu({
           <>
             <span className="office-profile-identity">
               <strong>
-                {loading ? t("Checking account…") : user ? name || t("Your account") : t("Guest actor")}
+                {loading
+                  ? t("Checking account…")
+                  : user
+                    ? name || t("Your account")
+                    : t("Guest actor")}
               </strong>
               <small>{t(user ? "Your studio" : "Browser-local studio")}</small>
             </span>
