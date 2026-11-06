@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { placementDisplayStatus } from "@/lib/conservatory-academic";
 import { getSchool } from "@/data/schools";
 
@@ -11,19 +12,19 @@ export function PlacementAssessmentNotice({ school }: { school: string }) {
   const pending = placementDisplayStatus(null, school, "school", null);
   return (
     <section className="panel p-4" aria-label="Advanced placement assessment">
-      <span className="office-kicker">FOR EXPERIENCED ACTORS</span>
-      <h2 className="mt-2 text-lg font-bold">Already trained? Prove your starting level.</h2>
+      <span className="office-kicker"><T>FOR EXPERIENCED ACTORS</T></span>
+      <h2 className="mt-2 text-lg font-bold"><T>Already trained? Prove your starting level.</T></h2>
       <p className="mt-2">
         You can explore {schoolName} now. Skipping prerequisite training for academic
         credit will require a school-specific assessment, a qualified faculty review,
         and a verified server-side unlock. Previous acting experience alone cannot
         unlock later lessons.
       </p>
-      <p className="mt-2 text-sm text-muted-foreground">
+      <p className="mt-2 text-sm text-muted-foreground"><T>
         Placement requirements may include practical performance with a consenting
         human partner, script work, and demonstrable responses to directed adjustments.
         Solo exercises cannot replace partner competencies.
-      </p>
+      </T></p>
       <p role="status" className="mt-3 font-semibold">{pending.label}</p>
       <p className="text-sm">{pending.next}. No reviewed placement assessment has been released yet.</p>
     </section>
