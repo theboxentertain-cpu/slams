@@ -71,3 +71,41 @@ it("renders translated authored text without adding markup or changing saved sce
   expect(container.querySelector("p")).toHaveTextContent("ابدأ");
   expect(SCENE.setup).toBe(originalSetup);
 });
+
+
+it("restores the saved Arabic locale and exposes the correct switch state", () => {
+  localStorage.setItem(LANGUAGE_KEY, "ar");
+  render(
+    <LanguageProvider>
+      <LanguageProbe />
+    </LanguageProvider>,
+  );
+  expect(screen.getByTestId("current-locale")).toHaveTextContent("ar");
+  expect(document.documentElement).toHaveAttribute("lang", "ar");
+  expect(document.documentElement).toHaveAttribute("dir", "rtl");
+  expect(screen.getByRole("button", { name: "العربية" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(screen.getByRole("button", { name: "English" })).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+});
+
+it("keeps user-authored records intact when toggling the interface twice", () => {
+  const personalNote = "Keep my exact personal rehearsal text ملاحظاتي";
+  const record = JSON.stringify({ reflection: personalNote, tactic: "To plead" });
+  localStorage.setItem("slams.passport.v1", record);
+  render(
+    <LanguageProvider>
+      <LanguageProbe />
+    </LanguageProvider>,
+  );
+  fireEvent.click(screen.getByRole("button", { name: "العربية" }));
+  fireEvent.click(screen.getByRole("button", { name: "English" }));
+  expect(localStorage.getItem("slams.passport.v1")).toBe(record);
+  expect(JSON.parse(localStorage.getItem("slams.passport.v1")!).reflection).toBe(
+    personalNote,
+  );
+});
