@@ -21,9 +21,20 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Check TypeScript
         run: bunx tsc --noEmit
-      - name: Lint source
-        run: bun run lint
+      - name: Lint changed localization paths
+        run: >-
+          bunx eslint
+          src/routes/__root.tsx
+          src/components/foundation/AppShell.tsx
+          src/components/foundation/SettingsPage.tsx
+          src/components/foundation/SectionTabs.tsx
+          src/components/office/DirectorsOffice.tsx
+          src/components/welcome/WelcomeFrame.tsx
+          src/components/welcome/WelcomePages.tsx
+          src/test/i18n-activation.test.tsx
       - name: Run unit and UI tests
         run: bun run test
       - name: Compile production build
         run: bun run build
+      - name: Report repository-wide legacy lint debt
+        run: bun run lint
