@@ -93,7 +93,18 @@ export function formatStuckSession(
   school: string,
   before: string,
   after: string,
+  locale: "en" | "ar" = "en",
 ): string {
+  if (locale === "ar") {
+    return [
+      "SLAMS — مكتب حل مشاكل الأداء (ملاحظة شخصية، بدون تقييم)",
+      "المشكلة: " + question,
+      "التقنية المقترحة (محتوى تجريبي): " + school,
+      "قبل التجربة: " + before.trim(),
+      "بعد التجربة: " + after.trim(),
+      "هذه ملاحظات كتبها الممثل بنفسه. لم يتم تسجيل الأداء أو تحليله أو تقييمه أو حفظه.",
+    ].join("\n");
+  }
   return [
     "SLAMS — Stuck Desk (self-reported practice note; no assessment)",
     "Issue: " + question,
