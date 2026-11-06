@@ -1,5 +1,6 @@
 import { useLanguage } from "@/lib/i18n";
 import { STAN_SOURCE_LINKS, STAN_TERM_ONE } from "@/data/stanislavski-editorial-workshop-one";
+import { STAN_WORKSHOP_ONE_ASSESSMENT } from "@/data/stanislavski-assessment-draft";
 import { PlacementAssessmentNotice } from "./PlacementAssessmentNotice";
 import { StanislavskiWorkshopOne } from "./StanislavskiWorkshopOne";
 
@@ -79,6 +80,24 @@ export function StanislavskiAcademicPreview() {
           {ar
             ? "أي تقييم جامعي فعلي يتطلب مشاهدة أداء، وتحليل الظروف والأفعال، وتكيّفًا مع استجابة شريك، ومراجعة مدرس مؤهل وفق معايير معلنة. لا يوجد حد نجاح مُعتمد أو محرّك إصدار شهادات."
             : "A future assessed gate must require observed performance, playable actions under given circumstances, adjustment to an actual partner, documented criteria and a qualified reviewer. No pass threshold or certification engine is active."}
+        </p>
+        <h4 className="mt-4 font-semibold">{ar ? "مسودة معايير مراجعة الأداء" : "Draft faculty-observation criteria"}</h4>
+        <ul className="mt-3 list-disc space-y-3 ps-5">
+          {STAN_WORKSHOP_ONE_ASSESSMENT.criteria.map((criterion) => (
+            <li key={criterion.id}>
+              <strong>{criterion.focus[locale]}</strong>
+              <p className="mt-1 text-sm">{criterion.evidence[locale]}</p>
+              <p className="text-xs text-muted-foreground">
+                {ar ? "ما لا يكفي كدليل: " : "Insufficient evidence: "}
+                {criterion.commonFailure[locale]}
+              </p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-sm text-muted-foreground">
+          {ar
+            ? "لا توجد الآن درجات أو حد اجتياز أو مدرس مخوّل بترقية السجل الأكاديمي. الانتقال داخل هذه الورشة ليس اجتيازًا."
+            : "No grades, pass threshold, appointed reviewer or authorized academic advancement is active. Moving between pilot exercises does not constitute passing a course."}
         </p>
       </section>
       <PlacementAssessmentNotice school="stanislavski" />
