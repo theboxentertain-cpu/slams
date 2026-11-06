@@ -20,7 +20,16 @@ describe("Guided Stuck Desk protects actor evidence from invented analysis", () 
   it("offers four distinct bilingual technique-informed choices and never a claim of faculty review", () => {
     expect(RESCUE_PROBLEMS.map((item) => item.id)).toEqual(["planning", "flat", "stakes", "stiff"]);
     for (const item of RESCUE_PROBLEMS) {
-      for (const key of ["title", "lens", "why", "intervention", "solo", "partner", "avoid", "cue"] as const) {
+      for (const key of [
+        "title",
+        "lens",
+        "why",
+        "intervention",
+        "solo",
+        "partner",
+        "avoid",
+        "cue",
+      ] as const) {
         expect(item[key].en.trim().length, `${item.id} English ${key}`).toBeGreaterThan(10);
         expect(item[key].ar.trim().length, `${item.id} Arabic ${key}`).toBeGreaterThan(10);
       }

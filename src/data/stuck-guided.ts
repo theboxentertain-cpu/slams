@@ -47,7 +47,10 @@ export const RESCUE_PROBLEMS = [
   {
     id: "flat",
     title: { en: "My scene feels flat / general", ar: "المشهد مسطّح أو عام" },
-    lens: { en: "Stanislavski-informed playable action", ar: "الفعل القابل للتنفيذ بمنظور ستانيسلافسكي" },
+    lens: {
+      en: "Stanislavski-informed playable action",
+      ar: "الفعل القابل للتنفيذ بمنظور ستانيسلافسكي",
+    },
     why: {
       en: "An abstract emotion does not tell the actor what to attempt. A specific objective and action can organize behavior.",
       ar: "الشعور المجرّد لا يخبر الممثل بما سيحاول فعله. الهدف والفعل المحددان ينظمان السلوك.",
@@ -76,7 +79,10 @@ export const RESCUE_PROBLEMS = [
   {
     id: "stakes",
     title: { en: "Nothing feels at stake", ar: "مش حاسس إن في حاجة مهمة على المحك" },
-    lens: { en: "Adler-informed given circumstances and imagination", ar: "الظروف والخيال بمنظور ستيلا أدلر" },
+    lens: {
+      en: "Adler-informed given circumstances and imagination",
+      ar: "الظروف والخيال بمنظور ستيلا أدلر",
+    },
     why: {
       en: "A precise fictional consequence can make an action more understandable than trying to generate an intense emotion.",
       ar: "النتيجة الخيالية المحددة قد تجعل الفعل أكثر قابلية للفهم من محاولة فرض انفعال شديد.",
@@ -168,28 +174,29 @@ export function rescueOutcomeLabel(outcome: RescueOutcome): LocalizedText {
 export function rescueNote(input: RescueInput, locale: "en" | "ar") {
   const problem = rescueProblemById(input.problemId);
   if (!problem || !canCompareRescue(input)) return "";
-  const rows = locale === "ar"
-    ? [
-        "SLAMS · مكتب التعثر · ملاحظات تدريب خاصة",
-        "اختار الممثل المشكلة بنفسه. لا يوجد تحليل أداء آلي أو تقييم أو اعتماد.",
-        "المشكلة: " + problem.title.ar,
-        "منظور التمرين: " + problem.lens.ar,
-        "المحاولة الأولى: " + input.firstAttempt.trim(),
-        "التعديل المقترح: " + problem.intervention.ar,
-        "المحاولة الثانية: " + input.secondAttempt.trim(),
-        "ما لاحظته: " + input.difference.trim(),
-        "رأيي في الفرق: " + rescueOutcomeLabel(input.outcome).ar,
-      ]
-    : [
-        "SLAMS · Stuck Desk · private rehearsal note",
-        "Problem selected by actor. No automatic performance analysis, diagnosis, grade or credit.",
-        "Problem: " + problem.title.en,
-        "Technique lens: " + problem.lens.en,
-        "First attempt: " + input.firstAttempt.trim(),
-        "Suggested intervention: " + problem.intervention.en,
-        "Second attempt: " + input.secondAttempt.trim(),
-        "Observed difference: " + input.difference.trim(),
-        "Learner judgment: " + rescueOutcomeLabel(input.outcome).en,
-      ];
+  const rows =
+    locale === "ar"
+      ? [
+          "SLAMS · مكتب التعثر · ملاحظات تدريب خاصة",
+          "اختار الممثل المشكلة بنفسه. لا يوجد تحليل أداء آلي أو تقييم أو اعتماد.",
+          "المشكلة: " + problem.title.ar,
+          "منظور التمرين: " + problem.lens.ar,
+          "المحاولة الأولى: " + input.firstAttempt.trim(),
+          "التعديل المقترح: " + problem.intervention.ar,
+          "المحاولة الثانية: " + input.secondAttempt.trim(),
+          "ما لاحظته: " + input.difference.trim(),
+          "رأيي في الفرق: " + rescueOutcomeLabel(input.outcome).ar,
+        ]
+      : [
+          "SLAMS · Stuck Desk · private rehearsal note",
+          "Problem selected by actor. No automatic performance analysis, diagnosis, grade or credit.",
+          "Problem: " + problem.title.en,
+          "Technique lens: " + problem.lens.en,
+          "First attempt: " + input.firstAttempt.trim(),
+          "Suggested intervention: " + problem.intervention.en,
+          "Second attempt: " + input.secondAttempt.trim(),
+          "Observed difference: " + input.difference.trim(),
+          "Learner judgment: " + rescueOutcomeLabel(input.outcome).en,
+        ];
   return rows.join("\n");
 }

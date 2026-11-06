@@ -268,12 +268,17 @@ export function StuckIntake({ tab }: TabProps) {
     <Page title="The Stuck Desk" eyebrow="FIX WHAT ISN’T WORKING" backTo="/" world="stuck">
       {tab !== "describe" && (
         <p className="text-sm text-muted-foreground">
-          <T>Older Stuck Desk links now open the guided self-report practice flow. No automated performance diagnosis is available.</T>
+          <T>
+            Older Stuck Desk links now open the guided self-report practice flow. No automated
+            performance diagnosis is available.
+          </T>
         </p>
       )}
       <StuckDeskGuided />
       <details className="planned-tools">
-        <summary><T>Browse original quick intervention prompts</T></summary>
+        <summary>
+          <T>Browse original quick intervention prompts</T>
+        </summary>
         <DraftInterventions />
       </details>
     </Page>

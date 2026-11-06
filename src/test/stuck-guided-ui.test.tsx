@@ -13,7 +13,9 @@ const state = vi.hoisted(() => ({
 
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ to, children, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) => (
-    <a href={to} {...rest}>{children}</a>
+    <a href={to} {...rest}>
+      {children}
+    </a>
   ),
 }));
 vi.mock("@/lib/session", () => ({
@@ -48,7 +50,9 @@ afterEach(() => {
 
 function startFirst() {
   fireEvent.click(screen.getByRole("button", { name: /I'm in my head/ }));
-  expect(screen.getByRole("heading", { name: "02 — Observe your first attempt" })).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { name: "02 — Observe your first attempt" }),
+  ).toBeInTheDocument();
 }
 function reachRetake() {
   startFirst();
@@ -98,8 +102,13 @@ describe("Stuck Desk guided actor workflow", () => {
     expect(region).toHaveTextContent("Before");
     expect(region).toHaveTextContent("After");
     expect(region).toHaveTextContent("I could not identify a difference");
-    expect(region).toHaveTextContent("No automatic performance analysis, diagnosis, grade or credit");
-    expect(screen.getByRole("link", { name: "Practice the Living Scene" })).toHaveAttribute("href", "/scene");
+    expect(region).toHaveTextContent(
+      "No automatic performance analysis, diagnosis, grade or credit",
+    );
+    expect(screen.getByRole("link", { name: "Practice the Living Scene" })).toHaveAttribute(
+      "href",
+      "/scene",
+    );
     expect(state.save).not.toHaveBeenCalled();
   });
   it("requires an explicit Passport save, using only user-entered evidence", async () => {
@@ -109,14 +118,19 @@ describe("Stuck Desk guided actor workflow", () => {
     expect(state.save).not.toHaveBeenCalled();
     fireEvent.click(save);
     await waitFor(() => expect(state.save).toHaveBeenCalledTimes(1));
-    expect(state.save).toHaveBeenCalledWith(expect.objectContaining({
-      id: "11111111-2222-4333-8444-555555555555",
-      obstacle: "I'm in my head / planning lines",
-      exerciseNote: "I planned my reply and missed the other line.",
-      retakeLine: "I waited, noticed the pause and responded to it.",
-    }));
+    expect(state.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "11111111-2222-4333-8444-555555555555",
+        obstacle: "I'm in my head / planning lines",
+        exerciseNote: "I planned my reply and missed the other line.",
+        retakeLine: "I waited, noticed the pause and responded to it.",
+      }),
+    );
     expect(await screen.findByRole("button", { name: "Saved to Passport" })).toBeDisabled();
-    expect(screen.getByRole("link", { name: "Open your saved Passport record" })).toHaveAttribute("href", "/passport");
+    expect(screen.getByRole("link", { name: "Open your saved Passport record" })).toHaveAttribute(
+      "href",
+      "/passport",
+    );
   });
   it("does not falsely report a failed save as successful and keeps copy available", async () => {
     state.save.mockResolvedValue({ error: "Unavailable" });
@@ -138,18 +152,29 @@ describe("Stuck Desk guided actor workflow", () => {
     state.user = { id: "actor-a" };
     const result = render(<StuckDeskGuided />);
     startFirst();
-    fireEvent.change(screen.getByLabelText("What did you actually say or do on the first attempt?"), {
-      target: { value: "Private rehearsal note for actor A" },
-    });
+    fireEvent.change(
+      screen.getByLabelText("What did you actually say or do on the first attempt?"),
+      {
+        target: { value: "Private rehearsal note for actor A" },
+      },
+    );
     state.user = { id: "actor-b" };
     result.rerender(<StuckDeskGuided />);
-    expect(screen.getByRole("heading", { name: "01 — What actually got stuck?" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "01 — What actually got stuck?" }),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Private rehearsal note for actor A")).toBeNull();
   });
   it("renders the new guided workflow in Arabic from stored language settings", () => {
     localStorage.setItem(LANGUAGE_KEY, "ar");
-    render(<LanguageProvider><StuckDeskGuided /></LanguageProvider>);
-    expect(screen.getByRole("heading", { name: "٠١ — ما المشكلة التي واجهتك؟" })).toBeInTheDocument();
+    render(
+      <LanguageProvider>
+        <StuckDeskGuided />
+      </LanguageProvider>,
+    );
+    expect(
+      screen.getByRole("heading", { name: "٠١ — ما المشكلة التي واجهتك؟" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /جسمي متصلّب/ })).toBeInTheDocument();
     expect(screen.getByText(/لا يشاهد أداءك ولا يشخّصه/)).toBeInTheDocument();
   });

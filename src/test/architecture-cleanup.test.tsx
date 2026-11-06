@@ -100,22 +100,39 @@ describe("Available work comes first", () => {
   );
   it("keeps the four original quick intervention prompts behind a disclosure, without replacing the working guided flow", () => {
     render(<StuckIntake tab="describe" onTabChange={vi.fn()} />);
-    expect(screen.getByRole("heading", { name: "01 — What actually got stuck?" })).toBeInTheDocument();
-    const disclosure = screen.getByText("Browse original quick intervention prompts").closest("details");
+    expect(
+      screen.getByRole("heading", { name: "01 — What actually got stuck?" }),
+    ).toBeInTheDocument();
+    const disclosure = screen
+      .getByText("Browse original quick intervention prompts")
+      .closest("details");
     expect(disclosure).not.toHaveAttribute("open");
     for (const item of DRAFT_INTERVENTIONS)
       expect(within(disclosure!).getByText(item.q).closest("button")).toBeInTheDocument();
     expect(screen.queryByRole("tablist")).toBeNull();
-    expect(screen.getByRole("link", { name: "Try the Living Scene instead" })).toHaveAttribute("href", "/scene");
+    expect(screen.getByRole("link", { name: "Try the Living Scene instead" })).toHaveAttribute(
+      "href",
+      "/scene",
+    );
   });
   it.each(["scene", "identify"])(
     "lands old Stuck Desk %s bookmarks on the same truthful guided actor workflow",
     (tab) => {
       render(<StuckIntake tab={tab} onTabChange={vi.fn()} />);
-      expect(screen.getByRole("heading", { name: "01 — What actually got stuck?" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "01 — What actually got stuck?" }),
+      ).toBeInTheDocument();
       expect(screen.getByText(/Older Stuck Desk links now open the guided/)).toBeInTheDocument();
-      expect(within(screen.getByRole("region", { name: "Guided Stuck Desk workflow" })).getByRole("button", { name: /My scene feels flat/ })).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: "Try the Living Scene instead" })).toHaveAttribute("href", "/scene");
+      expect(
+        within(screen.getByRole("region", { name: "Guided Stuck Desk workflow" })).getByRole(
+          "button",
+          { name: /My scene feels flat/ },
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "Try the Living Scene instead" })).toHaveAttribute(
+        "href",
+        "/scene",
+      );
     },
   );
 });
