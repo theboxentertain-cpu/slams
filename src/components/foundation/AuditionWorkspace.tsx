@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { btnPrimary, btnSecondary } from "@/components/slams";
@@ -52,27 +53,27 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
       {!sessionLoading && !signedIn && (
         <p className="mb-4 text-sm text-muted-foreground">
           Work through your sides before the room. Saved locally in this browser —{" "}
-          <Link to="/auth" className="underline">
+          <Link to="/auth" className="underline"><T>
             sign in to save to your account.
-          </Link>
+          </T></Link>
         </p>
       )}
       {signedIn && (
-        <p className="mb-4 text-sm text-muted-foreground">
+        <p className="mb-4 text-sm text-muted-foreground"><T>
           Work through your sides before the room. Saved to your account.
-        </p>
+        </T></p>
       )}
       {signedIn && localHasData && (
         <div className="mb-4 rounded border border-amber p-3 text-sm">
-          <p>This browser holds audition notes not yet in your account.</p>
+          <p><T>This browser holds audition notes not yet in your account.</T></p>
           <button
             type="button"
             className={`${btnSecondary} mt-2`}
             disabled={busy}
             onClick={handleImport}
-          >
+          ><T>
             Import browser notes to my account
-          </button>
+          </T></button>
         </div>
       )}
       {error && (
@@ -81,7 +82,7 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
         </p>
       )}
       {!loaded ? (
-        <p role="status">Loading…</p>
+        <p role="status"><T>Loading…</T></p>
       ) : (
         <form
           className="grid gap-3"
