@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { LanguageProvider, LanguageSwitch, LANGUAGE_KEY, translateText, useLanguage } from "@/lib/i18n";
+import {
+  LanguageProvider,
+  LanguageSwitch,
+  LANGUAGE_KEY,
+  translateText,
+  useLanguage,
+} from "@/lib/i18n";
 
 function LanguageProbe() {
   const { locale, t } = useLanguage();
@@ -24,12 +30,18 @@ it("falls back to English for catalog gaps and never modifies the source text", 
   expect(translateText("Progress", "en")).toBe("Progress");
   expect(translateText("Progress", "ar")).toBe("التقدّم");
   expect(translateText("  Sign in  ", "ar")).toBe("  تسجيل الدخول  ");
-  expect(translateText("User-written private reflection", "ar")).toBe("User-written private reflection");
+  expect(translateText("User-written private reflection", "ar")).toBe(
+    "User-written private reflection",
+  );
 });
 
 it("switches and persists the locale without changing studio records or URL identifiers", () => {
   localStorage.setItem("slams.passport.v1", "private-note");
-  render(<LanguageProvider><LanguageProbe /></LanguageProvider>);
+  render(
+    <LanguageProvider>
+      <LanguageProbe />
+    </LanguageProvider>,
+  );
   expect(screen.getByTestId("translated-progress")).toHaveTextContent("Progress");
   fireEvent.click(screen.getByRole("button", { name: "العربية" }));
   expect(screen.getByTestId("translated-progress")).toHaveTextContent("التقدّم");
