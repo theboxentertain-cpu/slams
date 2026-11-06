@@ -81,7 +81,9 @@ export function StanislavskiAcademicPreview() {
             ? "أي تقييم جامعي فعلي يتطلب مشاهدة أداء، وتحليل الظروف والأفعال، وتكيّفًا مع استجابة شريك، ومراجعة مدرس مؤهل وفق معايير معلنة. لا يوجد حد نجاح مُعتمد أو محرّك إصدار شهادات."
             : "A future assessed gate must require observed performance, playable actions under given circumstances, adjustment to an actual partner, documented criteria and a qualified reviewer. No pass threshold or certification engine is active."}
         </p>
-        <h4 className="mt-4 font-semibold">{ar ? "مسودة معايير مراجعة الأداء" : "Draft faculty-observation criteria"}</h4>
+        <h4 className="mt-4 font-semibold">
+          {ar ? "مسودة معايير مراجعة الأداء" : "Draft faculty-observation criteria"}
+        </h4>
         <ul className="mt-3 list-disc space-y-3 ps-5">
           {STAN_WORKSHOP_ONE_ASSESSMENT.criteria.map((criterion) => (
             <li key={criterion.id}>

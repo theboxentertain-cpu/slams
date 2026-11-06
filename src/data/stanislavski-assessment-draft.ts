@@ -20,7 +20,10 @@ export const STAN_WORKSHOP_ONE_ASSESSMENT = {
   criteria: [
     {
       id: "given-circumstances",
-      focus: { en: "Given circumstances and the creative if", ar: "الظروف المعطاة و«ماذا لو» الإبداعية" },
+      focus: {
+        en: "Given circumstances and the creative if",
+        ar: "الظروف المعطاة و«ماذا لو» الإبداعية",
+      },
       evidence: {
         en: "The actor distinguishes stated scene facts from interpretations and acts consistently within them.",
         ar: "يميّز الممثل بين حقائق النص وتأويلاته ويتصرف بما يتسق مع تلك الظروف.",
@@ -33,7 +36,10 @@ export const STAN_WORKSHOP_ONE_ASSESSMENT = {
     },
     {
       id: "attention-to-task",
-      focus: { en: "Practical attention and observable change", ar: "الانتباه العملي والتغيير الملحوظ" },
+      focus: {
+        en: "Practical attention and observable change",
+        ar: "الانتباه العملي والتغيير الملحوظ",
+      },
       evidence: {
         en: "A concrete cue is noticed and produces a meaningful change in physical behavior.",
         ar: "يلاحظ الممثل مؤثرًا محددًا ويترتب عليه تغيير واضح في السلوك الجسدي.",
@@ -72,7 +78,10 @@ export const STAN_WORKSHOP_ONE_ASSESSMENT = {
     },
     {
       id: "partner-response",
-      focus: { en: "Listening and responsible ensemble practice", ar: "الإنصات وممارسة العمل الجماعي بمسؤولية" },
+      focus: {
+        en: "Listening and responsible ensemble practice",
+        ar: "الإنصات وممارسة العمل الجماعي بمسؤولية",
+      },
       evidence: {
         en: "With a voluntary human partner, actual responses influence the next action; the partners respect boundaries.",
         ar: "مع شريك بشري موافق، تؤثر الاستجابات الفعلية في الفعل التالي مع احترام الحدود.",
