@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { OfficeObject } from "./OfficeObject";
 import { Link } from "@tanstack/react-router";
 import { BadActingWall } from "./BadActingWall";
@@ -7,9 +8,9 @@ export default function WorkWall({ savedCount }: { savedCount: number | null }) 
   return (
     <>
       <div className="room-heading">
-        <span className="office-kicker">02 / THE WORK WALL</span>
-        <h2>The Work Wall</h2>
-        <p>Plan. Practice. Track. Grow.</p>
+        <span className="office-kicker"><T>02 / THE WORK WALL</T></span>
+        <h2><T>The Work Wall</T></h2>
+        <p><T>Plan. Practice. Track. Grow.</T></p>
       </div>
       <div className="work-wall-cork" aria-hidden="true" />
       <OfficeObject destination="work" />
@@ -25,14 +26,14 @@ export default function WorkWall({ savedCount }: { savedCount: number | null }) 
       <OfficeObject destination="stuck" />
       <BadActingWall />
       <Link className="wall-progress-sheet" to={OFFICE_CONTROLS.progress.to}>
-        <strong>Progress, on record</strong>
+        <strong><T>Progress, on record</T></strong>
         <span>
           {savedCount === null ? "Records unavailable" : `${savedCount} rehearsals saved`}
         </span>
       </Link>
-      <Link className="wall-scene-notes" to="/work">
+      <Link className="wall-scene-notes" to="/work"><T>
         Scene & character notes · Actor at Work
-      </Link>
+      </T></Link>
     </>
   );
 }
