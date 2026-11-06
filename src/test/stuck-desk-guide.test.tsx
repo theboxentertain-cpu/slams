@@ -7,9 +7,7 @@ import { LanguageProvider } from "@/lib/i18n";
 import { StuckDeskGuide } from "@/components/foundation/StuckDeskGuide";
 
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to }: { children: ReactNode; to: string }) => (
-    <a href={to}>{children}</a>
-  ),
+  Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
 vi.mock("@/components/slams", () => ({ btnSecondary: "secondary" }));
 
@@ -33,7 +31,9 @@ describe("Stuck Desk self-guided practice", () => {
     expect(screen.getByText(DRAFT_INTERVENTIONS[0]!.fix)).toBeInTheDocument();
     expect(screen.getByText("Why this might help")).toBeInTheDocument();
     expect(screen.getByText("What not to do")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Practice in the scripted demonstration" })).toHaveAttribute("href", "/scene");
+    expect(
+      screen.getByRole("link", { name: "Practice in the scripted demonstration" }),
+    ).toHaveAttribute("href", "/scene");
     expect(screen.getByText(/no academic credit/i)).toBeInTheDocument();
   });
 
@@ -84,13 +84,19 @@ describe("Stuck Desk self-guided practice", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[2]!.q }));
     expect(screen.getByLabelText("Before: what did you actually do?")).toHaveValue("");
-    expect(screen.getByLabelText("After the experiment: what did you do differently?")).toHaveValue("");
+    expect(screen.getByLabelText("After the experiment: what did you do differently?")).toHaveValue(
+      "",
+    );
     expect(screen.queryByText("Old symptom note")).not.toBeInTheDocument();
   });
 
   it("supplies Arabic prompts and copies an Arabic self-report without changing user text", async () => {
     localStorage.setItem("slams.language.v1", "ar");
-    render(<LanguageProvider><StuckDeskGuide /></LanguageProvider>);
+    render(
+      <LanguageProvider>
+        <StuckDeskGuide />
+      </LanguageProvider>,
+    );
     const arabic = STUCK_GUIDES.stiff.arQuestion;
     const button = await screen.findByRole("button", { name: arabic });
     fireEvent.click(button);
