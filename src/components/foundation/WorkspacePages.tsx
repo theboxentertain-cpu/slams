@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { Page, btnPrimary, btnSecondary } from "@/components/slams";
 import { useAuditionPrep, usePassport } from "@/lib/store";
 import { DRAFT_INTERVENTIONS } from "@/data/stuck";
+import { StuckDeskGuided } from "./StuckDeskGuided";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 import { AuditionWorkspace } from "./AuditionWorkspace";
 import { SUPPORT_PAGES } from "@/lib/foundation";
@@ -262,27 +263,19 @@ export function DraftInterventions() {
     </>
   );
 }
-export function StuckIntake({ tab, onTabChange }: TabProps) {
+export function StuckIntake({ tab }: TabProps) {
   return (
     <Page title="The Stuck Desk" eyebrow="FIX WHAT ISN’T WORKING" backTo="/" world="stuck">
-      {tab === "describe" ? (
+      {tab !== "describe" && (
+        <p className="text-sm text-muted-foreground">
+          <T>Older Stuck Desk links now open the guided self-report practice flow. No automated performance diagnosis is available.</T>
+        </p>
+      )}
+      <StuckDeskGuided />
+      <details className="planned-tools">
+        <summary><T>Browse original quick intervention prompts</T></summary>
         <DraftInterventions />
-      ) : (
-        <Unavailable>
-          {tab === "scene"
-            ? "Saving a scene-specific problem intake is in development. Use the existing draft suggestions or run the demonstration scene."
-            : "Structured problem intake and diagnosis are in development. No cause has been inferred from your performance."}
-        </Unavailable>
-      )}
-      {tab !== "describe" ? (
-        <button className={btnPrimary} onClick={() => onTabChange("describe")}>
-          <T>View draft interventions</T>
-        </button>
-      ) : (
-        <Link to="/scene" className={btnPrimary}>
-          <T>Try the Living Scene</T>
-        </Link>
-      )}
+      </details>
     </Page>
   );
 }
