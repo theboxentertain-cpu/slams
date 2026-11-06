@@ -16,7 +16,7 @@ describe("Stanislavski faculty-review rubric is not academic grading", () => {
     expect(rubric.repetitionMinimumFromInstitution).toBeNull();
   });
   it("provides bilingual, observable evidence for all curricular learning outcomes", () => {
-    const lessons = new Set(STAN_LESSONS.map((item) => item.id));
+    const lessons = new Set<string>(STAN_LESSONS.map((item) => item.id));
     expect(rubric.criteria).toHaveLength(5);
     expect(new Set(rubric.criteria.map((item) => item.id)).size).toBe(5);
     for (const criterion of rubric.criteria) {
