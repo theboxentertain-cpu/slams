@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SessionProvider } from "@/lib/session";
+import { LanguageProvider } from "@/lib/i18n";
 import { AppShell } from "@/components/foundation/AppShell";
 
 function NotFoundComponent() {
@@ -104,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=Karla:wght@400;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=Karla:wght@400;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap",
       },
       { rel: "icon", href: "/slams-icon.svg", type: "image/svg+xml" },
     ],
@@ -135,11 +136,13 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <SessionProvider>
-        <AppShell>
-          <Outlet />
-        </AppShell>
-      </SessionProvider>
+      <LanguageProvider>
+        <SessionProvider>
+          <AppShell>
+            <Outlet />
+          </AppShell>
+        </SessionProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
