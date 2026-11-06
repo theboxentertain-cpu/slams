@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, expect, it } from "vitest";
+import { SCENE } from "@/data/scene";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import {
   LanguageProvider,
   LanguageSwitch,
+  T,
   LANGUAGE_KEY,
   translateText,
   useLanguage,
@@ -52,4 +54,20 @@ it("switches and persists the locale without changing studio records or URL iden
   fireEvent.click(screen.getByRole("button", { name: "English" }));
   expect(screen.getByTestId("translated-progress")).toHaveTextContent("Progress");
   expect(document.documentElement).toHaveAttribute("dir", "ltr");
+});
+
+it("renders translated authored text without adding markup or changing saved scene source", () => {
+  const originalSetup = SCENE.setup;
+  const scriptInArabic = translateText(originalSetup, "ar");
+  expect(scriptInArabic).not.toBe(originalSetup);
+  const { container } = render(
+    <LanguageProvider>
+      <p><T>Start rehearsal</T></p>
+      <LanguageSwitch />
+    </LanguageProvider>,
+  );
+  expect(container.querySelector("p")?.childElementCount).toBe(0);
+  fireEvent.click(screen.getByRole("button", { name: "العربية" }));
+  expect(container.querySelector("p")).toHaveTextContent("ابدأ");
+  expect(SCENE.setup).toBe(originalSetup);
 });
