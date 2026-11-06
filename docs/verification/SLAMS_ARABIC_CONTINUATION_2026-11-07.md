@@ -1,36 +1,40 @@
-# SLAMS — Arabic build continuation and verified checkpoint
-_Date: 7 November 2026 (Cairo). Development branch: `feat/arabic-language-activation`; draft PR #16._
+# SLAMS — Build continuation checkpoint
+_Date: 7 November 2026 (Africa/Cairo)_
 
-## Current verified gate
-- GitHub Actions run: https://github.com/theboxentertain-cpu/slams/actions/runs/42307116722
-- TypeScript: PASS.
-- Semantic ESLint (excluding existing Prettier formatting debt): PASS (warnings remain).
-- Vitest: **31 suites, 228 tests passed**.
-- Production build: PASS.
-- Full-repository lint: **FAIL**, 1,892 Prettier errors and 9 warnings in the current branch; this is currently reported with `continue-on-error` in CI. It must be addressed before release.
-- No authenticated two-account RLS test, Android browser/RTL visual sweep, or live Supabase migration verification is claimed here.
-- PR remains a **draft**, not merged or deployed. Lovable's main branch/preview is not changed by these proposed commits.
+## Verified project status
+- Existing SLAMS Lovable project: `64914af9-5120-4ab2-bf0b-13e6ee092b40`.
+- GitHub repository: `theboxentertain-cpu/slams`.
+- **Localization PR #16 merged to `main`**. The latest verified main commit at this checkpoint is `28ce25e158f9b2024d13c4926d3da3e3900d8557`.
+- Lovable reports the project as **ready but unpublished**, preview at `https://id-preview--64914af9-5120-4ab2-bf0b-13e6ee092b40.lovable.app`. Its `latest_commit_sha` matches the main commit above. This does NOT establish live RTL visual quality.
 
-## Changes implemented in draft PR #16
-- Mounted the existing `LanguageProvider` at the root.
-- Added a persistent language switch in Welcome, Director's Office settings, profile menu and Settings; HTML `lang` and `dir` update with locale.
-- Added Noto Sans Arabic and RTL presentation foundations while preserving the SLAMS wordmark and LTR email/password entry.
-- Applied existing authored Arabic catalog at presentation boundaries across navigation, shared page titles and tabs, Director UI, first-use setup, Conservatory/Meisner preview, Audition Workspace, Work Hub, Baseline, Scene, Passport, Authentication, Help and other UI surfaces.
-- Added a text-only `<T>` fragment component (no extra DOM layout node) for audited, fixed JSX labels. It must never receive user-authored values, identity fields, route identifiers or saved notes.
-- For the original scripted Living Scene, localize prompts, dialogue, obstacle and exercise placeholders **at render time only**. Persist the original source values and user-entered rehearsal notes without translation.
-- Added locale regression tests for switching, persistence, DOM direction, static text and unaffected saved records. Fixed an existing SQL migration-test path for reproducible CI.
-- Created reproducible Actions CI for TypeScript, semantic lint, tests and production compilation.
+## Current unmerged development work
+### Draft PR #17 — RTL legibility and accessible controls
+https://github.com/theboxentertain-cpu/slams/pull/17
+- Opposite-edge placement for the welcome back arrow and language selector in RTL.
+- Arabic fonts and wrapping for welcome, office and Conservatory scenic taglines; minimum 44px language-switch tap target.
+- Regression tests for persisted Arabic preference, user-note integrity, and static RTL layout contracts.
+- GitHub Actions run `42308457151`: TypeScript, semantic lint, **233 tests across 32 suites**, and production build passed.
+- **Not yet physically/browser-verified on Android at 320/360/390px**. Keep this a draft until that work is completed.
 
-## Product and content boundaries
-- The Arabic catalog has approximately 1,000 authored entries. **This does not mean every screen or dynamic message is localized**; more source strings, inline interpolations, placeholders and error boundaries require explicit coverage.
-- Unreviewed acting curriculum remains draft; no user can award themselves mastery or claim institutional accreditation from these previews.
-- Full Conservatory content, live assessment/reviewer gates, camera/video capture, partner matching and full professional Actor at Work tools are NOT declared complete.
+### Draft PR #18 — mechanical formatter cleanup
+https://github.com/theboxentertain-cpu/slams/pull/18
+- Isolated Prettier-only change of **56 TS/TSX source files**; no deliberate feature changes.
+- One-time autoformat workflow removed before opening PR.
+- GitHub Actions run `42308749171`: TypeScript, semantic lint, **228 tests across 31 suites**, and production build passed.
+- Full ESLint/Prettier on its isolated branch: **0 errors, 9 warnings** (prior main/PR #17 has ~1,900 formatting errors).
+- This branch is based on main and does not include PR #17. After any merge or rebase order, rerun the *combined* tests and lint; do not combine test counts.
 
-## Next exact milestone
-1. Audit every remaining user-facing English string, including dynamic JSX expressions, accessibility labels, placeholders, errors and the full Conservatory/actor tools. Add authored Arabic where missing, never auto-translate user data or stable IDs.
-2. Clear formatter errors on the draft branch without changing functionality; retain a separate reviewable formatting commit if possible.
-3. Browser-test every route at 320px/360px/390px Android dimensions in English and Arabic, verify correct keyboard navigation, text direction, input safety, contrast and no clipped controls. Fix issues before merge.
-4. Independently verify live auth (including reset), guest-to-account import, cross-account isolation and PostgreSQL/RLS/migrations with two non-admin test users before publication.
-5. Continue the academically reviewed eight-school Conservatory curriculum after localization safety gates pass. Never claim an exact private syllabus, official accreditation, or a released assessment without qualified verification.
+## No false completion claims
+- Localization still has untranslated text and dynamic display cases.
+- Full accredited Conservatory curricula, faculty reviews, advancement checks, partner-learning systems and actor tools are not complete.
+- No verified live two-account Supabase RLS test, verified migration deployment, cross-device account isolation, or published-release checks.
+- Existing text-only Living Scene should preserve saved user notes and original source data during locale switching.
 
-_Use this file as a continuity handoff. Never infer release-readiness from a successful unit-test run alone._
+## Next milestone
+1. Browser-test all core navigation and welcome/auth screens at **320, 360 and 390px** in English and Arabic, including back button/switch separation, 44px targets, headings and horizontal overflow.
+2. Finish user-facing Arabic messages and translated accessible labels without altering user-authored notes or stable IDs.
+3. Review and integrate PR #17 and #18 in an order that retains both improvements; rerun combined quality gates after integration.
+4. Run live guest/sign-in/import/reset flows and separate-user database isolation checks.
+5. Resume academically reviewed Conservatory content and progression implementation.
+
+_This file supersedes the earlier draft-PR #16 checkpoint. Status claims are source-verified but Android visual checks remain outstanding._

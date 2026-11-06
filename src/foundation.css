@@ -562,3 +562,46 @@ body [data-school="viewpoints"] {
 @media (max-width: 420px) {
   .language-switch button { padding-inline: 7px; }
 }
+
+
+/* Arabic presentation safeguards: keep the navigational back control
+   opposite the language selector, and use a real Arabic font for taglines. */
+:root[dir="rtl"] .welcome-language-control {
+  right: auto;
+  left: 10px;
+}
+:root[dir="rtl"] .welcome-back svg {
+  transform: rotate(180deg);
+}
+:root[dir="rtl"] .welcome-tagline,
+:root[dir="rtl"] .office-premium .office-tagline,
+:root[dir="rtl"] .training-heading-description {
+  font-family: "Noto Sans Arabic", system-ui, sans-serif;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+:root[dir="rtl"] .welcome-tagline {
+  max-width: 100%;
+  font-size: clamp(22px, 5.8vw, 38px);
+}
+:root[dir="rtl"] .welcome-motto {
+  max-width: 100%;
+  white-space: normal;
+  letter-spacing: normal;
+  line-height: 1.6;
+}
+:root[dir="rtl"] .office-premium .office-brand {
+  min-width: 0;
+}
+:root[dir="rtl"] .office-premium .office-tagline {
+  max-width: 100%;
+  font-size: clamp(12px, 3vw, 20px);
+  text-align: center;
+}
+.language-switch button {
+  min-height: 44px;
+}
