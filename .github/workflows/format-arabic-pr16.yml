@@ -1,0 +1,39 @@
+name: One-time formatting for SLAMS Arabic PR 16
+
+on:
+  push:
+    branches:
+      - feat/arabic-language-activation
+    paths:
+      - .github/workflows/format-arabic-pr16.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format-pr-files:
+    if: github.repository == 'theboxentertain-cpu/slams'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the exact draft branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/arabic-language-activation
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+      - name: Format only code files changed by this draft PR
+        run: |
+          git diff --name-only -z --diff-filter=ACMRT origin/main...HEAD -- '*.ts' '*.tsx' '*.css' | xargs -0 -r bunx prettier --write --
+          git diff --check
+      - name: Commit formatting changes to draft branch only
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -u
+            git commit -m "style: format changed Arabic PR source with Prettier"
+            git push origin HEAD:feat/arabic-language-activation
+          fi
