@@ -1261,4 +1261,9 @@ export const arabic: Record<string, string> = {
     "تُحفظ ملاحظات جواز الممثل وتجارب الأداء في حسابك. وتظل إعدادات المخرج على هذا الجهاز.",
   year: "سنة",
   years: "سنوات",
+  "Practice round": "جولة التدريب",
+  "of": "من",
+  "recorded": "مسجلة",
+  "Record this practice round": "سجّل جولة التدريب هذه",
+  "Three distinct written rounds are the SLAMS preview target, not an official Meisner requirement or an evaluation. Nothing is saved unless you explicitly copy your note.": "ثلاث جولات مكتوبة مختلفة هي هدف تدريبي تجريبي داخل SLAMS، وليست شرطًا رسميًا من مدرسة مايزنر أو تقييمًا. لا تُحفظ أي ملاحظات إلا إذا نسختها بنفسك.",
 };
