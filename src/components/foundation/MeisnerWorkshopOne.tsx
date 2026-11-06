@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { DirectorNote, btnPrimary, btnSecondary } from "@/components/slams";
@@ -52,7 +53,7 @@ function Field({
 /** Account-identity-keyed, temporary session state; intentionally no remote or local storage. */
 export function MeisnerWorkshopOne() {
   const { user, loading } = useSession();
-  if (loading) return <p role="status">Loading training preview…</p>;
+  if (loading) return <p role="status"><T>Loading training preview…</T></p>;
   return <WorkshopRun key={user?.id ?? "guest"} />;
 }
 
@@ -113,11 +114,11 @@ function WorkshopRun() {
       aria-label="Interactive Meisner Workshop 1"
     >
       <span className="office-kicker">SOURCE-GROUNDED EDITORIAL PREVIEW · {WORKSHOP_ONE.id}</span>
-      <h3 className="mt-2 text-xl font-bold">Workshop 1 — Attention on the other person</h3>
-      <p className="mt-2 text-sm text-muted-foreground">
+      <h3 className="mt-2 text-xl font-bold"><T>Workshop 1 — Attention on the other person</T></h3>
+      <p className="mt-2 text-sm text-muted-foreground"><T>
         Three original SLAMS lessons, two partner exercises, and a guided reflection. Pending
         qualified teacher review. No formal lesson completion or acting evaluation is available.
-      </p>
+      </T></p>
       <p className="mt-3 text-sm font-semibold" role="status">
         {stages[stage]}
       </p>
@@ -129,16 +130,16 @@ function WorkshopRun() {
           </p>
           <h4 className="mt-2 text-lg font-semibold">{lesson.title}</h4>
           <p className="mt-3">
-            <strong>Why:</strong> {lesson.why}
+            <strong><T>Why:</T></strong> {lesson.why}
           </p>
           <p className="mt-3">
-            <strong>Demonstration:</strong> {lesson.example}
+            <strong><T>Demonstration:</T></strong> {lesson.example}
           </p>
           <p className="mt-3">
-            <strong>Try:</strong> {lesson.apply}
+            <strong><T>Try:</T></strong> {lesson.apply}
           </p>
           <p className="mt-3">
-            <strong>Avoid:</strong> {lesson.caution}
+            <strong><T>Avoid:</T></strong> {lesson.caution}
           </p>
           <DirectorNote short="Observe, then respond.">{lesson.director}</DirectorNote>
           <div className="mt-5 flex flex-wrap gap-2">
@@ -161,9 +162,9 @@ function WorkshopRun() {
                 type="button"
                 className={btnSecondary}
                 onClick={() => setLessonNumber(lessonNumber - 1)}
-              >
+              ><T>
                 Previous lesson
-              </button>
+              </T></button>
             )}
           </div>
         </section>
@@ -171,10 +172,10 @@ function WorkshopRun() {
 
       {stage === "check" && (
         <section className="mt-4" aria-label="Knowledge check">
-          <h4 className="text-lg font-semibold">Observation or interpretation?</h4>
-          <p className="mt-2 text-sm">
+          <h4 className="text-lg font-semibold"><T>Observation or interpretation?</T></h4>
+          <p className="mt-2 text-sm"><T>
             This is a written classification exercise, not a test of partner responsiveness.
-          </p>
+          </T></p>
           <p className="mt-3 text-sm">
             Example {questionNumber + 1} of {KNOWLEDGE_CHECK.length}
           </p>
@@ -238,69 +239,69 @@ function WorkshopRun() {
                   setAnswer(null);
                 }
               }}
-            >
+            ><T>
               Back
-            </button>
+            </T></button>
           </div>
         </section>
       )}
 
       {stage === "mode" && (
         <section className="mt-4" aria-label="Practice setup">
-          <h4 className="text-lg font-semibold">Who can practise with you?</h4>
-          <p className="mt-2">
+          <h4 className="text-lg font-semibold"><T>Who can practise with you?</T></h4>
+          <p className="mt-2"><T>
             Solo observation preparation cannot count as Meisner partner practice. The two authored
             exercises require a consenting human partner.
-          </p>
+          </T></p>
           <fieldset className="mt-3 space-y-3">
-            <legend className="font-semibold">Practice mode</legend>
+            <legend className="font-semibold"><T>Practice mode</T></legend>
             <label className="flex min-h-11 items-center gap-2">
               <input
                 type="radio"
                 name="meisner-practice-mode"
                 checked={mode === "solo"}
                 onChange={() => setMode("solo")}
-              />
+              /><T>
               Solo preparation only
-            </label>
+            </T></label>
             <label className="flex min-h-11 items-center gap-2">
               <input
                 type="radio"
                 name="meisner-practice-mode"
                 checked={mode === "partner"}
                 onChange={() => setMode("partner")}
-              />
+              /><T>
               With a real human partner
-            </label>
+            </T></label>
           </fieldset>
           {mode === "partner" && (
             <fieldset className="mt-3 space-y-2">
-              <legend className="font-semibold">Participation and boundaries</legend>
+              <legend className="font-semibold"><T>Participation and boundaries</T></legend>
               <label className="flex min-h-11 items-center gap-2">
                 <input
                   type="checkbox"
                   checked={consent}
                   onChange={(event) => setConsent(event.target.checked)}
-                />
+                /><T>
                 My partner voluntarily agreed.
-              </label>
+              </T></label>
               <label className="flex min-h-11 items-center gap-2">
                 <input
                   type="checkbox"
                   checked={boundaries}
                   onChange={(event) => setBoundaries(event.target.checked)}
-                />
+                /><T>
                 We can both pause or stop, avoid personal judgments, and will not record by default.
-              </label>
-              <p className="text-sm text-muted-foreground">
+              </T></label>
+              <p className="text-sm text-muted-foreground"><T>
                 These are self-reported conditions, not verified consent. Do not include personal
                 identifying information.
-              </p>
+              </T></p>
             </fieldset>
           )}
-          <DirectorNote short="A real partner matters.">
+          <DirectorNote short="A real partner matters."><T>
             Repetition requires another human. Solo preparation is useful; it is not the same thing.
-          </DirectorNote>
+          </T></DirectorNote>
           <div className="mt-5 flex flex-wrap gap-2">
             <button
               type="button"
@@ -310,9 +311,9 @@ function WorkshopRun() {
                 setExercise(0);
                 setStage("practice");
               }}
-            >
+            ><T>
               Begin practice
-            </button>
+            </T></button>
             <button
               type="button"
               className={btnSecondary}
@@ -321,9 +322,9 @@ function WorkshopRun() {
                 setQuestionNumber(KNOWLEDGE_CHECK.length - 1);
                 setAnswer(null);
               }}
-            >
+            ><T>
               Back
-            </button>
+            </T></button>
           </div>
         </section>
       )}
@@ -360,10 +361,10 @@ function WorkshopRun() {
               <li key={step}>{step}</li>
             ))}
           </ol>
-          <p className="mt-3 text-sm text-muted-foreground">
+          <p className="mt-3 text-sm text-muted-foreground"><T>
             No recording, matching, diagnosis or remote saving. Do not identify or describe private
             details of your partner.
-          </p>
+          </T></p>
           {exercise === 0 ? (
             <>
               <Field
@@ -437,19 +438,19 @@ function WorkshopRun() {
                 if (exercise === 1) setExercise(0);
                 else setStage("mode");
               }}
-            >
+            ><T>
               Back
-            </button>
+            </T></button>
           </div>
         </section>
       )}
 
       {stage === "reflect" && (
         <section className="mt-4" aria-label="Post-exercise reflection">
-          <h4 className="text-lg font-semibold">Reflect on what happened</h4>
-          <p className="mt-2">
+          <h4 className="text-lg font-semibold"><T>Reflect on what happened</T></h4>
+          <p className="mt-2"><T>
             Describe what changed without rating yourself or another actor's emotions.
-          </p>
+          </T></p>
           <Field
             id="meisner-reflection"
             label={
@@ -466,18 +467,18 @@ function WorkshopRun() {
             value={notes.next}
             onChange={(v) => update("next", v)}
           />
-          <DirectorNote short="One specific adjustment.">
+          <DirectorNote short="One specific adjustment."><T>
             Name one concrete adjustment. You can test it next time without inventing a grade.
-          </DirectorNote>
+          </T></DirectorNote>
           <div className="mt-5 flex flex-wrap gap-2">
             <button
               type="button"
               className={btnPrimary}
               disabled={!canSummarize(notes)}
               onClick={() => setStage("summary")}
-            >
+            ><T>
               Review private practice note
-            </button>
+            </T></button>
             <button
               type="button"
               className={btnSecondary}
@@ -485,33 +486,33 @@ function WorkshopRun() {
                 setExercise(mode === "partner" ? 1 : 0);
                 setStage("practice");
               }}
-            >
+            ><T>
               Back to practice
-            </button>
+            </T></button>
           </div>
         </section>
       )}
 
       {stage === "summary" && (
         <section className="mt-4" aria-label="Private practice note">
-          <h4 className="text-lg font-semibold">Your practice note</h4>
-          <p className="mt-2">
+          <h4 className="text-lg font-semibold"><T>Your practice note</T></h4>
+          <p className="mt-2"><T>
             Self-reported and NOT assessed. This note exists only in the open screen until you
             explicitly copy it. It does not save to Passport or unlock training.
-          </p>
+          </T></p>
           <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded border border-border bg-secondary p-3 text-sm">
             {practiceNote(mode, notes)}
           </pre>
           <div className="mt-4 flex flex-wrap gap-2">
-            <button type="button" className={btnPrimary} onClick={() => void copy()}>
+            <button type="button" className={btnPrimary} onClick={() => void copy()}><T>
               Copy my note
-            </button>
-            <button type="button" className={btnSecondary} onClick={() => setStage("reflect")}>
+            </T></button>
+            <button type="button" className={btnSecondary} onClick={() => setStage("reflect")}><T>
               Revise
-            </button>
-            <button type="button" className={btnSecondary} onClick={reset}>
+            </T></button>
+            <button type="button" className={btnSecondary} onClick={reset}><T>
               Start a new attempt
-            </button>
+            </T></button>
           </div>
           {copyMessage && (
             <p role="status" className="mt-2 text-sm">
@@ -520,17 +521,17 @@ function WorkshopRun() {
           )}
           <p className="mt-4 text-sm">
             You can also try the{" "}
-            <Link to="/scene" className="underline">
+            <Link to="/scene" className="underline"><T>
               scripted Living Scene
-            </Link>
+            </T></Link><T>
             , which is separate from this partnered exercise.
-          </p>
+          </T></p>
         </section>
       )}
-      <p className="mt-5 border-t border-border pt-3 text-xs text-muted-foreground">
+      <p className="mt-5 border-t border-border pt-3 text-xs text-muted-foreground"><T>
         SLAMS independent editorial adaptation, pending faculty review. No acting evaluation, saved
         progression, official credential or term completion.
-      </p>
+      </T></p>
     </section>
   );
 }
