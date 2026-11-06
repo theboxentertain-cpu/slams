@@ -64,10 +64,11 @@ export function Unavailable({
   children: ReactNode;
   title?: string;
 }) {
+  const { t } = useLanguage();
   return (
     <section className="availability-note">
-      <h2>{title}</h2>
-      <p>{children}</p>
+      <h2>{t(title)}</h2>
+      <p>{typeof children === "string" ? t(children) : children}</p>
     </section>
   );
 }
