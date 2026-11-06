@@ -1,0 +1,35 @@
+name: One-time formatting of Meisner practice PR
+
+on:
+  push:
+    branches: [feat/meisner-guided-repetition-log]
+    paths: [.github/workflows/format-meisner-once.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.repository == 'theboxentertain-cpu/slams'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/meisner-guided-repetition-log
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Format changed Meisner sources and tests
+        run: |
+          bunx prettier --write src/data/meisner-workshop-one.ts src/components/foundation/MeisnerWorkshopOne.tsx src/test/meisner-workshop-ui.test.tsx src/test/meisner-guided-repetitions.test.ts src/lib/arabic.ts
+          git diff --check
+      - name: Commit formatting to draft branch only
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -u src
+            git commit -m "style: format Meisner practice tracker and tests"
+            git push origin HEAD:feat/meisner-guided-repetition-log
+          fi
