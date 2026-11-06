@@ -181,7 +181,11 @@ export function DirectorsOffice() {
         </div>
       </header>
       {settingsOpen && (
-        <section id="office-settings" aria-label={t("Office preferences")} className="office-settings">
+        <section
+          id="office-settings"
+          aria-label={t("Office preferences")}
+          className="office-settings"
+        >
           <DirectorToggle />
           <LanguageSwitch />
           <button
