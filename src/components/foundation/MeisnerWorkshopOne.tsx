@@ -12,6 +12,13 @@ import {
   canContinue,
   canSummarize,
   practiceNote,
+  addPracticeRep,
+  canLogPracticeRep,
+  hasEnoughPracticeRounds,
+  practiceFields,
+  roundCount,
+  EDITORIAL_PRACTICE_ROUNDS,
+  type PracticeRep,
   type Category,
   type Mode,
   type Notes,
@@ -72,6 +79,7 @@ function WorkshopRun() {
   const [boundaries, setBoundaries] = useState(false);
   const [exercise, setExercise] = useState<0 | 1>(0);
   const [notes, setNotes] = useState<Notes>(emptyNotes);
+  const [rounds, setRounds] = useState<PracticeRep[]>([]);
   const [copyMessage, setCopyMessage] = useState("");
 
   const lesson = WORKSHOP_ONE.lessons[lessonNumber]!;
@@ -97,14 +105,27 @@ function WorkshopRun() {
     setBoundaries(false);
     setExercise(0);
     setNotes(emptyNotes());
+    setRounds([]);
     setCopyMessage("");
+  };
+  const logRound = () => {
+    if (!canLogPracticeRep(mode, exercise, notes, rounds)) return;
+    const nextCount = roundCount(mode, exercise, rounds) + 1;
+    setRounds((previous) => addPracticeRep(mode, exercise, notes, previous));
+    if (nextCount < EDITORIAL_PRACTICE_ROUNDS) {
+      setNotes((previous) => {
+        const next = { ...previous };
+        for (const field of practiceFields(mode, exercise)) next[field] = "";
+        return next;
+      });
+    }
   };
   const copy = async () => {
     try {
       if (typeof navigator === "undefined" || !navigator.clipboard) {
         setCopyMessage("Clipboard unavailable. Select the note and copy it manually.");
       } else {
-        await navigator.clipboard.writeText(practiceNote(mode, notes));
+        await navigator.clipboard.writeText(practiceNote(mode, notes, rounds));
         setCopyMessage("Copied. Your note was not saved to SLAMS.");
       }
     } catch {
@@ -289,7 +310,11 @@ function WorkshopRun() {
                 type="radio"
                 name="meisner-practice-mode"
                 checked={mode === "solo"}
-                onChange={() => setMode("solo")}
+                onChange={() => {
+                  setMode("solo");
+                  setRounds([]);
+                  setNotes(emptyNotes());
+                }}
               />
               <T>Solo preparation only</T>
             </label>
@@ -298,7 +323,11 @@ function WorkshopRun() {
                 type="radio"
                 name="meisner-practice-mode"
                 checked={mode === "partner"}
-                onChange={() => setMode("partner")}
+                onChange={() => {
+                  setMode("partner");
+                  setRounds([]);
+                  setNotes(emptyNotes());
+                }}
               />
               <T>With a real human partner</T>
             </label>
@@ -458,11 +487,27 @@ function WorkshopRun() {
               />
             </>
           )}
+          <div className="mt-4 rounded border border-border bg-secondary p-3">
+            <p role="status" aria-live="polite" className="font-semibold">
+              Practice round {roundCount(mode, exercise, rounds)} of {EDITORIAL_PRACTICE_ROUNDS} recorded
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Three distinct written rounds are the SLAMS preview target, not an official Meisner requirement or an evaluation. Nothing is saved unless you explicitly copy your note.
+            </p>
+            <button
+              type="button"
+              className={`${btnSecondary} mt-3`}
+              disabled={!canLogPracticeRep(mode, exercise, notes, rounds)}
+              onClick={logRound}
+            >
+              Record this practice round
+            </button>
+          </div>
           <div className="mt-5 flex flex-wrap gap-2">
             <button
               type="button"
               className={btnPrimary}
-              disabled={!canContinue(mode, exercise, notes)}
+              disabled={!hasEnoughPracticeRounds(mode, exercise, rounds)}
               onClick={() => {
                 if (mode === "partner" && exercise === 0) setExercise(1);
                 else setStage("reflect");
@@ -550,7 +595,7 @@ function WorkshopRun() {
             </T>
           </p>
           <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded border border-border bg-secondary p-3 text-sm">
-            {practiceNote(mode, notes)}
+            {practiceNote(mode, notes, rounds)}
           </pre>
           <div className="mt-4 flex flex-wrap gap-2">
             <button type="button" className={btnPrimary} onClick={() => void copy()}>
