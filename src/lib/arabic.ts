@@ -1017,4 +1017,8 @@ export const arabic: Record<string, string> = {
   "QUIET": "هادئ",
   "OFF": "إيقاف",
   "English": "English",
+  "Working…": "جارٍ التنفيذ…",
+  "Passport and audition notes save to your account. Director settings stay on this device.": "تُحفظ ملاحظات جواز الممثل وتجارب الأداء في حسابك. وتظل إعدادات المخرج على هذا الجهاز.",
+  "year": "سنة",
+  "years": "سنوات",
 };
