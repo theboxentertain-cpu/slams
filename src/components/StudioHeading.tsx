@@ -1,3 +1,4 @@
+import { T, useLanguage } from "@/lib/i18n";
 import type { ReactNode } from "react";
 import { Drama } from "lucide-react";
 import { SectionCoach } from "./office/SectionCoach";
@@ -34,6 +35,7 @@ export function StudioHeading({
   world: StudioWorld;
   performing?: boolean;
 }) {
+  const { t } = useLanguage();
   const book = BOOK_DESIGNS.find((item) => item.slug === school);
   const hasDirector = !performing;
   const scenic = world === "conservatory" || world === "baseline" || (world === "school" && !!book);
@@ -71,7 +73,7 @@ export function StudioHeading({
         {eyebrow && <p className="studio-eyebrow">{eyebrow}</p>}
         <h1>{title}</h1>
         <span className="studio-title-stroke" aria-hidden="true" />
-        {scenic && description && <p className="training-heading-description">{description}</p>}
+        {scenic && description && <p className="training-heading-description">{t(description)}</p>}
       </div>
       {hasDirector && <SectionCoach key={world} section={world} compact={scenic} />}
       {book && (
@@ -88,7 +90,7 @@ export function StudioHeading({
         <span className="studio-passport-cover" aria-hidden="true">
           <Drama />
           <strong>SLAMS</strong>
-          <small>ACTOR’S PASSPORT</small>
+          <small><T>ACTOR’S PASSPORT</T></small>
         </span>
       )}
     </header>

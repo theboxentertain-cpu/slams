@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import type { CSSProperties, Ref } from "react";
@@ -88,10 +89,10 @@ export function BookCover({
     >
       <span className="book-pages" aria-hidden="true" />
       <span className="book-cover">
-        <span className="book-edition">THE ACTOR’S LIBRARY</span>
+        <span className="book-edition"><T>THE ACTOR’S LIBRARY</T></span>
         <span className="book-title">{book.title}</span>
         <CoverDrawing motif={book.motif} />
-        <span className="book-footer">SLAMS · CONSERVATORY</span>
+        <span className="book-footer"><T>SLAMS · CONSERVATORY</T></span>
       </span>
       <span className="book-spine" aria-hidden="true" />
     </span>
@@ -120,10 +121,10 @@ export function DeskBooks({
         ))}
       </span>
       <span className="object-label">
-        <strong>
-          Explore the eight schools <ArrowUpRight aria-hidden="true" size={14} />
+        <strong><T>
+          Explore the eight schools </T><ArrowUpRight aria-hidden="true" size={14} />
         </strong>
-        <span className="book-shelf-subtitle">Open the actor’s library</span>
+        <span className="book-shelf-subtitle"><T>Open the actor’s library</T></span>
       </span>
     </button>
   );
@@ -153,12 +154,12 @@ export function SchoolBooks({
         }}
       >
         <div className="library-heading">
-          <span className="office-kicker">FROM THE DIRECTOR’S DESK</span>
-          <DialogTitle>The actor’s library.</DialogTitle>
-          <DialogDescription>
+          <span className="office-kicker"><T>FROM THE DIRECTOR’S DESK</T></span>
+          <DialogTitle><T>The actor’s library.</T></DialogTitle>
+          <DialogDescription><T>
             Eight schools. Pick a book, find your way in. The curriculum remains provisional; only
             reviewed material can be completed.
-          </DialogDescription>
+          </T></DialogDescription>
         </div>
         <div className="library-grid">
           {BOOK_DESIGNS.map((book) => (
@@ -177,13 +178,13 @@ export function SchoolBooks({
                   {book.school.years} years · {totalTerms(book.school)} terms
                 </span>
                 <span className="library-school-focus">{book.school.focus}</span>
-                <small>Provisional structure · Open school for availability</small>
+                <small><T>Provisional structure · Open school for availability</T></small>
               </span>
             </Link>
           ))}
         </div>
-        <Link className="library-all-link" to="/conservatory" onClick={() => onOpenChange(false)}>
-          View the full Conservatory <ArrowUpRight aria-hidden="true" size={12} />
+        <Link className="library-all-link" to="/conservatory" onClick={() => onOpenChange(false)}><T>
+          View the full Conservatory </T><ArrowUpRight aria-hidden="true" size={12} />
         </Link>
       </DialogContent>
     </Dialog>

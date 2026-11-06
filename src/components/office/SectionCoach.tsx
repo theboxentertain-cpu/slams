@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,14 +44,14 @@ export function SectionCoach({
           }
           className="section-coach-portrait"
         />
-        {compact && <span className="section-coach-label">The Director</span>}
+        {compact && <span className="section-coach-label"><T>The Director</T></span>}
         <span className="section-coach-cue" aria-hidden="true">
           {open ? <X size={17} /> : <MessageCircle size={17} />}
         </span>
       </Button>
       {open && (
         <p className="section-coach-note" role="status">
-          <strong>The Director</strong>
+          <strong><T>The Director</T></strong>
           {mode === "quiet" ? coach.short : coach.note}
         </p>
       )}

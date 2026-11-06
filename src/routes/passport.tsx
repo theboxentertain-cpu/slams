@@ -1,3 +1,4 @@
+import { T, useLanguage } from "@/lib/i18n";
 import { createFileRoute, Link, type SearchSchemaInput } from "@tanstack/react-router";
 import { useState } from "react";
 import { validateTab } from "@/lib/foundation";
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/passport")({
 });
 
 function Passport() {
+  const { t } = useLanguage();
   const { tab } = Route.useSearch();
   const navigate = Route.useNavigate();
   const {
@@ -56,27 +58,27 @@ function Passport() {
         {(current) =>
           current !== "journey" ? (
             <Unavailable>
-              {current === "evidence"
+              {t(current === "evidence"
                 ? "Your saved text reflections are available in Journey. Recording and evidence attachments are not implemented."
                 : current === "badges"
                   ? "No competence badges are awarded. Reviewed achievement criteria are not available."
-                  : "Portfolio projects and assessment records are in development."}
+                  : "Portfolio projects and assessment records are in development.")}
             </Unavailable>
           ) : (
             <div>
               {!sessionLoading && !signedIn && (
                 <p className="mb-4 rounded border border-warning p-3 text-sm">
                   Local-only: entries live in this browser. Clearing browser data deletes them.{" "}
-                  <Link to="/auth" className="underline">
+                  <Link to="/auth" className="underline"><T>
                     Sign in to save them to your account.
-                  </Link>
+                  </T></Link>
                 </p>
               )}
               {signedIn && (
-                <p className="mb-4 rounded border border-border p-3 text-sm">
+                <p className="mb-4 rounded border border-border p-3 text-sm"><T>
                   Entries are saved to your account. Cross-device behavior still requires live
                   verification.
-                </p>
+                </T></p>
               )}
               {signedIn && localCount > 0 && (
                 <div className="mb-4 rounded border border-amber p-3 text-sm">
@@ -89,7 +91,7 @@ function Passport() {
                     disabled={importing}
                     onClick={handleImport}
                   >
-                    {importing ? "Importing…" : "Import browser entries to my account"}
+                    {t(importing ? "Importing…" : "Import browser entries to my account")}
                   </button>
                   {importMsg && (
                     <p role="status" className="mt-2">
@@ -105,13 +107,13 @@ function Passport() {
               )}
               {importMsg && localCount === 0 && <p role="status">{importMsg}</p>}
               {!loaded ? (
-                <p role="status">Loading…</p>
+                <p role="status"><T>Loading…</T></p>
               ) : entries.length === 0 ? (
                 <div className="panel p-4 text-center">
-                  <p>No rehearsals saved yet.</p>
-                  <Link to="/scene" className={`${btnPrimary} mt-3`}>
+                  <p><T>No rehearsals saved yet.</T></p>
+                  <Link to="/scene" className={`${btnPrimary} mt-3`}><T>
                     Start rehearsal
-                  </Link>
+                  </T></Link>
                 </div>
               ) : (
                 <>
@@ -122,35 +124,35 @@ function Passport() {
                           {new Date(e.date).toLocaleString()} · “Stay” demo
                         </p>
                         <p className="mt-1">
-                          <b>Tactic:</b> {e.tactic}
+                          <b><T>Tactic:</T></b> {t(e.tactic)}
                         </p>
                         <p>
-                          <b>Intervention:</b> {e.intervention}
+                          <b><T>Intervention:</T></b> {e.intervention}
                         </p>
                         <p>
-                          <b>Exercise:</b> {e.exerciseNote}
+                          <b><T>Exercise:</T></b> {e.exerciseNote}
                         </p>
                         <p>
-                          <b>Obstacle:</b> {e.obstacle}
+                          <b><T>Obstacle:</T></b> {t(e.obstacle)}
                         </p>
                         <p>
-                          <b>Retake:</b> {e.retakeLine}
+                          <b><T>Retake:</T></b> {e.retakeLine}
                         </p>
                         <p className="mt-2 italic">“{e.reflection}”</p>
-                        <button className={`${btnSecondary} mt-2`} onClick={() => remove(e.id)}>
+                        <button className={`${btnSecondary} mt-2`} onClick={() => remove(e.id)}><T>
                           Delete entry
-                        </button>
+                        </T></button>
                       </li>
                     ))}
                   </ul>
                   <button
                     className={`${btnSecondary} mt-4`}
                     onClick={() => {
-                      if (confirm("Delete all Passport entries?")) clear();
+                      if (confirm(t("Delete all Passport entries?"))) clear();
                     }}
-                  >
+                  ><T>
                     Delete all Passport entries
-                  </button>
+                  </T></button>
                 </>
               )}
             </div>

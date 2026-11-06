@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { DirectorToggle, Page, btnPrimary } from "@/components/slams";
@@ -28,35 +29,35 @@ function Director() {
       <div className="director-profile">
         <DirectorPortrait expression={expression} />
         <div>
-          <p className="director-profile-quote">
+          <p className="director-profile-quote"><T>
             “I can’t do the work for you.
-            <br />
+            </T><br /><T>
             Terrible arrangement, I know.”
-          </p>
-          <p>
+          </T></p>
+          <p><T>
             Your studio guide. Dry observations, a little perspective, and the good sense to stay
             quiet during a take.
-          </p>
+          </T></p>
           <div className="director-settings-block">
-            <h2>How much Director?</h2>
+            <h2><T>How much Director?</T></h2>
             <DirectorToggle />
-            <p>
+            <p><T>
               ON gives you the full note. QUIET keeps it brief. OFF leaves you in peace. Your
               preference stays in this browser.
-            </p>
+            </T></p>
           </div>
-          <Link to="/scene" className={btnPrimary}>
-            Back to the work <span aria-hidden="true">↗</span>
+          <Link to="/scene" className={btnPrimary}><T>
+            Back to the work </T><span aria-hidden="true">↗</span>
           </Link>
         </div>
       </div>
       <details className="director-expression-gallery">
-        <summary>The many faces of a very long day</summary>
-        <p>
+        <summary><T>The many faces of a very long day</T></summary>
+        <p><T>
           Character expressions, not an assessment of your acting. SLAMS uses scripted scene
           responses and your confirmed saved records; it does not listen to or grade your
           performance.
-        </p>
+        </T></p>
         <div>
           {DIRECTOR_EXPRESSIONS.filter((state) => state !== "master").map((state) => (
             <button

@@ -1,3 +1,4 @@
+import { T, useLanguage } from "@/lib/i18n";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff } from "lucide-react";
@@ -16,6 +17,7 @@ export function AccountForm({
   welcome?: boolean;
 }) {
   const { user, loading, signOut } = useSession();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const active = useRef(true);
   useEffect(() => {
@@ -94,11 +96,11 @@ export function AccountForm({
       if (active.current) setBusy(false);
     }
   }
-  if (loading) return <p role="status">Checking your account…</p>;
+  if (loading) return <p role="status"><T>Checking your account…</T></p>;
   if (user)
     return (
       <section className="account-form">
-        <h2>Signed in</h2>
+        <h2><T>Signed in</T></h2>
         <p>{user.email}</p>
         <Link
           className={welcome ? "welcome-primary" : "account-submit"}
@@ -107,7 +109,7 @@ export function AccountForm({
             enterStudio();
           }}
         >
-          {welcome ? "Start a first rehearsal" : "Back to the studio"}
+          {t(welcome ? "Start a first rehearsal" : "Back to the studio")}
         </Link>
         <button
           className="account-secondary"
@@ -122,27 +124,29 @@ export function AccountForm({
               if (active.current) setBusy(false);
             }
           }}
-        >
+        ><T>
           Sign out
-        </button>
-        {error && <p role="alert">{error}</p>}
+        </T></button>
+        {error && <p role="alert">{t(error)}</p>}
       </section>
     );
   return (
     <section className="account-form">
       <h2>
-        {mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Reset password"}
+        {t(mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Reset password")}
       </h2>
       <p>
-        {mode === "forgot"
-          ? "We’ll email you a link to set a new password."
-          : "Save your Passport, rehearsal reflections and audition preparation to your account."}
+        {t(
+          mode === "forgot"
+            ? "We’ll email you a link to set a new password."
+            : "Save your Passport, rehearsal reflections and audition preparation to your account.",
+        )}
       </p>
       <form onSubmit={submit} className="account-fields">
         {mode === "signup" && (
           <label>
-            <span>
-              Full name <small>(optional)</small>
+            <span><T>
+              Full name </T><small><T>(optional)</T></small>
             </span>
             <input
               autoComplete="name"
@@ -153,9 +157,9 @@ export function AccountForm({
             />
           </label>
         )}
-        <label>
+        <label><T>
           Email
-          <input
+          </T><input
             type="email"
             required
             autoComplete="email"
@@ -165,9 +169,9 @@ export function AccountForm({
           />
         </label>
         {mode !== "forgot" && (
-          <label>
+          <label><T>
             Password
-            <span className="password-control">
+            </T><span className="password-control">
               <input
                 type={showPassword ? "text" : "password"}
                 required
@@ -179,7 +183,7 @@ export function AccountForm({
               />
               <button
                 type="button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={t(showPassword ? "Hide password" : "Show password")}
                 aria-pressed={showPassword}
                 disabled={busy}
                 onClick={() => setShowPassword(!showPassword)}
@@ -191,9 +195,9 @@ export function AccountForm({
         )}
         {mode === "signup" && (
           <>
-            <label>
+            <label><T>
               Confirm password
-              <span className="password-control">
+              </T><span className="password-control">
                 <input
                   type={showConfirm ? "text" : "password"}
                   required
@@ -204,7 +208,7 @@ export function AccountForm({
                 />
                 <button
                   type="button"
-                  aria-label={showConfirm ? "Hide confirmation" : "Show confirmation"}
+                  aria-label={t(showConfirm ? "Hide confirmation" : "Show confirmation")}
                   aria-pressed={showConfirm}
                   disabled={busy}
                   onClick={() => setShowConfirm(!showConfirm)}
@@ -214,21 +218,21 @@ export function AccountForm({
               </span>
             </label>
             <p className="password-hint">
-              At least 8 characters.{" "}
+              {t("At least 8 characters.")}{" "}
               {password.length >= 8
-                ? "Length requirement met."
+                ? t("Length requirement met.")
                 : `${Math.min(password.length, 8)} of 8 entered.`}
             </p>
           </>
         )}
         {error && (
           <p role="alert" className="account-error">
-            {error}
+            {t(error)}
           </p>
         )}
         {notice && (
           <p role="status" className="account-notice">
-            {notice}
+            {t(notice)}
           </p>
         )}
         <button
@@ -236,40 +240,42 @@ export function AccountForm({
           className={welcome ? "welcome-primary" : "account-submit"}
           disabled={busy}
         >
-          {busy
-            ? "Working…"
-            : mode === "signup"
-              ? "Create account"
-              : mode === "forgot"
-                ? "Send reset link"
-                : "Sign in"}
+          {t(
+            busy
+              ? "Working…"
+              : mode === "signup"
+                ? "Create account"
+                : mode === "forgot"
+                  ? "Send reset link"
+                  : "Sign in",
+          )}
         </button>
       </form>
       <div className="account-mode-links">
         {mode !== "signin" && (
-          <button disabled={busy} onClick={() => changeMode("signin")}>
+          <button disabled={busy} onClick={() => changeMode("signin")}><T>
             Sign in
-          </button>
+          </T></button>
         )}
         {mode !== "signup" && (
-          <button disabled={busy} onClick={() => changeMode("signup")}>
+          <button disabled={busy} onClick={() => changeMode("signup")}><T>
             Create account
-          </button>
+          </T></button>
         )}
         {mode !== "forgot" && (
-          <button disabled={busy} onClick={() => changeMode("forgot")}>
+          <button disabled={busy} onClick={() => changeMode("forgot")}><T>
             Forgot password?
-          </button>
+          </T></button>
         )}
       </div>
       {welcome && (
         <>
-          <p className="account-provider-note">
+          <p className="account-provider-note"><T>
             Email sign-in is available. Social sign-in is not enabled.
-          </p>
-          <Link className="account-guest" to="/scene" onClick={enterStudio}>
+          </T></p>
+          <Link className="account-guest" to="/scene" onClick={enterStudio}><T>
             Continue as guest
-          </Link>
+          </T></Link>
         </>
       )}
     </section>

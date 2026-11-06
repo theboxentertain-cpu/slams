@@ -12,6 +12,7 @@ import {
 import { PRIMARY_NAVIGATION, primarySection } from "@/lib/foundation";
 import { useOfficePreferences } from "@/lib/office-preferences";
 import { useSession } from "@/lib/session";
+import { LanguageSwitch, useLanguage } from "@/lib/i18n";
 import { enterStudio, useStudioEntry } from "@/lib/studio-entry";
 import {
   DropdownMenu,
@@ -28,6 +29,7 @@ const icons = {
   stuck: ScrollText,
 };
 export function AppShell({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
   const nav = useRef<HTMLElement>(null);
   const location = useLocation();
   const active = primarySection(location.pathname);
@@ -72,11 +74,11 @@ export function AppShell({ children }: { children: ReactNode }) {
       data-welcome={cinematic ? "true" : "false"}
     >
       <a className="skip-link" href="#page-content">
-        Skip to content
+        {t("Skip to content")}
       </a>
       {children}
       {!cinematic && (
-        <nav ref={nav} className="primary-navigation" aria-label="Main studio navigation">
+        <nav ref={nav} className="primary-navigation" aria-label={t("Main studio navigation")}>
           {PRIMARY_NAVIGATION.map((item) => {
             const Icon = icons[item.icon];
             return (
@@ -86,7 +88,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 aria-current={active === item.to ? "page" : undefined}
               >
                 <Icon aria-hidden="true" />
-                <span>{item.label}</span>
+                <span>{t(item.label)}</span>
               </Link>
             );
           })}
@@ -104,6 +106,7 @@ export function ProfileMenu({
   identity?: boolean;
 }) {
   const { user, loading } = useSession();
+  const { t } = useLanguage();
   const name =
     typeof user?.user_metadata?.["display_name"] === "string"
       ? user.user_metadata["display_name"].trim().slice(0, 60)
@@ -112,16 +115,20 @@ export function ProfileMenu({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={`profile-trigger ${className}`}
-        aria-label="Open profile menu"
+        aria-label={t("Open profile menu")}
       >
         <CircleUserRound size={28} aria-hidden="true" />
         {identity && (
           <>
             <span className="office-profile-identity">
               <strong>
-                {loading ? "Checking account…" : user ? name || "Your account" : "Guest actor"}
+                {loading
+                  ? t("Checking account…")
+                  : user
+                    ? name || t("Your account")
+                    : t("Guest actor")}
               </strong>
-              <small>{user ? "Your studio" : "Browser-local studio"}</small>
+              <small>{t(user ? "Your studio" : "Browser-local studio")}</small>
             </span>
             <ChevronDown size={15} aria-hidden="true" />
           </>
@@ -129,13 +136,13 @@ export function ProfileMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="profile-menu">
         <p className="px-3 py-2 text-xs text-muted-foreground">
-          {loading ? "Checking account…" : user ? "Your studio" : "Browser-local studio"}
+          {t(loading ? "Checking account…" : user ? "Your studio" : "Browser-local studio")}
         </p>
         <DropdownMenuItem asChild>
-          <Link to="/passport">Actor’s Passport</Link>
+          <Link to="/passport">{t("Actor’s Passport")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/progress">Progress</Link>
+          <Link to="/progress">{t("Progress")}</Link>
         </DropdownMenuItem>
         {(
           [
@@ -147,22 +154,25 @@ export function ProfileMenu({
         ).map(([label, tab]) => (
           <DropdownMenuItem key={tab} asChild>
             <Link to="/settings" search={{ tab }}>
-              {label}
+              {t(label)}
             </Link>
           </DropdownMenuItem>
         ))}
         <DropdownMenuItem asChild>
-          <Link to="/director">Director controls</Link>
+          <Link to="/director">{t("Director controls")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/help">Help</Link>
+          <Link to="/help">{t("Help")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/welcome">Welcome & actor setup</Link>
+          <Link to="/welcome">{t("Welcome & actor setup")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/auth">{user ? "Manage account / sign out" : "Sign in"}</Link>
+          <Link to="/auth">{t(user ? "Manage account / sign out" : "Sign in")}</Link>
         </DropdownMenuItem>
+        <div className="px-3 py-2" role="group" aria-label={t("Language")}>
+          <LanguageSwitch />
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

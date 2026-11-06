@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,29 +65,29 @@ function ResetPassword() {
         <Wordmark small />
       </Link>
       <main id="page-content" tabIndex={-1} className="panel mt-8 w-full max-w-sm p-6">
-        <h1 className="text-xl font-bold">Set a new password</h1>
+        <h1 className="text-xl font-bold"><T>Set a new password</T></h1>
         {valid === null ? (
-          <p role="status" className="mt-2 text-sm">
+          <p role="status" className="mt-2 text-sm"><T>
             Checking your reset link…
-          </p>
+          </T></p>
         ) : valid === false ? (
           <>
-            <p role="alert" className="mt-2 text-sm text-crimson">
+            <p role="alert" className="mt-2 text-sm text-crimson"><T>
               This reset link is invalid or has expired. Request a new one.
-            </p>
-            <Link to="/auth" className={`${btnPrimary} mt-4`}>
+            </T></p>
+            <Link to="/auth" className={`${btnPrimary} mt-4`}><T>
               Back to sign in
-            </Link>
+            </T></Link>
           </>
         ) : done ? (
-          <p role="status" className="mt-2 text-sm text-amber">
+          <p role="status" className="mt-2 text-sm text-amber"><T>
             Password updated. Taking you back to the studio…
-          </p>
+          </T></p>
         ) : (
           <form className="mt-4 grid gap-3" onSubmit={submit}>
-            <label className="grid gap-1 text-sm">
+            <label className="grid gap-1 text-sm"><T>
               New password
-              <input
+              </T><input
                 type="password"
                 required
                 minLength={8}
@@ -96,9 +97,9 @@ function ResetPassword() {
                 className="rounded border border-input bg-background p-2"
               />
             </label>
-            <label className="grid gap-1 text-sm">
+            <label className="grid gap-1 text-sm"><T>
               Confirm new password
-              <input
+              </T><input
                 type="password"
                 required
                 minLength={8}

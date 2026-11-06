@@ -12,6 +12,7 @@ import {
   MoveHorizontal,
 } from "lucide-react";
 import { useSession } from "@/lib/session";
+import { useLanguage } from "@/lib/i18n";
 import { enterStudio } from "@/lib/studio-entry";
 import { BaselineContent } from "@/components/foundation/BaselinePage";
 import baselineDirector from "@/assets/premium/baseline-director.webp";
@@ -21,6 +22,7 @@ import { BookCover, SchoolBooks } from "@/components/office/SchoolBooks";
 import { WelcomeFrame } from "./WelcomeFrame";
 
 export function WelcomeLanding() {
+  const { t } = useLanguage();
   const [books, setBooks] = useState(false);
   const bookTrigger = useRef<HTMLButtonElement>(null);
   const { animate } = useOfficePreferences();
@@ -31,36 +33,37 @@ export function WelcomeLanding() {
       variant="landing"
     >
       <section className="welcome-entry" aria-labelledby="first-rehearsal-title">
-        <h2 id="first-rehearsal-title">Your first rehearsal starts here.</h2>
+        <h2 id="first-rehearsal-title">{t("Your first rehearsal starts here.")}</h2>
         <p>
-          SLAMS is your acting practice studio. Try a short, text-only scene, change your approach
-          and reflect on your retake.
+          {t(
+            "SLAMS is your acting practice studio. Try a short, text-only scene, change your approach and reflect on your retake.",
+          )}
         </p>
         <Link to="/scene" onClick={enterStudio} className="welcome-primary">
           <Play aria-hidden="true" />
-          Enter the Studio
+          {t("Enter the Studio")}
           <ArrowRight aria-hidden="true" />
         </Link>
         <p className="welcome-entry-note">
-          No account or profile needed. Guest reflections stay in this browser.
+          {t("No account or profile needed. Guest reflections stay in this browser.")}
         </p>
         <div className="welcome-account-links">
           <Link to="/auth" search={{ mode: "signin", flow: "welcome" }}>
-            Sign in
+            {t("Sign in")}
           </Link>
-          <Link to="/welcome/setup">Studio settings · optional</Link>
+          <Link to="/welcome/setup">{t("Studio settings · optional")}</Link>
         </div>
         <Link className="welcome-skip" to="/" onClick={enterStudio}>
-          Explore the Office
+          {t("Explore the Office")}
         </Link>
       </section>
       <details className="welcome-explore">
-        <summary>Explore more of the studio</summary>
+        <summary>{t("Explore more of the studio")}</summary>
         <button
           ref={bookTrigger}
           className="welcome-books"
           onClick={() => setBooks(true)}
-          aria-label="Explore the eight acting-school books"
+          aria-label={t("Explore the eight acting-school books")}
           aria-haspopup="dialog"
         >
           <span aria-hidden="true">
@@ -68,28 +71,28 @@ export function WelcomeLanding() {
               <BookCover key={book.slug} book={book} mini />
             ))}
           </span>
-          <strong>Eight schools. Find your way in.</strong>
+          <strong>{t("Eight schools. Find your way in.")}</strong>
         </button>
-        <nav className="welcome-features" aria-label="Inside the studio">
+        <nav className="welcome-features" aria-label={t("Inside the studio")}>
           <Link to="/conservatory">
             <BookOpen aria-hidden="true" />
-            <span>Eight acting schools</span>
+            <span>{t("Eight acting schools")}</span>
           </Link>
           <Link to="/rehearsal">
             <Clapperboard aria-hidden="true" />
-            <span>Rehearsal Studio</span>
+            <span>{t("Rehearsal Studio")}</span>
           </Link>
           <Link to="/work">
             <Drama aria-hidden="true" />
-            <span>Actor at Work</span>
+            <span>{t("Actor at Work")}</span>
           </Link>
           <Link to="/stuck">
             <ScrollText aria-hidden="true" />
-            <span>The Stuck Desk</span>
+            <span>{t("The Stuck Desk")}</span>
           </Link>
           <Link to="/passport">
             <IdCard aria-hidden="true" />
-            <span>Your Passport</span>
+            <span>{t("Your Passport")}</span>
           </Link>
         </nav>
       </details>
@@ -103,6 +106,7 @@ export function WelcomeLanding() {
   );
 }
 export function WelcomeAccount() {
+  const { t } = useLanguage();
   const { user, loading } = useSession();
   return (
     <WelcomeFrame
@@ -113,17 +117,17 @@ export function WelcomeAccount() {
       <section className="welcome-choice-list" aria-label="Choose how to enter">
         <Link className="welcome-primary" to="/scene" onClick={enterStudio}>
           <Play aria-hidden="true" />
-          Start a first rehearsal
+          {t("Start a first rehearsal")}
           <ArrowRight aria-hidden="true" />
         </Link>
         <p className="welcome-storage-note">
-          No account needed. Guest reflections stay in this browser.
+          {t("No account needed. Guest reflections stay in this browser.")}
         </p>
         {loading ? (
-          <p role="status">Checking account… You can rehearse while we check.</p>
+          <p role="status">{t("Checking account… You can rehearse while we check.")}</p>
         ) : user ? (
           <Link className="welcome-outline" to="/auth">
-            Manage your account
+            {t("Manage your account")}
           </Link>
         ) : (
           <div className="welcome-account-links">
@@ -131,7 +135,7 @@ export function WelcomeAccount() {
               Sign in
             </Link>
             <Link to="/auth" search={{ mode: "signup", flow: "welcome" }}>
-              Create a new account
+              {t("Create a new account")}
             </Link>
           </div>
         )}
@@ -139,10 +143,10 @@ export function WelcomeAccount() {
           Studio settings · optional
         </Link>
         <p className="welcome-planned">
-          Email sign-in is available. Google and Apple sign-in are not available yet.
+          {t("Email sign-in is available. Google and Apple sign-in are not available yet.")}
         </p>
         <details className="welcome-why">
-          <summary>Why create an account?</summary>
+          <summary>{t("Why create an account?")}</summary>
           <p>
             Keep Passport reflections and audition notes in your account. Guests can rehearse and
             save locally. Curriculum progress needs a signed-in account and reviewed, published
@@ -150,13 +154,14 @@ export function WelcomeAccount() {
           </p>
         </details>
         <Link className="welcome-skip" to="/" onClick={enterStudio}>
-          Skip to the Office
+          {t("Skip to the Office")}
         </Link>
       </section>
     </WelcomeFrame>
   );
 }
 export function ActorSetupPage() {
+  const { t } = useLanguage();
   const { preferences, updatePreferences, reducedMotion } = useOfficePreferences();
   return (
     <WelcomeFrame
@@ -166,7 +171,7 @@ export function ActorSetupPage() {
       back="/welcome"
     >
       <fieldset className="welcome-paper">
-        <legend>Your experience of the studio</legend>
+        <legend>{t("Your experience of the studio")}</legend>
         <div className="setup-preferences">
           <label>
             <input
@@ -175,7 +180,7 @@ export function ActorSetupPage() {
               onChange={() => updatePreferences({ ...preferences, motion: !preferences.motion })}
             />
             <MoveHorizontal aria-hidden="true" />
-            Reduce motion
+            {t("Reduce motion")}
           </label>
           <label>
             <input
@@ -184,12 +189,14 @@ export function ActorSetupPage() {
               onChange={() => updatePreferences({ ...preferences, sound: !preferences.sound })}
             />
             <Volume2 aria-hidden="true" />
-            Office sounds
+            {t("Office sounds")}
           </label>
         </div>
-        {reducedMotion && <p>Motion is also reduced by your device preference.</p>}
+        {reducedMotion && <p>{t("Motion is also reduced by your device preference.")}</p>}
         <p>
-          Changes apply immediately. This browser remembers them when local storage is available.
+          {t(
+            "Changes apply immediately. This browser remembers them when local storage is available.",
+          )}
         </p>
       </fieldset>
       <Link className="welcome-primary" to="/scene" onClick={enterStudio}>

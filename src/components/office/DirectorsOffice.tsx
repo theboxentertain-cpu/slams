@@ -26,6 +26,7 @@ import { OfficeDirectory } from "./OfficeDirectory";
 import { ProfileMenu } from "@/components/foundation/AppShell";
 import { TrainingSummary } from "@/components/foundation/TrainingSummary";
 import { useOfficePreferences } from "@/lib/office-preferences";
+import { LanguageSwitch, useLanguage } from "@/lib/i18n";
 import { CoachPanel } from "./CoachPanel";
 import { DeskBooks, SchoolBooks } from "./SchoolBooks";
 import { useOfficeMilestones } from "./useOfficeMilestones";
@@ -62,6 +63,7 @@ function paperSound() {
 }
 
 export function DirectorsOffice() {
+  const { t } = useLanguage();
   const [view, setView] = useState<OfficeView>("desk");
   const [visited, setVisited] = useState<OfficeView[]>(["desk"]);
   const [booksOpen, setBooksOpen] = useState(false);
@@ -146,11 +148,11 @@ export function DirectorsOffice() {
   return (
     <div className="office-shell office-premium" data-motion={animate ? "on" : "off"}>
       <header className="office-masthead">
-        <h1 className="sr-only">The Director’s Office</h1>
+        <h1 className="sr-only">{t("The Director’s Office")}</h1>
         <button
           className="office-icon-button premium-preferences"
           type="button"
-          aria-label="Office preferences"
+          aria-label={t("Office preferences")}
           aria-expanded={settingsOpen}
           aria-controls="office-settings"
           onClick={() => setSettingsOpen(!settingsOpen)}
@@ -160,7 +162,7 @@ export function DirectorsOffice() {
         <div className="office-brand">
           <span className="studio-credit">mrahmostudios presents</span>
           <Wordmark small />
-          <span className="office-tagline">The Actor’s Pocket Studio</span>
+          <span className="office-tagline">{t("The Actor’s Pocket Studio")}</span>
         </div>
         <div className="office-header-actions">
           <Link
@@ -179,8 +181,13 @@ export function DirectorsOffice() {
         </div>
       </header>
       {settingsOpen && (
-        <section id="office-settings" aria-label="Office preferences" className="office-settings">
+        <section
+          id="office-settings"
+          aria-label={t("Office preferences")}
+          className="office-settings"
+        >
           <DirectorToggle />
+          <LanguageSwitch />
           <button
             type="button"
             aria-pressed={preferences.motion}
@@ -205,7 +212,7 @@ export function DirectorsOffice() {
       <main
         id="page-content"
         tabIndex={-1}
-        aria-label="The Director’s Office"
+        aria-label={t("The Director’s Office")}
         className="office-world"
         data-view={view}
         onPointerDown={(event) => {
@@ -305,7 +312,7 @@ export function DirectorsOffice() {
                     aria-label="Actor at Work — open audition preparation"
                   >
                     <Clapperboard aria-hidden="true" />
-                    <span>Actor at Work</span>
+                    <span>{t("Actor at Work")}</span>
                     <ArrowUpRight aria-hidden="true" />
                   </Link>
                   <Link
@@ -313,7 +320,7 @@ export function DirectorsOffice() {
                     className="reference-rehearsal-sign"
                     aria-label="Go to the rehearsal studio"
                   >
-                    <span>Rehearse</span>
+                    <span>{t("Rehearse")}</span>
                     <ArrowRight size={18} aria-hidden="true" />
                   </Link>
                   <button
@@ -325,8 +332,8 @@ export function DirectorsOffice() {
                   >
                     <DirectorPortrait expression={expression} className="premium-coach-seal" />
                     <span>
-                      <strong>The Director</strong>
-                      <small>Your reluctant accomplice</small>
+                      <strong>{t("The Director")}</strong>
+                      <small>{t("Your reluctant accomplice")}</small>
                     </span>
                     <ArrowUpRight size={16} aria-hidden="true" />
                   </button>
@@ -336,10 +343,10 @@ export function DirectorsOffice() {
                 <section className="premium-bookcase" aria-label="The Conservatory bookcase">
                   <div className="premium-section-label">
                     <span />
-                    The Conservatory
+                    {t("The Conservatory")}
                     <span />
                   </div>
-                  <p>Eight schools. Eight ways into the work.</p>
+                  <p>{t("Eight schools. Eight ways into the work.")}</p>
                   <DeskBooks buttonRef={booksTrigger} onOpen={() => openBooks()} />
                 </section>
               </>
@@ -362,22 +369,22 @@ export function DirectorsOffice() {
           <nav className="office-wall-shortcuts" aria-label="Continue from the Work Wall">
             <button type="button" onClick={() => selectView("corner", true)}>
               <Clapperboard aria-hidden="true" />
-              <strong>Rehearsal Corner</strong>
+              <strong>{t("Rehearsal Corner")}</strong>
               <span>Practice · Perform · Reflect</span>
             </button>
             <Link to="/scene">
               <Play aria-hidden="true" />
-              <strong>Living Scene</strong>
+              <strong>{t("Living Scene")}</strong>
               <span>Try a different approach</span>
             </Link>
             <Link to="/passport">
               <IdCard aria-hidden="true" />
-              <strong>Rehearsal notes</strong>
-              <span>Your saved reflections</span>
+              <strong>{t("Rehearsal notes")}</strong>
+              <span>{t("Your saved reflections")}</span>
             </Link>
             <Link to="/work/audition">
               <NotebookPen aria-hidden="true" />
-              <strong>Audition desk</strong>
+              <strong>{t("Audition desk")}</strong>
               <span>Prepare your next audition</span>
             </Link>
           </nav>
@@ -390,20 +397,20 @@ export function DirectorsOffice() {
           <nav aria-label="Supporting studio tools">
             <Link to="/passport">
               <IdCard aria-hidden="true" />
-              <strong>Actor’s Passport</strong>
+              <strong>{t("Actor’s Passport")}</strong>
               <span>Your saved reflections</span>
               <ArrowUpRight aria-hidden="true" />
             </Link>
             <Link to="/matrix">
               <BookOpen aria-hidden="true" />
-              <strong>Technique Matrix</strong>
-              <span>Reviewed comparisons in development</span>
+              <strong>{t("Technique Matrix")}</strong>
+              <span>{t("Reviewed comparisons in development")}</span>
               <ArrowUpRight aria-hidden="true" />
             </Link>
             <Link to="/director">
               <Drama aria-hidden="true" />
               <strong>The Director</strong>
-              <span>Modes &amp; studio guidance</span>
+              <span>{t("Modes & studio guidance")}</span>
               <ArrowUpRight aria-hidden="true" />
             </Link>
           </nav>

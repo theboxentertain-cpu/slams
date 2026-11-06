@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { createFileRoute, Link, type SearchSchemaInput } from "@tanstack/react-router";
 import { Wordmark } from "@/components/slams";
 import { AccountForm } from "@/components/welcome/AccountForm";
@@ -55,11 +56,11 @@ function Auth() {
         <Wordmark small />
       </Link>
       <main id="page-content" tabIndex={-1} className="standard-auth-panel">
-        <h1 className="sr-only">Your SLAMS account</h1>
+        <h1 className="sr-only"><T>Your SLAMS account</T></h1>
         {form}
-        <Link className="account-tour" to="/welcome">
+        <Link className="account-tour" to="/welcome"><T>
           New to the studio? Take a look.
-        </Link>
+        </T></Link>
       </main>
     </div>
   );

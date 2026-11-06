@@ -54,6 +54,14 @@ export function useLanguage() {
   return { ...context, t: (source: string) => translateText(source, context.locale) };
 }
 
+/** Translate a known, authored JSX label without adding a layout element.
+ * Do not pass user-entered values, route identifiers or stored records.
+ */
+export function T({ children }: { children: string }) {
+  const { t } = useLanguage();
+  return <>{t(children)}</>;
+}
+
 /** Keeps mixed JSX text reactive without translating user-authored values. */
 export function useTranslation() {
   const { t, locale } = useLanguage();

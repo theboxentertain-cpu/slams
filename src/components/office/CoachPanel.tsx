@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { DirectorToggle } from "@/components/slams";
@@ -26,19 +27,19 @@ export function CoachPanel({
           onReturnFocus();
         }}
       >
-        <DialogTitle>The Acting Coach</DialogTitle>
-        <DialogDescription>
+        <DialogTitle><T>The Acting Coach</T></DialogTitle>
+        <DialogDescription><T>
           Your reluctant accomplice. Set the level of company, then get back to the work.
-        </DialogDescription>
+        </T></DialogDescription>
         <DirectorPortrait expression={expression} />
         <DirectorToggle />
-        <p>
+        <p><T>
           Comments stay silent during takes. Responses use scripted choices and confirmed records,
           never invented performance analysis.
-        </p>
-        <Link to="/director" onClick={() => onOpenChange(false)}>
+        </T></p>
+        <Link to="/director" onClick={() => onOpenChange(false)}><T>
           Meet the Director and explore controls
-        </Link>
+        </T></Link>
       </DialogContent>
     </Dialog>
   );

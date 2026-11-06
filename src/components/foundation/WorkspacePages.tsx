@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Page, btnPrimary, btnSecondary } from "@/components/slams";
@@ -12,25 +13,25 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
   const prep = useAuditionPrep();
   return (
     <Page title="Actor at Work" eyebrow="DO THE WORK" backTo="/" world="work">
-      <p className="section-intro">
+      <p className="section-intro"><T>
         Practical preparation for the room. Start with your own circumstances and playable choices.
-      </p>
+      </T></p>
       {tab === "auditions" ? (
         <section className="foundation-stack">
-          <h2>Your audition preparation</h2>
+          <h2><T>Your audition preparation</T></h2>
           {!prep.loaded ? (
-            <p role="status">Loading audition notes…</p>
+            <p role="status"><T>Loading audition notes…</T></p>
           ) : prep.error ? (
-            <p role="alert">Your audition notes could not be loaded. Open preparation to retry.</p>
+            <p role="alert"><T>Your audition notes could not be loaded. Open preparation to retry.</T></p>
           ) : (
             <p>{prep.data["role"] || "Your personal audition-preparation workspace."}</p>
           )}
-          <Link to="/work/audition" search={{ tab: "preparation" }} className={btnPrimary}>
+          <Link to="/work/audition" search={{ tab: "preparation" }} className={btnPrimary}><T>
             Open audition preparation
-          </Link>
-          <p className="text-sm text-muted-foreground">
+          </T></Link>
+          <p className="text-sm text-muted-foreground"><T>
             Multiple audition files and deadlines are in development.
-          </p>
+          </T></p>
         </section>
       ) : (
         <section className="foundation-stack">
@@ -41,14 +42,14 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
                 ? "Dedicated character files are in development. Existing audition notes remain available."
                 : "Recording, playback and export are not implemented."}
           </Unavailable>
-          <button className={btnPrimary} onClick={() => onTabChange("auditions")}>
+          <button className={btnPrimary} onClick={() => onTabChange("auditions")}><T>
             Back to audition preparation
-          </button>
+          </T></button>
         </section>
       )}
       <details className="planned-tools">
-        <summary>Tools in development</summary>
-        <p>These tools are not available yet. Your audition preparation remains available.</p>
+        <summary><T>Tools in development</T></summary>
+        <p><T>These tools are not available yet. Your audition preparation remains available.</T></p>
         <ul>
           {(["character", "breakdown", "selfTape", "journal"] as const).map((id) => {
             const tool = SUPPORT_PAGES[id];
@@ -72,17 +73,17 @@ export function AuditionFile({ tab, onTabChange }: TabProps) {
           current === "preparation" ? (
             <AuditionWorkspace prep={prep} />
           ) : current === "script" ? (
-            <Unavailable>
+            <Unavailable><T>
               Saved scripts and sides are in development. Your current preparation notes are
               preserved.
-            </Unavailable>
+            </T></Unavailable>
           ) : (
             <section className="foundation-stack">
               <h2>{current === "brief" ? "Your brief" : "Your character choices"}</h2>
               {!prep.loaded ? (
-                <p role="status">Loading notes…</p>
+                <p role="status"><T>Loading notes…</T></p>
               ) : prep.error ? (
-                <p role="alert">Notes unavailable. Open Preparation to retry.</p>
+                <p role="alert"><T>Notes unavailable. Open Preparation to retry.</T></p>
               ) : (
                 <dl className="saved-choices">
                   {(current === "brief"
@@ -109,14 +110,14 @@ export function AuditionFile({ tab, onTabChange }: TabProps) {
                 </dl>
               )}
               {current === "character" && (
-                <p>
+                <p><T>
                   These are your own preparation notes; script-supported facts and interpretations
                   are not classified automatically.
-                </p>
+                </T></p>
               )}
-              <button className={btnPrimary} onClick={() => onTabChange("preparation")}>
+              <button className={btnPrimary} onClick={() => onTabChange("preparation")}><T>
                 Edit preparation
-              </button>
+              </T></button>
             </section>
           )
         }
@@ -132,37 +133,37 @@ export function RehearsalHub({ tab, onTabChange }: TabProps) {
         {(current) =>
           current === "my-scenes" ? (
             <section className="foundation-stack">
-              <span className="office-kicker">ORIGINAL SCRIPTED DEMONSTRATION</span>
-              <h2>“Stay”</h2>
-              <p>
+              <span className="office-kicker"><T>ORIGINAL SCRIPTED DEMONSTRATION</T></span>
+              <h2><T>“Stay”</T></h2>
+              <p><T>
                 Explore, perform, intervene, practice, retake and reflect. The partner responses are
                 fixed; no recording, analysis or grading takes place.
-              </p>
-              <Link to="/scene" className={btnPrimary}>
+              </T></p>
+              <Link to="/scene" className={btnPrimary}><T>
                 Start rehearsal
-              </Link>
-              <p>
+              </T></Link>
+              <p><T>
                 Rehearsal drafts and personal scene libraries are in development. Completed
                 reflections remain in Passport.
-              </p>
+              </T></p>
             </section>
           ) : current === "new-scene" ? (
             <section className="foundation-stack">
-              <Unavailable>
+              <Unavailable><T>
                 Importing and saving your own scripts is in development. The working demonstration
                 is available now.
-              </Unavailable>
-              <Link to="/scene" className={btnPrimary}>
+              </T></Unavailable>
+              <Link to="/scene" className={btnPrimary}><T>
                 Try the demonstration
-              </Link>
+              </T></Link>
             </section>
           ) : (
             <section className="foundation-stack">
-              <h2>Saved rehearsal records</h2>
+              <h2><T>Saved rehearsal records</T></h2>
               {!passport.loaded ? (
-                <p role="status">Loading records…</p>
+                <p role="status"><T>Loading records…</T></p>
               ) : passport.error ? (
-                <p role="alert">Saved records could not be loaded.</p>
+                <p role="alert"><T>Saved records could not be loaded.</T></p>
               ) : (
                 <p>
                   {passport.entries.length} completed rehearsal{" "}
@@ -170,12 +171,12 @@ export function RehearsalHub({ tab, onTabChange }: TabProps) {
                   {passport.signedIn ? "to your account" : "in this browser"}.
                 </p>
               )}
-              <Link to="/passport" className={btnPrimary}>
+              <Link to="/passport" className={btnPrimary}><T>
                 Open rehearsal history
-              </Link>
-              <p>These are completed reflection records, not resumable or live sessions.</p>
-              <Link to="/lab">Performance Lab</Link>
-              <Link to="/lounge">Rehearsal Lounge</Link>
+              </T></Link>
+              <p><T>These are completed reflection records, not resumable or live sessions.</T></p>
+              <Link to="/lab"><T>Performance Lab</T></Link>
+              <Link to="/lounge"><T>Rehearsal Lounge</T></Link>
             </section>
           )
         }
@@ -187,10 +188,10 @@ export function DraftInterventions() {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <>
-      <p className="section-intro">
+      <p className="section-intro"><T>
         Existing draft interventions — pending faculty review. These suggestions do not analyze or
         grade a performance.
-      </p>
+      </T></p>
       <ul className="foundation-stack">
         {DRAFT_INTERVENTIONS.map((p, i) => (
           <li className="panel p-4" key={p.q}>
@@ -205,7 +206,7 @@ export function DraftInterventions() {
               <div className="foundation-stack mt-3">
                 <p className="font-bold text-amber">{p.school}</p>
                 <p>{p.fix}</p>
-                <Link to="/scene">Practice in the scripted demonstration</Link>
+                <Link to="/scene"><T>Practice in the scripted demonstration</T></Link>
               </div>
             )}
           </li>
@@ -227,13 +228,13 @@ export function StuckIntake({ tab, onTabChange }: TabProps) {
         </Unavailable>
       )}
       {tab !== "describe" ? (
-        <button className={btnPrimary} onClick={() => onTabChange("describe")}>
+        <button className={btnPrimary} onClick={() => onTabChange("describe")}><T>
           View draft interventions
-        </button>
+        </T></button>
       ) : (
-        <Link to="/scene" className={btnPrimary}>
+        <Link to="/scene" className={btnPrimary}><T>
           Try the Living Scene
-        </Link>
+        </T></Link>
       )}
     </Page>
   );

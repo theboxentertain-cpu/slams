@@ -1,0 +1,33 @@
+name: SLAMS quality gates
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: TypeScript, lint, tests and production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+      - name: Check TypeScript
+        run: bunx tsc --noEmit
+      - name: Semantic lint (existing formatting debt excluded)
+        run: |
+          bunx eslint . --rule 'prettier/prettier: off'
+      - name: Run unit and UI tests
+        run: bun run test
+      - name: Compile production build
+        run: bun run build
+      - name: Report outstanding repository-wide formatting debt
+        continue-on-error: true
+        run: bun run lint

@@ -1,3 +1,4 @@
+import { T, useLanguage } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ export function Wordmark({ small = false }: { small?: boolean }) {
 }
 
 export function DemoBanner() {
+  const { t } = useLanguage();
   const { user, loading } = useSession();
   if (loading) return null;
   if (user) {
@@ -25,31 +27,32 @@ export function DemoBanner() {
         role="note"
         className="bg-secondary px-3 py-1.5 text-center text-xs font-bold text-foreground"
       >
-        Signed in as {user.email}. Passport and audition notes save to your account. Director
-        settings stay on this device.
+        {t("Signed in as")} <bdi>{user.email}</bdi>.{" "}
+        {t("Passport and audition notes save to your account. Director settings stay on this device.")}
       </p>
     );
   }
   return (
     <p role="note" className="bg-warning px-3 py-1.5 text-center text-xs font-bold text-charcoal">
-      GUEST STUDIO — rehearsal reflections and audition notes stay in this browser.{" "}
-      <Link to="/auth" className="underline">
+      {t("GUEST STUDIO — rehearsal reflections and audition notes stay in this browser.")}{" "}
+      <Link to="/auth" className="underline"><T>
         Sign in to save to your account.
-      </Link>
+      </T></Link>
     </p>
   );
 }
 
 export function AccountLink() {
+  const { t } = useLanguage();
   const { user, loading, signOut } = useSession();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   if (loading) return null;
   if (!user) {
     return (
-      <Link to="/auth" className="account-link rounded bg-secondary px-3 py-2 text-sm">
+      <Link to="/auth" className="account-link rounded bg-secondary px-3 py-2 text-sm"><T>
         Sign in
-      </Link>
+      </T></Link>
     );
   }
   return (
@@ -71,7 +74,7 @@ export function AccountLink() {
           }
         }}
       >
-        {busy ? "Signing out…" : "Sign out"}
+        {t(busy ? "Signing out…" : "Sign out")}
       </Button>
       {error && (
         <span role="alert" className="block text-destructive">
@@ -83,13 +86,14 @@ export function AccountLink() {
 }
 
 export function DirectorToggle() {
+  const { t, locale } = useLanguage();
   const [mode, setMode] = useDirectorMode();
   return (
     <fieldset className="director-controls flex items-center gap-1 text-xs">
-      <legend className="sr-only">Director mode</legend>
-      <span className="mr-1 text-muted-foreground" aria-hidden>
+      <legend className="sr-only"><T>Director mode</T></legend>
+      <span className="mr-1 text-muted-foreground" aria-hidden><T>
         Director
-      </span>
+      </T></span>
       {(["on", "quiet", "off"] as DirectorMode[]).map((m) => (
         <button
           key={m}
@@ -98,7 +102,7 @@ export function DirectorToggle() {
           onClick={() => setMode(m)}
           className={`rounded px-2 py-1 uppercase ${mode === m ? "bg-amber text-charcoal font-bold" : "bg-secondary"}`}
         >
-          {m}
+          {locale === "ar" ? t(m.toUpperCase()) : m}
         </button>
       ))}
     </fieldset>
@@ -118,13 +122,14 @@ export function DirectorNote({
   expression?: DirectorExpression;
 }) {
   const [mode] = useDirectorMode();
+  const { t } = useLanguage();
   if (performing || mode === "off") return null;
   return (
     <aside aria-label="The Director" className="panel mt-4 flex gap-3 border-amber/40 p-3 text-sm">
       <DirectorPortrait expression={expression} className="director-note-portrait" />
       <p>
-        <span className="font-bold text-amber">The Director: </span>
-        {mode === "quiet" ? (short ?? children) : children}
+        <span className="font-bold text-amber"><T>The Director: </T></span>
+        {mode === "quiet" && short ? t(short) : children}
       </p>
     </aside>
   );
@@ -147,21 +152,28 @@ export function Page({
   world?: StudioWorld;
   performing?: boolean;
 }) {
+  const { t } = useLanguage();
   return (
     <div data-school={school} data-world={world} className="studio-page min-h-screen">
       <DemoBanner />
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-3">
-        <Link to={backTo} className="page-back-button rounded bg-secondary px-3 py-2 text-sm">
+        <Link to={backTo} className="page-back-button rounded bg-secondary px-3 py-2 text-sm"><T>
           ← Back
-        </Link>
+        </T></Link>
         <Link to="/" aria-label="Return to the Director’s Office" className="page-office-link">
           <Wordmark small />
-          <span>THE OFFICE</span>
+          <span><T>THE OFFICE</T></span>
         </Link>
         <ProfileMenu />
       </header>
       <main id="page-content" tabIndex={-1} className="rise mx-auto max-w-3xl px-4 pb-8">
-        <StudioHeading title={title} eyebrow={eyebrow} school={school} world={world} performing={performing} />
+        <StudioHeading
+          title={t(title)}
+          eyebrow={eyebrow ? t(eyebrow) : undefined}
+          school={school}
+          world={world}
+          performing={performing}
+        />
         {children}
       </main>
     </div>
