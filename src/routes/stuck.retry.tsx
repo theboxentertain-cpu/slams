@@ -1,10 +1,8 @@
-import { createFileRoute, type SearchSchemaInput } from "@tanstack/react-router";
-import { validateTab } from "@/lib/foundation";
-import { SupportPage } from "@/components/foundation/SupportPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
+/** Legacy bookmarks lead to working, learner-led practice without claiming automated analysis. */
 export const Route = createFileRoute("/stuck/retry")({
-  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) => validateTab("retry", input),
-  component: Screen,
+  beforeLoad: () => {
+    throw redirect({ to: "/stuck", search: { tab: "describe" }, replace: true });
+  },
 });
-function Screen() {
-  return <SupportPage id="retry" />;
-}
