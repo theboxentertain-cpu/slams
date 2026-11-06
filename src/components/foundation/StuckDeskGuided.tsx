@@ -109,16 +109,22 @@ function StuckDeskSession() {
       retakeLine: input.secondAttempt.trim(),
       reflection: [input.difference.trim(), rescueOutcomeLabel(input.outcome).en].join(" — "),
     };
-    const result = await passport.add(entry);
-    if (result.error) {
+    try {
+      const result = await passport.add(entry);
+      if (result.error) {
+        setFeedbackError(true);
+        setFeedback(ar ? "تعذّر حفظ المذكرة. لم يتم تأكيد الحفظ؛ حاول مجددًا أو انسخ النص." : "Save was not confirmed. Retry or copy your note.");
+      } else {
+        setSaved(true);
+        setFeedbackError(false);
+        setFeedback(ar ? "تم الحفظ في جواز الممثل." : "Saved to your Actor’s Passport.");
+      }
+    } catch {
       setFeedbackError(true);
       setFeedback(ar ? "تعذّر حفظ المذكرة. لم يتم تأكيد الحفظ؛ حاول مجددًا أو انسخ النص." : "Save was not confirmed. Retry or copy your note.");
-    } else {
-      setSaved(true);
-      setFeedbackError(false);
-      setFeedback(ar ? "تم الحفظ في جواز الممثل." : "Saved to your Actor’s Passport.");
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
   }
   const label = (en: string, arLabel: string) => (ar ? arLabel : en);
   const heading = (text: string) => <h3 ref={stageHeading} tabIndex={-1} className="text-xl font-bold focus:outline-none">{text}</h3>;
