@@ -30,7 +30,9 @@ export function WelcomeFrame({
             <ArrowLeft aria-hidden="true" />
           </Link>
         )}
-        <div className="welcome-language-control"><LanguageSwitch /></div>
+        <div className="welcome-language-control">
+          <LanguageSwitch />
+        </div>
         <span className="welcome-credit">mrahmostudios presents</span>
         <Wordmark />
         <span className="welcome-tagline">{t("The Actor’s Pocket Studio")}</span>
