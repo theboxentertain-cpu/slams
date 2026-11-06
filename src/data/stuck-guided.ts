@@ -3,7 +3,6 @@
  * These are technique-informed teaching lenses, not a diagnosis,
  * observation of an actor, or official school exercises.
  */
-import { DRAFT_INTERVENTIONS } from "./stuck";
 
 export type LocalizedText = Readonly<{ en: string; ar: string }>;
 export type RescueOutcome = "change" | "no-change" | "unsure";
@@ -18,7 +17,7 @@ export type RescueInput = Readonly<{
 export const RESCUE_PROBLEMS = [
   {
     id: "planning",
-    title: { en: DRAFT_INTERVENTIONS[0].q, ar: "أفكر في الجمل القادمة بدل ما أسمع" },
+    title: { en: "I'm in my head / planning lines", ar: "أفكر في الجمل القادمة بدل ما أسمع" },
     lens: { en: "Meisner-informed listening", ar: "الإنصات بمنظور مايزنر" },
     why: {
       en: "Preparing the next reply can draw attention away from what actually changed in the scene.",
@@ -47,7 +46,7 @@ export const RESCUE_PROBLEMS = [
   },
   {
     id: "flat",
-    title: { en: DRAFT_INTERVENTIONS[1].q, ar: "المشهد مسطّح أو عام" },
+    title: { en: "My scene feels flat / general", ar: "المشهد مسطّح أو عام" },
     lens: { en: "Stanislavski-informed playable action", ar: "الفعل القابل للتنفيذ بمنظور ستانيسلافسكي" },
     why: {
       en: "An abstract emotion does not tell the actor what to attempt. A specific objective and action can organize behavior.",
@@ -76,7 +75,7 @@ export const RESCUE_PROBLEMS = [
   },
   {
     id: "stakes",
-    title: { en: DRAFT_INTERVENTIONS[2].q, ar: "مش حاسس إن في حاجة مهمة على المحك" },
+    title: { en: "Nothing feels at stake", ar: "مش حاسس إن في حاجة مهمة على المحك" },
     lens: { en: "Adler-informed given circumstances and imagination", ar: "الظروف والخيال بمنظور ستيلا أدلر" },
     why: {
       en: "A precise fictional consequence can make an action more understandable than trying to generate an intense emotion.",
@@ -105,7 +104,7 @@ export const RESCUE_PROBLEMS = [
   },
   {
     id: "stiff",
-    title: { en: DRAFT_INTERVENTIONS[3].q, ar: "جسمي متصلّب أثناء المشهد" },
+    title: { en: "My body feels stiff", ar: "جسمي متصلّب أثناء المشهد" },
     lens: { en: "Laban-informed movement quality", ar: "نوعية الحركة بمنظور لابان" },
     why: {
       en: "Movement quality can expand playable choices, but forcing a posture may make behavior less responsive.",
