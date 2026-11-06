@@ -550,6 +550,15 @@ body [data-school="viewpoints"] {
 :root[dir="rtl"] :is(textarea, input[type="text"]) {
   unicode-bidi: plaintext;
 }
+:root[dir="rtl"] :is(input[type="email"], input[type="password"], input[type="tel"], input[type="url"]) {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: plaintext;
+}
+:root[dir="rtl"] [role="tablist"],
+:root[dir="rtl"] .primary-navigation {
+  direction: rtl;
+}
 @media (max-width: 420px) {
   .language-switch button { padding-inline: 7px; }
 }
