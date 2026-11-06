@@ -252,7 +252,9 @@ function WorkshopRun() {
               <p>
                 {correct
                   ? t(question.why)
-                  : t("Does this describe an observable event, an inference, or the speaker's own experience?")}
+                  : t(
+                      "Does this describe an observable event, an inference, or the speaker's own experience?",
+                    )}
               </p>
             </div>
           )}
@@ -490,10 +492,14 @@ function WorkshopRun() {
           )}
           <div className="mt-4 rounded border border-border bg-secondary p-3">
             <p role="status" aria-live="polite" className="font-semibold">
-              {t("Practice round")} {roundCount(mode, exercise, rounds)} {t("of")} {EDITORIAL_PRACTICE_ROUNDS} {t("recorded")}
+              {t("Practice round")} {roundCount(mode, exercise, rounds)} {t("of")}{" "}
+              {EDITORIAL_PRACTICE_ROUNDS} {t("recorded")}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              <T>Three distinct written rounds are the SLAMS preview target, not an official Meisner requirement or an evaluation. Nothing is saved unless you explicitly copy your note.</T>
+              <T>
+                Three distinct written rounds are the SLAMS preview target, not an official Meisner
+                requirement or an evaluation. Nothing is saved unless you explicitly copy your note.
+              </T>
             </p>
             <button
               type="button"

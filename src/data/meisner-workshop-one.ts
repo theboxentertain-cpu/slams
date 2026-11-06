@@ -152,7 +152,9 @@ export function canLogPracticeRep(
   if (!fields.length || !canContinue(mode, exercise, notes)) return false;
   const rounds = previous.filter((r) => r.exercise === exercise && r.mode === mode);
   if (rounds.length >= EDITORIAL_PRACTICE_ROUNDS) return false;
-  const fingerprint = fields.map((field) => notes[field].trim().replace(/\s+/g, " ").toLocaleLowerCase()).join("\\u241f");
+  const fingerprint = fields
+    .map((field) => notes[field].trim().replace(/\s+/g, " ").toLocaleLowerCase())
+    .join("\\u241f");
   return !rounds.some((r) => r.fingerprint === fingerprint);
 }
 
@@ -208,12 +210,14 @@ export function practiceNote(mode: Mode, notes: Notes, reps: PracticeRep[] = [])
       : []),
     "Reflection: " + notes.reflection.trim(),
     "Next practice: " + notes.next.trim(),
-    ...reps.filter((rep) => rep.mode === mode).map((rep, index) => {
-      const values = practiceFields(mode, rep.exercise)
-        .map((field) => `${field}: ${rep.fields[field] ?? ""}`)
-        .join(" | ");
-      return `Self-logged round ${index + 1}, exercise ${rep.exercise + 1}: ${values}`;
-    }),
+    ...reps
+      .filter((rep) => rep.mode === mode)
+      .map((rep, index) => {
+        const values = practiceFields(mode, rep.exercise)
+          .map((field) => `${field}: ${rep.fields[field] ?? ""}`)
+          .join(" | ");
+        return `Self-logged round ${index + 1}, exercise ${rep.exercise + 1}: ${values}`;
+      }),
     "Evidence: learner reflection only, no reviewer; no Passport/cloud save.",
   ].join("\n");
 }
