@@ -44,7 +44,9 @@ describe("SLAMS Stanislavski editorial academic fidelity", () => {
     expect(STAN_TERM_ONE.institutionalRepRequirement).toBeNull();
     expect(STAN_TERM_ONE.passThreshold).toBeNull();
     expect(STAN_TERM_ONE.workshops.map((w) => w.status)).toEqual([
-      "interactive-editorial-preview", "outline-only", "outline-only",
+      "interactive-editorial-preview",
+      "outline-only",
+      "outline-only",
     ]);
     expect(STAN_SOURCE_LINKS).toHaveLength(3);
     expect(STAN_SOURCE_LINKS.every((source) => source.url.startsWith("https://"))).toBe(true);
@@ -53,7 +55,19 @@ describe("SLAMS Stanislavski editorial academic fidelity", () => {
   it("covers every agreed lesson element in English and Arabic", () => {
     expect(STAN_LESSONS).toHaveLength(3);
     expect(new Set(STAN_LESSONS.map((lesson) => lesson.id)).size).toBe(3);
-    const fields = ["title", "outcome", "why", "how", "when", "notToDo", "example", "solo", "partner", "realWorld", "evidence"] as const;
+    const fields = [
+      "title",
+      "outcome",
+      "why",
+      "how",
+      "when",
+      "notToDo",
+      "example",
+      "solo",
+      "partner",
+      "realWorld",
+      "evidence",
+    ] as const;
     for (const lesson of STAN_LESSONS) {
       for (const field of fields) {
         expect(lesson[field].en.trim(), `${lesson.id} ${field} English`).not.toBe("");
@@ -96,8 +110,17 @@ describe("SLAMS Stanislavski editorial academic fidelity", () => {
     first.circumstances = "CHANGED LATER";
     expect(history[0]!.fields.circumstances).not.toBe("CHANGED LATER");
     expect(recordStanRound(exerciseId, "solo", sampleRound(1), history)).toBe(history);
-    expect(recordStanRound(exerciseId, "solo", { ...sampleRound(2), objective: " " }, history)).toBe(history);
-    expect(recordStanRound(exerciseId, "solo", { ...sampleRound(2), objective: "a".repeat(901) }, history)).toBe(history);
+    expect(
+      recordStanRound(exerciseId, "solo", { ...sampleRound(2), objective: " " }, history),
+    ).toBe(history);
+    expect(
+      recordStanRound(
+        exerciseId,
+        "solo",
+        { ...sampleRound(2), objective: "a".repeat(901) },
+        history,
+      ),
+    ).toBe(history);
     for (let n = 2; n <= STAN_EDITORIAL_ROUNDS; n++)
       history = recordStanRound(exerciseId, "solo", sampleRound(n), history);
     expect(canAdvanceStanExercise(exerciseId, "solo", history)).toBe(true);
