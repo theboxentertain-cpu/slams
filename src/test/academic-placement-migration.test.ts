@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 /** Static contract checks only. These are NOT PostgreSQL or multi-account RLS tests. */
 const sql = readFileSync(
-  new URL("../../drizzle/migrations/0003_academic_progression_placement.sql", import.meta.url),
+  resolve(process.cwd(), "drizzle/migrations/0003_academic_progression_placement.sql"),
   "utf8"
 );
 
