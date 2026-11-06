@@ -22,7 +22,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Format only Stanislavski draft sources and tests
         run: |
-          bunx prettier --write src/data/stanislavski-editorial-workshop-one.ts src/components/foundation/StanislavskiWorkshopOne.tsx src/components/foundation/StanislavskiAcademicPreview.tsx src/components/foundation/SchoolPages.tsx src/test/stanislavski-workshop-content.test.ts src/test/stanislavski-workshop-ui.test.tsx
+          bunx prettier --write src/data/stanislavski-editorial-workshop-one.ts src/components/foundation/StanislavskiWorkshopOne.tsx src/components/foundation/StanislavskiAcademicPreview.tsx src/components/foundation/SchoolPages.tsx src/test/stanislavski-workshop-content.test.ts src/test/stanislavski-workshop-ui.test.tsx src/data/stanislavski-assessment-draft.ts src/test/stanislavski-assessment-draft.test.ts
           git diff --check
       - name: Commit isolated style changes
         run: |
