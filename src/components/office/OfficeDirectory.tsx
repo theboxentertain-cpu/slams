@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { OfficeArt } from "./OfficeArt";
@@ -20,8 +21,8 @@ export function OfficeDirectory({
           <CoverDrawing motif="architecture" />
         </span>
         <strong>{includeRehearsal ? "Train" : "The Conservatory"}</strong>
-        <span>The Conservatory</span>
-        <small>Eight acting schools</small>
+        <span><T>The Conservatory</T></span>
+        <small><T>Eight acting schools</T></small>
         <ArrowUpRight className="portal-arrow" aria-hidden="true" />
       </Link>
       {includeRehearsal && (
@@ -29,9 +30,9 @@ export function OfficeDirectory({
           <span className="portal-art" aria-hidden="true">
             <OfficeArt kind="clapper" />
           </span>
-          <strong>Rehearse</strong>
-          <span>The Living Scene</span>
-          <small>Perform · Retake · Reflect</small>
+          <strong><T>Rehearse</T></strong>
+          <span><T>The Living Scene</T></span>
+          <small><T>Perform · Retake · Reflect</T></small>
           <ArrowUpRight className="portal-arrow" aria-hidden="true" />
         </Link>
       )}
@@ -40,8 +41,8 @@ export function OfficeDirectory({
           <OfficeArt kind="casting" />
         </span>
         <strong>{includeRehearsal ? "Work" : "Actor at Work"}</strong>
-        <span>Actor at Work</span>
-        <small>Audition preparation</small>
+        <span><T>Actor at Work</T></span>
+        <small><T>Audition preparation</T></small>
         <ArrowUpRight className="portal-arrow" aria-hidden="true" />
       </Link>
       <Link to="/stuck" data-task="stuck" onFocus={onStuckIntent} onPointerEnter={onStuckIntent}>
@@ -49,8 +50,8 @@ export function OfficeDirectory({
           <OfficeArt kind="script" />
         </span>
         <strong>{includeRehearsal ? "Get Unstuck" : "The Stuck Desk"}</strong>
-        <span>The Stuck Desk</span>
-        <small>Change one thing. Try again.</small>
+        <span><T>The Stuck Desk</T></span>
+        <small><T>Change one thing. Try again.</T></small>
         <ArrowUpRight className="portal-arrow" aria-hidden="true" />
       </Link>
     </nav>
