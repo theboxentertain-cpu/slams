@@ -42,6 +42,7 @@ function StuckDeskSession() {
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [feedbackError, setFeedbackError] = useState(false);
   const stageHeading = useRef<HTMLHeadingElement>(null);
   const problem = rescueProblemById(input.problemId);
   const tx = <T extends { en: string; ar: string }>(text: T) => text[locale];
@@ -55,12 +56,14 @@ function StuckDeskSession() {
   function choose(problemId: RescueProblemId) {
     setInput({ ...initialInput, problemId });
     setFeedback("");
+    setFeedbackError(false);
     setSaved(false);
     setStage("first");
   }
   function edit(field: TextField, value: string) {
     setInput((current) => ({ ...current, [field]: value }));
     setFeedback("");
+    setFeedbackError(false);
   }
   function restart() {
     setInput(initialInput);
@@ -68,28 +71,34 @@ function StuckDeskSession() {
     setSaved(false);
     setBusy(false);
     setFeedback("");
+    setFeedbackError(false);
   }
   async function copyNote() {
     if (!ready) return;
     if (typeof navigator === "undefined" || !navigator.clipboard) {
+      setFeedbackError(true);
       setFeedback(ar ? "الحافظة غير متاحة. حدّد النص وانسخه يدويًا." : "Clipboard unavailable. Select the note and copy it manually.");
       return;
     }
     try {
       await navigator.clipboard.writeText(summary);
+      setFeedbackError(false);
       setFeedback(ar ? "تم نسخ ملاحظاتك، ولم تُحفظ في حسابك." : "Note copied. It was not saved to your account.");
     } catch {
+      setFeedbackError(true);
       setFeedback(ar ? "تعذّر النسخ. حدّد النص وانسخه يدويًا." : "Copy failed. Select the note and copy it manually.");
     }
   }
   async function saveNote() {
     if (!ready || !passport.loaded || passport.error || saved || busy || !problem) return;
     if (!globalThis.crypto?.randomUUID) {
+      setFeedbackError(true);
       setFeedback(ar ? "الحفظ غير متاح في هذا السياق. انسخ ملاحظاتك بدلًا من ذلك." : "Secure saving is unavailable here. Copy your note instead.");
       return;
     }
     setBusy(true);
     setFeedback("");
+    setFeedbackError(false);
     const entry: PassportEntry = {
       id: globalThis.crypto.randomUUID(),
       date: new Date().toISOString(),
@@ -102,9 +111,11 @@ function StuckDeskSession() {
     };
     const result = await passport.add(entry);
     if (result.error) {
+      setFeedbackError(true);
       setFeedback(ar ? "تعذّر حفظ المذكرة. لم يتم تأكيد الحفظ؛ حاول مجددًا أو انسخ النص." : "Save was not confirmed. Retry or copy your note.");
     } else {
       setSaved(true);
+      setFeedbackError(false);
       setFeedback(ar ? "تم الحفظ في جواز الممثل." : "Saved to your Actor’s Passport.");
     }
     setBusy(false);
@@ -154,6 +165,9 @@ function StuckDeskSession() {
               </button>
             ))}
           </div>
+          <p className="mt-4 text-sm">
+            <Link to="/scene" className="underline">{label("Try the Living Scene instead", "جرّب المشهد التفاعلي بدلًا من ذلك")}</Link>
+          </p>
         </section>
       )}
 
@@ -277,7 +291,7 @@ function StuckDeskSession() {
           </p>
           {passport.error && <p role="alert">{label("Passport is unavailable. Copy this note instead.", "جواز الممثل غير متاح. انسخ مذكرتك بدلًا من ذلك.")}</p>}
           {!passport.loaded && !passport.error && <p role="status">{label("Checking Passport availability…", "جارٍ فحص جواز الممثل…")}</p>}
-          {feedback && <p role={feedback.includes("failed") || feedback.includes("تعذّر") ? "alert" : "status"} className="mt-2">{feedback}</p>}
+          {feedback && <p role={feedbackError ? "alert" : "status"} className="mt-2">{feedback}</p>}
           {saved && (
             <p className="mt-3">
               <Link to="/passport" className="underline">{label("Open your saved Passport record", "افتح السجل المحفوظ في جواز الممثل")}</Link>
