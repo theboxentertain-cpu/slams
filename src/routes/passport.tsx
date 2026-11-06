@@ -1,4 +1,4 @@
-import { T } from "@/lib/i18n";
+import { T, useLanguage } from "@/lib/i18n";
 import { createFileRoute, Link, type SearchSchemaInput } from "@tanstack/react-router";
 import { useState } from "react";
 import { validateTab } from "@/lib/foundation";
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/passport")({
 });
 
 function Passport() {
+  const { t } = useLanguage();
   const { tab } = Route.useSearch();
   const navigate = Route.useNavigate();
   const {
@@ -57,11 +58,11 @@ function Passport() {
         {(current) =>
           current !== "journey" ? (
             <Unavailable>
-              {current === "evidence"
+              {t(current === "evidence"
                 ? "Your saved text reflections are available in Journey. Recording and evidence attachments are not implemented."
                 : current === "badges"
                   ? "No competence badges are awarded. Reviewed achievement criteria are not available."
-                  : "Portfolio projects and assessment records are in development."}
+                  : "Portfolio projects and assessment records are in development.")}
             </Unavailable>
           ) : (
             <div>
@@ -90,7 +91,7 @@ function Passport() {
                     disabled={importing}
                     onClick={handleImport}
                   >
-                    {importing ? "Importing…" : "Import browser entries to my account"}
+                    {t(importing ? "Importing…" : "Import browser entries to my account")}
                   </button>
                   {importMsg && (
                     <p role="status" className="mt-2">
@@ -123,7 +124,7 @@ function Passport() {
                           {new Date(e.date).toLocaleString()} · “Stay” demo
                         </p>
                         <p className="mt-1">
-                          <b><T>Tactic:</T></b> {e.tactic}
+                          <b><T>Tactic:</T></b> {t(e.tactic)}
                         </p>
                         <p>
                           <b><T>Intervention:</T></b> {e.intervention}
@@ -132,7 +133,7 @@ function Passport() {
                           <b><T>Exercise:</T></b> {e.exerciseNote}
                         </p>
                         <p>
-                          <b><T>Obstacle:</T></b> {e.obstacle}
+                          <b><T>Obstacle:</T></b> {t(e.obstacle)}
                         </p>
                         <p>
                           <b><T>Retake:</T></b> {e.retakeLine}
@@ -147,7 +148,7 @@ function Passport() {
                   <button
                     className={`${btnSecondary} mt-4`}
                     onClick={() => {
-                      if (confirm("Delete all Passport entries?")) clear();
+                      if (confirm(t("Delete all Passport entries?"))) clear();
                     }}
                   ><T>
                     Delete all Passport entries
