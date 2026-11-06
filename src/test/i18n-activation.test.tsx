@@ -74,7 +74,6 @@ it("renders translated authored text without adding markup or changing saved sce
   expect(SCENE.setup).toBe(originalSetup);
 });
 
-
 it("restores the saved Arabic locale and exposes the correct switch state", () => {
   localStorage.setItem(LANGUAGE_KEY, "ar");
   render(
@@ -85,14 +84,8 @@ it("restores the saved Arabic locale and exposes the correct switch state", () =
   expect(screen.getByTestId("current-locale")).toHaveTextContent("ar");
   expect(document.documentElement).toHaveAttribute("lang", "ar");
   expect(document.documentElement).toHaveAttribute("dir", "rtl");
-  expect(screen.getByRole("button", { name: "العربية" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  expect(screen.getByRole("button", { name: "English" })).toHaveAttribute(
-    "aria-pressed",
-    "false",
-  );
+  expect(screen.getByRole("button", { name: "العربية" })).toHaveAttribute("aria-pressed", "true");
+  expect(screen.getByRole("button", { name: "English" })).toHaveAttribute("aria-pressed", "false");
 });
 
 it("keeps user-authored records intact when toggling the interface twice", () => {
@@ -107,7 +100,5 @@ it("keeps user-authored records intact when toggling the interface twice", () =>
   fireEvent.click(screen.getByRole("button", { name: "العربية" }));
   fireEvent.click(screen.getByRole("button", { name: "English" }));
   expect(localStorage.getItem("slams.passport.v1")).toBe(record);
-  expect(JSON.parse(localStorage.getItem("slams.passport.v1")!).reflection).toBe(
-    personalNote,
-  );
+  expect(JSON.parse(localStorage.getItem("slams.passport.v1")!).reflection).toBe(personalNote);
 });
