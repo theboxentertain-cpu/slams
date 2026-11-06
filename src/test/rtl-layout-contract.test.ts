@@ -20,7 +20,7 @@ describe("Arabic visual baseline contracts", () => {
       /:root\[dir="rtl"\] \.welcome-tagline,[\s\S]*?font-family:\s*"Noto Sans Arabic"/,
     );
     expect(css).toMatch(
-      /:root\[dir="rtl"\] \.office-premium \.office-tagline\s*\{[^}]*white-space:\s*normal/s,
+      /:root\[dir="rtl"\] \.office-premium \.office-tagline,[\s\S]*?white-space:\s*normal/,
     );
   });
 
