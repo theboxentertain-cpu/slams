@@ -7,7 +7,8 @@ import { formatStuckSession, STUCK_GUIDES, type StuckGuideId } from "@/data/stuc
 
 const COPY = {
   en: {
-    intro: "Choose what is actually getting in your way. Try one small experiment, then write down what changed. This is your own observation, not an automated diagnosis.",
+    intro:
+      "Choose what is actually getting in your way. Try one small experiment, then write down what changed. This is your own observation, not an automated diagnosis.",
     heading: "Self-guided rehearsal experiment",
     status: "Draft teaching prompts · awaiting faculty review · no academic credit",
     why: "Why this might help",
@@ -21,16 +22,19 @@ const COPY = {
     beforeHint: "Describe one observable behavior or choice, not a rating of your talent.",
     afterHint: "Describe a specific change, or say that nothing changed.",
     comparison: "Your before / after observations",
-    identical: "The two notes are identical. Record an actual observation from the second attempt before comparing.",
+    identical:
+      "The two notes are identical. Record an actual observation from the second attempt before comparing.",
     copy: "Copy my practice note",
     copied: "Copied. Nothing was saved to SLAMS.",
     failed: "Clipboard unavailable. Your notes are still visible here to select and copy manually.",
-    temporary: "Session only: these notes are not saved, recorded, graded, or added to Passport. Switching problems clears them.",
+    temporary:
+      "Session only: these notes are not saved, recorded, graded, or added to Passport. Switching problems clears them.",
     scene: "Practice in the scripted demonstration",
     noResult: "No result is inferred from these notes. You decide what to investigate next.",
   },
   ar: {
-    intro: "حدد العائق الحقيقي في المشهد. جرب تمرين صغير، واكتب إيه اللي اتغير. دي ملاحظتك الشخصية، مش تشخيص آلي.",
+    intro:
+      "حدد العائق الحقيقي في المشهد. جرب تمرين صغير، واكتب إيه اللي اتغير. دي ملاحظتك الشخصية، مش تشخيص آلي.",
     heading: "تجربة تدريبية موجهة",
     status: "محتوى تعليمي تجريبي · في انتظار مراجعة مدرسين متخصصين · بدون اعتماد أكاديمي",
     why: "ليه ده ممكن يفيد",
@@ -48,7 +52,8 @@ const COPY = {
     copy: "انسخ ملاحظات التدريب",
     copied: "تم النسخ. لم يتم حفظ أي شيء في SLAMS.",
     failed: "الحافظة غير متاحة. تقدر تحدد الملاحظات الظاهرة وتنسخها يدوياً.",
-    temporary: "الملاحظات مؤقتة: مش محفوظة أو مسجلة أو مقيمة، ومش مضافة لجواز الممثل. تغيير المشكلة يمسحها.",
+    temporary:
+      "الملاحظات مؤقتة: مش محفوظة أو مسجلة أو مقيمة، ومش مضافة لجواز الممثل. تغيير المشكلة يمسحها.",
     scene: "اتدرب في المشهد التفاعلي المكتوب",
     noResult: "التطبيق مش بيستنتج نتيجة من ملاحظاتك. أنت اللي بتحدد الخطوة التالية.",
   },
@@ -166,7 +171,10 @@ export function StuckDeskGuide() {
                   </div>
                   {identical && <p role="alert">{ui.identical}</p>}
                   {ready && (
-                    <section className="foundation-stack border-t border-amber/30 pt-4" aria-label={ui.comparison}>
+                    <section
+                      className="foundation-stack border-t border-amber/30 pt-4"
+                      aria-label={ui.comparison}
+                    >
                       <h3 className="font-semibold">{ui.comparison}</h3>
                       <p className="whitespace-pre-wrap break-words">{record}</p>
                       <p className="text-sm text-muted-foreground">{ui.noResult}</p>
