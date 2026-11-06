@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import type { ReactNode } from "react";
 import { Drama } from "lucide-react";
 import { SectionCoach } from "./office/SectionCoach";
@@ -88,7 +89,7 @@ export function StudioHeading({
         <span className="studio-passport-cover" aria-hidden="true">
           <Drama />
           <strong>SLAMS</strong>
-          <small>ACTOR’S PASSPORT</small>
+          <small><T>ACTOR’S PASSPORT</T></small>
         </span>
       )}
     </header>
