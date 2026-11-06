@@ -15,7 +15,7 @@ export const REQUIRED_EXERCISE_TEXT = [
   "professionalApplication",
   "evidenceRequirements",
   "safetyAndAccess",
-  "nextStep"
+  "nextStep",
 ] as const;
 
 export type RequiredExerciseText = (typeof REQUIRED_EXERCISE_TEXT)[number];
@@ -67,11 +67,13 @@ export function inspectExerciseForReview(record: ExerciseAcademicRecord) {
   for (const [name, mode] of [
     ["solo", record.solo],
     ["partner", record.partner],
-    ["group", record.group]
+    ["group", record.group],
   ] as const) {
     if (!mode.explanation.trim()) blockers.push(name + " requires honest suitability explanation.");
-    if (mode.use !== "not_suitable" &&
-        (!mode.steps.length || mode.steps.some((step) => !step.trim())))
+    if (
+      mode.use !== "not_suitable" &&
+      (!mode.steps.length || mode.steps.some((step) => !step.trim()))
+    )
       blockers.push(name + " requires real steps or a non-suitable designation.");
   }
   if (record.requiredMode === "human_partner" && record.solo.use === "qualifying")
@@ -80,8 +82,11 @@ export function inspectExerciseForReview(record: ExerciseAcademicRecord) {
     blockers.push("Partner-required exercise needs a qualifying real-partner protocol.");
   if (record.requiredMode === "facilitated_group" && record.group.use !== "qualifying")
     blockers.push("Group-required exercise needs a qualifying ensemble protocol.");
-  if (record.requiredMode === "partner_or_group" &&
-      record.partner.use !== "qualifying" && record.group.use !== "qualifying")
+  if (
+    record.requiredMode === "partner_or_group" &&
+    record.partner.use !== "qualifying" &&
+    record.group.use !== "qualifying"
+  )
     blockers.push("Partner-or-group exercise needs a genuine qualifying human activity.");
   if (record.requiredMode === "solo" && record.solo.use !== "qualifying")
     blockers.push("Solo-required exercise needs a qualifying independent protocol.");
@@ -90,15 +95,19 @@ export function inspectExerciseForReview(record: ExerciseAcademicRecord) {
   if (record.practiceRequirement.kind === "unapproved")
     blockers.push("Practice quota or competency protocol has not been approved.");
   else if (record.practiceRequirement.kind === "faculty_competence_protocol") {
-    if (!record.practiceRequirement.observableCriteria.length ||
-        record.practiceRequirement.observableCriteria.some((c) => !c.trim()))
+    if (
+      !record.practiceRequirement.observableCriteria.length ||
+      record.practiceRequirement.observableCriteria.some((c) => !c.trim())
+    )
       blockers.push("Competence policy needs observable, reviewable criteria.");
     if (!record.practiceRequirement.signedPolicyId)
       blockers.push("Competence policy needs an authenticated faculty release.");
   } else {
-    if (!Number.isInteger(record.practiceRequirement.count) ||
-        record.practiceRequirement.count <= 0 ||
-        !record.practiceRequirement.sourceOrRationale.trim())
+    if (
+      !Number.isInteger(record.practiceRequirement.count) ||
+      record.practiceRequirement.count <= 0 ||
+      !record.practiceRequirement.sourceOrRationale.trim()
+    )
       blockers.push("Repetition floor must have a positive count and verifiable provenance.");
     if (!record.practiceRequirement.signedPolicyId)
       blockers.push("Repetition floor needs an authenticated faculty release.");
@@ -115,15 +124,20 @@ export type PracticeEvent = {
   schoolId: string;
   exerciseId: string;
   mode: TrainingMode;
-  state: "attempted" | "evidence_submitted" | "review_pending" | "revision_requested" | "faculty_accepted";
+  state:
+    | "attempted"
+    | "evidence_submitted"
+    | "review_pending"
+    | "revision_requested"
+    | "faculty_accepted";
   facultyReviewId: string | null;
 };
 export function summarizePracticeEvents(
-  events: PracticeEvent[], schoolId: string, exerciseId: string
+  events: PracticeEvent[],
+  schoolId: string,
+  exerciseId: string,
 ) {
-  const matching = events.filter((e) =>
-    e.schoolId === schoolId && e.exerciseId === exerciseId
-  );
+  const matching = events.filter((e) => e.schoolId === schoolId && e.exerciseId === exerciseId);
   // Latest event for each practice attempt wins. Events arrive in chronological order.
   // This is a display helper; authoritative ordering and integrity are enforced server-side.
   const distinct = [...new Map(matching.map((e) => [e.attemptId, e])).values()];
@@ -131,11 +145,11 @@ export function summarizePracticeEvents(
     recordedAttempts: distinct.length,
     soloPreparation: distinct.filter((e) => e.mode === "solo").length,
     partnerOrGroupAttempts: distinct.filter((e) => e.mode !== "solo").length,
-    pendingReview: distinct.filter((e) =>
-      e.state === "evidence_submitted" || e.state === "review_pending"
+    pendingReview: distinct.filter(
+      (e) => e.state === "evidence_submitted" || e.state === "review_pending",
     ).length,
-    reportedAccepted: distinct.filter((e) =>
-      e.state === "faculty_accepted" && !!e.facultyReviewId && e.mode !== "solo"
+    reportedAccepted: distinct.filter(
+      (e) => e.state === "faculty_accepted" && !!e.facultyReviewId && e.mode !== "solo",
     ).length,
     // No client-derived "mastered", "passed" or "unlocked" field by design.
   };
@@ -145,8 +159,13 @@ export type PlacementReview = {
   schoolId: string;
   targetId: string;
   policyVersion: string;
-  state: "draft" | "evidence_submitted" | "faculty_review" |
-    "revision_requested" | "not_assessable" | "approved";
+  state:
+    | "draft"
+    | "evidence_submitted"
+    | "faculty_review"
+    | "revision_requested"
+    | "not_assessable"
+    | "approved";
   facultyReviewId: string | null;
 };
 /**
@@ -158,21 +177,53 @@ export function placementDisplayStatus(
   caseRecord: PlacementReview | null,
   schoolId: string,
   targetId: string,
-  currentPublishedPolicyVersion: string | null
+  currentPublishedPolicyVersion: string | null,
 ) {
   if (!currentPublishedPolicyVersion)
-    return { label: "Assessment unavailable", next: "Await faculty-reviewed policy", serverUnlock: false };
+    return {
+      label: "Assessment unavailable",
+      next: "Await faculty-reviewed policy",
+      serverUnlock: false,
+    };
   if (!caseRecord || caseRecord.schoolId !== schoolId || caseRecord.targetId !== targetId)
-    return { label: "Not assessed", next: "Request a scoped placement assessment", serverUnlock: false };
+    return {
+      label: "Not assessed",
+      next: "Request a scoped placement assessment",
+      serverUnlock: false,
+    };
   if (caseRecord.policyVersion !== currentPublishedPolicyVersion)
-    return { label: "Policy changed", next: "Request review under the current policy", serverUnlock: false };
+    return {
+      label: "Policy changed",
+      next: "Request review under the current policy",
+      serverUnlock: false,
+    };
   if (caseRecord.state === "approved" && caseRecord.facultyReviewId)
-    return { label: "Review recorded", next: "Request server-side eligibility verification", serverUnlock: false };
+    return {
+      label: "Review recorded",
+      next: "Request server-side eligibility verification",
+      serverUnlock: false,
+    };
   if (caseRecord.state === "approved")
-    return { label: "Invalid approval", next: "Qualified faculty review is missing", serverUnlock: false };
+    return {
+      label: "Invalid approval",
+      next: "Qualified faculty review is missing",
+      serverUnlock: false,
+    };
   if (caseRecord.state === "revision_requested")
-    return { label: "Revision required", next: "Complete targeted practice and resubmit", serverUnlock: false };
+    return {
+      label: "Revision required",
+      next: "Complete targeted practice and resubmit",
+      serverUnlock: false,
+    };
   if (caseRecord.state === "not_assessable")
-    return { label: "Evidence inconclusive", next: "Use an accessible alternative or request human review", serverUnlock: false };
-  return { label: "Not yet approved", next: "Complete the assessment and faculty review", serverUnlock: false };
+    return {
+      label: "Evidence inconclusive",
+      next: "Use an accessible alternative or request human review",
+      serverUnlock: false,
+    };
+  return {
+    label: "Not yet approved",
+    next: "Complete the assessment and faculty review",
+    serverUnlock: false,
+  };
 }

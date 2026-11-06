@@ -1,16 +1,25 @@
 import { describe, expect, it } from "vitest";
 import { MEISNER_EDITORIAL_TERM_ONE as pilot } from "@/data/meisner-editorial-term-one";
-import { WORKSHOP_ONE, KNOWLEDGE_CHECK, emptyNotes,
-  isCorrectAnswer, canStart, canContinue, canSummarize, practiceNote
+import {
+  WORKSHOP_ONE,
+  KNOWLEDGE_CHECK,
+  emptyNotes,
+  isCorrectAnswer,
+  canStart,
+  canContinue,
+  canSummarize,
+  practiceNote,
 } from "@/data/meisner-workshop-one";
 
 describe("Meisner first workshop source-grounded training preview", () => {
   it("uses original Content 03 identifiers and protects publication rules", () => {
     expect(WORKSHOP_ONE.id).toBe("meisner-t01-w01");
-    expect(WORKSHOP_ONE.lessons.map((lesson) => lesson.id))
-      .toEqual(pilot.lessons.slice(0, 3).map((lesson) => lesson.id));
-    expect(WORKSHOP_ONE.exercises.map((exercise) => exercise.id))
-      .toEqual(pilot.exercises.slice(0, 2).map((exercise) => exercise.id));
+    expect(WORKSHOP_ONE.lessons.map((lesson) => lesson.id)).toEqual(
+      pilot.lessons.slice(0, 3).map((lesson) => lesson.id),
+    );
+    expect(WORKSHOP_ONE.exercises.map((exercise) => exercise.id)).toEqual(
+      pilot.exercises.slice(0, 2).map((exercise) => exercise.id),
+    );
     expect(WORKSHOP_ONE.publicationAuthorized).toBe(false);
     expect(WORKSHOP_ONE.masteryAwardAllowed).toBe(false);
     expect(WORKSHOP_ONE.partnerReviewRequired).toBe(true);
@@ -40,7 +49,9 @@ describe("Meisner first workshop source-grounded training preview", () => {
     expect(canContinue("solo", 1, n)).toBe(false);
     n.partnerReply = "The partner corrected the statement";
     expect(canContinue("partner", 0, n)).toBe(true);
-    n.expected = "Yes"; n.actual = "No"; n.adjusted = "I reconsidered";
+    n.expected = "Yes";
+    n.actual = "No";
+    n.adjusted = "I reconsidered";
     expect(canContinue("partner", 1, n)).toBe(true);
   });
   it("keeps self-reflection separate from competence and server progression", () => {

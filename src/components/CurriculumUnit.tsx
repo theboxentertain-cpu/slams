@@ -75,7 +75,9 @@ export function CurriculumUnit({
       aria-busy={busy || (!!user && progress.isPending)}
     >
       {loading ? (
-        <p role="status"><T>Checking your account…</T></p>
+        <p role="status">
+          <T>Checking your account…</T>
+        </p>
       ) : user ? (
         <>
           <p className="curriculum-activity-status" role="status">
@@ -87,20 +89,26 @@ export function CurriculumUnit({
               busy || progress.isPending || !!progress.error || progress.data === "completed"
             }
             onClick={() => void saveStarted()}
-          ><T>
-            Start unit
-          </T></Button>
-          <p className="curriculum-activity-help text-xs text-muted-foreground"><T>
-            Starting records activity only. Academic completion needs evidence and authorized
-            assessment; no self-awarded credit.
-          </T></p>
+          >
+            <T>Start unit</T>
+          </Button>
+          <p className="curriculum-activity-help text-xs text-muted-foreground">
+            <T>
+              Starting records activity only. Academic completion needs evidence and authorized
+              assessment; no self-awarded credit.
+            </T>
+          </p>
         </>
       ) : (
         <>
-          {presentation === "lesson" && <p><T>Sign in to keep this unit in your training record.</T></p>}
-          <Link to="/auth" className="curriculum-signin underline"><T>
-            Sign in to save unit progress
-          </T></Link>
+          {presentation === "lesson" && (
+            <p>
+              <T>Sign in to keep this unit in your training record.</T>
+            </p>
+          )}
+          <Link to="/auth" className="curriculum-signin underline">
+            <T>Sign in to save unit progress</T>
+          </Link>
         </>
       )}
     </div>
@@ -126,13 +134,17 @@ export function CurriculumUnit({
               <p className="curriculum-reading-copy whitespace-pre-wrap">{unit.content}</p>
             </section>
             <aside className="curriculum-record" aria-label="Unit activity">
-              <h2><T>Your training record</T></h2>
+              <h2>
+                <T>Your training record</T>
+              </h2>
               {activity}
               {failure}
             </aside>
           </div>
         ) : (
-          <p className="availability-note"><T>Coming soon — reviewed material is not available.</T></p>
+          <p className="availability-note">
+            <T>Coming soon — reviewed material is not available.</T>
+          </p>
         )}
         {!published && failure}
         {children}
@@ -144,7 +156,9 @@ export function CurriculumUnit({
         {unit.title} · {kind}
       </summary>
       {!published ? (
-        <p className="text-sm text-warning"><T>Coming soon — reviewed material is not available.</T></p>
+        <p className="text-sm text-warning">
+          <T>Coming soon — reviewed material is not available.</T>
+        </p>
       ) : (
         <>
           <p className="mt-2 whitespace-pre-wrap">{unit.content}</p>

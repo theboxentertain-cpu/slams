@@ -90,7 +90,9 @@ export function StudioHeading({
         <span className="studio-passport-cover" aria-hidden="true">
           <Drama />
           <strong>SLAMS</strong>
-          <small><T>ACTOR’S PASSPORT</T></small>
+          <small>
+            <T>ACTOR’S PASSPORT</T>
+          </small>
         </span>
       )}
     </header>

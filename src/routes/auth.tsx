@@ -56,11 +56,13 @@ function Auth() {
         <Wordmark small />
       </Link>
       <main id="page-content" tabIndex={-1} className="standard-auth-panel">
-        <h1 className="sr-only"><T>Your SLAMS account</T></h1>
+        <h1 className="sr-only">
+          <T>Your SLAMS account</T>
+        </h1>
         {form}
-        <Link className="account-tour" to="/welcome"><T>
-          New to the studio? Take a look.
-        </T></Link>
+        <Link className="account-tour" to="/welcome">
+          <T>New to the studio? Take a look.</T>
+        </Link>
       </main>
     </div>
   );

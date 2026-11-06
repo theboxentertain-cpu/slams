@@ -58,27 +58,31 @@ function Passport() {
         {(current) =>
           current !== "journey" ? (
             <Unavailable>
-              {t(current === "evidence"
-                ? "Your saved text reflections are available in Journey. Recording and evidence attachments are not implemented."
-                : current === "badges"
-                  ? "No competence badges are awarded. Reviewed achievement criteria are not available."
-                  : "Portfolio projects and assessment records are in development.")}
+              {t(
+                current === "evidence"
+                  ? "Your saved text reflections are available in Journey. Recording and evidence attachments are not implemented."
+                  : current === "badges"
+                    ? "No competence badges are awarded. Reviewed achievement criteria are not available."
+                    : "Portfolio projects and assessment records are in development.",
+              )}
             </Unavailable>
           ) : (
             <div>
               {!sessionLoading && !signedIn && (
                 <p className="mb-4 rounded border border-warning p-3 text-sm">
                   Local-only: entries live in this browser. Clearing browser data deletes them.{" "}
-                  <Link to="/auth" className="underline"><T>
-                    Sign in to save them to your account.
-                  </T></Link>
+                  <Link to="/auth" className="underline">
+                    <T>Sign in to save them to your account.</T>
+                  </Link>
                 </p>
               )}
               {signedIn && (
-                <p className="mb-4 rounded border border-border p-3 text-sm"><T>
-                  Entries are saved to your account. Cross-device behavior still requires live
-                  verification.
-                </T></p>
+                <p className="mb-4 rounded border border-border p-3 text-sm">
+                  <T>
+                    Entries are saved to your account. Cross-device behavior still requires live
+                    verification.
+                  </T>
+                </p>
               )}
               {signedIn && localCount > 0 && (
                 <div className="mb-4 rounded border border-amber p-3 text-sm">
@@ -107,13 +111,17 @@ function Passport() {
               )}
               {importMsg && localCount === 0 && <p role="status">{importMsg}</p>}
               {!loaded ? (
-                <p role="status"><T>Loading…</T></p>
+                <p role="status">
+                  <T>Loading…</T>
+                </p>
               ) : entries.length === 0 ? (
                 <div className="panel p-4 text-center">
-                  <p><T>No rehearsals saved yet.</T></p>
-                  <Link to="/scene" className={`${btnPrimary} mt-3`}><T>
-                    Start rehearsal
-                  </T></Link>
+                  <p>
+                    <T>No rehearsals saved yet.</T>
+                  </p>
+                  <Link to="/scene" className={`${btnPrimary} mt-3`}>
+                    <T>Start rehearsal</T>
+                  </Link>
                 </div>
               ) : (
                 <>
@@ -124,24 +132,39 @@ function Passport() {
                           {new Date(e.date).toLocaleString()} · “Stay” demo
                         </p>
                         <p className="mt-1">
-                          <b><T>Tactic:</T></b> {t(e.tactic)}
+                          <b>
+                            <T>Tactic:</T>
+                          </b>{" "}
+                          {t(e.tactic)}
                         </p>
                         <p>
-                          <b><T>Intervention:</T></b> {e.intervention}
+                          <b>
+                            <T>Intervention:</T>
+                          </b>{" "}
+                          {e.intervention}
                         </p>
                         <p>
-                          <b><T>Exercise:</T></b> {e.exerciseNote}
+                          <b>
+                            <T>Exercise:</T>
+                          </b>{" "}
+                          {e.exerciseNote}
                         </p>
                         <p>
-                          <b><T>Obstacle:</T></b> {t(e.obstacle)}
+                          <b>
+                            <T>Obstacle:</T>
+                          </b>{" "}
+                          {t(e.obstacle)}
                         </p>
                         <p>
-                          <b><T>Retake:</T></b> {e.retakeLine}
+                          <b>
+                            <T>Retake:</T>
+                          </b>{" "}
+                          {e.retakeLine}
                         </p>
                         <p className="mt-2 italic">“{e.reflection}”</p>
-                        <button className={`${btnSecondary} mt-2`} onClick={() => remove(e.id)}><T>
-                          Delete entry
-                        </T></button>
+                        <button className={`${btnSecondary} mt-2`} onClick={() => remove(e.id)}>
+                          <T>Delete entry</T>
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -150,9 +173,9 @@ function Passport() {
                     onClick={() => {
                       if (confirm(t("Delete all Passport entries?"))) clear();
                     }}
-                  ><T>
-                    Delete all Passport entries
-                  </T></button>
+                  >
+                    <T>Delete all Passport entries</T>
+                  </button>
                 </>
               )}
             </div>

@@ -28,16 +28,18 @@ export function DemoBanner() {
         className="bg-secondary px-3 py-1.5 text-center text-xs font-bold text-foreground"
       >
         {t("Signed in as")} <bdi>{user.email}</bdi>.{" "}
-        {t("Passport and audition notes save to your account. Director settings stay on this device.")}
+        {t(
+          "Passport and audition notes save to your account. Director settings stay on this device.",
+        )}
       </p>
     );
   }
   return (
     <p role="note" className="bg-warning px-3 py-1.5 text-center text-xs font-bold text-charcoal">
       {t("GUEST STUDIO — rehearsal reflections and audition notes stay in this browser.")}{" "}
-      <Link to="/auth" className="underline"><T>
-        Sign in to save to your account.
-      </T></Link>
+      <Link to="/auth" className="underline">
+        <T>Sign in to save to your account.</T>
+      </Link>
     </p>
   );
 }
@@ -50,9 +52,9 @@ export function AccountLink() {
   if (loading) return null;
   if (!user) {
     return (
-      <Link to="/auth" className="account-link rounded bg-secondary px-3 py-2 text-sm"><T>
-        Sign in
-      </T></Link>
+      <Link to="/auth" className="account-link rounded bg-secondary px-3 py-2 text-sm">
+        <T>Sign in</T>
+      </Link>
     );
   }
   return (
@@ -90,10 +92,12 @@ export function DirectorToggle() {
   const [mode, setMode] = useDirectorMode();
   return (
     <fieldset className="director-controls flex items-center gap-1 text-xs">
-      <legend className="sr-only"><T>Director mode</T></legend>
-      <span className="mr-1 text-muted-foreground" aria-hidden><T>
-        Director
-      </T></span>
+      <legend className="sr-only">
+        <T>Director mode</T>
+      </legend>
+      <span className="mr-1 text-muted-foreground" aria-hidden>
+        <T>Director</T>
+      </span>
       {(["on", "quiet", "off"] as DirectorMode[]).map((m) => (
         <button
           key={m}
@@ -128,7 +132,9 @@ export function DirectorNote({
     <aside aria-label="The Director" className="panel mt-4 flex gap-3 border-amber/40 p-3 text-sm">
       <DirectorPortrait expression={expression} className="director-note-portrait" />
       <p>
-        <span className="font-bold text-amber"><T>The Director: </T></span>
+        <span className="font-bold text-amber">
+          <T>The Director: </T>
+        </span>
         {mode === "quiet" && short ? t(short) : children}
       </p>
     </aside>
@@ -157,12 +163,14 @@ export function Page({
     <div data-school={school} data-world={world} className="studio-page min-h-screen">
       <DemoBanner />
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-3">
-        <Link to={backTo} className="page-back-button rounded bg-secondary px-3 py-2 text-sm"><T>
-          ← Back
-        </T></Link>
+        <Link to={backTo} className="page-back-button rounded bg-secondary px-3 py-2 text-sm">
+          <T>← Back</T>
+        </Link>
         <Link to="/" aria-label="Return to the Director’s Office" className="page-office-link">
           <Wordmark small />
-          <span><T>THE OFFICE</T></span>
+          <span>
+            <T>THE OFFICE</T>
+          </span>
         </Link>
         <ProfileMenu />
       </header>

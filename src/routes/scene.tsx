@@ -88,22 +88,28 @@ function Scene() {
         {step === "explore" && (
           <>
             <p>{tx(SCENE.setup)}</p>
-            <p className="mt-2 font-bold"><T>Objective:</T> {tx(SCENE.objective)}</p>
-            <p className="mt-2 text-xs text-muted-foreground"><T>
-              Original scene written for demonstration. Sam's responses are fixed and scripted —
-              nothing here judges or grades you.
-            </T></p>
-            <button className={`${btnPrimary} mt-4 w-full`} onClick={() => setStep("perform")}><T>
-              Begin take
-            </T></button>
+            <p className="mt-2 font-bold">
+              <T>Objective:</T> {tx(SCENE.objective)}
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              <T>
+                Original scene written for demonstration. Sam's responses are fixed and scripted —
+                nothing here judges or grades you.
+              </T>
+            </p>
+            <button className={`${btnPrimary} mt-4 w-full`} onClick={() => setStep("perform")}>
+              <T>Begin take</T>
+            </button>
           </>
         )}
         {step === "perform" && (
           <>
-            <h2 className="text-xl font-bold"><T>Take 1 — choose your tactic</T></h2>
-            <p className="mb-3 text-sm text-muted-foreground"><T>
-              Read the line aloud if you like, then commit.
-            </T></p>
+            <h2 className="text-xl font-bold">
+              <T>Take 1 — choose your tactic</T>
+            </h2>
+            <p className="mb-3 text-sm text-muted-foreground">
+              <T>Read the line aloud if you like, then commit.</T>
+            </p>
             <div className="grid gap-2">
               {TACTICS.map((x) => (
                 <button
@@ -123,16 +129,20 @@ function Scene() {
         )}
         {step === "response" && t && (
           <>
-            <p className="text-sm text-muted-foreground"><T>You:</T> “{tx(t.line)}”</p>
+            <p className="text-sm text-muted-foreground">
+              <T>You:</T> “{tx(t.line)}”
+            </p>
             <p className="mt-3 text-lg">{tx(t.response)}</p>
-            <button className={`${btnPrimary} mt-4 w-full`} onClick={() => setStep("intervene")}><T>
-              Cut — call an intervention
-            </T></button>
+            <button className={`${btnPrimary} mt-4 w-full`} onClick={() => setStep("intervene")}>
+              <T>Cut — call an intervention</T>
+            </button>
           </>
         )}
         {step === "intervene" && (
           <>
-            <h2 className="text-xl font-bold"><T>Choose one technique intervention</T></h2>
+            <h2 className="text-xl font-bold">
+              <T>Choose one technique intervention</T>
+            </h2>
             <div className="mt-3 grid gap-2">
               {INTERVENTIONS.map((x) => (
                 <button
@@ -157,9 +167,9 @@ function Scene() {
           <>
             <h2 className="text-xl font-bold">{iv.school} exercise</h2>
             <p className="mt-2 text-sm">{tx(iv.exercisePrompt)}</p>
-            <label htmlFor="ex" className="sr-only"><T>
-              Your exercise
-            </T></label>
+            <label htmlFor="ex" className="sr-only">
+              <T>Your exercise</T>
+            </label>
             <textarea
               id="ex"
               value={note}
@@ -172,29 +182,40 @@ function Scene() {
               disabled={note.trim().length < 3}
               className={`${btnPrimary} mt-3 w-full`}
               onClick={() => setStep("retake")}
-            ><T>
-              Go to retake
-            </T></button>
+            >
+              <T>Go to retake</T>
+            </button>
           </>
         )}
         {step === "retake" && (
           <>
-            <h2 className="text-xl font-bold"><T>Take 2 — new obstacle</T></h2>
+            <h2 className="text-xl font-bold">
+              <T>Take 2 — new obstacle</T>
+            </h2>
             <p className="mt-2 rounded border border-crimson p-3">{tx(obstacle)}</p>
             <div className="mt-3 space-y-2 text-sm">
               <p>
-                <strong><T>Earlier tactic:</T></strong> {t?.verb}
+                <strong>
+                  <T>Earlier tactic:</T>
+                </strong>{" "}
+                {t?.verb}
               </p>
               <p>
-                <strong><T>Your intervention:</T></strong> {iv?.school} — {iv?.label}
+                <strong>
+                  <T>Your intervention:</T>
+                </strong>{" "}
+                {iv?.school} — {iv?.label}
               </p>
               <p className="whitespace-pre-wrap break-words">
-                <strong><T>Your exercise note:</T></strong> {note}
+                <strong>
+                  <T>Your exercise note:</T>
+                </strong>{" "}
+                {note}
               </p>
             </div>
-            <label htmlFor="rt" className="mt-3 block text-sm"><T>
-              Your new line or action
-            </T></label>
+            <label htmlFor="rt" className="mt-3 block text-sm">
+              <T>Your new line or action</T>
+            </label>
             <textarea
               id="rt"
               value={retakeLine}
@@ -206,33 +227,39 @@ function Scene() {
               disabled={retakeLine.trim().length < 3}
               className={`${btnPrimary} mt-3 w-full`}
               onClick={() => setStep("reflect")}
-            ><T>
-              Cut — end take
-            </T></button>
+            >
+              <T>Cut — end take</T>
+            </button>
             <button
               type="button"
               className={`${btnSecondary} mt-3 w-full`}
               onClick={() => setStep("practice")}
-            ><T>
-              Back to exercise
-            </T></button>
+            >
+              <T>Back to exercise</T>
+            </button>
           </>
         )}
         {step === "reflect" && (
           <>
-            <h2 className="text-xl font-bold"><T>Reflection</T></h2>
-            <p className="text-sm text-muted-foreground"><T>
-              What changed between take 1 and take 2? Only you can judge this.
-            </T></p>
+            <h2 className="text-xl font-bold">
+              <T>Reflection</T>
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              <T>What changed between take 1 and take 2? Only you can judge this.</T>
+            </p>
             <section
               aria-label="Rehearsal summary"
               className="my-4 rounded border border-border p-3"
             >
-              <h3 className="font-bold"><T>Your two takes, on the page</T></h3>
-              <p className="mt-1 text-xs text-muted-foreground"><T>
-                The partner response is scripted. The exercise, retake and reflection are your own
-                notes.
-              </T></p>
+              <h3 className="font-bold">
+                <T>Your two takes, on the page</T>
+              </h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                <T>
+                  The partner response is scripted. The exercise, retake and reflection are your own
+                  notes.
+                </T>
+              </p>
               <dl className="mt-3 grid gap-3 text-sm">
                 {[
                   ["First-take tactic", `${t?.verb}: “${t?.line}”`],
@@ -249,9 +276,9 @@ function Scene() {
                 ))}
               </dl>
             </section>
-            <label htmlFor="rf" className="sr-only"><T>
-              Reflection
-            </T></label>
+            <label htmlFor="rf" className="sr-only">
+              <T>Reflection</T>
+            </label>
             <textarea
               id="rf"
               value={reflection}
@@ -274,13 +301,13 @@ function Scene() {
             >
               {tx(saving ? "Saving…" : "Save to Passport")}
             </button>
-            <p className="mt-3 text-sm text-muted-foreground"><T>
-              Saving is optional. Leaving without saving discards this rehearsal’s notes.
-            </T></p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              <T>Saving is optional. Leaving without saving discards this rehearsal’s notes.</T>
+            </p>
             {!saving && (
-              <Link to="/" className={`${btnSecondary} mt-2 w-full`}><T>
-                Continue to the Office without saving
-              </T></Link>
+              <Link to="/" className={`${btnSecondary} mt-2 w-full`}>
+                <T>Continue to the Office without saving</T>
+              </Link>
             )}
             {!saving && (
               <>
@@ -291,32 +318,38 @@ function Scene() {
                     setError("");
                     setStep("retake");
                   }}
-                ><T>
-                  Practice again
-                </T></button>
-                <p className="mt-3 text-sm text-muted-foreground"><T>
-                  Practice again edits this retake and keeps your notes. Leaving without saving
-                  discards the unsaved rehearsal.
-                </T></p>
-                <Link to="/rehearsal" className={`${btnSecondary} mt-2 w-full`}><T>
-                  Return to rehearsal without saving
-                </T></Link>
+                >
+                  <T>Practice again</T>
+                </button>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  <T>
+                    Practice again edits this retake and keeps your notes. Leaving without saving
+                    discards the unsaved rehearsal.
+                  </T>
+                </p>
+                <Link to="/rehearsal" className={`${btnSecondary} mt-2 w-full`}>
+                  <T>Return to rehearsal without saving</T>
+                </Link>
               </>
             )}
           </>
         )}
         {step === "saved" && (
           <>
-            <h2 className="text-xl font-bold"><T>Saved to your Passport</T></h2>
+            <h2 className="text-xl font-bold">
+              <T>Saved to your Passport</T>
+            </h2>
             <p className="text-sm text-muted-foreground">
-              {tx(passport.signedIn
-                ? "Saved to your account in Lovable Cloud."
-                : "Stored in this browser only (demo mode).")}
+              {tx(
+                passport.signedIn
+                  ? "Saved to your account in Lovable Cloud."
+                  : "Stored in this browser only (demo mode).",
+              )}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              <Link to="/passport" className={btnPrimary}><T>
-                Open Passport
-              </T></Link>
+              <Link to="/passport" className={btnPrimary}>
+                <T>Open Passport</T>
+              </Link>
               <button
                 className={btnSecondary}
                 onClick={() => {
@@ -327,22 +360,40 @@ function Scene() {
                   setRetakeLine("");
                   setReflection("");
                 }}
-              ><T>
-                Rehearse again
-              </T></button>
-              <Link to="/rehearsal" className={btnSecondary}><T>
-                Return to the rehearsal studio
-              </T></Link>
+              >
+                <T>Rehearse again</T>
+              </button>
+              <Link to="/rehearsal" className={btnSecondary}>
+                <T>Return to the rehearsal studio</T>
+              </Link>
             </div>
           </>
         )}
       </div>
-      <DirectorNote performing={performing} expression={step === "saved" ? "proud" : step === "intervene" ? "critical" : step === "reflect" ? "observant" : "master"} short={tx(step === "saved" ? "Your reflection is saved." : "Play the action, not the result.")}>
-        {tx(step === "intervene"
-          ? "Each intervention gives you a different retake problem. Pick the one you want to train."
-          : step === "saved" ? "Your reflection is saved. Evidence of the work, not a verdict on your talent."
-          : step === "reflect" ? "What changed? Be specific. Your observation matters more than my approval."
-          : "Play the action, not the result. I'll stay silent during takes.")}
+      <DirectorNote
+        performing={performing}
+        expression={
+          step === "saved"
+            ? "proud"
+            : step === "intervene"
+              ? "critical"
+              : step === "reflect"
+                ? "observant"
+                : "master"
+        }
+        short={tx(
+          step === "saved" ? "Your reflection is saved." : "Play the action, not the result.",
+        )}
+      >
+        {tx(
+          step === "intervene"
+            ? "Each intervention gives you a different retake problem. Pick the one you want to train."
+            : step === "saved"
+              ? "Your reflection is saved. Evidence of the work, not a verdict on your talent."
+              : step === "reflect"
+                ? "What changed? Be specific. Your observation matters more than my approval."
+                : "Play the action, not the result. I'll stay silent during takes.",
+        )}
       </DirectorNote>
     </Page>
   );

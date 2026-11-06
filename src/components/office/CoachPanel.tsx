@@ -27,19 +27,23 @@ export function CoachPanel({
           onReturnFocus();
         }}
       >
-        <DialogTitle><T>The Acting Coach</T></DialogTitle>
-        <DialogDescription><T>
-          Your reluctant accomplice. Set the level of company, then get back to the work.
-        </T></DialogDescription>
+        <DialogTitle>
+          <T>The Acting Coach</T>
+        </DialogTitle>
+        <DialogDescription>
+          <T>Your reluctant accomplice. Set the level of company, then get back to the work.</T>
+        </DialogDescription>
         <DirectorPortrait expression={expression} />
         <DirectorToggle />
-        <p><T>
-          Comments stay silent during takes. Responses use scripted choices and confirmed records,
-          never invented performance analysis.
-        </T></p>
-        <Link to="/director" onClick={() => onOpenChange(false)}><T>
-          Meet the Director and explore controls
-        </T></Link>
+        <p>
+          <T>
+            Comments stay silent during takes. Responses use scripted choices and confirmed records,
+            never invented performance analysis.
+          </T>
+        </p>
+        <Link to="/director" onClick={() => onOpenChange(false)}>
+          <T>Meet the Director and explore controls</T>
+        </Link>
       </DialogContent>
     </Dialog>
   );

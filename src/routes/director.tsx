@@ -29,35 +29,46 @@ function Director() {
       <div className="director-profile">
         <DirectorPortrait expression={expression} />
         <div>
-          <p className="director-profile-quote"><T>
-            “I can’t do the work for you.
-            </T><br /><T>
-            Terrible arrangement, I know.”
-          </T></p>
-          <p><T>
-            Your studio guide. Dry observations, a little perspective, and the good sense to stay
-            quiet during a take.
-          </T></p>
+          <p className="director-profile-quote">
+            <T>“I can’t do the work for you.</T>
+            <br />
+            <T>Terrible arrangement, I know.”</T>
+          </p>
+          <p>
+            <T>
+              Your studio guide. Dry observations, a little perspective, and the good sense to stay
+              quiet during a take.
+            </T>
+          </p>
           <div className="director-settings-block">
-            <h2><T>How much Director?</T></h2>
+            <h2>
+              <T>How much Director?</T>
+            </h2>
             <DirectorToggle />
-            <p><T>
-              ON gives you the full note. QUIET keeps it brief. OFF leaves you in peace. Your
-              preference stays in this browser.
-            </T></p>
+            <p>
+              <T>
+                ON gives you the full note. QUIET keeps it brief. OFF leaves you in peace. Your
+                preference stays in this browser.
+              </T>
+            </p>
           </div>
-          <Link to="/scene" className={btnPrimary}><T>
-            Back to the work </T><span aria-hidden="true">↗</span>
+          <Link to="/scene" className={btnPrimary}>
+            <T>Back to the work </T>
+            <span aria-hidden="true">↗</span>
           </Link>
         </div>
       </div>
       <details className="director-expression-gallery">
-        <summary><T>The many faces of a very long day</T></summary>
-        <p><T>
-          Character expressions, not an assessment of your acting. SLAMS uses scripted scene
-          responses and your confirmed saved records; it does not listen to or grade your
-          performance.
-        </T></p>
+        <summary>
+          <T>The many faces of a very long day</T>
+        </summary>
+        <p>
+          <T>
+            Character expressions, not an assessment of your acting. SLAMS uses scripted scene
+            responses and your confirmed saved records; it does not listen to or grade your
+            performance.
+          </T>
+        </p>
         <div>
           {DIRECTOR_EXPRESSIONS.filter((state) => state !== "master").map((state) => (
             <button

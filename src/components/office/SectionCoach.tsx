@@ -44,14 +44,20 @@ export function SectionCoach({
           }
           className="section-coach-portrait"
         />
-        {compact && <span className="section-coach-label"><T>The Director</T></span>}
+        {compact && (
+          <span className="section-coach-label">
+            <T>The Director</T>
+          </span>
+        )}
         <span className="section-coach-cue" aria-hidden="true">
           {open ? <X size={17} /> : <MessageCircle size={17} />}
         </span>
       </Button>
       {open && (
         <p className="section-coach-note" role="status">
-          <strong><T>The Director</T></strong>
+          <strong>
+            <T>The Director</T>
+          </strong>
           {mode === "quiet" ? coach.short : coach.note}
         </p>
       )}
