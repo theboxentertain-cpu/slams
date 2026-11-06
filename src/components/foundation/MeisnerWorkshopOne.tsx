@@ -1,4 +1,4 @@
-import { T } from "@/lib/i18n";
+import { T, useLanguage } from "@/lib/i18n";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { DirectorNote, btnPrimary, btnSecondary } from "@/components/slams";
@@ -38,12 +38,13 @@ function Field({
   onChange: (value: string) => void;
   hint?: string;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="mt-4">
       <label htmlFor={id} className="block font-semibold">
-        {label}
+        {t(label)}
       </label>
-      {hint && <p className="mt-1 text-sm text-muted-foreground">{hint}</p>}
+      {hint && <p className="mt-1 text-sm text-muted-foreground">{t(hint)}</p>}
       <textarea
         id={id}
         rows={3}
@@ -69,6 +70,7 @@ export function MeisnerWorkshopOne() {
 }
 
 function WorkshopRun() {
+  const { t } = useLanguage();
   const [stage, setStage] = useState<Stage>("learn");
   const [lessonNumber, setLessonNumber] = useState(0);
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -149,7 +151,7 @@ function WorkshopRun() {
         </T>
       </p>
       <p className="mt-3 text-sm font-semibold" role="status">
-        {stages[stage]}
+        {t(stages[stage])}
       </p>
 
       {stage === "learn" && (
@@ -157,32 +159,32 @@ function WorkshopRun() {
           <p className="text-xs text-muted-foreground">
             Lesson {lessonNumber + 1} of 3 · {lesson.id}
           </p>
-          <h4 className="mt-2 text-lg font-semibold">{lesson.title}</h4>
+          <h4 className="mt-2 text-lg font-semibold">{t(lesson.title)}</h4>
           <p className="mt-3">
             <strong>
               <T>Why:</T>
             </strong>{" "}
-            {lesson.why}
+            {t(lesson.why)}
           </p>
           <p className="mt-3">
             <strong>
               <T>Demonstration:</T>
             </strong>{" "}
-            {lesson.example}
+            {t(lesson.example)}
           </p>
           <p className="mt-3">
             <strong>
               <T>Try:</T>
             </strong>{" "}
-            {lesson.apply}
+            {t(lesson.apply)}
           </p>
           <p className="mt-3">
             <strong>
               <T>Avoid:</T>
             </strong>{" "}
-            {lesson.caution}
+            {t(lesson.caution)}
           </p>
-          <DirectorNote short="Observe, then respond.">{lesson.director}</DirectorNote>
+          <DirectorNote short="Observe, then respond.">{t(lesson.director)}</DirectorNote>
           <div className="mt-5 flex flex-wrap gap-2">
             <button
               type="button"
@@ -223,7 +225,7 @@ function WorkshopRun() {
             Example {questionNumber + 1} of {KNOWLEDGE_CHECK.length}
           </p>
           <fieldset className="mt-3">
-            <legend className="text-lg font-semibold">“{question.statement}”</legend>
+            <legend className="text-lg font-semibold">“{t(question.statement)}”</legend>
             <div className="mt-3 flex flex-wrap gap-2">
               {(
                 [
@@ -239,18 +241,18 @@ function WorkshopRun() {
                   className={btnSecondary}
                   onClick={() => setAnswer(value)}
                 >
-                  {label}
+                  {t(label)}
                 </button>
               ))}
             </div>
           </fieldset>
           {answer && (
             <div role="status" className="availability-note mt-3">
-              <strong>{correct ? "Correct." : "Reconsider your answer."}</strong>
+              <strong>{t(correct ? "Correct." : "Reconsider your answer.")}</strong>
               <p>
                 {correct
-                  ? question.why
-                  : "Does this describe an observable event, an inference, or the speaker's own experience?"}
+                  ? t(question.why)
+                  : t("Does this describe an observable event, an inference, or the speaker's own experience?")}
               </p>
             </div>
           )}
@@ -399,10 +401,10 @@ function WorkshopRun() {
       {stage === "practice" && (
         <section className="mt-4" aria-label="Guided exercise">
           <p className="text-xs text-muted-foreground">
-            {mode === "solo" ? "SOLO PREPARATION" : "REAL PARTNER · SELF-REPORTED ONLY"}
+            {t(mode === "solo" ? "SOLO PREPARATION" : "REAL PARTNER · SELF-REPORTED ONLY")}
           </p>
           <h4 className="mt-2 text-lg font-semibold">
-            {exercise === 0 ? WORKSHOP_ONE.exercises[0].title : WORKSHOP_ONE.exercises[1].title}
+            {t(exercise === 0 ? WORKSHOP_ONE.exercises[0].title : WORKSHOP_ONE.exercises[1].title)}
           </h4>
           <ol className="mt-3 list-decimal space-y-2 pl-5">
             {(exercise === 0
@@ -425,7 +427,7 @@ function WorkshopRun() {
                   "Answer what you heard. Swap roles and reflect.",
                 ]
             ).map((step) => (
-              <li key={step}>{step}</li>
+              <li key={step}>{t(step)}</li>
             ))}
           </ol>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -488,10 +490,10 @@ function WorkshopRun() {
           )}
           <div className="mt-4 rounded border border-border bg-secondary p-3">
             <p role="status" aria-live="polite" className="font-semibold">
-              Practice round {roundCount(mode, exercise, rounds)} of {EDITORIAL_PRACTICE_ROUNDS} recorded
+              {t("Practice round")} {roundCount(mode, exercise, rounds)} {t("of")} {EDITORIAL_PRACTICE_ROUNDS} {t("recorded")}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Three distinct written rounds are the SLAMS preview target, not an official Meisner requirement or an evaluation. Nothing is saved unless you explicitly copy your note.
+              <T>Three distinct written rounds are the SLAMS preview target, not an official Meisner requirement or an evaluation. Nothing is saved unless you explicitly copy your note.</T>
             </p>
             <button
               type="button"
@@ -499,7 +501,7 @@ function WorkshopRun() {
               disabled={!canLogPracticeRep(mode, exercise, notes, rounds)}
               onClick={logRound}
             >
-              Record this practice round
+              <T>Record this practice round</T>
             </button>
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
