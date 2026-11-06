@@ -61,9 +61,14 @@ describe("Meisner Workshop 1 guided editorial preview", () => {
     render(<MeisnerWorkshopOne />);
     reachPracticeChoice();
     fireEvent.click(screen.getByRole("button", { name: "Begin practice" }));
-    fill("What observable event did you notice?", "The chair moved.");
-    fill("What explanation or assumption occurred to you?", "Someone was impatient.");
-    fill("How can you express this more accurately?", "The chair moved to the left.");
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeDisabled();
+    completeRounds([
+      ["What observable event did you notice?", "The chair moved."],
+      ["What explanation or assumption occurred to you?", "Someone was impatient."],
+      ["How can you express this more accurately?", "The chair moved to the left."],
+    ]);
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeEnabled();
+    expect(screen.getByText("Practice round 3 of 3 recorded")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Exercise 02 — Receive" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Reflect on this attempt" }));
     fill("What did you notice about your assumptions?", "I guessed the motive.");
