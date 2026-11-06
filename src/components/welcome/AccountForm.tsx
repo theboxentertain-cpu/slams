@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff } from "lucide-react";
@@ -94,11 +95,11 @@ export function AccountForm({
       if (active.current) setBusy(false);
     }
   }
-  if (loading) return <p role="status">Checking your account…</p>;
+  if (loading) return <p role="status"><T>Checking your account…</T></p>;
   if (user)
     return (
       <section className="account-form">
-        <h2>Signed in</h2>
+        <h2><T>Signed in</T></h2>
         <p>{user.email}</p>
         <Link
           className={welcome ? "welcome-primary" : "account-submit"}
@@ -122,9 +123,9 @@ export function AccountForm({
               if (active.current) setBusy(false);
             }
           }}
-        >
+        ><T>
           Sign out
-        </button>
+        </T></button>
         {error && <p role="alert">{error}</p>}
       </section>
     );
@@ -141,8 +142,8 @@ export function AccountForm({
       <form onSubmit={submit} className="account-fields">
         {mode === "signup" && (
           <label>
-            <span>
-              Full name <small>(optional)</small>
+            <span><T>
+              Full name </T><small><T>(optional)</T></small>
             </span>
             <input
               autoComplete="name"
@@ -153,9 +154,9 @@ export function AccountForm({
             />
           </label>
         )}
-        <label>
+        <label><T>
           Email
-          <input
+          </T><input
             type="email"
             required
             autoComplete="email"
@@ -165,9 +166,9 @@ export function AccountForm({
           />
         </label>
         {mode !== "forgot" && (
-          <label>
+          <label><T>
             Password
-            <span className="password-control">
+            </T><span className="password-control">
               <input
                 type={showPassword ? "text" : "password"}
                 required
@@ -191,9 +192,9 @@ export function AccountForm({
         )}
         {mode === "signup" && (
           <>
-            <label>
+            <label><T>
               Confirm password
-              <span className="password-control">
+              </T><span className="password-control">
                 <input
                   type={showConfirm ? "text" : "password"}
                   required
@@ -247,29 +248,29 @@ export function AccountForm({
       </form>
       <div className="account-mode-links">
         {mode !== "signin" && (
-          <button disabled={busy} onClick={() => changeMode("signin")}>
+          <button disabled={busy} onClick={() => changeMode("signin")}><T>
             Sign in
-          </button>
+          </T></button>
         )}
         {mode !== "signup" && (
-          <button disabled={busy} onClick={() => changeMode("signup")}>
+          <button disabled={busy} onClick={() => changeMode("signup")}><T>
             Create account
-          </button>
+          </T></button>
         )}
         {mode !== "forgot" && (
-          <button disabled={busy} onClick={() => changeMode("forgot")}>
+          <button disabled={busy} onClick={() => changeMode("forgot")}><T>
             Forgot password?
-          </button>
+          </T></button>
         )}
       </div>
       {welcome && (
         <>
-          <p className="account-provider-note">
+          <p className="account-provider-note"><T>
             Email sign-in is available. Social sign-in is not enabled.
-          </p>
-          <Link className="account-guest" to="/scene" onClick={enterStudio}>
+          </T></p>
+          <Link className="account-guest" to="/scene" onClick={enterStudio}><T>
             Continue as guest
-          </Link>
+          </T></Link>
         </>
       )}
     </section>
