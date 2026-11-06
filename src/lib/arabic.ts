@@ -1262,7 +1262,6 @@ export const arabic: Record<string, string> = {
   year: "سنة",
   years: "سنوات",
   "Practice round": "جولة التدريب",
-  of: "من",
   recorded: "مسجلة",
   "Record this practice round": "سجّل جولة التدريب هذه",
   "Three distinct written rounds are the SLAMS preview target, not an official Meisner requirement or an evaluation. Nothing is saved unless you explicitly copy your note.":
