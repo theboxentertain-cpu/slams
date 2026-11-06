@@ -8,6 +8,7 @@ import { CoverDrawing } from "@/components/office/SchoolBooks";
 import { SchoolPortrait } from "./SchoolPortrait";
 import { CurriculumUnit } from "@/components/CurriculumUnit";
 import { MeisnerAcademicPreview } from "./MeisnerAcademicPreview";
+import { StanislavskiAcademicPreview } from "./StanislavskiAcademicPreview";
 import {
   useCatalog,
   useTrainingProgress,
@@ -216,9 +217,11 @@ export function SchoolPage({ school, tab, onTabChange }: TabProps & { school: st
               <p>
                 {school === "meisner"
                   ? "Explore the provisional school structure and the first-term SLAMS editorial preview. The preview is awaiting qualified teaching review and does not award academic credit."
-                  : "This independently designed SLAMS school structure remains subject to academic review. Detailed principles, history, demonstrations and school-specific teaching material have not been supplied."}
+                  : school === "stanislavski"
+                    ? "Explore the first Stanislavski workshop: original source-mapped lessons, knowledge checks and a private practice journal. The material remains an unreviewed SLAMS pilot; it cannot award academic credit."
+                    : "This independently designed SLAMS school structure remains subject to academic review. Detailed principles, history, demonstrations and school-specific teaching material have not been supplied."}
               </p>
-              {school === "meisner" && (
+              {(school === "meisner" || school === "stanislavski") && (
                 <Link
                   to="/conservatory/$school/years/$year/terms/$term"
                   params={{ school, year: "1", term: "1" }}
@@ -344,6 +347,7 @@ export function TermPage({ school, year, term }: { school: string; year: string;
         </T>
       </p>
       {school === "meisner" && year === "1" && term === "1" && <MeisnerAcademicPreview />}
+      {school === "stanislavski" && year === "1" && term === "1" && <StanislavskiAcademicPreview />}
       <CatalogState catalog={catalog} />
       <UnitList
         units={catalog.units.filter(
