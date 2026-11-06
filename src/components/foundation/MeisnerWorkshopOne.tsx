@@ -9,7 +9,6 @@ import {
   emptyNotes,
   isCorrectAnswer,
   canStart,
-  canContinue,
   canSummarize,
   practiceNote,
   addPracticeRep,
