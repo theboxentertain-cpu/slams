@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Page, AccountLink, DirectorToggle, btnSecondary } from "@/components/slams";
 import { useOfficePreferences } from "@/lib/office-preferences";
+import { LanguageSwitch, useLanguage } from "@/lib/i18n";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 export function SettingsPage({
   tab,
@@ -10,20 +11,21 @@ export function SettingsPage({
   onTabChange: (tab: string) => void;
 }) {
   const { preferences, updatePreferences, reducedMotion } = useOfficePreferences();
+  const { t, locale } = useLanguage();
   return (
-    <Page title="Settings" eyebrow="Your studio" backTo="/">
+    <Page title={t("Settings")} eyebrow={t("Your studio")} backTo="/">
       <SectionTabs page="settings" value={tab} onChange={onTabChange}>
         {(current) =>
           current === "account" ? (
             <section className="foundation-stack">
-              <h2>Account</h2>
+              <h2>{t("Account")}</h2>
               <Link to="/auth">Open account management</Link>
               <AccountLink />
               <p>Director, motion and sound preferences stay in this browser.</p>
             </section>
           ) : current === "accessibility" ? (
             <section className="foundation-stack">
-              <h2>Your experience</h2>
+              <h2>{t("Your experience")}</h2>
               <DirectorToggle />
               <button
                 className="preference-button"
@@ -51,16 +53,17 @@ export function SettingsPage({
             </section>
           ) : current === "language" ? (
             <section>
-              <h2>Language</h2>
-              <p>English is currently available.</p>
-              <Unavailable>
-                Arabic interface translation and RTL verification are planned. Selecting an
-                unsupported language is not offered.
-              </Unavailable>
+              <h2>{t("Language")}</h2>
+              <LanguageSwitch />
+              <p lang={locale}>
+                {locale === "ar"
+                  ? "الواجهة العربية نسخة تجريبية؛ قد تظل بعض الصفحات باللغة الإنجليزية حتى تكتمل المراجعة."
+                  : "Arabic interface preview: some pages remain in English while translation and RTL review continue."}
+              </p>
             </section>
           ) : (
             <section>
-              <h2>Privacy and recording</h2>
+              <h2>{t("Privacy and recording")}</h2>
               <p>
                 The current rehearsal is text-only. Camera and microphone capture, recording
                 storage, notifications, account-data export and account deletion are not available
