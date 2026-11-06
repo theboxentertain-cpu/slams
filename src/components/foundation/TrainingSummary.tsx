@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { useCatalog, useTrainingProgress, resolveResume, type TrainingUnit } from "@/lib/training";
 import { getSchool } from "@/data/schools";
@@ -41,21 +42,21 @@ export function TrainingSummary({
         {current ? (
           <UnitLink unit={current}>Continue training: {current.title}</UnitLink>
         ) : (
-          <Link to="/scene" aria-label="Start rehearsal — The Living Scene">
-            Start rehearsal <span aria-hidden="true">→</span>
+          <Link to="/scene" aria-label="Start rehearsal — The Living Scene"><T>
+            Start rehearsal </T><span aria-hidden="true">→</span>
           </Link>
         )}
         {!current && (progress.error || catalog.isError) && progress.signedIn && (
-          <small>Curriculum status is unavailable. Your scripted rehearsal is ready.</small>
+          <small><T>Curriculum status is unavailable. Your scripted rehearsal is ready.</T></small>
         )}
         {!current && progress.loading && (
-          <small role="status">Checking your account training…</small>
+          <small role="status"><T>Checking your account training…</T></small>
         )}
       </section>
     );
   return (
     <section className="training-summary" aria-label="Current training">
-      <span className="office-kicker">YOUR NEXT PAGE</span>
+      <span className="office-kicker"><T>YOUR NEXT PAGE</T></span>
       {current ? (
         <>
           <h2>{getSchool(current.school)?.name}</h2>
