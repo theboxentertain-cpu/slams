@@ -33,6 +33,7 @@ vi.mock("@/components/slams", () => ({
   btnPrimary: "primary",
   btnSecondary: "secondary",
 }));
+vi.mock("@/lib/session", () => ({ useSession: () => ({ user: null, loading: false }) }));
 vi.mock("@/lib/store", () => ({
   useAuditionPrep: () => ({
     data: { role: "Existing saved preparation" },
@@ -97,27 +98,24 @@ describe("Available work comes first", () => {
       expect(change).toHaveBeenCalledWith("auditions");
     },
   );
-  it("retains every authored draft intervention without competing empty workflow tabs", () => {
+  it("keeps the four original quick intervention prompts behind a disclosure, without replacing the working guided flow", () => {
     render(<StuckIntake tab="describe" onTabChange={vi.fn()} />);
+    expect(screen.getByRole("heading", { name: "01 — What actually got stuck?" })).toBeInTheDocument();
+    const disclosure = screen.getByText("Browse original quick intervention prompts").closest("details");
+    expect(disclosure).not.toHaveAttribute("open");
     for (const item of DRAFT_INTERVENTIONS)
-      expect(screen.getByRole("button", { name: item.q })).toBeInTheDocument();
+      expect(within(disclosure!).getByText(item.q).closest("button")).toBeInTheDocument();
     expect(screen.queryByRole("tablist")).toBeNull();
-    expect(screen.queryByRole("navigation", { name: "Stuck Desk workflow" })).toBeNull();
-    expect(screen.getByRole("link", { name: "Try the Living Scene" })).toHaveAttribute(
-      "href",
-      "/scene",
-    );
-    fireEvent.click(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[0]!.q }));
-    expect(screen.getByText(DRAFT_INTERVENTIONS[0]!.fix)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Try the Living Scene instead" })).toHaveAttribute("href", "/scene");
   });
   it.each(["scene", "identify"])(
-    "keeps an old Stuck Desk %s bookmark truthful and actionable",
+    "lands old Stuck Desk %s bookmarks on the same truthful guided actor workflow",
     (tab) => {
-      const change = vi.fn();
-      render(<StuckIntake tab={tab} onTabChange={change} />);
-      expect(screen.getByRole("heading", { name: "In development" })).toBeInTheDocument();
-      fireEvent.click(screen.getByRole("button", { name: "View draft interventions" }));
-      expect(change).toHaveBeenCalledWith("describe");
+      render(<StuckIntake tab={tab} onTabChange={vi.fn()} />);
+      expect(screen.getByRole("heading", { name: "01 — What actually got stuck?" })).toBeInTheDocument();
+      expect(screen.getByText(/Older Stuck Desk links now open the guided/)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /My scene feels flat/ })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "Try the Living Scene instead" })).toHaveAttribute("href", "/scene");
     },
   );
 });
