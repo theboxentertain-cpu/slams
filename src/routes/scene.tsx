@@ -1,4 +1,4 @@
-import { T } from "@/lib/i18n";
+import { T, useLanguage } from "@/lib/i18n";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { DirectorNote, DirectorToggle, Page, btnPrimary, btnSecondary } from "@/components/slams";
@@ -24,6 +24,7 @@ type Step =
 const STAGES: Step[] = ["perform", "intervene", "practice", "retake", "reflect"];
 
 function Scene() {
+  const { t: tx } = useLanguage();
   const passport = usePassport();
   const [step, setStep] = useState<Step>("explore");
   const [tactic, setTactic] = useState<string>();
@@ -61,7 +62,7 @@ function Scene() {
 
   return (
     <Page
-      title={`“${SCENE.title}”`}
+      title={`“${tx(SCENE.title)}”`}
       eyebrow="Demonstration Living Scene"
       backTo="/rehearsal"
       world="scene"
@@ -86,8 +87,8 @@ function Scene() {
       <div aria-live="polite" className="panel p-4">
         {step === "explore" && (
           <>
-            <p>{SCENE.setup}</p>
-            <p className="mt-2 font-bold">Objective: {SCENE.objective}</p>
+            <p>{tx(SCENE.setup)}</p>
+            <p className="mt-2 font-bold"><T>Objective:</T> {tx(SCENE.objective)}</p>
             <p className="mt-2 text-xs text-muted-foreground"><T>
               Original scene written for demonstration. Sam's responses are fixed and scripted —
               nothing here judges or grades you.
@@ -113,8 +114,8 @@ function Scene() {
                     setStep("response");
                   }}
                 >
-                  <span className="font-bold text-amber">{x.verb}</span>
-                  <span>“{x.line}”</span>
+                  <span className="font-bold text-amber">{tx(x.verb)}</span>
+                  <span>“{tx(x.line)}”</span>
                 </button>
               ))}
             </div>
@@ -122,8 +123,8 @@ function Scene() {
         )}
         {step === "response" && t && (
           <>
-            <p className="text-sm text-muted-foreground">You: “{t.line}”</p>
-            <p className="mt-3 text-lg">{t.response}</p>
+            <p className="text-sm text-muted-foreground"><T>You:</T> “{tx(t.line)}”</p>
+            <p className="mt-3 text-lg">{tx(t.response)}</p>
             <button className={`${btnPrimary} mt-4 w-full`} onClick={() => setStep("intervene")}><T>
               Cut — call an intervention
             </T></button>
@@ -144,9 +145,9 @@ function Scene() {
                   }}
                 >
                   <span className="font-bold text-school">
-                    {x.school} — {x.label}
+                    {x.school} — {tx(x.label)}
                   </span>
-                  <span className="text-xs">{x.principle}</span>
+                  <span className="text-xs">{tx(x.principle)}</span>
                 </button>
               ))}
             </div>
@@ -155,7 +156,7 @@ function Scene() {
         {step === "practice" && iv && (
           <>
             <h2 className="text-xl font-bold">{iv.school} exercise</h2>
-            <p className="mt-2 text-sm">{iv.exercisePrompt}</p>
+            <p className="mt-2 text-sm">{tx(iv.exercisePrompt)}</p>
             <label htmlFor="ex" className="sr-only"><T>
               Your exercise
             </T></label>
@@ -163,7 +164,7 @@ function Scene() {
               id="ex"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder={iv.exercisePlaceholder}
+              placeholder={tx(iv.exercisePlaceholder)}
               rows={4}
               className="mt-3 w-full rounded border border-input bg-background p-2"
             />
@@ -179,7 +180,7 @@ function Scene() {
         {step === "retake" && (
           <>
             <h2 className="text-xl font-bold"><T>Take 2 — new obstacle</T></h2>
-            <p className="mt-2 rounded border border-crimson p-3">{obstacle}</p>
+            <p className="mt-2 rounded border border-crimson p-3">{tx(obstacle)}</p>
             <div className="mt-3 space-y-2 text-sm">
               <p>
                 <strong><T>Earlier tactic:</T></strong> {t?.verb}
@@ -242,7 +243,7 @@ function Scene() {
                   ["Your retake line or action", retakeLine],
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <dt className="font-bold text-amber">{label}</dt>
+                    <dt className="font-bold text-amber">{tx(label)}</dt>
                     <dd className="whitespace-pre-wrap break-words">{value}</dd>
                   </div>
                 ))}
@@ -263,7 +264,7 @@ function Scene() {
             />
             {error && (
               <p role="alert" className="text-sm text-destructive">
-                {error}
+                {tx(error)}
               </p>
             )}
             <button
@@ -271,7 +272,7 @@ function Scene() {
               className={`${btnPrimary} mt-3 w-full`}
               onClick={save}
             >
-              {saving ? "Saving…" : "Save to Passport"}
+              {tx(saving ? "Saving…" : "Save to Passport")}
             </button>
             <p className="mt-3 text-sm text-muted-foreground"><T>
               Saving is optional. Leaving without saving discards this rehearsal’s notes.
@@ -308,9 +309,9 @@ function Scene() {
           <>
             <h2 className="text-xl font-bold"><T>Saved to your Passport</T></h2>
             <p className="text-sm text-muted-foreground">
-              {passport.signedIn
+              {tx(passport.signedIn
                 ? "Saved to your account in Lovable Cloud."
-                : "Stored in this browser only (demo mode)."}
+                : "Stored in this browser only (demo mode).")}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Link to="/passport" className={btnPrimary}><T>
@@ -336,12 +337,12 @@ function Scene() {
           </>
         )}
       </div>
-      <DirectorNote performing={performing} expression={step === "saved" ? "proud" : step === "intervene" ? "critical" : step === "reflect" ? "observant" : "master"} short={step === "saved" ? "Your reflection is saved." : "Play the action, not the result."}>
-        {step === "intervene"
+      <DirectorNote performing={performing} expression={step === "saved" ? "proud" : step === "intervene" ? "critical" : step === "reflect" ? "observant" : "master"} short={tx(step === "saved" ? "Your reflection is saved." : "Play the action, not the result.")}>
+        {tx(step === "intervene"
           ? "Each intervention gives you a different retake problem. Pick the one you want to train."
           : step === "saved" ? "Your reflection is saved. Evidence of the work, not a verdict on your talent."
           : step === "reflect" ? "What changed? Be specific. Your observation matters more than my approval."
-          : "Play the action, not the result. I'll stay silent during takes."}
+          : "Play the action, not the result. I'll stay silent during takes.")}
       </DirectorNote>
     </Page>
   );
