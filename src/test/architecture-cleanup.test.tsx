@@ -114,7 +114,7 @@ describe("Available work comes first", () => {
       render(<StuckIntake tab={tab} onTabChange={vi.fn()} />);
       expect(screen.getByRole("heading", { name: "01 — What actually got stuck?" })).toBeInTheDocument();
       expect(screen.getByText(/Older Stuck Desk links now open the guided/)).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /My scene feels flat/ })).toBeInTheDocument();
+      expect(within(screen.getByRole("region", { name: "Guided Stuck Desk workflow" })).getByRole("button", { name: /My scene feels flat/ })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: "Try the Living Scene instead" })).toHaveAttribute("href", "/scene");
     },
   );
