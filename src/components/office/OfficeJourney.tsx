@@ -1,3 +1,4 @@
+import { T } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { ChartNoAxesCombined, ChevronRight } from "lucide-react";
 
@@ -15,17 +16,17 @@ export function OfficeJourney({
     <Link to="/progress" className="office-journey" aria-label="Your progress — view saved work">
       <ChartNoAxesCombined aria-hidden="true" />
       <span className="journey-title">
-        <strong>Your journey</strong>
+        <strong><T>Your journey</T></strong>
         <small>{signedIn ? "Your account records" : "Rehearsals on this device"}</small>
       </span>
       <dl>
         <div>
           <dd>{rehearsals ?? "—"}</dd>
-          <dt>Rehearsals</dt>
+          <dt><T>Rehearsals</T></dt>
         </div>
         <div>
           <dd>{milestones ?? "—"}</dd>
-          <dt>Curriculum units completed</dt>
+          <dt><T>Curriculum units completed</T></dt>
         </div>
       </dl>
       <ChevronRight aria-hidden="true" />
