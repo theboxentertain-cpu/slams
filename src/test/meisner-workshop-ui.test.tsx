@@ -90,15 +90,23 @@ describe("Meisner Workshop 1 guided editorial preview", () => {
     fireEvent.click(screen.getByLabelText(/We can both pause or stop/));
     expect(begin).toBeEnabled();
     fireEvent.click(begin);
-    fill("What observable event did you notice?", "The partner looked away.");
-    fill("What explanation or assumption occurred to you?", "They wanted to leave.");
-    fill("How can you express this more accurately?", "They looked toward the door.");
-    fill("How did your partner reply, confirm or correct you?", "They corrected the wording.");
+    expect(screen.getByRole("button", { name: "Exercise 02 — Receive" })).toBeDisabled();
+    completeRounds([
+      ["What observable event did you notice?", "The partner looked away."],
+      ["What explanation or assumption occurred to you?", "They wanted to leave."],
+      ["How can you express this more accurately?", "They looked toward the door."],
+      ["How did your partner reply, confirm or correct you?", "They corrected the wording."],
+    ]);
+    expect(screen.getByRole("button", { name: "Exercise 02 — Receive" })).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "Exercise 02 — Receive" }));
     expect(screen.getByRole("heading", { name: "Notice → Offer → Receive" })).toBeInTheDocument();
-    fill("What reply did you originally predict?", "Yes.");
-    fill("What did your partner actually say or do?", "I heard a noise.");
-    fill("How did your next response change?", "I responded to the noise comment.");
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeDisabled();
+    completeRounds([
+      ["What reply did you originally predict?", "Yes."],
+      ["What did your partner actually say or do?", "I heard a noise."],
+      ["How did your next response change?", "I responded to the noise comment."],
+    ]);
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "Reflect on this attempt" }));
     fill("What surprised you in the actual exchange?", "The reply was different.");
     fill("What specific change will you try next?", "Wait until the reply ends.");
