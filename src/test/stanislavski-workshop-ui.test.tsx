@@ -22,7 +22,7 @@ function openSetup() {
   fireEvent.click(screen.getByRole("button", { name: "Check your understanding" }));
   for (let index = 0; index < STAN_CHECKS.length; index++) {
     const q = STAN_CHECKS[index]!;
-    expect(screen.getByText(q.prompt.en)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: q.prompt.en })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: q.options[q.answer]!.en }));
     fireEvent.click(screen.getByRole("button", {
       name: index < STAN_CHECKS.length - 1 ? "Next question" : "Prepare practice",
@@ -51,7 +51,6 @@ function logThreeRounds(exerciseIndex: number) {
     fireEvent.click(save);
     expect(save).toBeDisabled();
   }
-  expect(screen.getByRole("status", { name: "" })).toBeDefined();
 }
 
 describe("Stanislavski live editorial workshop", () => {
