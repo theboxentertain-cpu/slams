@@ -243,7 +243,7 @@ function Scene() {
                   ["Your retake line or action", retakeLine],
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <dt className="font-bold text-amber">{tx(label)}</dt>
+                    <dt className="font-bold text-amber">{tx(label ?? "")}</dt>
                     <dd className="whitespace-pre-wrap break-words">{value}</dd>
                   </div>
                 ))}
