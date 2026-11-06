@@ -86,7 +86,7 @@ export function AccountLink() {
 }
 
 export function DirectorToggle() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [mode, setMode] = useDirectorMode();
   return (
     <fieldset className="director-controls flex items-center gap-1 text-xs">
@@ -102,7 +102,7 @@ export function DirectorToggle() {
           onClick={() => setMode(m)}
           className={`rounded px-2 py-1 uppercase ${mode === m ? "bg-amber text-charcoal font-bold" : "bg-secondary"}`}
         >
-          {t(m)}
+          {locale === "ar" ? t(m.toUpperCase()) : m}
         </button>
       ))}
     </fieldset>
