@@ -80,7 +80,7 @@ export function TrainingSummary({
           <p>
             {!progress.signedIn
               ? t("Sign in to view account curriculum progress.")
-              : t("A resume link appears only for a saved, started unit with reviewed published material.")
+              : t("A resume link appears only for a saved, started unit with reviewed published material.")}
           </p>
           <Link to={progress.signedIn ? "/progress" : "/conservatory"}>
             {t(progress.signedIn ? "Review training progress" : "Explore the Conservatory")}
