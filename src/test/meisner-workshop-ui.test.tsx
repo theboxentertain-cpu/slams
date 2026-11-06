@@ -38,6 +38,13 @@ function fill(label: string, value: string) {
   fireEvent.change(screen.getByLabelText(label), { target: { value } });
 }
 
+function completeRounds(fields: [string, string][]) {
+  for (let n = 1; n <= 3; n++) {
+    for (const [label, value] of fields) fill(label, value + " / round " + n);
+    fireEvent.click(screen.getByRole("button", { name: "Record this practice round" }));
+  }
+}
+
 describe("Meisner Workshop 1 guided editorial preview", () => {
   it("walks through three authored lessons and accurate knowledge distinctions", () => {
     render(<MeisnerWorkshopOne />);
