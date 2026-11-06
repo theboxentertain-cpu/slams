@@ -35,7 +35,9 @@ export function WelcomeLanding() {
       <section className="welcome-entry" aria-labelledby="first-rehearsal-title">
         <h2 id="first-rehearsal-title">{t("Your first rehearsal starts here.")}</h2>
         <p>
-          {t("SLAMS is your acting practice studio. Try a short, text-only scene, change your approach and reflect on your retake.")}
+          {t(
+            "SLAMS is your acting practice studio. Try a short, text-only scene, change your approach and reflect on your retake.",
+          )}
         </p>
         <Link to="/scene" onClick={enterStudio} className="welcome-primary">
           <Play aria-hidden="true" />
@@ -192,7 +194,9 @@ export function ActorSetupPage() {
         </div>
         {reducedMotion && <p>{t("Motion is also reduced by your device preference.")}</p>}
         <p>
-          {t("Changes apply immediately. This browser remembers them when local storage is available.")}
+          {t(
+            "Changes apply immediately. This browser remembers them when local storage is available.",
+          )}
         </p>
       </fieldset>
       <Link className="welcome-primary" to="/scene" onClick={enterStudio}>
