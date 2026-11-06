@@ -1,4 +1,4 @@
-import { T } from "@/lib/i18n";
+import { T, useLanguage } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ export function Wordmark({ small = false }: { small?: boolean }) {
 }
 
 export function DemoBanner() {
+  const { t } = useLanguage();
   const { user, loading } = useSession();
   if (loading) return null;
   if (user) {
@@ -26,14 +27,14 @@ export function DemoBanner() {
         role="note"
         className="bg-secondary px-3 py-1.5 text-center text-xs font-bold text-foreground"
       >
-        Signed in as {user.email}. Passport and audition notes save to your account. Director
-        settings stay on this device.
+        {t("Signed in as")} <bdi>{user.email}</bdi>.{" "}
+        {t("Passport and audition notes save to your account. Director settings stay on this device.")}
       </p>
     );
   }
   return (
     <p role="note" className="bg-warning px-3 py-1.5 text-center text-xs font-bold text-charcoal">
-      GUEST STUDIO — rehearsal reflections and audition notes stay in this browser.{" "}
+      {t("GUEST STUDIO — rehearsal reflections and audition notes stay in this browser.")}{" "}
       <Link to="/auth" className="underline"><T>
         Sign in to save to your account.
       </T></Link>
@@ -42,6 +43,7 @@ export function DemoBanner() {
 }
 
 export function AccountLink() {
+  const { t } = useLanguage();
   const { user, loading, signOut } = useSession();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -72,7 +74,7 @@ export function AccountLink() {
           }
         }}
       >
-        {busy ? "Signing out…" : "Sign out"}
+        {t(busy ? "Signing out…" : "Sign out")}
       </Button>
       {error && (
         <span role="alert" className="block text-destructive">
@@ -84,6 +86,7 @@ export function AccountLink() {
 }
 
 export function DirectorToggle() {
+  const { t } = useLanguage();
   const [mode, setMode] = useDirectorMode();
   return (
     <fieldset className="director-controls flex items-center gap-1 text-xs">
@@ -99,7 +102,7 @@ export function DirectorToggle() {
           onClick={() => setMode(m)}
           className={`rounded px-2 py-1 uppercase ${mode === m ? "bg-amber text-charcoal font-bold" : "bg-secondary"}`}
         >
-          {m}
+          {t(m)}
         </button>
       ))}
     </fieldset>
@@ -119,13 +122,14 @@ export function DirectorNote({
   expression?: DirectorExpression;
 }) {
   const [mode] = useDirectorMode();
+  const { t } = useLanguage();
   if (performing || mode === "off") return null;
   return (
     <aside aria-label="The Director" className="panel mt-4 flex gap-3 border-amber/40 p-3 text-sm">
       <DirectorPortrait expression={expression} className="director-note-portrait" />
       <p>
         <span className="font-bold text-amber"><T>The Director: </T></span>
-        {mode === "quiet" ? (short ?? children) : children}
+        {mode === "quiet" && short ? t(short) : children}
       </p>
     </aside>
   );
@@ -148,6 +152,7 @@ export function Page({
   world?: StudioWorld;
   performing?: boolean;
 }) {
+  const { t } = useLanguage();
   return (
     <div data-school={school} data-world={world} className="studio-page min-h-screen">
       <DemoBanner />
@@ -162,7 +167,13 @@ export function Page({
         <ProfileMenu />
       </header>
       <main id="page-content" tabIndex={-1} className="rise mx-auto max-w-3xl px-4 pb-8">
-        <StudioHeading title={title} eyebrow={eyebrow} school={school} world={world} performing={performing} />
+        <StudioHeading
+          title={t(title)}
+          eyebrow={eyebrow ? t(eyebrow) : undefined}
+          school={school}
+          world={world}
+          performing={performing}
+        />
         {children}
       </main>
     </div>
