@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PAGE_TABS, tabId, type PageId } from "@/lib/foundation";
+import { useLanguage } from "@/lib/i18n";
 import { BookOpen, FolderOpen, Users, Clapperboard, Footprints, Files, Award } from "lucide-react";
 const WORLD_TAB_ICONS = {
   Auditions: BookOpen,
@@ -25,6 +26,7 @@ export function SectionTabs({
   children: (tab: string) => ReactNode;
   keepMounted?: boolean;
 }) {
+  const { t } = useLanguage();
   return (
     <Tabs value={value} onValueChange={onChange} className="section-tabs" data-page={page}>
       <TabsList aria-label={`${page} sections`} className="section-tab-list">
@@ -36,7 +38,7 @@ export function SectionTabs({
           return (
             <TabsTrigger key={label} value={tabId(label)}>
               {Icon && <Icon aria-hidden="true" />}
-              {label}
+              {t(label)}
             </TabsTrigger>
           );
         })}
