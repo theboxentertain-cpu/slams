@@ -65,29 +65,31 @@ function ResetPassword() {
         <Wordmark small />
       </Link>
       <main id="page-content" tabIndex={-1} className="panel mt-8 w-full max-w-sm p-6">
-        <h1 className="text-xl font-bold"><T>Set a new password</T></h1>
+        <h1 className="text-xl font-bold">
+          <T>Set a new password</T>
+        </h1>
         {valid === null ? (
-          <p role="status" className="mt-2 text-sm"><T>
-            Checking your reset link…
-          </T></p>
+          <p role="status" className="mt-2 text-sm">
+            <T>Checking your reset link…</T>
+          </p>
         ) : valid === false ? (
           <>
-            <p role="alert" className="mt-2 text-sm text-crimson"><T>
-              This reset link is invalid or has expired. Request a new one.
-            </T></p>
-            <Link to="/auth" className={`${btnPrimary} mt-4`}><T>
-              Back to sign in
-            </T></Link>
+            <p role="alert" className="mt-2 text-sm text-crimson">
+              <T>This reset link is invalid or has expired. Request a new one.</T>
+            </p>
+            <Link to="/auth" className={`${btnPrimary} mt-4`}>
+              <T>Back to sign in</T>
+            </Link>
           </>
         ) : done ? (
-          <p role="status" className="mt-2 text-sm text-amber"><T>
-            Password updated. Taking you back to the studio…
-          </T></p>
+          <p role="status" className="mt-2 text-sm text-amber">
+            <T>Password updated. Taking you back to the studio…</T>
+          </p>
         ) : (
           <form className="mt-4 grid gap-3" onSubmit={submit}>
-            <label className="grid gap-1 text-sm"><T>
-              New password
-              </T><input
+            <label className="grid gap-1 text-sm">
+              <T>New password</T>
+              <input
                 type="password"
                 required
                 minLength={8}
@@ -97,9 +99,9 @@ function ResetPassword() {
                 className="rounded border border-input bg-background p-2"
               />
             </label>
-            <label className="grid gap-1 text-sm"><T>
-              Confirm new password
-              </T><input
+            <label className="grid gap-1 text-sm">
+              <T>Confirm new password</T>
+              <input
                 type="password"
                 required
                 minLength={8}

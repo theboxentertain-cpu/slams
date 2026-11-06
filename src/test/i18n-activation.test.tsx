@@ -62,7 +62,9 @@ it("renders translated authored text without adding markup or changing saved sce
   expect(scriptInArabic).not.toBe(originalSetup);
   const { container } = render(
     <LanguageProvider>
-      <p><T>Start rehearsal</T></p>
+      <p>
+        <T>Start rehearsal</T>
+      </p>
       <LanguageSwitch />
     </LanguageProvider>,
   );

@@ -53,27 +53,29 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
       {!sessionLoading && !signedIn && (
         <p className="mb-4 text-sm text-muted-foreground">
           Work through your sides before the room. Saved locally in this browser —{" "}
-          <Link to="/auth" className="underline"><T>
-            sign in to save to your account.
-          </T></Link>
+          <Link to="/auth" className="underline">
+            <T>sign in to save to your account.</T>
+          </Link>
         </p>
       )}
       {signedIn && (
-        <p className="mb-4 text-sm text-muted-foreground"><T>
-          Work through your sides before the room. Saved to your account.
-        </T></p>
+        <p className="mb-4 text-sm text-muted-foreground">
+          <T>Work through your sides before the room. Saved to your account.</T>
+        </p>
       )}
       {signedIn && localHasData && (
         <div className="mb-4 rounded border border-amber p-3 text-sm">
-          <p><T>This browser holds audition notes not yet in your account.</T></p>
+          <p>
+            <T>This browser holds audition notes not yet in your account.</T>
+          </p>
           <button
             type="button"
             className={`${btnSecondary} mt-2`}
             disabled={busy}
             onClick={handleImport}
-          ><T>
-            Import browser notes to my account
-          </T></button>
+          >
+            <T>Import browser notes to my account</T>
+          </button>
         </div>
       )}
       {error && (
@@ -82,7 +84,9 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
         </p>
       )}
       {!loaded ? (
-        <p role="status"><T>Loading…</T></p>
+        <p role="status">
+          <T>Loading…</T>
+        </p>
       ) : (
         <form
           className="grid gap-3"

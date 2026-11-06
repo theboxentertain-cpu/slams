@@ -3,8 +3,14 @@ import { SCHOOLS, totalTerms } from "@/data/schools";
 import { getObstacle } from "@/data/scene";
 
 const expected: Record<string, [number, number]> = {
-  stanislavski: [4, 8], meisner: [2, 4], adler: [3, 6], strasberg: [2, 6],
-  chekhov: [2, 4], laban: [1, 2], "practical-aesthetics": [2, 4], viewpoints: [1, 2],
+  stanislavski: [4, 8],
+  meisner: [2, 4],
+  adler: [3, 6],
+  strasberg: [2, 6],
+  chekhov: [2, 4],
+  laban: [1, 2],
+  "practical-aesthetics": [2, 4],
+  viewpoints: [1, 2],
 };
 
 describe("provisional curriculum", () => {
@@ -17,7 +23,9 @@ describe("provisional curriculum", () => {
     });
   }
   it("no term is marked complete", () => {
-    for (const s of SCHOOLS) for (const y of s.curriculum) for (const t of y.terms) expect(t.status).toBe("in-development");
+    for (const s of SCHOOLS)
+      for (const y of s.curriculum)
+        for (const t of y.terms) expect(t.status).toBe("in-development");
   });
 });
 

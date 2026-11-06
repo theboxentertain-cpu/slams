@@ -96,11 +96,18 @@ export function AccountForm({
       if (active.current) setBusy(false);
     }
   }
-  if (loading) return <p role="status"><T>Checking your account…</T></p>;
+  if (loading)
+    return (
+      <p role="status">
+        <T>Checking your account…</T>
+      </p>
+    );
   if (user)
     return (
       <section className="account-form">
-        <h2><T>Signed in</T></h2>
+        <h2>
+          <T>Signed in</T>
+        </h2>
         <p>{user.email}</p>
         <Link
           className={welcome ? "welcome-primary" : "account-submit"}
@@ -124,9 +131,9 @@ export function AccountForm({
               if (active.current) setBusy(false);
             }
           }}
-        ><T>
-          Sign out
-        </T></button>
+        >
+          <T>Sign out</T>
+        </button>
         {error && <p role="alert">{t(error)}</p>}
       </section>
     );
@@ -145,8 +152,11 @@ export function AccountForm({
       <form onSubmit={submit} className="account-fields">
         {mode === "signup" && (
           <label>
-            <span><T>
-              Full name </T><small><T>(optional)</T></small>
+            <span>
+              <T>Full name </T>
+              <small>
+                <T>(optional)</T>
+              </small>
             </span>
             <input
               autoComplete="name"
@@ -157,9 +167,9 @@ export function AccountForm({
             />
           </label>
         )}
-        <label><T>
-          Email
-          </T><input
+        <label>
+          <T>Email</T>
+          <input
             type="email"
             required
             autoComplete="email"
@@ -169,9 +179,9 @@ export function AccountForm({
           />
         </label>
         {mode !== "forgot" && (
-          <label><T>
-            Password
-            </T><span className="password-control">
+          <label>
+            <T>Password</T>
+            <span className="password-control">
               <input
                 type={showPassword ? "text" : "password"}
                 required
@@ -195,9 +205,9 @@ export function AccountForm({
         )}
         {mode === "signup" && (
           <>
-            <label><T>
-              Confirm password
-              </T><span className="password-control">
+            <label>
+              <T>Confirm password</T>
+              <span className="password-control">
                 <input
                   type={showConfirm ? "text" : "password"}
                   required
@@ -253,29 +263,29 @@ export function AccountForm({
       </form>
       <div className="account-mode-links">
         {mode !== "signin" && (
-          <button disabled={busy} onClick={() => changeMode("signin")}><T>
-            Sign in
-          </T></button>
+          <button disabled={busy} onClick={() => changeMode("signin")}>
+            <T>Sign in</T>
+          </button>
         )}
         {mode !== "signup" && (
-          <button disabled={busy} onClick={() => changeMode("signup")}><T>
-            Create account
-          </T></button>
+          <button disabled={busy} onClick={() => changeMode("signup")}>
+            <T>Create account</T>
+          </button>
         )}
         {mode !== "forgot" && (
-          <button disabled={busy} onClick={() => changeMode("forgot")}><T>
-            Forgot password?
-          </T></button>
+          <button disabled={busy} onClick={() => changeMode("forgot")}>
+            <T>Forgot password?</T>
+          </button>
         )}
       </div>
       {welcome && (
         <>
-          <p className="account-provider-note"><T>
-            Email sign-in is available. Social sign-in is not enabled.
-          </T></p>
-          <Link className="account-guest" to="/scene" onClick={enterStudio}><T>
-            Continue as guest
-          </T></Link>
+          <p className="account-provider-note">
+            <T>Email sign-in is available. Social sign-in is not enabled.</T>
+          </p>
+          <Link className="account-guest" to="/scene" onClick={enterStudio}>
+            <T>Continue as guest</T>
+          </Link>
         </>
       )}
     </section>

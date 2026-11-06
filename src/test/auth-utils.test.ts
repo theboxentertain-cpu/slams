@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { looksLikeEmail, parseRecoveryHash, validatePassword, MIN_PASSWORD_LENGTH } from "@/lib/auth-utils";
+import {
+  looksLikeEmail,
+  parseRecoveryHash,
+  validatePassword,
+  MIN_PASSWORD_LENGTH,
+} from "@/lib/auth-utils";
 
 describe("parseRecoveryHash", () => {
   it("accepts a Supabase recovery hash", () => {

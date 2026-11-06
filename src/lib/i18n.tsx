@@ -25,7 +25,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const sync = () => {
       try {
         setLanguage(localStorage.getItem(LANGUAGE_KEY) === "ar" ? "ar" : "en");
-      } catch { /* Keep English when storage is inaccessible. */ }
+      } catch {
+        /* Keep English when storage is inaccessible. */
+      }
     };
     sync();
     window.addEventListener("storage", sync);
@@ -44,9 +46,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(LANGUAGE_KEY, next);
       window.dispatchEvent(new Event(LANGUAGE_EVENT));
-    } catch { /* Language switching remains available for this visit. */ }
+    } catch {
+      /* Language switching remains available for this visit. */
+    }
   }
-  return <LanguageContext.Provider value={{ locale, setLocale }}>{children}</LanguageContext.Provider>;
+  return (
+    <LanguageContext.Provider value={{ locale, setLocale }}>{children}</LanguageContext.Provider>
+  );
 }
 
 export function useLanguage() {
@@ -66,7 +72,7 @@ export function T({ children }: { children: string }) {
 export function useTranslation() {
   const { t, locale } = useLanguage();
   return {
-    t: (value: ReactNode): ReactNode => typeof value === "string" ? t(value) : value,
+    t: (value: ReactNode): ReactNode => (typeof value === "string" ? t(value) : value),
     locale,
   };
 }
@@ -74,9 +80,30 @@ export function useTranslation() {
 export function LanguageSwitch({ className = "" }: { className?: string }) {
   const { locale, setLocale } = useLanguage();
   return (
-    <div className={`language-switch ${className}`} role="group" aria-label={locale === "ar" ? "لغة التطبيق" : "App language"} dir="ltr">
-      <Button variant={locale === "en" ? "secondary" : "ghost"} size="sm" aria-pressed={locale === "en"} onClick={() => setLocale("en")} lang="en">English</Button>
-      <Button variant={locale === "ar" ? "secondary" : "ghost"} size="sm" aria-pressed={locale === "ar"} onClick={() => setLocale("ar")} lang="ar">العربية</Button>
+    <div
+      className={`language-switch ${className}`}
+      role="group"
+      aria-label={locale === "ar" ? "لغة التطبيق" : "App language"}
+      dir="ltr"
+    >
+      <Button
+        variant={locale === "en" ? "secondary" : "ghost"}
+        size="sm"
+        aria-pressed={locale === "en"}
+        onClick={() => setLocale("en")}
+        lang="en"
+      >
+        English
+      </Button>
+      <Button
+        variant={locale === "ar" ? "secondary" : "ghost"}
+        size="sm"
+        aria-pressed={locale === "ar"}
+        onClick={() => setLocale("ar")}
+        lang="ar"
+      >
+        العربية
+      </Button>
     </div>
   );
 }

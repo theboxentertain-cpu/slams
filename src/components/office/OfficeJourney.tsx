@@ -16,17 +16,23 @@ export function OfficeJourney({
     <Link to="/progress" className="office-journey" aria-label="Your progress — view saved work">
       <ChartNoAxesCombined aria-hidden="true" />
       <span className="journey-title">
-        <strong><T>Your journey</T></strong>
+        <strong>
+          <T>Your journey</T>
+        </strong>
         <small>{signedIn ? "Your account records" : "Rehearsals on this device"}</small>
       </span>
       <dl>
         <div>
           <dd>{rehearsals ?? "—"}</dd>
-          <dt><T>Rehearsals</T></dt>
+          <dt>
+            <T>Rehearsals</T>
+          </dt>
         </div>
         <div>
           <dd>{milestones ?? "—"}</dd>
-          <dt><T>Curriculum units completed</T></dt>
+          <dt>
+            <T>Curriculum units completed</T>
+          </dt>
         </div>
       </dl>
       <ChevronRight aria-hidden="true" />
