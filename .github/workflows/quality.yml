@@ -22,7 +22,8 @@ jobs:
       - name: Check TypeScript
         run: bunx tsc --noEmit
       - name: Semantic lint (existing formatting debt excluded)
-        run: bunx eslint . --rule 'prettier/prettier: off'
+        run: |
+          bunx eslint . --rule 'prettier/prettier: off'
       - name: Run unit and UI tests
         run: bun run test
       - name: Compile production build
