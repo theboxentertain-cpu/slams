@@ -1,4 +1,4 @@
-import { T } from "@/lib/i18n";
+import { T, useLanguage } from "@/lib/i18n";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { DirectorNote, btnPrimary, btnSecondary } from "@/components/slams";
@@ -9,9 +9,15 @@ import {
   emptyNotes,
   isCorrectAnswer,
   canStart,
-  canContinue,
   canSummarize,
   practiceNote,
+  addPracticeRep,
+  canLogPracticeRep,
+  hasEnoughPracticeRounds,
+  practiceFields,
+  roundCount,
+  EDITORIAL_PRACTICE_ROUNDS,
+  type PracticeRep,
   type Category,
   type Mode,
   type Notes,
@@ -32,12 +38,13 @@ function Field({
   onChange: (value: string) => void;
   hint?: string;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="mt-4">
       <label htmlFor={id} className="block font-semibold">
-        {label}
+        {t(label)}
       </label>
-      {hint && <p className="mt-1 text-sm text-muted-foreground">{hint}</p>}
+      {hint && <p className="mt-1 text-sm text-muted-foreground">{t(hint)}</p>}
       <textarea
         id={id}
         rows={3}
@@ -63,6 +70,7 @@ export function MeisnerWorkshopOne() {
 }
 
 function WorkshopRun() {
+  const { t } = useLanguage();
   const [stage, setStage] = useState<Stage>("learn");
   const [lessonNumber, setLessonNumber] = useState(0);
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -72,6 +80,7 @@ function WorkshopRun() {
   const [boundaries, setBoundaries] = useState(false);
   const [exercise, setExercise] = useState<0 | 1>(0);
   const [notes, setNotes] = useState<Notes>(emptyNotes);
+  const [rounds, setRounds] = useState<PracticeRep[]>([]);
   const [copyMessage, setCopyMessage] = useState("");
 
   const lesson = WORKSHOP_ONE.lessons[lessonNumber]!;
@@ -97,14 +106,27 @@ function WorkshopRun() {
     setBoundaries(false);
     setExercise(0);
     setNotes(emptyNotes());
+    setRounds([]);
     setCopyMessage("");
+  };
+  const logRound = () => {
+    if (!canLogPracticeRep(mode, exercise, notes, rounds)) return;
+    const nextCount = roundCount(mode, exercise, rounds) + 1;
+    setRounds((previous) => addPracticeRep(mode, exercise, notes, previous));
+    if (nextCount < EDITORIAL_PRACTICE_ROUNDS) {
+      setNotes((previous) => {
+        const next = { ...previous };
+        for (const field of practiceFields(mode, exercise)) next[field] = "";
+        return next;
+      });
+    }
   };
   const copy = async () => {
     try {
       if (typeof navigator === "undefined" || !navigator.clipboard) {
         setCopyMessage("Clipboard unavailable. Select the note and copy it manually.");
       } else {
-        await navigator.clipboard.writeText(practiceNote(mode, notes));
+        await navigator.clipboard.writeText(practiceNote(mode, notes, rounds));
         setCopyMessage("Copied. Your note was not saved to SLAMS.");
       }
     } catch {
@@ -129,7 +151,7 @@ function WorkshopRun() {
         </T>
       </p>
       <p className="mt-3 text-sm font-semibold" role="status">
-        {stages[stage]}
+        {t(stages[stage])}
       </p>
 
       {stage === "learn" && (
@@ -137,32 +159,32 @@ function WorkshopRun() {
           <p className="text-xs text-muted-foreground">
             Lesson {lessonNumber + 1} of 3 · {lesson.id}
           </p>
-          <h4 className="mt-2 text-lg font-semibold">{lesson.title}</h4>
+          <h4 className="mt-2 text-lg font-semibold">{t(lesson.title)}</h4>
           <p className="mt-3">
             <strong>
               <T>Why:</T>
             </strong>{" "}
-            {lesson.why}
+            {t(lesson.why)}
           </p>
           <p className="mt-3">
             <strong>
               <T>Demonstration:</T>
             </strong>{" "}
-            {lesson.example}
+            {t(lesson.example)}
           </p>
           <p className="mt-3">
             <strong>
               <T>Try:</T>
             </strong>{" "}
-            {lesson.apply}
+            {t(lesson.apply)}
           </p>
           <p className="mt-3">
             <strong>
               <T>Avoid:</T>
             </strong>{" "}
-            {lesson.caution}
+            {t(lesson.caution)}
           </p>
-          <DirectorNote short="Observe, then respond.">{lesson.director}</DirectorNote>
+          <DirectorNote short="Observe, then respond.">{t(lesson.director)}</DirectorNote>
           <div className="mt-5 flex flex-wrap gap-2">
             <button
               type="button"
@@ -203,7 +225,7 @@ function WorkshopRun() {
             Example {questionNumber + 1} of {KNOWLEDGE_CHECK.length}
           </p>
           <fieldset className="mt-3">
-            <legend className="text-lg font-semibold">“{question.statement}”</legend>
+            <legend className="text-lg font-semibold">“{t(question.statement)}”</legend>
             <div className="mt-3 flex flex-wrap gap-2">
               {(
                 [
@@ -219,18 +241,20 @@ function WorkshopRun() {
                   className={btnSecondary}
                   onClick={() => setAnswer(value)}
                 >
-                  {label}
+                  {t(label)}
                 </button>
               ))}
             </div>
           </fieldset>
           {answer && (
             <div role="status" className="availability-note mt-3">
-              <strong>{correct ? "Correct." : "Reconsider your answer."}</strong>
+              <strong>{t(correct ? "Correct." : "Reconsider your answer.")}</strong>
               <p>
                 {correct
-                  ? question.why
-                  : "Does this describe an observable event, an inference, or the speaker's own experience?"}
+                  ? t(question.why)
+                  : t(
+                      "Does this describe an observable event, an inference, or the speaker's own experience?",
+                    )}
               </p>
             </div>
           )}
@@ -289,7 +313,11 @@ function WorkshopRun() {
                 type="radio"
                 name="meisner-practice-mode"
                 checked={mode === "solo"}
-                onChange={() => setMode("solo")}
+                onChange={() => {
+                  setMode("solo");
+                  setRounds([]);
+                  setNotes(emptyNotes());
+                }}
               />
               <T>Solo preparation only</T>
             </label>
@@ -298,7 +326,11 @@ function WorkshopRun() {
                 type="radio"
                 name="meisner-practice-mode"
                 checked={mode === "partner"}
-                onChange={() => setMode("partner")}
+                onChange={() => {
+                  setMode("partner");
+                  setRounds([]);
+                  setNotes(emptyNotes());
+                }}
               />
               <T>With a real human partner</T>
             </label>
@@ -371,10 +403,10 @@ function WorkshopRun() {
       {stage === "practice" && (
         <section className="mt-4" aria-label="Guided exercise">
           <p className="text-xs text-muted-foreground">
-            {mode === "solo" ? "SOLO PREPARATION" : "REAL PARTNER · SELF-REPORTED ONLY"}
+            {t(mode === "solo" ? "SOLO PREPARATION" : "REAL PARTNER · SELF-REPORTED ONLY")}
           </p>
           <h4 className="mt-2 text-lg font-semibold">
-            {exercise === 0 ? WORKSHOP_ONE.exercises[0].title : WORKSHOP_ONE.exercises[1].title}
+            {t(exercise === 0 ? WORKSHOP_ONE.exercises[0].title : WORKSHOP_ONE.exercises[1].title)}
           </h4>
           <ol className="mt-3 list-decimal space-y-2 pl-5">
             {(exercise === 0
@@ -397,7 +429,7 @@ function WorkshopRun() {
                   "Answer what you heard. Swap roles and reflect.",
                 ]
             ).map((step) => (
-              <li key={step}>{step}</li>
+              <li key={step}>{t(step)}</li>
             ))}
           </ol>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -458,11 +490,31 @@ function WorkshopRun() {
               />
             </>
           )}
+          <div className="mt-4 rounded border border-border bg-secondary p-3">
+            <p role="status" aria-live="polite" className="font-semibold">
+              {t("Practice round")} {roundCount(mode, exercise, rounds)} {t("of")}{" "}
+              {EDITORIAL_PRACTICE_ROUNDS} {t("recorded")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              <T>
+                Three distinct written rounds are the SLAMS preview target, not an official Meisner
+                requirement or an evaluation. Nothing is saved unless you explicitly copy your note.
+              </T>
+            </p>
+            <button
+              type="button"
+              className={`${btnSecondary} mt-3`}
+              disabled={!canLogPracticeRep(mode, exercise, notes, rounds)}
+              onClick={logRound}
+            >
+              <T>Record this practice round</T>
+            </button>
+          </div>
           <div className="mt-5 flex flex-wrap gap-2">
             <button
               type="button"
               className={btnPrimary}
-              disabled={!canContinue(mode, exercise, notes)}
+              disabled={!hasEnoughPracticeRounds(mode, exercise, rounds)}
               onClick={() => {
                 if (mode === "partner" && exercise === 0) setExercise(1);
                 else setStage("reflect");
@@ -550,7 +602,7 @@ function WorkshopRun() {
             </T>
           </p>
           <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded border border-border bg-secondary p-3 text-sm">
-            {practiceNote(mode, notes)}
+            {practiceNote(mode, notes, rounds)}
           </pre>
           <div className="mt-4 flex flex-wrap gap-2">
             <button type="button" className={btnPrimary} onClick={() => void copy()}>

@@ -38,6 +38,13 @@ function fill(label: string, value: string) {
   fireEvent.change(screen.getByLabelText(label), { target: { value } });
 }
 
+function completeRounds(fields: [string, string][]) {
+  for (let n = 1; n <= 3; n++) {
+    for (const [label, value] of fields) fill(label, value + " / round " + n);
+    fireEvent.click(screen.getByRole("button", { name: "Record this practice round" }));
+  }
+}
+
 describe("Meisner Workshop 1 guided editorial preview", () => {
   it("walks through three authored lessons and accurate knowledge distinctions", () => {
     render(<MeisnerWorkshopOne />);
@@ -54,9 +61,14 @@ describe("Meisner Workshop 1 guided editorial preview", () => {
     render(<MeisnerWorkshopOne />);
     reachPracticeChoice();
     fireEvent.click(screen.getByRole("button", { name: "Begin practice" }));
-    fill("What observable event did you notice?", "The chair moved.");
-    fill("What explanation or assumption occurred to you?", "Someone was impatient.");
-    fill("How can you express this more accurately?", "The chair moved to the left.");
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeDisabled();
+    completeRounds([
+      ["What observable event did you notice?", "The chair moved."],
+      ["What explanation or assumption occurred to you?", "Someone was impatient."],
+      ["How can you express this more accurately?", "The chair moved to the left."],
+    ]);
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeEnabled();
+    expect(screen.getByText("Practice round 3 of 3 recorded")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Exercise 02 — Receive" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Reflect on this attempt" }));
     fill("What did you notice about your assumptions?", "I guessed the motive.");
@@ -78,15 +90,23 @@ describe("Meisner Workshop 1 guided editorial preview", () => {
     fireEvent.click(screen.getByLabelText(/We can both pause or stop/));
     expect(begin).toBeEnabled();
     fireEvent.click(begin);
-    fill("What observable event did you notice?", "The partner looked away.");
-    fill("What explanation or assumption occurred to you?", "They wanted to leave.");
-    fill("How can you express this more accurately?", "They looked toward the door.");
-    fill("How did your partner reply, confirm or correct you?", "They corrected the wording.");
+    expect(screen.getByRole("button", { name: "Exercise 02 — Receive" })).toBeDisabled();
+    completeRounds([
+      ["What observable event did you notice?", "The partner looked away."],
+      ["What explanation or assumption occurred to you?", "They wanted to leave."],
+      ["How can you express this more accurately?", "They looked toward the door."],
+      ["How did your partner reply, confirm or correct you?", "They corrected the wording."],
+    ]);
+    expect(screen.getByRole("button", { name: "Exercise 02 — Receive" })).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "Exercise 02 — Receive" }));
     expect(screen.getByRole("heading", { name: "Notice → Offer → Receive" })).toBeInTheDocument();
-    fill("What reply did you originally predict?", "Yes.");
-    fill("What did your partner actually say or do?", "I heard a noise.");
-    fill("How did your next response change?", "I responded to the noise comment.");
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeDisabled();
+    completeRounds([
+      ["What reply did you originally predict?", "Yes."],
+      ["What did your partner actually say or do?", "I heard a noise."],
+      ["How did your next response change?", "I responded to the noise comment."],
+    ]);
+    expect(screen.getByRole("button", { name: "Reflect on this attempt" })).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "Reflect on this attempt" }));
     fill("What surprised you in the actual exchange?", "The reply was different.");
     fill("What specific change will you try next?", "Wait until the reply ends.");
