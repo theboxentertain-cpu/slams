@@ -38,14 +38,16 @@ beforeEach(() => {
   mock.insertResult.mockResolvedValue({ data: row("new", "actor-a"), error: null });
   mock.updateResult.mockResolvedValue({ data: row("p-a", "actor-a", 2), error: null });
   mock.history.mockResolvedValue({
-    data: [{
-      revision: 1,
-      title: "Old title",
-      role_name: "Nora",
-      status: "active",
-      notes: { beats: "First beat" },
-      created_at: "2026-11-07T00:00:00Z",
-    }],
+    data: [
+      {
+        revision: 1,
+        title: "Old title",
+        role_name: "Nora",
+        status: "active",
+        notes: { beats: "First beat" },
+        created_at: "2026-11-07T00:00:00Z",
+      },
+    ],
     error: null,
   });
   mock.from.mockImplementation((table: string) => {
@@ -89,7 +91,10 @@ async function mount() {
 
 describe("Actor project account protection", () => {
   it("filters anomalous nonowner rows and does not touch old audition data", async () => {
-    mock.load.mockResolvedValue({ data: [row("p-a", "actor-a"), row("p-b", "actor-b")], error: null });
+    mock.load.mockResolvedValue({
+      data: [row("p-a", "actor-a"), row("p-b", "actor-b")],
+      error: null,
+    });
     const hook = await mount();
     expect(hook.result.current.projects).toHaveLength(1);
     expect(hook.result.current.projects[0]?.id).toBe("p-a");
@@ -131,7 +136,9 @@ describe("Actor project account protection", () => {
     expect(hook.result.current.projects[0]?.revision).toBe(2);
     mock.updateResult.mockResolvedValue({ data: null, error: { message: "0 rows" } });
     await act(async () => {
-      expect(await hook.result.current.update(hook.result.current.projects[0]!, draft)).toMatchObject({
+      expect(
+        await hook.result.current.update(hook.result.current.projects[0]!, draft),
+      ).toMatchObject({
         error: expect.stringContaining("changed elsewhere"),
       });
     });
@@ -141,7 +148,11 @@ describe("Actor project account protection", () => {
   it("never renders a late A load after switching to account B", async () => {
     let resolveA!: (value: unknown) => void;
     mock.load
-      .mockReturnValueOnce(new Promise((resolve) => { resolveA = resolve; }))
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveA = resolve;
+        }),
+      )
       .mockResolvedValueOnce({ data: [row("p-b", "actor-b")], error: null });
     const hook = renderHook(() => useActorProjects());
     mock.session = { user: { id: "actor-b" }, loading: false };
@@ -174,7 +185,9 @@ describe("Actor project account protection", () => {
       expect(await hook.result.current.create(draft)).toMatchObject({ error: expect.any(String) });
     });
     expect(mock.insertPayload).not.toHaveBeenCalled();
-    expect(JSON.parse(localStorage.getItem("slams.audition.v1")!)).toEqual({ role: "Old audition" });
+    expect(JSON.parse(localStorage.getItem("slams.audition.v1")!)).toEqual({
+      role: "Old audition",
+    });
     localStorage.removeItem("slams.audition.v1");
   });
 });
