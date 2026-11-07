@@ -141,6 +141,17 @@ describe("Stuck Desk guided actor workflow", () => {
     expect(screen.getByRole("button", { name: "Save to Actor’s Passport" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Copy note (no save)" })).toBeEnabled();
   });
+  it("recovers after an unexpected save rejection without losing the private comparison", async () => {
+    state.save.mockRejectedValue(new Error("Network interrupted"));
+    render(<StuckDeskGuided />);
+    reachReview();
+    fireEvent.click(screen.getByRole("button", { name: "Save to Actor’s Passport" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Save was not confirmed");
+    expect(screen.getByRole("button", { name: "Save to Actor’s Passport" })).toBeEnabled();
+    expect(screen.getByRole("region", { name: "Guided Stuck Desk workflow" })).toHaveTextContent(
+      "I stopped preparing the next line before the reply.",
+    );
+  });
   it("blocks saving when Passport cannot verify account availability", () => {
     state.loaded = false;
     render(<StuckDeskGuided />);
