@@ -44,7 +44,7 @@ export function validateProjectDraft(value: ProjectDraft): string | null {
   }
   // The database independently enforces its own size limit. This prevents
   // a large Unicode/Arabic JSON payload from reaching that limit unexpectedly.
-  if (new Blob([JSON.stringify(value.notes)]).size > 22000)
+  if (new Blob([JSON.stringify(value.notes)]).size > 14000)
     return "Project notes are too long. Shorten a field before saving.";
   return null;
 }
