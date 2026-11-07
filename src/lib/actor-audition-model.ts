@@ -40,7 +40,8 @@ export function parseAuditionNotes(value: unknown): AuditionNotes {
       ? (value as Record<string, unknown>)
       : {};
   const notes = blankAuditionNotes();
-  for (const { key } of AUDITION_FIELDS) notes[key] = typeof source[key] === "string" ? source[key] : "";
+  for (const { key } of AUDITION_FIELDS)
+    notes[key] = typeof source[key] === "string" ? source[key] : "";
   return notes;
 }
 export function validCalendarDate(value: string): boolean {
@@ -50,18 +51,25 @@ export function validCalendarDate(value: string): boolean {
   const parsed = new Date(0);
   parsed.setUTCFullYear(y, m - 1, d);
   parsed.setUTCHours(0, 0, 0, 0);
-  return parsed.getUTCFullYear() === y && parsed.getUTCMonth() === m - 1 && parsed.getUTCDate() === d;
+  return (
+    parsed.getUTCFullYear() === y && parsed.getUTCMonth() === m - 1 && parsed.getUTCDate() === d
+  );
 }
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export function validateAuditionDraft(draft: AuditionDraft, ownedProjectIds: readonly string[]): string | null {
+export function validateAuditionDraft(
+  draft: AuditionDraft,
+  ownedProjectIds: readonly string[],
+): string | null {
   if (!draft.title.trim() || draft.title.trim().length > 120)
     return "Audition title must be 1–120 characters.";
   if (draft.roleName.length > 120) return "Role must be 120 characters or less.";
   if (!AUDITION_STATUSES.includes(draft.status)) return "Choose a valid audition status.";
-  if (draft.dueDate !== null && !validCalendarDate(draft.dueDate))
-    return "Enter a valid due date.";
-  if (draft.projectId !== null && (!uuid.test(draft.projectId) || !ownedProjectIds.includes(draft.projectId)))
+  if (draft.dueDate !== null && !validCalendarDate(draft.dueDate)) return "Enter a valid due date.";
+  if (
+    draft.projectId !== null &&
+    (!uuid.test(draft.projectId) || !ownedProjectIds.includes(draft.projectId))
+  )
     return "Select a project that belongs to this account.";
   for (const { key, en } of AUDITION_FIELDS) {
     if (typeof draft.notes[key] !== "string" || draft.notes[key].length > 1500)

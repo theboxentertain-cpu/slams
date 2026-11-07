@@ -90,10 +90,9 @@ describe("Multi-audition workflow", () => {
       }),
       [ownerProjectId],
     );
-    expect(screen.getByRole("link", { name: "Open original audition-preparation notes" })).toHaveAttribute(
-      "href",
-      "/work/audition",
-    );
+    expect(
+      screen.getByRole("link", { name: "Open original audition-preparation notes" }),
+    ).toHaveAttribute("href", "/work/audition");
   });
   it("reopens a prior file, then saves independent notes without rewriting another file", async () => {
     render(<AuditionFiles />);
@@ -130,9 +129,8 @@ describe("Multi-audition workflow", () => {
     render(<AuditionFiles />);
     expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/auth");
     expect(screen.queryByRole("button", { name: "New audition" })).toBeNull();
-    expect(screen.getByRole("link", { name: "Open original audition-preparation notes" })).toHaveAttribute(
-      "href",
-      "/work/audition",
-    );
+    expect(
+      screen.getByRole("link", { name: "Open original audition-preparation notes" }),
+    ).toHaveAttribute("href", "/work/audition");
   });
 });
