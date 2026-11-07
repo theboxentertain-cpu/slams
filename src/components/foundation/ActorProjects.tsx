@@ -109,6 +109,7 @@ export function ActorProjects() {
     setCreating(false);
     setDraft(blankProjectDraft());
     setHistory(null);
+    setHistoryLoading(false);
     setMessage("");
   }, [store.userId]);
 
@@ -117,6 +118,7 @@ export function ActorProjects() {
     setCreating(false);
     setDraft(projectDraft(project));
     setHistory(null);
+    setHistoryLoading(false);
     setMessage("");
   }
   function newProject() {
@@ -124,12 +126,14 @@ export function ActorProjects() {
     setCreating(true);
     setDraft(blankProjectDraft());
     setHistory(null);
+    setHistoryLoading(false);
     setMessage("");
   }
   function closeProject() {
     setSelectedId(null);
     setCreating(false);
     setHistory(null);
+    setHistoryLoading(false);
     setMessage("");
   }
   const editing = creating || selected !== null;
@@ -278,7 +282,7 @@ export function ActorProjects() {
                       />
                     </label>
                     {(["Character", "Breakdown"] as const).map((group) => (
-                      <details key={group} open={group === "Character" ? undefined : undefined} className="planned-tools">
+                      <details key={group} className="planned-tools">
                         <summary>{group === "Character" ? ui.character : ui.breakdown}</summary>
                         <div className="grid gap-3">
                           {PROJECT_NOTE_FIELDS.filter((field) => field.group === group).map((field) => (
