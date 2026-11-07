@@ -8,6 +8,60 @@ export type Database = {
   };
   public: {
     Tables: {
+      actor_sides: {
+        Row: {
+          id: string;
+          user_id: string;
+          project_id: string | null;
+          audition_id: string | null;
+          title: string;
+          content: string;
+          annotations: Json;
+          revision: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          project_id?: string | null;
+          audition_id?: string | null;
+          title: string;
+          content: string;
+          annotations?: Json;
+          revision?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          project_id?: string | null;
+          audition_id?: string | null;
+          title?: string;
+          content?: string;
+          annotations?: Json;
+          revision?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "actor_sides_project_owner";
+            columns: ["user_id", "project_id"];
+            isOneToOne: false;
+            referencedRelation: "actor_projects";
+            referencedColumns: ["user_id", "id"];
+          },
+          {
+            foreignKeyName: "actor_sides_audition_owner";
+            columns: ["user_id", "audition_id"];
+            isOneToOne: false;
+            referencedRelation: "actor_auditions";
+            referencedColumns: ["user_id", "id"];
+          },
+        ];
+      };
       actor_auditions: {
         Row: {
           id: string;
