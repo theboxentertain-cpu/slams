@@ -21,9 +21,8 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Check TypeScript
         run: bunx tsc --noEmit
-      - name: Semantic lint (existing formatting debt excluded)
-        run: |
-          bunx eslint . --rule 'prettier/prettier: off'
+      - name: Enforce lint and formatting with zero warnings
+        run: bun run lint
       - name: Run unit and UI tests
         run: bun run test
       - name: Validate architecture ownership
@@ -32,8 +31,6 @@ jobs:
           node scripts/audit-page-contracts.cjs --structure-only
       - name: Compile production build
         run: bun run build
-      - name: Enforce repository-wide lint and formatting
-        run: bun run lint
 
   database_contract:
     name: Disposable PostgreSQL migration and RLS audit
