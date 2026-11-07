@@ -38,9 +38,16 @@ beforeEach(() => {
   mock.update.mockResolvedValue({ value: { ...project, revision: 4 } });
   mock.create.mockResolvedValue({ value: project });
   mock.loadHistory.mockResolvedValue({
-    value: [{ revision: 2, title: "Old title", roleName: "Miranda", status: "active",
-      notes: { ...blankProjectDraft().notes, beats: "Old beat" },
-      createdAt: "2026-11-06T00:00:00Z" }],
+    value: [
+      {
+        revision: 2,
+        title: "Old title",
+        roleName: "Miranda",
+        status: "active",
+        notes: { ...blankProjectDraft().notes, beats: "Old beat" },
+        createdAt: "2026-11-06T00:00:00Z",
+      },
+    ],
   });
   mock.store = {
     userId: "actor-a",
@@ -82,14 +89,22 @@ describe("Actor at Work project workspace", () => {
     fireEvent.click(screen.getByRole("button", { name: "View version history" }));
     await waitFor(() => expect(mock.loadHistory).toHaveBeenCalledOnce());
     fireEvent.click(screen.getByText(/Version 2/));
-    fireEvent.click(screen.getByRole("button", { name: "Load this version into the editor (not saved)" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Load this version into the editor (not saved)" }),
+    );
     expect(screen.getByLabelText("Project / production title")).toHaveValue("Old title");
     expect(mock.update).not.toHaveBeenCalled();
     expect(screen.getByRole("status")).toHaveTextContent("Save it to create a new revision.");
   });
 
   it("requires an authenticated account without creating deceptive guest project storage", () => {
-    mock.store = { ...mock.store, userId: undefined, signedIn: false, loaded: true, projects: [] };
+    mock.store = {
+      ...mock.store,
+      userId: undefined,
+      signedIn: false,
+      loaded: true,
+      projects: [],
+    };
     render(<ActorProjects />);
     expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/auth");
     expect(screen.getByRole("link", { name: "Open existing audition notes" })).toHaveAttribute(
