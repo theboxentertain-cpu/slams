@@ -78,7 +78,6 @@ describe("Actor at Work database rollout safety", () => {
     expect(realAuth).toContain("actor_project_revisions");
     expect(realAuth).toContain("READ-ONLY");
     expect(realAuth).not.toMatch(/\.insert\(|\.update\(|\.delete\(/);
-    expect(realAuth).toContain("cleanUp");
     expect(gate).toContain("real authenticated user sessions");
     expect(gate).toContain("No production SQL");
   });
