@@ -9,6 +9,7 @@ trap '"${docker_cmd[@]}" rm -fv "$container" >/dev/null 2>&1 || true' EXIT
   --env POSTGRES_HOST_AUTH_METHOD=trust \
   --mount "type=bind,src=$PWD/drizzle/migrations,dst=/audit/migrations,readonly" \
   --mount "type=bind,src=$PWD/scripts/rls.sql,dst=/audit/rls.sql,readonly" \
+  --mount "type=bind,src=$PWD/scripts/rls-actor-work.sql,dst=/audit/rls-actor-work.sql,readonly" \
   postgres:17-alpine >/dev/null
 ready=false
 for _ in {1..30}; do
@@ -25,3 +26,5 @@ if [ "$ready" != true ]; then
   exit 1
 fi
 "${docker_cmd[@]}" exec "$container" psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /audit/rls.sql
+
+"${docker_cmd[@]}" exec "$container" psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /audit/rls-actor-work.sql
