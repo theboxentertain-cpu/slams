@@ -150,6 +150,31 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(sessions).toHaveLength(0);
     expect(state.makeURL).not.toHaveBeenCalled();
   });
+  it("enforces a 90-second stop timer and stops recording if the tab is hidden", async () => {
+    const timerSpy = vi.spyOn(globalThis, "setTimeout");
+    render(<PerformanceLab />);
+    fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "Stop recording" })).toBeInTheDocument());
+    expect(timerSpy).toHaveBeenCalledWith(expect.any(Function), 90_000);
+    timerSpy.mockRestore();
+    Object.defineProperty(document, "hidden", { configurable: true, value: true });
+    document.dispatchEvent(new Event("visibilitychange"));
+    await waitFor(() => expect(state.stopTrack).toHaveBeenCalled());
+    expect(sessions[0]?.state).toBe("inactive");
+    Object.defineProperty(document, "hidden", { configurable: true, value: false });
+  });
+  it("releases permission obtained after the actor leaves without constructing a recorder", async () => {
+    let resolvePermission!: (stream: unknown) => void;
+    state.permission.mockReturnValueOnce(new Promise((resolve) => { resolvePermission = resolve; }));
+    const view = render(<PerformanceLab />);
+    fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
+    expect(state.permission).toHaveBeenCalledOnce();
+    view.unmount();
+    resolvePermission({ getTracks: () => [{ stop: state.stopTrack }] });
+    await waitFor(() => expect(state.stopTrack).toHaveBeenCalled());
+    expect(sessions).toHaveLength(0);
+    expect(state.makeURL).not.toHaveBeenCalled();
+  });
   it("releases the live stream and revokes media URLs on navigation away", async () => {
     const view = render(<PerformanceLab />);
     await recordA();
