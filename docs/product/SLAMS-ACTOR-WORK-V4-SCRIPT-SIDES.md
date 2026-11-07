@@ -6,7 +6,7 @@
 - A working **Script Sides & Beats** route at `/work/sides`, accessible from Actor at Work, the existing Audition script tab, Projects and the multi-audition list.
 - Signed-in users can paste script text or load a UTF-8 `.txt` file (up to 60 KB), preview/edit the text, explicitly associate the side with **one** private project or audition, and save to their account.
 - The source snapshot is immutable after import. The client cannot save an annotation that changes its script text. The database trigger also forbids changes to text and the parent association.
-- Original line breaks and character text are retained in the saved source string. Display splits into numbered lines for clear source-reference anchors; the script is not rewritten or translated.
+- UTF-8 `.txt` file imports retain source characters and newline codepoints in the saved text. Browser textareas may normalize CRLF to LF when **pasting**; the rendered line order and characters remain intact. Display splits into numbered lines for anchors; no automatic rewriting or translation.
 - Actors add line-anchored `beat`, `objective`, and `tactic` notes by selecting from/to line numbers and seeing the source excerpt before explicitly saving. They can stage or remove a beat without persisting it immediately.
 - The UI distinguishes **script text as evidence** from **user-authored interpretations**. There is no AI diagnosis, originality assessment, script parser, automatic beat detection, or performance grading.
 - Optimistic concurrency uses an owner ID + script ID + prior revision, with an explicit failure rather than silent overwrite.
