@@ -218,6 +218,48 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(sessions).toHaveLength(0);
     expect(state.makeURL).not.toHaveBeenCalled();
   });
+  it("cancels a pending camera permission request when backgrounded and disposes a late grant", async () => {
+    let grant!: (stream: unknown) => void;
+    state.permission.mockReturnValueOnce(
+      new Promise((resolve) => {
+        grant = resolve;
+      }),
+    );
+    render(<PerformanceLab />);
+    fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
+    expect(state.permission).toHaveBeenCalledOnce();
+    Object.defineProperty(document, "hidden", { configurable: true, value: true });
+    fireEvent(document, new Event("visibilitychange"));
+    expect(screen.getByRole("alert")).toHaveTextContent("Permission request cancelled");
+    expect(screen.getByRole("button", { name: /Record Take A/ })).toBeEnabled();
+    Object.defineProperty(document, "hidden", { configurable: true, value: false });
+    grant({ getTracks: () => [{ stop: state.stopTrack }] });
+    await waitFor(() => expect(state.stopTrack).toHaveBeenCalled());
+    expect(sessions).toHaveLength(0);
+    expect(state.makeURL).not.toHaveBeenCalled();
+    expect(screen.queryByRole("button", { name: "Stop recording" })).toBeNull();
+  });
+
+  it("rejects a permission response acquired while hidden even without a visibility event", async () => {
+    let grant!: (stream: unknown) => void;
+    state.permission.mockReturnValueOnce(
+      new Promise((resolve) => {
+        grant = resolve;
+      }),
+    );
+    render(<PerformanceLab />);
+    fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
+    Object.defineProperty(document, "hidden", { configurable: true, value: true });
+    grant({ getTracks: () => [{ stop: state.stopTrack }] });
+    await waitFor(() =>
+      expect(screen.getByRole("alert")).toHaveTextContent("No recording started"),
+    );
+    expect(state.stopTrack).toHaveBeenCalled();
+    expect(sessions).toHaveLength(0);
+    expect(state.makeURL).not.toHaveBeenCalled();
+    Object.defineProperty(document, "hidden", { configurable: true, value: false });
+  });
+
   it("releases the live stream and revokes media URLs on navigation away", async () => {
     const view = render(<PerformanceLab />);
     await recordA();
