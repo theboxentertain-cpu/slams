@@ -19,7 +19,7 @@
 - [ ] Demonstrate that only `0004`, followed by `0005`, can be applied as **targeted, reviewed SQL**. **Never run all pending Drizzle journal entries**: doing so may also apply the deferred `0003_academic_progression_placement.sql`.
 - [ ] Apply proposed SQL to **staging only**, after inspecting/approving the exact SQL and current schema. Document execution output and any errors.
 - [ ] Run `scripts/db/actor-work-staging-rls.psql` using two distinct, disposable staging users. Its transaction rolls back test rows, but this simulates Supabase JWT claims under SQL; it is **not** real-token app verification.
-- [ ] Separately test two **real authenticated user sessions** against staging REST API/SDK: no cross-user project, revision or audition reads; no forged writes; cross-owner project association rejected; legitimate owner writes confirmed.
+- [ ] Separately test two **real authenticated user sessions** against staging REST API/SDK. Use the supplied staging-only script for project ownership, revision history, forged writes and cross-owner audition associations; a positive/negative audition READ fixture, if required, must be tested separately. Do not claim a complete audit from a partial smoke test.
 - [ ] Confirm legacy `audition_prep` and `passport_entries` still work and existing data remains unchanged. Test auth sign-out/account switch, stale revision conflict and unavailable-schema failure.
 - [ ] Record screenshots/logs of RTL/LTR UI, guest/login transitions and error handling; no claim of production readiness before separate real Android tests.
 - [ ] Review production lock impact, expected database size, rollback/recovery and required maintenance window. Obtain explicit deployment authorization from the database owner.
@@ -52,7 +52,20 @@ psql -X -v ON_ERROR_STOP=1 \
   -v actor_a="$STAGING_ACTOR_A_UUID" \
   -v actor_b="$STAGING_ACTOR_B_UUID" \
   "$STAGING_DB_URL" -f scripts/db/actor-work-staging-rls.psql
+
+# Separate end-user JWT/SDK RLS smoke test. Set staging secrets through
+# an approved secret store or private environment; never commit them.
+SLAMS_NONPROD_RLS_ACK=staging-only \
+SLAMS_STAGING_URL="$STAGING_SUPABASE_URL" \
+SLAMS_STAGING_PUBLISHABLE_KEY="$STAGING_PUBLISHABLE_KEY" \
+SLAMS_TEST_ACTOR_A_EMAIL="$STAGING_A_EMAIL" \
+SLAMS_TEST_ACTOR_A_PASSWORD="$STAGING_A_PASSWORD" \
+SLAMS_TEST_ACTOR_B_EMAIL="$STAGING_B_EMAIL" \
+SLAMS_TEST_ACTOR_B_PASSWORD="$STAGING_B_PASSWORD" \
+node scripts/db/verify-actor-rls-real-auth.mjs
 ```
+The SDK smoke test uses two real staging sign-ins and requires the `sb_publishable_` key, not an elevated service key. It creates one disposable project for each account, attempts verified cleanup, and **does not create a legitimate audition** because audition deletion is deliberately forbidden. If RLS is broken, unexpected writes may require authorized staging cleanup. A real-token audition read test, live RLS proof and Android checks remain separate release gates.
+
 Do **not** commit credentials, passwords, service-role keys, real test identities or DB URLs. The staging harness has `ON_ERROR_STOP` and a final `ROLLBACK`; failure aborts its open transaction and must be investigated before a second run.
 
 ## 5. Rollout boundary and stop conditions
