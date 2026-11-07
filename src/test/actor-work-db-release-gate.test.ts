@@ -73,7 +73,11 @@ describe("Actor at Work database rollout safety", () => {
     expect(realAuth).toContain("staging-only");
     expect(realAuth).toContain("signInWithPassword");
     expect(realAuth).toContain("sb_publishable_");
-    expect(realAuth).toContain("cross-account audition association");
+    expect(realAuth).toContain("actor_auditions");
+    expect(realAuth).toContain("actor_sides");
+    expect(realAuth).toContain("actor_project_revisions");
+    expect(realAuth).toContain("READ-ONLY");
+    expect(realAuth).not.toMatch(/\.insert\(|\.update\(|\.delete\(/);
     expect(realAuth).toContain("cleanUp");
     expect(gate).toContain("real authenticated user sessions");
     expect(gate).toContain("No production SQL");
