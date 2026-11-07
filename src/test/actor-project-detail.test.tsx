@@ -22,15 +22,16 @@ vi.mock("@/lib/i18n", () => ({
 }));
 vi.mock("@/components/slams", () => ({
   Page: ({ title, children }: { title: string; children: ReactNode }) => (
-    <main><h1>{title}</h1>{children}</main>
+    <main>
+      <h1>{title}</h1>
+      {children}
+    </main>
   ),
   btnPrimary: "primary",
   btnSecondary: "secondary",
 }));
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to }: { children: ReactNode; to: string }) => (
-    <a href={to}>{children}</a>
-  ),
+  Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
 
 const project = {
@@ -84,7 +85,8 @@ describe("Dedicated project workspaces", () => {
     expect(screen.queryByRole("button", { name: "Save this file" })).toBeNull();
     expect(screen.queryByText("Already written in the project")).toBeNull();
     expect(screen.getByRole("link", { name: /The Station/ })).toHaveAttribute(
-      "href", "/work/character",
+      "href",
+      "/work/character",
     );
   });
 
@@ -111,13 +113,13 @@ describe("Dedicated project workspaces", () => {
   it("stages selected legacy audition text but never overwrites filled fields or saves automatically", async () => {
     render(<ActorProjectDetail kind="character" projectId={projectId} />);
     fireEvent.click(screen.getByRole("button", { name: "Bring in existing audition preparation" }));
-    expect(
-      screen.getByRole("checkbox", { name: /Given circumstances/ }),
-    ).toBeDisabled();
+    expect(screen.getByRole("checkbox", { name: /Given circumstances/ })).toBeDisabled();
     expect(screen.getByRole("checkbox", { name: /Objective/ })).not.toBeChecked();
     expect(mock.update).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("checkbox", { name: /Objective/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Copy selected notes into this unsaved editor" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Copy selected notes into this unsaved editor" }),
+    );
     expect(screen.getByLabelText("Objective")).toHaveValue("أقنعه يفضل");
     expect(screen.getByLabelText("Given circumstances")).toHaveValue(
       "Already written in the project",
