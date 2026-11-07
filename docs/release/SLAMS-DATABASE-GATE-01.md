@@ -1,3 +1,35 @@
+## Real-token API write-security gate (2026-11-07)
+
+**Implemented in code; not yet run with real staging credentials.** Previous
+read-only real-token check passed with two staging users and synthetic fixtures.
+
+1. Rotate both disposable test-user passwords if they were exposed in terminal
+   screenshots or shell history. Never commit or paste credentials into chat.
+2. In the authorized SLAMS Codespace on `main`, `git pull --ff-only` after
+   this PR merges. Keep the existing staging publishable key and fixture ID
+   environment values from the previous read-only real-token test.
+3. For **staging only** `bfoukjcissyardeokfev`, explicitly set
+   `export SLAMS_STAGING_API_WRITES_ACK=synthetic-fixtures-only`.
+   Reenter **rotated** credentials using hidden `read -rsp` shell prompts;
+   export them without writing a shell-history or source-code secret.
+4. Run `node scripts/db/verify-actor-rls-real-writes.mjs`. This uses
+   Supabase publishable key + two real user JWT sessions; it rejects every URL
+   except the pinned separate staging ref. It validates synthetic fixture IDs,
+   ownership, and `SLAMS STAGING TEST` titles before mutation.
+5. The test checks owner-authorized updates for both actors across projects,
+   auditions and script-side annotations; server revision increments and
+   server-generated project history; cross-owner update rejection; forged
+   ownership rejection; cross-owner audition-project foreign key rejection;
+   immutable script-side source text; read-only revisions and anonymous
+   denial. It **does not** test DELETE, TRUNCATE, Android UI or production.
+6. It restores the original synthetic notes/annotations in `finally`;
+   immutable server-generated revision history **necessarily remains in
+   staging**. If a restore fails, stop and inspect the staging fixtures.
+7. Record PASS/error logs **without** email, passwords, tokens or keys.
+   The database release stays blocked pending verified backup restoration,
+   Android acceptance and production owner approval.
+
+---
 # SLAMS — Actor at Work database release gate
 
 **Current status (2026-11-07): BLOCKED FOR PRODUCTION SCHEMA CHANGES.**
