@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { btnPrimary, btnSecondary } from "@/components/slams";
 import type { useAuditionPrep } from "@/lib/store";
+import { useUnsavedWork } from "@/lib/unsaved-work";
 
 const FIELDS = [
   { id: "role", label: "Role & project" },
@@ -19,6 +20,9 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const dirty =
+    loaded && !sessionLoading && FIELDS.some(({ id }) => (draft[id] ?? "") !== (data[id] ?? ""));
+  const markSaved = useUnsavedWork(dirty);
 
   useEffect(() => {
     if (loaded) setDraft(data);
@@ -28,6 +32,7 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
     setBusy(true);
     setStatus(null);
     const res = await save(draft);
+    if (!res.error) markSaved();
     setBusy(false);
     setStatus(
       res.error

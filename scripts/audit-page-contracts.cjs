@@ -85,8 +85,7 @@ function validateMap(map) {
   }
   const navOwners = filesIn(path.join(root, "src/components")).filter(
     (f) =>
-      f.endsWith(".tsx") &&
-      fs.readFileSync(f, "utf8").includes('aria-label="Main studio navigation"'),
+      f.endsWith(".tsx") && fs.readFileSync(f, "utf8").includes('data-primary-navigation="studio"'),
   );
   if (navOwners.length !== 1) errors.push("Expected one implemented global navigation owner.");
   return errors;

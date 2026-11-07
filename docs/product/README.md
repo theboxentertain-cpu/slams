@@ -1,5 +1,7 @@
 # SLAMS execution checkpoint
 
+Latest continuation: Actor at Work journals, immutable script-source versions/imports, contextual rehearsals and protected account lifecycle are implemented in source on `feat/actor-work-continuity`. Production schemas and beta release remain gated. See [implementation and verification](SLAMS-ACTOR-WORK-CONTINUITY-VERIFICATION.md).
+
 Current delivery: **Conservatory, Baseline and lesson art direction**, continued November 3 from refreshed main `aa06ca6` on `feat/conservatory-baseline-design`. Main already includes the prior premium visuals (PR #12), first-rehearsal flow (PR #9), Meisner editorial pilot (PR #10) and academic safeguards (PR #11). The latest supplied images guide this visual extension. The 47-page audit remains the product checkpoint; styling does not close unavailable contracts.
 
 - [Training artwork, page responsibilities and ownership](SLAMS-TRAINING-ART-DIRECTION.md)

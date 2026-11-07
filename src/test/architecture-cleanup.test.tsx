@@ -92,7 +92,10 @@ describe("Available work comes first", () => {
     expect(screen.queryByRole("tablist")).toBeNull();
     const disclosure = screen.getByText("Tools in development").closest("details");
     expect(disclosure).not.toHaveAttribute("open");
-    expect(within(disclosure!).getAllByRole("link", { hidden: true })).toHaveLength(2);
+    const planned = within(disclosure!).getAllByRole("link", { hidden: true });
+    expect(planned).toHaveLength(1);
+    expect(planned[0]).toHaveAttribute("href", "/work/self-tape");
+    expect(within(disclosure!).queryByText(/Journal/)).toBeNull();
   });
   it("opens an actual project workspace for the projects tab", () => {
     render(<WorkHub tab="projects" onTabChange={vi.fn()} />);

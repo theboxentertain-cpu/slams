@@ -33,3 +33,6 @@ dist-ssr
 
 # Private database exports and local recovery logs — NEVER commit
 recovery_private/
+
+# Supabase CLI cache; no generated environment metadata in source
+supabase/.temp/

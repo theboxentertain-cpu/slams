@@ -64,6 +64,27 @@
       "when": 1794045000000,
       "tag": "0008_slams_role_grants_hardening",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794046009000,
+      "tag": "0009_actor_work_continuity",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794046010000,
+      "tag": "0010_account_lifecycle_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794046011000,
+      "tag": "0011_actor_script_storage",
+      "breakpoints": true
     }
   ]
 }

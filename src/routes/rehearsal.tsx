@@ -1,12 +1,20 @@
 import { createFileRoute, type SearchSchemaInput } from "@tanstack/react-router";
-import { validateTab } from "@/lib/foundation";
+import { validateRehearsalSearch } from "@/lib/actor-rehearsal-model";
 import { RehearsalHub } from "@/components/foundation/WorkspacePages";
 export const Route = createFileRoute("/rehearsal")({
-  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) => validateTab("rehearsal", input),
+  validateSearch: (input: Record<string, unknown> & SearchSchemaInput) =>
+    validateRehearsalSearch(input),
   component: Screen,
 });
 function Screen() {
-  const { tab } = Route.useSearch();
+  const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <RehearsalHub tab={tab} onTabChange={(tab) => void navigate({ search: { tab } })} />;
+  return (
+    <RehearsalHub
+      tab={search.tab}
+      search={search}
+      onContextChange={(next) => void navigate({ search: { tab: search.tab, ...next } })}
+      onTabChange={(tab) => void navigate({ search: { tab } })}
+    />
+  );
 }

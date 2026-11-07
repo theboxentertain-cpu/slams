@@ -1,0 +1,18 @@
+# Actor at Work — owner-run physical Android acceptance
+
+Status: NOT RUN. Execute against the approved, production-backed candidate while beta is closed. A browser viewport test does not complete this checklist.
+
+Record device model, Android version, Chrome version, actual viewport, test date and candidate commit. Use two disposable invited accounts and fictional script material. Keep credentials, recovery links and private scripts out of screenshots/logs.
+
+1. **Entry and identity:** accept an invitation, confirm email, sign in and reopen after Chrome restart. Sign out, switch accounts, expire a session and follow password recovery. Expired/used recovery links must fail safely. A must never see B's private work.
+2. **Professional work:** create two projects and two auditions. Reopen the exact selected record; edit character and breakdown separately, saving one without losing the other. Archive/restore a project and inspect prior revisions without accidentally saving history.
+3. **Keyboard and draft protection:** enter Arabic/English notes with the keyboard visible. Change tabs, press Android Back, follow a link, reload and cancel abandonment. Confirmed saves clear the warning. Failed saves leave the draft intact.
+4. **Imports:** use Android's file picker for fictional TXT, text PDF and DOCX. Preview extraction, choose an excerpt and approve it explicitly. Verify Arabic, punctuation and TXT CRLF preservation; distinguish source file from extracted text. Reject scanned/encrypted PDFs and malformed/oversized files without losing prior work.
+5. **Versioning:** annotate the first source, create a changed version, compare both and confirm the earlier annotations/source remain intact. Download the private original. A direct B-owned source link and logged-out access must disclose nothing.
+6. **Connected rehearsal:** enter from a selected audition/project/side. Verify objective, circumstances and original source version. Save a draft, background/close Chrome, reopen and resume it. Record two different actions and actual observations, apply a direction, reflect, complete, and return to the exact originating editor. Completed work opens read-only. Re-linking the audition later must not rewrite old rehearsal context.
+7. **Journal:** create a contextual journal entry, edit/archive/restore it, stage a historical version and save a new revision. Reopen its linked audition and rehearsal and verify the correct project.
+8. **Networks and conflicts:** disconnect during upload, creation and editing; reconnect and retry. No duplicate record, missing original, phantom success or silent overwrite. Edit the same record from another device and verify a revision conflict retains the first device's draft.
+9. **Accessibility:** repeat key tasks in English and Arabic RTL, portrait and landscape, large system text and TalkBack. Check focus order, labels, modal return focus, controls above the keyboard/system bars, touch areas and horizontal overflow. Credentials, script text and artwork must retain appropriate direction.
+10. **Disposable account deletion:** confirm deletion with reauthentication. Wrong password or a switched account must cause no deletion. Concurrent save/upload attempts must fail safely once pending begins. Confirm private files, owned rows and Auth user are removed, other account data remains, old sessions cannot read/write, and recovery does not silently recreate deleted access.
+
+For each item record PASS / FAIL / BLOCKED with a short observed result. Record exact failure steps and verify fixes on the same device. No physical-device, production persistence or recovery pass is inferred from source tests.

@@ -255,7 +255,10 @@ export function DirectorsOffice() {
             className="office-icon-button room-arrow"
             aria-label="Previous office view"
             disabled={index === 0}
-            onClick={() => { const previous = OFFICE_VIEWS[index - 1]; if (previous) selectView(previous.id); }}
+            onClick={() => {
+              const previous = OFFICE_VIEWS[index - 1];
+              if (previous) selectView(previous.id);
+            }}
           >
             <ArrowLeft size={17} />
           </button>
@@ -284,7 +287,10 @@ export function DirectorsOffice() {
             className="office-icon-button room-arrow"
             aria-label="Next office view"
             disabled={index === 2}
-            onClick={() => { const next = OFFICE_VIEWS[index + 1]; if (next) selectView(next.id); }}
+            onClick={() => {
+              const next = OFFICE_VIEWS[index + 1];
+              if (next) selectView(next.id);
+            }}
           >
             <ArrowRight size={17} />
           </button>

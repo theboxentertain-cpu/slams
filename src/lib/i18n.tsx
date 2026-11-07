@@ -53,16 +53,18 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }
   return (
     <LanguageContext.Provider value={{ locale, setLocale }}>
-      <DirectionProvider dir={locale === "ar" ? "rtl" : "ltr"}>
-        {children}
-      </DirectionProvider>
+      <DirectionProvider dir={locale === "ar" ? "rtl" : "ltr"}>{children}</DirectionProvider>
     </LanguageContext.Provider>
   );
 }
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  return { ...context, dir: context.locale === "ar" ? "rtl" as const : "ltr" as const, t: (source: string) => translateText(source, context.locale) };
+  return {
+    ...context,
+    dir: context.locale === "ar" ? ("rtl" as const) : ("ltr" as const),
+    t: (source: string) => translateText(source, context.locale),
+  };
 }
 
 /** Translate a known, authored JSX label without adding a layout element.

@@ -66,9 +66,9 @@ export const SUPPORT_PAGES = {
     title: "Project Journal",
     parent: "/work",
     message:
-      "Project records and revision history are in development. Existing saved rehearsal reflections are available in Passport.",
-    action: "/passport",
-    label: "Open saved reflections",
+      "Write private project notes, review saved versions, and return to linked auditions and rehearsals.",
+    action: "/work",
+    label: "Actor at Work",
   },
   diagnosis: {
     to: "/stuck/diagnosis",

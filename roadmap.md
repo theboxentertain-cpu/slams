@@ -1,6 +1,13 @@
+# Actor at Work continuation — 2026-11-07
+
+Implemented in source: project journals/history, TXT/PDF/DOCX reviewed excerpts and immutable source versions, context-pinned manual rehearsals/drafts/returns, protected account deletion, editor leave guards, and full lint repairs. New database packages remain review-only. See [verification and release gates](docs/product/SLAMS-ACTOR-WORK-CONTINUITY-VERIFICATION.md).
+
+Production release remains blocked by private backup recovery, approved selective migrations, real account/persistence/Storage lifecycle verification, and owner-run physical Android results. Academic 0003 remains deferred.
+
 # SLAMS Sprint 01B — Foundation Repair
 
 ## Current verification request
+
 - [ ] Implement and verify whole-app RTL page flow, alignment, directional icons, and interactive controls on desktop/mobile, without redesign or data changes.
 - [ ] Make the whole app bilingual in English/Arabic: shared language switch, persisted preference, authored translations, RTL layout, and browser/regression verification; preserve all data and behavior.
 - [ ] Match the new SLAMS page-design references through presentation-only changes; preserve navigation, real progress, honest curriculum, and Director modes, then check desktop/mobile and regressions.
@@ -24,6 +31,7 @@
 - [ ] Email-confirmation/password sign-in/recovery E2E — blocked on an available confirmation/recovery link; managed-session restoration is verified instead
 
 ## Continuation
+
 - [x] Repair foundation test fixture indexing using nonempty tuples, preserving strict compiler settings
 - [x] Verify desktop/mobile navigation, all Director modes, nine scene obstacles, branches/retakes, local/cloud Passport and audition refresh persistence
 - [x] Verify live RLS: 14 owner/spoofed-write/anonymous/nonexistent-unit checks pass

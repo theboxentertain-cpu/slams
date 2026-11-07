@@ -3,6 +3,7 @@ import { Page, AccountLink, DirectorToggle, btnSecondary } from "@/components/sl
 import { useOfficePreferences } from "@/lib/office-preferences";
 import { LanguageSwitch, useLanguage } from "@/lib/i18n";
 import { SectionTabs, Unavailable } from "./SectionTabs";
+import { AccountDeletion } from "./AccountDeletion";
 export function SettingsPage({
   tab,
   onTabChange,
@@ -22,6 +23,7 @@ export function SettingsPage({
               <Link to="/auth">Open account management</Link>
               <AccountLink />
               <p>Director, motion and sound preferences stay in this browser.</p>
+              <AccountDeletion />
             </section>
           ) : current === "accessibility" ? (
             <section className="foundation-stack">
@@ -66,14 +68,16 @@ export function SettingsPage({
               <h2>{t("Privacy and recording")}</h2>
               <p>
                 The current rehearsal is text-only. Camera and microphone capture, recording
-                storage, notifications, account-data export and account deletion are not available
-                here.
+                storage, notifications and account-data export are not available here.
               </p>
               <p>
                 Passport supports deleting your own saved rehearsal entries. Signed-out records
                 belong to this browser; signing in does not silently import them.
               </p>
               <Link to="/passport">Manage saved rehearsals</Link>
+              <p>
+                Account deletion is managed in the Account tab and requires your current password.
+              </p>
             </section>
           )
         }

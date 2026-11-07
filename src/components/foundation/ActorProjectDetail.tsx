@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { Page, btnPrimary, btnSecondary } from "@/components/slams";
 import { useLanguage } from "@/lib/i18n";
+import { useUnsavedWork } from "@/lib/unsaved-work";
 import {
   PROJECT_NOTE_FIELDS,
   blankProjectDraft,
@@ -40,6 +41,8 @@ const STRINGS = {
     staged: "Source notes staged. Check the text and select Save to create a project revision.",
     toCharacter: "Open Character File",
     toBreakdown: "Open Scene Breakdown",
+    rehearse: "Rehearse this project",
+    journal: "Open project journal",
   },
   ar: {
     character: "ملف الشخصية",
@@ -68,6 +71,8 @@ const STRINGS = {
     staged: "جهزنا الملاحظات في المحرر. راجعها واضغط حفظ علشان تعمل نسخة جديدة.",
     toCharacter: "افتح ملف الشخصية",
     toBreakdown: "افتح تحليل المشهد",
+    rehearse: "اتمرن على المشروع ده",
+    journal: "افتح دفتر المشروع",
   },
 } as const;
 
@@ -100,6 +105,7 @@ export function ActorProjectDetail({
   );
   const changed =
     !!project && fields.some((field) => draft.notes[field.key] !== project.notes[field.key]);
+  useUnsavedWork(changed);
   const validation = validateProjectDraft(draft);
 
   useEffect(() => {
@@ -191,6 +197,20 @@ export function ActorProjectDetail({
                   <p>{project.roleName || "—"}</p>
                   {project.status === "archived" && <p>{ui.archived}</p>}
                   <div className="flex flex-wrap gap-3 mt-3">
+                    <Link
+                      to="/work/journal"
+                      search={{ tab: "notes", projectId: project.id }}
+                      className={btnSecondary}
+                    >
+                      {ui.journal}
+                    </Link>
+                    <Link
+                      to="/rehearsal"
+                      search={{ projectId: project.id, returnTo: kind }}
+                      className={btnSecondary}
+                    >
+                      {ui.rehearse}
+                    </Link>
                     <Link
                       to="/work/character"
                       search={{ projectId: project.id }}
