@@ -11,6 +11,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/integrations/supabase/types";
 import { supabase } from "@/integrations/supabase/client";
 
+// Generated from the isolated staging catalog; preserve its emitted layout.
+// prettier-ignore
 type ActorWorkTables = {
       actor_auditions: {
         Row: {
