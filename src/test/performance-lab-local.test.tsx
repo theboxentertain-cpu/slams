@@ -9,6 +9,7 @@ const state = vi.hoisted(() => ({
   stopTrack: vi.fn(),
   makeURL: vi.fn(),
   revokeURL: vi.fn(),
+  copy: vi.fn(),
 }));
 vi.mock("@/lib/i18n", () => ({ useLanguage: () => ({ locale: state.locale }) }));
 vi.mock("@tanstack/react-router", () => ({
@@ -48,6 +49,10 @@ beforeEach(() => {
   state.stopTrack.mockReset();
   state.makeURL.mockReset();
   state.revokeURL.mockReset();
+  state.copy.mockReset().mockResolvedValue(undefined);
+  Object.defineProperty(navigator, "clipboard", {
+    configurable: true, value: { writeText: state.copy },
+  });
   let count = 0;
   state.makeURL.mockImplementation(() => "blob:slams-take-" + ++count);
   state.permission.mockImplementation(async () => ({ getTracks: () => [{ stop: state.stopTrack }] }));
@@ -87,7 +92,7 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(state.permission).not.toHaveBeenCalled();
     expect(sessions).toHaveLength(0);
     expect(state.makeURL).not.toHaveBeenCalled();
-    expect(screen.getByText(/no AI observation, automatic score, cloud upload/i)).toBeInTheDocument();
+    expect(screen.getByText(/No AI observation, automatic score, cloud upload/i)).toBeInTheDocument();
   });
   it("records one explicitly requested take, stops tracks and reveals user-controlled playback/download/delete", async () => {
     render(<PerformanceLab />);
@@ -120,7 +125,21 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(screen.getByLabelText("Playback take B").tagName).toBe("AUDIO");
     const copy = screen.getByRole("button", { name: "Copy comparison as text (no media)" });
     expect(copy).toBeDisabled();
-    fireEvent.change(screen.getByLabelText("What actually happened in this take?", { exact: false }), { target: { value: "a" } });
+    const noteFields = screen.getAllByLabelText("What actually happened in this take?");
+    expect(noteFields).toHaveLength(2);
+    fireEvent.change(noteFields[0]!, { target: { value: "I missed the response in take A." } });
+    fireEvent.change(noteFields[1]!, { target: { value: "I waited for the response in take B." } });
+    fireEvent.change(screen.getByLabelText("What changed between A and B, if anything?"), {
+      target: { value: "The pause was longer but I cannot grade the acting." },
+    });
+    expect(copy).toBeEnabled();
+    expect(state.copy).not.toHaveBeenCalled();
+    fireEvent.click(copy);
+    await waitFor(() => expect(state.copy).toHaveBeenCalledTimes(1));
+    expect(state.copy.mock.calls[0]?.[0]).toContain("The pause was longer");
+    expect(state.copy.mock.calls[0]?.[0]).toContain("not graded");
+    expect(state.revokeURL).not.toHaveBeenCalled();
+    expect(screen.getByLabelText("Playback take A")).toHaveAttribute("src", "blob:slams-take-1");
   });
   it("does not treat denied device access as a completed take", async () => {
     state.permission.mockRejectedValueOnce(new Error("Permission denied"));
