@@ -44,13 +44,24 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
         </section>
       ) : tab === "projects" ? (
         <ActorProjects />
+      ) : tab === "characters" ? (
+        <section className="foundation-stack">
+          <h2>
+            <T>Character files</T>
+          </h2>
+          <p>
+            <T>Choose a saved project and work on its character independently from other roles.</T>
+          </p>
+          <Link to="/work/character" className={btnPrimary}>
+            <T>Open Character Files</T>
+          </Link>
+          <Link to="/work/breakdown">
+            <T>Open Scene Breakdowns</T>
+          </Link>
+        </section>
       ) : (
         <section className="foundation-stack">
-          <Unavailable>
-            {tab === "characters"
-              ? "Use the character section inside each project file. The standalone Character File route is not available yet."
-              : "Recording, playback and export are not implemented."}
-          </Unavailable>
+          <Unavailable>Recording, playback and export are not implemented.</Unavailable>
           <button className={btnPrimary} onClick={() => onTabChange("auditions")}>
             <T>Back to audition preparation</T>
           </button>
@@ -61,10 +72,10 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
           <T>Tools in development</T>
         </summary>
         <p>
-          <T>These tools are not available yet. Your audition preparation remains available.</T>
+          <T>Recording and project journals remain in development.</T>
         </p>
         <ul>
-          {(["character", "breakdown", "selfTape", "journal"] as const).map((id) => {
+          {(["selfTape", "journal"] as const).map((id) => {
             const tool = SUPPORT_PAGES[id];
             return (
               <li key={id}>
