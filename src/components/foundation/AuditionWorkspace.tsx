@@ -69,7 +69,10 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
             <T>Copy selected audition notes into a character project</T>
           </Link>
           <p className="mt-1 text-muted-foreground">
-            <T>Your audition notes remain a separate record. Copying requires your explicit choice and project save.</T>
+            <T>
+              Your audition notes remain a separate record. Copying requires your explicit choice
+              and project save.
+            </T>
           </p>
         </div>
       )}
