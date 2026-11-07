@@ -1,7 +1,7 @@
 -- SLAMS Actor at Work: staging-only RLS regression harness.
 --
 -- Run ONLY against a disposable/nonproduction Supabase database AFTER an
--- approved review and separate, successful application of migrations 0004/0005.
+-- approved review and separate, successful application of migrations 0004–0007.
 -- Provision two REAL, DISTINCT disposable test users via an authorized admin.
 -- Their UUIDs must already exist in auth.users; do not use production identities.
 --
@@ -39,8 +39,9 @@ BEGIN
   END IF;
   IF to_regclass('public.actor_projects') IS NULL
      OR to_regclass('public.actor_project_revisions') IS NULL
-     OR to_regclass('public.actor_auditions') IS NULL THEN
-    RAISE EXCEPTION 'BLOCKED: reviewed 0004 and 0005 migrations not installed';
+     OR to_regclass('public.actor_auditions') IS NULL
+     OR to_regclass('public.actor_sides') IS NULL THEN
+    RAISE EXCEPTION 'BLOCKED: reviewed actor-work migrations 0004–0007 not installed';
   END IF;
 END;
 $block$;
@@ -98,15 +99,26 @@ BEGIN
   IF FOUND THEN
     RAISE EXCEPTION 'FAIL: actor B updated actor A project';
   END IF;
-  DELETE FROM public.actor_projects
-   WHERE id = current_setting('slams.project_a')::uuid;
-  IF FOUND THEN
-    RAISE EXCEPTION 'FAIL: actor B deleted actor A project';
-  END IF;
   UPDATE public.actor_auditions SET title = 'INTRUSION'
    WHERE id = current_setting('slams.audition_a')::uuid;
   IF FOUND THEN
     RAISE EXCEPTION 'FAIL: actor B updated actor A audition';
+  END IF;
+END;
+$block$;
+
+-- Final hardening 0007 denies authenticated project DELETE entirely,
+-- including one's own project, to preserve archive/restore and history.
+DO $block$
+DECLARE blocked BOOLEAN := FALSE;
+BEGIN
+  BEGIN
+    DELETE FROM public.actor_projects
+    WHERE id = current_setting('slams.project_a')::uuid;
+  EXCEPTION WHEN insufficient_privilege THEN blocked := TRUE;
+  END;
+  IF NOT blocked THEN
+    RAISE EXCEPTION 'FAIL: project deletion permission was not revoked by 0007';
   END IF;
 END;
 $block$;
