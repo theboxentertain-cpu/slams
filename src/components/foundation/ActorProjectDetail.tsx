@@ -95,9 +95,11 @@ export function ActorProjectDetail({
   activeKeyRef.current = activeKey;
 
   const project = store.projects.find((p) => p.id === projectId) ?? null;
-  const fields = PROJECT_NOTE_FIELDS.filter((f) => f.group ===
-    (kind === "character" ? "Character" : "Breakdown"));
-  const changed = !!project && fields.some((field) => draft.notes[field.key] !== project.notes[field.key]);
+  const fields = PROJECT_NOTE_FIELDS.filter(
+    (f) => f.group === (kind === "character" ? "Character" : "Breakdown"),
+  );
+  const changed =
+    !!project && fields.some((field) => draft.notes[field.key] !== project.notes[field.key]);
   const validation = validateProjectDraft(draft);
 
   useEffect(() => {
@@ -105,7 +107,7 @@ export function ActorProjectDetail({
     setMessage("");
     setCopyOpen(false);
     setSaving(false);
-  }, [store.userId, project?.id, project?.revision]);
+  }, [store.userId, project]);
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -141,7 +143,9 @@ export function ActorProjectDetail({
         {!store.signedIn ? (
           <div className="panel p-4 foundation-stack">
             <p>{ui.signIn}</p>
-            <Link to="/auth" className={btnPrimary}>{ui.signInLink}</Link>
+            <Link to="/auth" className={btnPrimary}>
+              {ui.signInLink}
+            </Link>
           </div>
         ) : (
           <>
@@ -181,7 +185,9 @@ export function ActorProjectDetail({
             {store.loaded && !store.error && project && (
               <section className="foundation-stack">
                 <div className="panel p-4">
-                  <h2>{ui.file}: {project.title}</h2>
+                  <h2>
+                    {ui.file}: {project.title}
+                  </h2>
                   <p>{project.roleName || "—"}</p>
                   {project.status === "archived" && <p>{ui.archived}</p>}
                   <div className="flex flex-wrap gap-3 mt-3">
@@ -204,7 +210,9 @@ export function ActorProjectDetail({
                 <form className="foundation-stack" onSubmit={(event) => void save(event)}>
                   {fields.map((field) => (
                     <label key={field.key} className="grid gap-2">
-                      <span className="font-semibold">{locale === "ar" ? field.ar : field.label}</span>
+                      <span className="font-semibold">
+                        {locale === "ar" ? field.ar : field.label}
+                      </span>
                       <textarea
                         className="w-full rounded border border-input bg-background p-3"
                         rows={4}
