@@ -9,13 +9,19 @@ import {
   type ProjectDraft,
   type ProjectStatus,
 } from "@/lib/actor-project-model";
-import { useActorProjects, type ActorProject, type ActorProjectRevision } from "@/lib/use-actor-projects";
+import {
+  useActorProjects,
+  type ActorProject,
+  type ActorProjectRevision,
+} from "@/lib/use-actor-projects";
 
 const LABELS = {
   en: {
     title: "Your project files",
-    intro: "Separate character preparation and scene breakdowns for each role. Your existing single audition-preparation record remains separate and untouched.",
-    signIn: "Sign in to create private, cloud-saved project files. Guest audition notes still work as before.",
+    intro:
+      "Separate character preparation and scene breakdowns for each role. Your existing single audition-preparation record remains separate and untouched.",
+    signIn:
+      "Sign in to create private, cloud-saved project files. Guest audition notes still work as before.",
     signInLink: "Sign in",
     loading: "Loading your projects…",
     empty: "No project files yet. Create one for your next role.",
@@ -49,7 +55,8 @@ const LABELS = {
   },
   ar: {
     title: "ملفات شغلك",
-    intro: "تحضير مستقل للشخصية وتحليل المشاهد لكل دور. ملاحظات الأوديشن القديمة منفصلة ومش هتتغير.",
+    intro:
+      "تحضير مستقل للشخصية وتحليل المشاهد لكل دور. ملاحظات الأوديشن القديمة منفصلة ومش هتتغير.",
     signIn: "سجل دخول علشان تنشئ ملفات خاصة محفوظة في حسابك. ملاحظات الأوديشن للزائر لسه شغالة.",
     signInLink: "تسجيل الدخول",
     loading: "جاري تحميل الملفات…",
@@ -195,8 +202,14 @@ export function ActorProjects() {
       {!store.signedIn ? (
         <section className="panel p-4">
           <p>{ui.signIn}</p>
-          <Link className={btnPrimary} to="/auth">{ui.signInLink}</Link>
-          <Link className="block mt-3 underline" to="/work/audition" search={{ tab: "preparation" }}>
+          <Link className={btnPrimary} to="/auth">
+            {ui.signInLink}
+          </Link>
+          <Link
+            className="block mt-3 underline"
+            to="/work/audition"
+            search={{ tab: "preparation" }}
+          >
             {ui.legacy}
           </Link>
         </section>
