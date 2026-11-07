@@ -61,10 +61,7 @@ if (!key.startsWith("sb_publishable_")) {
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const fixtures = {
   actor_projects: [process.env.SLAMS_TEST_A_PROJECT_ID, process.env.SLAMS_TEST_B_PROJECT_ID],
-  actor_auditions: [
-    process.env.SLAMS_TEST_A_AUDITION_ID,
-    process.env.SLAMS_TEST_B_AUDITION_ID,
-  ],
+  actor_auditions: [process.env.SLAMS_TEST_A_AUDITION_ID, process.env.SLAMS_TEST_B_AUDITION_ID],
   actor_sides: [process.env.SLAMS_TEST_A_SIDE_ID, process.env.SLAMS_TEST_B_SIDE_ID],
 };
 const allIds = Object.values(fixtures).flat();
