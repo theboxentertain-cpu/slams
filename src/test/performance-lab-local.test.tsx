@@ -33,7 +33,9 @@ vi.mock("@/components/slams", () => ({
   btnPrimary: "primary",
   btnSecondary: "secondary",
   DirectorNote: ({ children, short }: { children: ReactNode; short: string }) => (
-    <aside aria-label="The Director" data-short={short}>{children}</aside>
+    <aside aria-label="The Director" data-short={short}>
+      {children}
+    </aside>
   ),
 }));
 
@@ -320,7 +322,9 @@ describe("Performance Lab: consent and local-only evidence", () => {
     fireEvent.click(screen.getByRole("button", { name: "Delete take now" }));
     expect(screen.queryByRole("button", { name: "Jump to 00:11" })).toBeNull();
     expect(screen.queryByLabelText("The Director")).toBeNull();
-    expect(screen.getByText("Mark a playback moment above to get a specific retake experiment.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Mark a playback moment above to get a specific retake experiment."),
+    ).toBeInTheDocument();
   });
 
   it("supports bilingual timecoded observations that remain session-only", async () => {
@@ -328,7 +332,9 @@ describe("Performance Lab: consent and local-only evidence", () => {
     state.locale = "ar";
     render(<PerformanceLab />);
     fireEvent.click(screen.getByRole("button", { name: /سجّل المحاولة أ/ }));
-    await waitFor(() => expect(screen.getByRole("button", { name: "أوقف التسجيل" })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "أوقف التسجيل" })).toBeInTheDocument(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "أوقف التسجيل" }));
     await waitFor(() => expect(screen.getByLabelText("شغّل المحاولة أ")).toBeInTheDocument());
     const player = screen.getByLabelText("شغّل المحاولة أ") as HTMLMediaElement;
@@ -339,7 +345,8 @@ describe("Performance Lab: consent and local-only evidence", () => {
     fireEvent.click(screen.getByRole("button", { name: /حدّد توقيت المحاولة أ الحالي/ }));
     expect(screen.getByRole("button", { name: "انتقل إلى 00:06" })).toBeInTheDocument();
     expect(screen.getByLabelText("The Director")).toHaveTextContent("التطبيق لم يشاهد الأداء");
-    expect(screen.getByText(/الملاحظات الزمنية والهدف والمقارنة موجودة في ذاكرة الصفحة فقط/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/الملاحظات الزمنية والهدف والمقارنة موجودة في ذاكرة الصفحة فقط/),
+    ).toBeInTheDocument();
   });
-
 });

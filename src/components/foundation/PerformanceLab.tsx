@@ -9,8 +9,12 @@ import { useLanguage } from "@/lib/i18n";
 import { Page, DirectorNote, btnPrimary, btnSecondary } from "@/components/slams";
 import { TakeMarkerEditor } from "./TakeMarkerEditor";
 import {
-  formatLocalReview, markerPrompt, validateMarker, formatTimecode,
-  type MarkerCategory, type ReviewMarker,
+  formatLocalReview,
+  markerPrompt,
+  validateMarker,
+  formatTimecode,
+  type MarkerCategory,
+  type ReviewMarker,
 } from "@/lib/performance-review-model";
 
 type Slot = "a" | "b";
@@ -251,20 +255,39 @@ export function PerformanceLab() {
     const media = playbackNodes.current[take];
     const retained = takesRef.current[take];
     if (!retained || !media || media.getAttribute("src") !== retained.url)
-      return t("Play the actual take before marking a timestamp.", "شغّل المحاولة الفعلية قبل تحديد التوقيت.");
+      return t(
+        "Play the actual take before marking a timestamp.",
+        "شغّل المحاولة الفعلية قبل تحديد التوقيت.",
+      );
     const seconds = media.currentTime;
-    const issue = validateMarker(take, seconds, category, observation, markers.filter((m) => m.take === take).length);
+    const issue = validateMarker(
+      take,
+      seconds,
+      category,
+      observation,
+      markers.filter((m) => m.take === take).length,
+    );
     if (issue) {
-      return ar ? (
-        issue.startsWith("Write") ? "اكتب ملاحظة فعلية بين ٨ و٤٠٠ حرف." :
-        issue.startsWith("Limit") ? "وصلت للحد الأقصى: ١٥ علامة لكل محاولة. احذف علامة لإضافة أخرى." :
-        "انتقل للحظة صالحة داخل التسجيل قبل وضع العلامة."
-      ) : issue;
+      return ar
+        ? issue.startsWith("Write")
+          ? "اكتب ملاحظة فعلية بين ٨ و٤٠٠ حرف."
+          : issue.startsWith("Limit")
+            ? "وصلت للحد الأقصى: ١٥ علامة لكل محاولة. احذف علامة لإضافة أخرى."
+            : "انتقل للحظة صالحة داخل التسجيل قبل وضع العلامة."
+        : issue;
     }
     const id = globalThis.crypto?.randomUUID?.();
-    if (!id) return t("Cannot create a safe marker ID in this browser.", "تعذّر إنشاء رقم آمن للعلامة في هذا المتصفح.");
+    if (!id)
+      return t(
+        "Cannot create a safe marker ID in this browser.",
+        "تعذّر إنشاء رقم آمن للعلامة في هذا المتصفح.",
+      );
     const next: ReviewMarker = {
-      id, take, seconds, category, observation: observation.trim(),
+      id,
+      take,
+      seconds,
+      category,
+      observation: observation.trim(),
     };
     setMarkers((previous) => [...previous, next]);
     setSelectedMarkerId(id);
@@ -273,7 +296,7 @@ export function PerformanceLab() {
 
   function removeMarker(id: string) {
     setMarkers((previous) => previous.filter((item) => item.id !== id));
-    setSelectedMarkerId((previous) => previous === id ? null : previous);
+    setSelectedMarkerId((previous) => (previous === id ? null : previous));
   }
 
   function seekToMarker(marker: ReviewMarker) {
@@ -285,7 +308,12 @@ export function PerformanceLab() {
       setSelectedMarkerId(marker.id);
     } catch {
       setFailed(true);
-      setFeedback(t("Could not seek to this moment; try the player controls.", "تعذّر الانتقال لهذه اللحظة. استخدم أدوات تشغيل الفيديو."));
+      setFeedback(
+        t(
+          "Could not seek to this moment; try the player controls.",
+          "تعذّر الانتقال لهذه اللحظة. استخدم أدوات تشغيل الفيديو.",
+        ),
+      );
     }
   }
 
@@ -488,7 +516,9 @@ export function PerformanceLab() {
                         playsInline
                         preload="metadata"
                         src={takes[id]!.url}
-                        ref={(node) => { playbackNodes.current[id] = node; }}
+                        ref={(node) => {
+                          playbackNodes.current[id] = node;
+                        }}
                         className="w-full rounded bg-black"
                         aria-label={t(
                           `Playback take ${id.toUpperCase()}`,
@@ -500,7 +530,9 @@ export function PerformanceLab() {
                         controls
                         preload="metadata"
                         src={takes[id]!.url}
-                        ref={(node) => { playbackNodes.current[id] = node; }}
+                        ref={(node) => {
+                          playbackNodes.current[id] = node;
+                        }}
                         className="w-full"
                         aria-label={t(
                           `Playback take ${id.toUpperCase()}`,
@@ -575,7 +607,10 @@ export function PerformanceLab() {
             )}
           </p>
           <label className="block font-semibold" htmlFor="lab-objective">
-            {t("What playable result is your character pursuing?", "ما النتيجة القابلة للأداء التي تحاول شخصيتك تحقيقها؟")}
+            {t(
+              "What playable result is your character pursuing?",
+              "ما النتيجة القابلة للأداء التي تحاول شخصيتك تحقيقها؟",
+            )}
           </label>
           <input
             id="lab-objective"
@@ -584,7 +619,10 @@ export function PerformanceLab() {
             maxLength={300}
             value={sceneObjective}
             onChange={(event) => setSceneObjective(event.target.value)}
-            placeholder={t("For example: reassure the other character", "مثال: أطمن الشخصية الأخرى")}
+            placeholder={t(
+              "For example: reassure the other character",
+              "مثال: أطمن الشخصية الأخرى",
+            )}
           />
           <p className="text-xs text-muted-foreground">
             {t(
@@ -606,7 +644,13 @@ export function PerformanceLab() {
           <button
             type="button"
             className={btnSecondary}
-            disabled={!notes.a.trim() && !notes.b.trim() && !comparison.trim() && !sceneObjective.trim() && markers.length === 0}
+            disabled={
+              !notes.a.trim() &&
+              !notes.b.trim() &&
+              !comparison.trim() &&
+              !sceneObjective.trim() &&
+              markers.length === 0
+            }
             onClick={() => void copyReview()}
           >
             {t("Copy comparison as text (no media)", "انسخ المقارنة كنص فقط")}
@@ -617,9 +661,15 @@ export function PerformanceLab() {
               "الملاحظات الزمنية والهدف والمقارنة موجودة في ذاكرة الصفحة فقط. انسخ التقرير بنفسك للاحتفاظ بالنص. لا يتم رفع أو تقييم التسجيلات أو الملاحظات أو حفظها في جواز الممثل.",
             )}
           </p>
-          <section className="space-y-3 border-t border-border pt-4" aria-label={t("Director retake experiment", "تجربة إعادة المخرج")}>
+          <section
+            className="space-y-3 border-t border-border pt-4"
+            aria-label={t("Director retake experiment", "تجربة إعادة المخرج")}
+          >
             <h4 className="font-semibold">
-              {t("04 — Director: an experiment based only on your written marker", "٠٤ — المخرج: تجربة بناءً على ملاحظتك المكتوبة فقط")}
+              {t(
+                "04 — Director: an experiment based only on your written marker",
+                "٠٤ — المخرج: تجربة بناءً على ملاحظتك المكتوبة فقط",
+              )}
             </h4>
             <p className="text-sm text-muted-foreground">
               {t(
@@ -628,7 +678,12 @@ export function PerformanceLab() {
               )}
             </p>
             {markers.length === 0 ? (
-              <p className="text-sm">{t("Mark a playback moment above to get a specific retake experiment.", "حدّد لحظة من التسجيل أعلاه للحصول على تجربة إعادة محددة.")}</p>
+              <p className="text-sm">
+                {t(
+                  "Mark a playback moment above to get a specific retake experiment.",
+                  "حدّد لحظة من التسجيل أعلاه للحصول على تجربة إعادة محددة.",
+                )}
+              </p>
             ) : (
               <>
                 <label htmlFor="lab-director-marker" className="block font-semibold">
@@ -643,7 +698,8 @@ export function PerformanceLab() {
                   <option value="">{t("Select a marker", "اختر علامة زمنية")}</option>
                   {markers.map((marker) => (
                     <option value={marker.id} key={marker.id}>
-                      {marker.take.toUpperCase()} · {formatTimecode(marker.seconds)} · {marker.observation.slice(0, 60)}
+                      {marker.take.toUpperCase()} · {formatTimecode(marker.seconds)} ·{" "}
+                      {marker.observation.slice(0, 60)}
                     </option>
                   ))}
                 </select>
@@ -651,10 +707,18 @@ export function PerformanceLab() {
                   <>
                     <div className="rounded border border-border bg-secondary p-3 text-sm">
                       <strong>{t("Your recorded observation", "الملاحظة التي كتبتها")}</strong>
-                      <p className="mt-1 whitespace-pre-wrap break-words" dir="auto">{currentReview.observation}</p>
+                      <p className="mt-1 whitespace-pre-wrap break-words" dir="auto">
+                        {currentReview.observation}
+                      </p>
                     </div>
-                    <DirectorNote short={t("One actionable retake. Not a verdict.", "إعادة بفعل محدد، ليست حكمًا.")}>
-                      {markerPrompt(currentReview, locale).category}: {markerPrompt(currentReview, locale).exercise}{" "}
+                    <DirectorNote
+                      short={t(
+                        "One actionable retake. Not a verdict.",
+                        "إعادة بفعل محدد، ليست حكمًا.",
+                      )}
+                    >
+                      {markerPrompt(currentReview, locale).category}:{" "}
+                      {markerPrompt(currentReview, locale).exercise}{" "}
                       {markerPrompt(currentReview, locale).caveat}
                     </DirectorNote>
                   </>

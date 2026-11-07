@@ -34,17 +34,25 @@ describe("V2 playback markers and truthful review contracts", () => {
   });
   it("requires an actual position, bounded observation and supported category", () => {
     expect(validateMarker("a", 12, "listening", timestamped.observation, 0)).toBeNull();
-    expect(validateMarker("a", Number.NaN, "tactic", timestamped.observation, 0)).toMatch(/Open and seek/);
+    expect(validateMarker("a", Number.NaN, "tactic", timestamped.observation, 0)).toMatch(
+      /Open and seek/,
+    );
     expect(validateMarker("a", 91, "tactic", timestamped.observation, 0)).toMatch(/Open and seek/);
     expect(validateMarker("a", -1, "tactic", timestamped.observation, 0)).toMatch(/Open and seek/);
     expect(validateMarker("a", 10, "guess", timestamped.observation, 0)).toMatch(/supported/);
     expect(validateMarker("a", 10, "listening", "vague", 0)).toMatch(/8–400/);
     expect(validateMarker("a", 10, "listening", "x".repeat(401), 0)).toMatch(/8–400/);
-    expect(validateMarker("b", 10, "listening", timestamped.observation, MARKER_LIMIT_PER_TAKE)).toMatch(/Limit reached/);
+    expect(
+      validateMarker("b", 10, "listening", timestamped.observation, MARKER_LIMIT_PER_TAKE),
+    ).toMatch(/Limit reached/);
   });
   it("provides five authored bilingual technique lenses, not emotional verdicts or observed AI claims", () => {
     expect(MARKER_CATEGORIES.map((c) => c.id)).toEqual([
-      "listening", "objective", "tactic", "timing", "movement",
+      "listening",
+      "objective",
+      "tactic",
+      "timing",
+      "movement",
     ]);
     for (const lens of MARKER_CATEGORIES) {
       expect(lens.actionEn.length).toBeGreaterThan(40);
@@ -59,9 +67,11 @@ describe("V2 playback markers and truthful review contracts", () => {
   });
   it("copies only actor-authored observations and the chosen objective, including exact timecodes", () => {
     const text = formatLocalReview(
-      "en", "Ask for a clear answer",
+      "en",
+      "Ask for a clear answer",
       { a: "First take before note", b: "Second take after note" },
-      "No detectable change", [other, timestamped],
+      "No detectable change",
+      [other, timestamped],
     );
     expect(text).toContain("not graded");
     expect(text).toContain("Scene objective: Ask for a clear answer");
@@ -77,7 +87,9 @@ describe("V2 playback markers and truthful review contracts", () => {
     expect(ar).toContain(timestamped.observation);
   });
   it("returns a useful empty-state report without invented evidence", () => {
-    expect(formatLocalReview("en", "", { a: "", b: "" }, "", [])).toContain("No time-coded observations");
+    expect(formatLocalReview("en", "", { a: "", b: "" }, "", [])).toContain(
+      "No time-coded observations",
+    );
     expect(formatLocalReview("en", "", { a: "", b: "" }, "", [])).toContain("Not entered");
   });
 });

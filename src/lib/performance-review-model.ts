@@ -21,36 +21,46 @@ export const MARKER_CATEGORIES = [
     id: "listening",
     en: "Listening / response",
     ar: "الاستماع والاستجابة",
-    actionEn: "Replay the marked moment. Identify one spoken word, pause or visible cue you actually noticed; in the next retake, allow that cue to affect your next action.",
-    actionAr: "شاهد اللحظة المحددة مرة أخرى. حدّد كلمة أو وقفة أو إشارة لاحظتها فعلًا؛ وفي الإعادة التالية اسمح لها بالتأثير على فعلك القادم.",
+    actionEn:
+      "Replay the marked moment. Identify one spoken word, pause or visible cue you actually noticed; in the next retake, allow that cue to affect your next action.",
+    actionAr:
+      "شاهد اللحظة المحددة مرة أخرى. حدّد كلمة أو وقفة أو إشارة لاحظتها فعلًا؛ وفي الإعادة التالية اسمح لها بالتأثير على فعلك القادم.",
   },
   {
     id: "objective",
     en: "Objective / intention",
     ar: "الهدف والنية",
-    actionEn: "Name the concrete result the character seeks from the other person. Test one playable request, then observe the response rather than trying to manufacture emotion.",
-    actionAr: "حدّد النتيجة التي تريدها الشخصية من الطرف الآخر. جرّب طلبًا قابلًا للأداء ثم لاحظ الاستجابة بدل افتعال المشاعر.",
+    actionEn:
+      "Name the concrete result the character seeks from the other person. Test one playable request, then observe the response rather than trying to manufacture emotion.",
+    actionAr:
+      "حدّد النتيجة التي تريدها الشخصية من الطرف الآخر. جرّب طلبًا قابلًا للأداء ثم لاحظ الاستجابة بدل افتعال المشاعر.",
   },
   {
     id: "tactic",
     en: "Tactic / adjustment",
     ar: "التكتيك والتعديل",
-    actionEn: "Choose one playable verb and try an alternative on the same line while preserving the scene circumstances. Do not treat volume as a tactic.",
-    actionAr: "اختر فعلًا واضحًا ثم جرّب بديلًا في نفس الجملة مع الحفاظ على ظروف المشهد. رفع الصوت ليس تكتيكًا بحد ذاته.",
+    actionEn:
+      "Choose one playable verb and try an alternative on the same line while preserving the scene circumstances. Do not treat volume as a tactic.",
+    actionAr:
+      "اختر فعلًا واضحًا ثم جرّب بديلًا في نفس الجملة مع الحفاظ على ظروف المشهد. رفع الصوت ليس تكتيكًا بحد ذاته.",
   },
   {
     id: "timing",
     en: "Timing / pause",
     ar: "التوقيت والوقفة",
-    actionEn: "Look for the cue motivating the pause or response. Experiment with one timing change, and check whether it serves the action rather than slowing down mechanically.",
-    actionAr: "لاحظ الإشارة التي أدّت إلى الوقفة أو الرد. جرّب تعديلًا واحدًا في التوقيت وتحقّق هل يخدم الفعل بدل الإبطاء الآلي.",
+    actionEn:
+      "Look for the cue motivating the pause or response. Experiment with one timing change, and check whether it serves the action rather than slowing down mechanically.",
+    actionAr:
+      "لاحظ الإشارة التي أدّت إلى الوقفة أو الرد. جرّب تعديلًا واحدًا في التوقيت وتحقّق هل يخدم الفعل بدل الإبطاء الآلي.",
   },
   {
     id: "movement",
     en: "Movement / physical task",
     ar: "الحركة والمهمة الجسدية",
-    actionEn: "Notice the practical task at this point. Try one comfortable, safe movement quality that helps the action; do not push through pain or force physical intensity.",
-    actionAr: "لاحظ المهمة العملية في هذه اللحظة. جرّب نوعية حركة مريحة وآمنة تخدم الفعل؛ لا تتجاوز الألم ولا تفرض مجهودًا بدنيًا.",
+    actionEn:
+      "Notice the practical task at this point. Try one comfortable, safe movement quality that helps the action; do not push through pain or force physical intensity.",
+    actionAr:
+      "لاحظ المهمة العملية في هذه اللحظة. جرّب نوعية حركة مريحة وآمنة تخدم الفعل؛ لا تتجاوز الألم ولا تفرض مجهودًا بدنيًا.",
   },
 ] as const satisfies ReadonlyArray<{
   id: MarkerCategory;
@@ -97,7 +107,10 @@ export function markerPrompt(
   const source = MARKER_CATEGORIES.find((item) => item.id === marker.category);
   if (!source) throw new Error("Unknown teaching lens.");
   return {
-    heading: locale === "ar" ? "مهمة إعادة مقترحة — ليست نتيجة تحليل آلي" : "Suggested retake experiment — not an AI verdict",
+    heading:
+      locale === "ar"
+        ? "مهمة إعادة مقترحة — ليست نتيجة تحليل آلي"
+        : "Suggested retake experiment — not an AI verdict",
     category: locale === "ar" ? source.ar : source.en,
     observation: marker.observation,
     exercise: locale === "ar" ? source.actionAr : source.actionEn,
@@ -135,10 +148,11 @@ export function formatLocalReview(
           `Difference noticed: ${difference.trim() || "Not entered"}`,
           "Time-coded observations:",
         ];
-  const ordered = [...markers].sort((a, b) =>
-    a.take.localeCompare(b.take) || a.seconds - b.seconds || a.id.localeCompare(b.id),
+  const ordered = [...markers].sort(
+    (a, b) => a.take.localeCompare(b.take) || a.seconds - b.seconds || a.id.localeCompare(b.id),
   );
-  if (ordered.length === 0) text.push(locale === "ar" ? "لا توجد ملاحظات زمنية" : "No time-coded observations");
+  if (ordered.length === 0)
+    text.push(locale === "ar" ? "لا توجد ملاحظات زمنية" : "No time-coded observations");
   for (const marker of ordered) {
     const category = MARKER_CATEGORIES.find((item) => item.id === marker.category);
     text.push(
