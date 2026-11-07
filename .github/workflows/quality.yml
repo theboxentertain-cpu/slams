@@ -28,6 +28,5 @@ jobs:
         run: bun run test
       - name: Compile production build
         run: bun run build
-      - name: Report outstanding repository-wide formatting debt
-        continue-on-error: true
+      - name: Enforce repository-wide lint and formatting
         run: bun run lint
