@@ -74,6 +74,7 @@ export function PerformanceLab() {
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tick = useRef<ReturnType<typeof setInterval> | null>(null);
   const requestId = useRef(0);
+  const permissionPending = useRef(false);
   const captureTarget = useRef<{ slot: Slot; kind: CaptureKind } | null>(null);
 
   function stopTracks() {
@@ -135,6 +136,7 @@ export function PerformanceLab() {
       return;
     }
     setStage("requesting");
+    permissionPending.current = true;
     setElapsed(0);
     const sequence = ++requestId.current;
     let acquired: MediaStream | null = null;
@@ -144,8 +146,19 @@ export function PerformanceLab() {
         audio: true,
         video: kind === "video" ? { facingMode: "user" } : false,
       });
-      if (!live.current || sequence !== requestId.current) {
+      if (sequence === requestId.current) permissionPending.current = false;
+      if (!live.current || sequence !== requestId.current || document.hidden) {
         acquired.getTracks().forEach((track) => track.stop());
+        if (live.current && sequence === requestId.current && document.hidden) {
+          setStage("idle");
+          setFailed(true);
+          setFeedback(
+            t(
+              "Recording permission returned while this page was hidden. No recording started.",
+              "وصل إذن التسجيل أثناء وجود الصفحة بالخلفية. لم يبدأ أي تسجيل.",
+            ),
+          );
+        }
         return;
       }
       stream.current = acquired;
@@ -234,6 +247,7 @@ export function PerformanceLab() {
         1000,
       );
     } catch {
+      if (sequence === requestId.current) permissionPending.current = false;
       acquired?.getTracks().forEach((track) => track.stop());
       stopTracks();
       stopTimers();
@@ -320,15 +334,28 @@ export function PerformanceLab() {
   useEffect(() => {
     live.current = true;
     const stopWhenHidden = () => {
-      if (document.hidden && recorder.current?.state === "recording") {
-        endCapture();
+      if (!document.hidden) return;
+      if (permissionPending.current) {
+        // A late browser permission grant must never start recording in background.
+        permissionPending.current = false;
+        requestId.current++;
+        setStage("idle");
+        setFailed(true);
+        setFeedback(
+          t(
+            "Permission request cancelled when the page was hidden. Start again when ready.",
+            "اتلغى طلب الإذن لما الصفحة دخلت الخلفية. تقدر تبدأ من جديد وقت ما تحب.",
+          ),
+        );
       }
+      if (recorder.current?.state === "recording") endCapture();
     };
     document.addEventListener("visibilitychange", stopWhenHidden);
     return () => {
       document.removeEventListener("visibilitychange", stopWhenHidden);
       live.current = false;
       requestId.current++;
+      permissionPending.current = false;
       stopTimers();
       if (recorder.current) {
         recorder.current.onstop = null;
