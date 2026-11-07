@@ -1,9 +1,8 @@
 import { T } from "@/lib/i18n";
-import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Page, btnPrimary, btnSecondary } from "@/components/slams";
+import { Page, btnPrimary } from "@/components/slams";
 import { useAuditionPrep, usePassport } from "@/lib/store";
-import { DRAFT_INTERVENTIONS } from "@/data/stuck";
+import { StuckDeskGuide } from "./StuckDeskGuide";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 import { AuditionWorkspace } from "./AuditionWorkspace";
 import { SUPPORT_PAGES } from "@/lib/foundation";
@@ -228,39 +227,7 @@ export function RehearsalHub({ tab, onTabChange }: TabProps) {
   );
 }
 export function DraftInterventions() {
-  const [open, setOpen] = useState<number | null>(null);
-  return (
-    <>
-      <p className="section-intro">
-        <T>
-          Existing draft interventions — pending faculty review. These suggestions do not analyze or
-          grade a performance.
-        </T>
-      </p>
-      <ul className="foundation-stack">
-        {DRAFT_INTERVENTIONS.map((p, i) => (
-          <li className="panel p-4" key={p.q}>
-            <button
-              className={`${btnSecondary} w-full text-left`}
-              aria-expanded={open === i}
-              onClick={() => setOpen(open === i ? null : i)}
-            >
-              {p.q}
-            </button>
-            {open === i && (
-              <div className="foundation-stack mt-3">
-                <p className="font-bold text-amber">{p.school}</p>
-                <p>{p.fix}</p>
-                <Link to="/scene">
-                  <T>Practice in the scripted demonstration</T>
-                </Link>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+  return <StuckDeskGuide />;
 }
 export function StuckIntake({ tab, onTabChange }: TabProps) {
   return (

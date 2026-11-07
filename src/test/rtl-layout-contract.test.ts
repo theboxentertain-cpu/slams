@@ -7,9 +7,7 @@ const css = readFileSync(resolve(process.cwd(), "src/foundation.css"), "utf8");
 
 describe("Arabic visual baseline contracts", () => {
   it("places back navigation and the language switch on opposite edges in RTL", () => {
-    expect(css).toMatch(
-      /:root\[dir="rtl"\] \.welcome-back\s*\{[^}]*right:\s*6px/s,
-    );
+    expect(css).toMatch(/:root\[dir="rtl"\] \.welcome-back\s*\{[^}]*right:\s*6px/s);
     expect(css).toMatch(
       /:root\[dir="rtl"\] \.welcome-language-control\s*\{[^}]*right:\s*auto;[^}]*left:\s*10px/s,
     );
