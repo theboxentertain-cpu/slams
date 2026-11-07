@@ -7,7 +7,39 @@
 \ir /audit/migrations/0006_actor_sides_anchored.sql
 \ir /audit/migrations/0007_actor_projects_no_delete.sql
 
+-- Emulate broad Supabase public-schema default grants in disposable PostgreSQL.
+-- RLS does not protect TRUNCATE, so 0008 must revoke these before release.
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated;
+\ir /audit/migrations/0008_slams_role_grants_hardening.sql
+
 BEGIN;
+SELECT public.audit_assert(
+  NOT EXISTS (
+    SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND c.relkind='r'
+      AND c.relname IN (
+        'profiles','passport_entries','audition_prep',
+        'schools','curriculum_years','curriculum_terms','curriculum_courses',
+        'curriculum_workshops','curriculum_lessons','curriculum_exercises',
+        'curriculum_assessments','curriculum_imports','unit_progress',
+        'actor_projects','actor_project_revisions','actor_auditions','actor_sides')
+      AND (has_table_privilege('authenticated',c.oid,'TRUNCATE')
+        OR has_table_privilege('anon',c.oid,'TRUNCATE'))
+  ), 'No client role can TRUNCATE a SLAMS table');
+SELECT public.audit_assert(
+  has_table_privilege('authenticated','public.actor_project_revisions','SELECT')
+  AND NOT has_table_privilege('authenticated','public.actor_project_revisions','INSERT')
+  AND NOT has_table_privilege('authenticated','public.actor_project_revisions','UPDATE')
+  AND NOT has_table_privilege('authenticated','public.actor_project_revisions','DELETE')
+  AND NOT has_table_privilege('authenticated','public.actor_projects','DELETE')
+  AND NOT has_table_privilege('authenticated','public.actor_auditions','DELETE')
+  AND NOT has_table_privilege('authenticated','public.actor_sides','DELETE'),
+  'Actor history and deletions are restricted to exact intended table grants');
+SELECT public.audit_assert(
+  NOT has_function_privilege('anon','public.handle_new_user()','EXECUTE')
+  AND NOT has_function_privilege('authenticated','public.handle_new_user()','EXECUTE'),
+  'No direct client EXECUTE on SECURITY DEFINER signup trigger');
+
 INSERT INTO auth.users (id)
 VALUES ('00000000-0000-4000-8000-000000000011'),
        ('00000000-0000-4000-8000-000000000022');

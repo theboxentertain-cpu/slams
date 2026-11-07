@@ -82,6 +82,34 @@ WHERE table_schema='public'
   AND grantee IN ('PUBLIC','anon','authenticated','service_role')
 ORDER BY table_name,grantee,privilege_type;
 
+-- Check EFFECTIVE permissions: Supabase default ACLs may grant TRUNCATE,
+-- TRIGGER, DELETE or history writes despite apparently narrow migration GRANTs.
+-- RLS does NOT restrict TRUNCATE. These must all be false after 0008.
+SELECT c.relname AS table_name,
+       has_table_privilege('anon', c.oid, 'TRUNCATE') AS anon_can_truncate,
+       has_table_privilege('authenticated', c.oid, 'TRUNCATE') AS user_can_truncate,
+       has_table_privilege('authenticated', c.oid, 'TRIGGER') AS user_can_modify_triggers,
+       has_table_privilege('authenticated', c.oid, 'DELETE') AS user_can_delete,
+       has_table_privilege('authenticated', c.oid, 'INSERT') AS user_can_insert
+FROM pg_class c
+JOIN pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname='public' AND c.relkind='r'
+  AND c.relname IN ('actor_projects','actor_project_revisions',
+                    'actor_auditions','actor_sides',
+                    'profiles','audition_prep','passport_entries','unit_progress')
+ORDER BY c.relname;
+
+SELECT n.nspname, p.proname, p.prosecdef AS security_definer,
+       has_function_privilege('anon',p.oid,'EXECUTE') AS anon_can_execute,
+       has_function_privilege('authenticated',p.oid,'EXECUTE') AS user_can_execute
+FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
+WHERE n.nspname='public'
+  AND p.proname IN ('handle_new_user','validate_unit_progress',
+                    'require_reviewed_curriculum',
+                    'actor_projects_before_write','actor_projects_record_revision',
+                    'actor_auditions_before_write','actor_sides_before_write')
+ORDER BY p.proname;
+
 -- Check that the composite (user_id, project_id) FK and uniqueness really exist.
 SELECT conrelid::regclass::text AS table_name,
        conname, contype, pg_get_constraintdef(oid) AS definition

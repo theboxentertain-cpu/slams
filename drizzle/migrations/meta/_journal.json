@@ -57,6 +57,13 @@
       "when": 1794040000000,
       "tag": "0007_actor_projects_no_delete",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794045000000,
+      "tag": "0008_slams_role_grants_hardening",
+      "breakpoints": true
     }
   ]
 }
