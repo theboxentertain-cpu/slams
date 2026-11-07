@@ -1,7 +1,4 @@
-import {
-  type ProjectDraft,
-  type ProjectNoteKey,
-} from "@/lib/actor-project-model";
+import { type ProjectDraft, type ProjectNoteKey } from "@/lib/actor-project-model";
 
 /**
  * Legacy audition prep belongs to a single separate record. A copy into an
@@ -55,10 +52,7 @@ export function copyAuditionFields(
 /** IDs in links are selectors, not proof of ownership. The cloud query/RLS
  * and account-bound response must still verify the selected project.
  */
-export function projectSelectionSearch(
-  input: Record<string, unknown>,
-  tab: string,
-) {
+export function projectSelectionSearch(input: Record<string, unknown>, tab: string) {
   const id = input["projectId"];
   return {
     tab,
