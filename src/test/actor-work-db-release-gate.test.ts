@@ -33,6 +33,13 @@ describe("Actor at Work database rollout safety", () => {
   it("requires a read-only query for inspecting ledger and policy metadata", () => {
     expect(preflight).toContain("BEGIN TRANSACTION READ ONLY");
     expect(preflight).toContain("drizzle.__drizzle_migrations");
+    expect(preflight).toContain("\\if :has_drizzle_ledger");
+    expect(preflight).toContain("\\else");
+    expect(preflight).toContain("\\endif");
+    expect(preflight).toContain("migration_ledger_status");
+    expect(preflight).toContain("actor_sides");
+    expect(preflight).toContain("actor_sides_before_write");
+    expect(preflight).toContain("NO DELETE on actor_projects");
     expect(preflight).toContain("pg_policies");
     expect(preflight).toContain("information_schema.role_table_grants");
     expect(preflight).toContain("pg_get_constraintdef");
