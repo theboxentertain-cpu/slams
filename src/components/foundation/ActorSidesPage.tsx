@@ -20,7 +20,8 @@ import {
 const UI = {
   en: {
     heading: "Script Sides & Beats",
-    intro: "Create a private text snapshot for one project or audition. Mark exact lines with actor-authored beat, objective and tactic notes.",
+    intro:
+      "Create a private text snapshot for one project or audition. Mark exact lines with actor-authored beat, objective and tactic notes.",
     signIn: "Sign in to save private script sides.",
     signInLink: "Sign in",
     loading: "Loading script sides…",
@@ -40,8 +41,10 @@ const UI = {
     file: "Or load a UTF-8 .txt file from this device",
     fileInvalid: "Only .txt files up to 60 KB are supported. PDF, DOCX and FDX are not parsed.",
     fileFailed: "This text file could not be read. Nothing was uploaded.",
-    privacy: "The file is read in this device. It is sent to your account only when you select Save side.",
-    limits: "Maximum 25,000 characters and 400 lines. Source text is frozen after save so line anchors remain accurate. To revise a script, create a new side.",
+    privacy:
+      "The file is read in this device. It is sent to your account only when you select Save side.",
+    limits:
+      "Maximum 25,000 characters and 400 lines. Source text is frozen after save so line anchors remain accurate. To revise a script, create a new side.",
     save: "Save side",
     saving: "Saving…",
     saved: "Script side confirmed saved to your account.",
@@ -62,13 +65,16 @@ const UI = {
     noteSaved: "Beat annotations saved as a new revision.",
     noNotes: "No beats marked. Select lines and stage your first beat.",
     revision: "Revision",
-    caution: "The selected text is script evidence. Your beat, objective and tactic are your interpretation — not an AI diagnosis.",
-    unsaved: "Unsaved imports and beat edits are not backed up. Leaving or switching files discards them.",
+    caution:
+      "The selected text is script evidence. Your beat, objective and tactic are your interpretation — not an AI diagnosis.",
+    unsaved:
+      "Unsaved imports and beat edits are not backed up. Leaving or switching files discards them.",
     back: "Actor at Work",
   },
   ar: {
     heading: "النصوص وتحليل الوحدات",
-    intro: "احفظ نسخة نصية خاصة لمشروع أو أوديشن. علّم سطور بعينها وسجّل الوحدات والأهداف والتكتيكات بنفسك.",
+    intro:
+      "احفظ نسخة نصية خاصة لمشروع أو أوديشن. علّم سطور بعينها وسجّل الوحدات والأهداف والتكتيكات بنفسك.",
     signIn: "سجّل دخول علشان تحفظ النصوص بشكل خاص في حسابك.",
     signInLink: "تسجيل الدخول",
     loading: "جاري تحميل النصوص…",
@@ -89,7 +95,8 @@ const UI = {
     fileInvalid: "المدعوم ملفات .txt فقط حتى ٦٠ كيلوبايت. ملفات PDF وDOCX وFDX مش مدعومة.",
     fileFailed: "تعذر قراءة الملف النصي. ما اترفعش أي شيء.",
     privacy: "الملف بيتقري على جهازك. مش بيتحفظ في حسابك إلا لما تضغط حفظ النص.",
-    limits: "الحد الأقصى ٢٥ ألف حرف و٤٠٠ سطر. النص بيتثبت بعد الحفظ علشان أرقام السطور تفضل صحيحة. التعديل يحتاج نسخة نص جديدة.",
+    limits:
+      "الحد الأقصى ٢٥ ألف حرف و٤٠٠ سطر. النص بيتثبت بعد الحفظ علشان أرقام السطور تفضل صحيحة. التعديل يحتاج نسخة نص جديدة.",
     save: "احفظ النص",
     saving: "جاري الحفظ…",
     saved: "تم حفظ النص في حسابك.",
@@ -116,7 +123,9 @@ const UI = {
   },
 } as const;
 
-function parentOption(kind: SideTarget["kind"], id: string): SideTarget { return { kind, id }; }
+function parentOption(kind: SideTarget["kind"], id: string): SideTarget {
+  return { kind, id };
+}
 
 export function ActorSidesPage() {
   const { locale } = useLanguage();
@@ -149,11 +158,13 @@ export function ActorSidesPage() {
   const parentAvailable = !projects.error || !auditions.error;
   const invalid = validateSideDraft(draft, projectIds, auditionIds);
   const notesInvalid = selected ? validateSideAnnotations(annotationDraft, selected.content) : null;
-  const hasChanges = !!selected && JSON.stringify(annotationDraft) !== JSON.stringify(selected.annotations);
+  const hasChanges =
+    !!selected && JSON.stringify(annotationDraft) !== JSON.stringify(selected.annotations);
   const lineCount = selected ? sideLines(selected.content).length : 0;
-  const excerpt = selected && fromLine >= 1 && toLine >= fromLine && toLine <= lineCount
-    ? anchoredExcerpt(selected.content, fromLine, toLine)
-    : "";
+  const excerpt =
+    selected && fromLine >= 1 && toLine >= fromLine && toLine <= lineCount
+      ? anchoredExcerpt(selected.content, fromLine, toLine)
+      : "";
 
   useEffect(() => {
     readSeq.current++;
@@ -251,7 +262,10 @@ export function ActorSidesPage() {
     };
     const next = [...annotationDraft, item];
     const error = validateSideAnnotations(next, selected.content);
-    if (error) { setMessage(error); return; }
+    if (error) {
+      setMessage(error);
+      return;
+    }
     setAnnotationDraft(next);
     setBeat("");
     setObjective("");
@@ -284,7 +298,9 @@ export function ActorSidesPage() {
         {!sides.signedIn ? (
           <div className="panel p-4">
             <p>{ui.signIn}</p>
-            <Link to="/auth" className={btnPrimary}>{ui.signInLink}</Link>
+            <Link to="/auth" className={btnPrimary}>
+              {ui.signInLink}
+            </Link>
           </div>
         ) : (
           <>
@@ -314,7 +330,9 @@ export function ActorSidesPage() {
                         onClick={() => open(side)}
                       >
                         <span className="break-words">{side.title}</span>
-                        <span className="text-xs">{ui.revision} {side.revision}</span>
+                        <span className="text-xs">
+                          {ui.revision} {side.revision}
+                        </span>
                       </button>
                     </li>
                   ))}
@@ -345,11 +363,22 @@ export function ActorSidesPage() {
                           onChange={(event) => {
                             const value = event.target.value;
                             const owned = [
-                              ...availableProjects.map((item) => ({ kind: "project" as const, id: item.id })),
-                              ...availableAuditions.map((item) => ({ kind: "audition" as const, id: item.id })),
+                              ...availableProjects.map((item) => ({
+                                kind: "project" as const,
+                                id: item.id,
+                              })),
+                              ...availableAuditions.map((item) => ({
+                                kind: "audition" as const,
+                                id: item.id,
+                              })),
                             ];
-                            const next = owned.find((option) => `${option.kind}:${option.id}` === value);
-                            setDraft({ ...draft, target: next ? parentOption(next.kind, next.id) : null });
+                            const next = owned.find(
+                              (option) => `${option.kind}:${option.id}` === value,
+                            );
+                            setDraft({
+                              ...draft,
+                              target: next ? parentOption(next.kind, next.id) : null,
+                            });
                           }}
                         >
                           <option value="">{ui.parentNone}</option>
@@ -369,10 +398,17 @@ export function ActorSidesPage() {
                         <p>{ui.ownTargets}</p>
                       )}
                       {!parentReady && <p role="status">{ui.loading}</p>}
-                      {parentReady && !parentAvailable && <p role="alert">{ui.unavailableParents}</p>}
+                      {parentReady && !parentAvailable && (
+                        <p role="alert">{ui.unavailableParents}</p>
+                      )}
                       <label className="grid gap-1">
                         {ui.file}
-                        <input type="file" accept=".txt,text/plain" disabled={busy} onChange={(event) => void readTextFile(event)} />
+                        <input
+                          type="file"
+                          accept=".txt,text/plain"
+                          disabled={busy}
+                          onChange={(event) => void readTextFile(event)}
+                        />
                       </label>
                       <p className="text-xs text-muted-foreground">{ui.privacy}</p>
                       <label className="grid gap-1">
@@ -387,7 +423,11 @@ export function ActorSidesPage() {
                         />
                       </label>
                       <p className="text-xs text-muted-foreground">{ui.limits}</p>
-                      {invalid && <p className="text-sm text-amber" role="status">{invalid}</p>}
+                      {invalid && (
+                        <p className="text-sm text-amber" role="status">
+                          {invalid}
+                        </p>
+                      )}
                       <button
                         className={btnPrimary}
                         type="submit"
@@ -400,17 +440,29 @@ export function ActorSidesPage() {
                 )}
                 {selected && (
                   <section className="foundation-stack panel p-4">
-                    <button className={btnSecondary} type="button" disabled={busy} onClick={close}>{ui.close}</button>
+                    <button className={btnSecondary} type="button" disabled={busy} onClick={close}>
+                      {ui.close}
+                    </button>
                     <h2>{selected.title}</h2>
                     <p className="text-sm text-muted-foreground">
                       {ui.revision} {selected.revision} · {lineCount} {ui.lines}
                     </p>
                     <h3 className="font-semibold">{ui.scriptView}</h3>
-                    <ol className="grid gap-1 max-h-96 overflow-y-auto border border-input rounded p-2" aria-label={ui.scriptView}>
+                    <ol
+                      className="grid gap-1 max-h-96 overflow-y-auto border border-input rounded p-2"
+                      aria-label={ui.scriptView}
+                    >
                       {sideLines(selected.content).map((line, index) => (
                         <li className="flex gap-3 border-b border-input/40 py-1" key={index}>
-                          <span className="shrink-0 w-8 text-xs text-muted-foreground tabular-nums">{index + 1}</span>
-                          <span dir="auto" className="min-w-0 whitespace-pre-wrap break-words font-mono text-sm">{line || " "}</span>
+                          <span className="shrink-0 w-8 text-xs text-muted-foreground tabular-nums">
+                            {index + 1}
+                          </span>
+                          <span
+                            dir="auto"
+                            className="min-w-0 whitespace-pre-wrap break-words font-mono text-sm"
+                          >
+                            {line || " "}
+                          </span>
                         </li>
                       ))}
                     </ol>
@@ -418,23 +470,44 @@ export function ActorSidesPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <label className="grid gap-1">
                         {ui.start}
-                        <input type="number" min={1} max={lineCount} value={fromLine} onChange={(event) => setFromLine(Number(event.target.value))} className="w-full rounded border border-input bg-background p-2"/>
+                        <input
+                          type="number"
+                          min={1}
+                          max={lineCount}
+                          value={fromLine}
+                          onChange={(event) => setFromLine(Number(event.target.value))}
+                          className="w-full rounded border border-input bg-background p-2"
+                        />
                       </label>
                       <label className="grid gap-1">
                         {ui.end}
-                        <input type="number" min={1} max={lineCount} value={toLine} onChange={(event) => setToLine(Number(event.target.value))} className="w-full rounded border border-input bg-background p-2"/>
+                        <input
+                          type="number"
+                          min={1}
+                          max={lineCount}
+                          value={toLine}
+                          onChange={(event) => setToLine(Number(event.target.value))}
+                          className="w-full rounded border border-input bg-background p-2"
+                        />
                       </label>
                     </div>
                     <div className="foundation-stack">
                       <strong>{ui.selected}</strong>
-                      <blockquote className="whitespace-pre-wrap break-words border-s-2 border-amber ps-3" dir="auto">{excerpt || "—"}</blockquote>
+                      <blockquote
+                        className="whitespace-pre-wrap break-words border-s-2 border-amber ps-3"
+                        dir="auto"
+                      >
+                        {excerpt || "—"}
+                      </blockquote>
                     </div>
                     <p className="text-xs text-muted-foreground">{ui.caution}</p>
-                    {([
-                      [ui.beat, beat, setBeat, 300],
-                      [ui.objective, objective, setObjective, 500],
-                      [ui.tactic, tactic, setTactic, 500],
-                    ] as const).map(([label, value, setter, maxLength]) => (
+                    {(
+                      [
+                        [ui.beat, beat, setBeat, 300],
+                        [ui.objective, objective, setObjective, 500],
+                        [ui.tactic, tactic, setTactic, 500],
+                      ] as const
+                    ).map(([label, value, setter, maxLength]) => (
                       <label className="grid gap-1" key={label}>
                         {label}
                         <textarea
@@ -447,23 +520,48 @@ export function ActorSidesPage() {
                         />
                       </label>
                     ))}
-                    <button type="button" className={btnSecondary} disabled={busy} onClick={stageBeat}>{ui.add}</button>
+                    <button
+                      type="button"
+                      className={btnSecondary}
+                      disabled={busy}
+                      onClick={stageBeat}
+                    >
+                      {ui.add}
+                    </button>
                     <h3 className="font-semibold">{ui.changes}</h3>
                     {annotationDraft.length === 0 && <p>{ui.noNotes}</p>}
                     <ul className="grid gap-3">
                       {annotationDraft.map((note) => (
-                        <li key={note.id} className="rounded border border-input p-3 foundation-stack">
-                          <strong>{ui.start} {note.fromLine} – {ui.end} {note.toLine}: {note.beat}</strong>
-                          <blockquote className="whitespace-pre-wrap break-words border-s-2 border-amber ps-3" dir="auto">
+                        <li
+                          key={note.id}
+                          className="rounded border border-input p-3 foundation-stack"
+                        >
+                          <strong>
+                            {ui.start} {note.fromLine} – {ui.end} {note.toLine}: {note.beat}
+                          </strong>
+                          <blockquote
+                            className="whitespace-pre-wrap break-words border-s-2 border-amber ps-3"
+                            dir="auto"
+                          >
                             {anchoredExcerpt(selected.content, note.fromLine, note.toLine)}
                           </blockquote>
-                          {note.objective && <p>{ui.objective}: {note.objective}</p>}
-                          {note.tactic && <p>{ui.tactic}: {note.tactic}</p>}
+                          {note.objective && (
+                            <p>
+                              {ui.objective}: {note.objective}
+                            </p>
+                          )}
+                          {note.tactic && (
+                            <p>
+                              {ui.tactic}: {note.tactic}
+                            </p>
+                          )}
                           <button
                             type="button"
                             className={btnSecondary}
                             disabled={busy}
-                            onClick={() => setAnnotationDraft((old) => old.filter((item) => item.id !== note.id))}
+                            onClick={() =>
+                              setAnnotationDraft((old) => old.filter((item) => item.id !== note.id))
+                            }
                           >
                             {ui.remove}
                           </button>
@@ -471,7 +569,12 @@ export function ActorSidesPage() {
                       ))}
                     </ul>
                     {notesInvalid && <p role="alert">{notesInvalid}</p>}
-                    <button type="button" className={btnPrimary} disabled={busy || !hasChanges || !!notesInvalid} onClick={() => void saveBeats()}>
+                    <button
+                      type="button"
+                      className={btnPrimary}
+                      disabled={busy || !hasChanges || !!notesInvalid}
+                      onClick={() => void saveBeats()}
+                    >
                       {busy ? ui.saving : ui.commit}
                     </button>
                     {!hasChanges && <p className="text-xs text-muted-foreground">{ui.noChanges}</p>}
@@ -479,11 +582,17 @@ export function ActorSidesPage() {
                 )}
               </>
             )}
-            {message && <p role="status" className="text-sm text-amber">{message}</p>}
+            {message && (
+              <p role="status" className="text-sm text-amber">
+                {message}
+              </p>
+            )}
           </>
         )}
         <p className="text-xs text-muted-foreground">{ui.unsaved}</p>
-        <Link to="/work" className={btnSecondary}>{ui.back}</Link>
+        <Link to="/work" className={btnSecondary}>
+          {ui.back}
+        </Link>
       </section>
     </Page>
   );
