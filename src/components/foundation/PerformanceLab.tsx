@@ -6,7 +6,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useLanguage } from "@/lib/i18n";
-import { Page, btnPrimary, btnSecondary } from "@/components/slams";
+import { Page, DirectorNote, btnPrimary, btnSecondary } from "@/components/slams";
+import { TakeMarkerEditor } from "./TakeMarkerEditor";
+import {
+  formatLocalReview, markerPrompt, validateMarker, formatTimecode,
+  type MarkerCategory, type ReviewMarker,
+} from "@/lib/performance-review-model";
 
 type Slot = "a" | "b";
 type CaptureKind = "video" | "audio";
@@ -47,6 +52,11 @@ export function PerformanceLab() {
   const [takes, setTakes] = useState<Takes>(initialTakes);
   const [notes, setNotes] = useState<Notes>(initialNotes);
   const [comparison, setComparison] = useState("");
+  const [sceneObjective, setSceneObjective] = useState("");
+  const [markers, setMarkers] = useState<ReviewMarker[]>([]);
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+  const playbackNodes = useRef<Record<Slot, HTMLMediaElement | null>>({ a: null, b: null });
+  const currentReview = markers.find((item) => item.id === selectedMarkerId) ?? null;
   const [feedback, setFeedback] = useState("");
   const [failed, setFailed] = useState(false);
   const captureError = useRef(false);
@@ -79,6 +89,9 @@ export function PerformanceLab() {
     takesRef.current = next;
     setTakes(next);
     setNotes((prev) => ({ ...prev, [slotId]: "" }));
+    setMarkers((prev) => prev.filter((marker) => marker.take !== slotId));
+    setSelectedMarkerId(null);
+    playbackNodes.current[slotId] = null;
     setComparison("");
     setFeedback("");
   }
@@ -195,6 +208,9 @@ export function PerformanceLab() {
         takesRef.current = next;
         setTakes(next);
         setNotes((prev) => ({ ...prev, [target.slot]: "" }));
+        setMarkers((prev) => prev.filter((marker) => marker.take !== target.slot));
+        setSelectedMarkerId(null);
+        playbackNodes.current[target.slot] = null;
         setComparison("");
         setFailed(false);
         setStage("idle");
@@ -231,6 +247,48 @@ export function PerformanceLab() {
     }
   }
 
+  function addMarker(take: Slot, category: MarkerCategory, observation: string): string | null {
+    const media = playbackNodes.current[take];
+    const retained = takesRef.current[take];
+    if (!retained || !media || media.getAttribute("src") !== retained.url)
+      return t("Play the actual take before marking a timestamp.", "شغّل المحاولة الفعلية قبل تحديد التوقيت.");
+    const seconds = media.currentTime;
+    const issue = validateMarker(take, seconds, category, observation, markers.filter((m) => m.take === take).length);
+    if (issue) {
+      return ar ? (
+        issue.startsWith("Write") ? "اكتب ملاحظة فعلية بين ٨ و٤٠٠ حرف." :
+        issue.startsWith("Limit") ? "وصلت للحد الأقصى: ١٥ علامة لكل محاولة. احذف علامة لإضافة أخرى." :
+        "انتقل للحظة صالحة داخل التسجيل قبل وضع العلامة."
+      ) : issue;
+    }
+    const id = globalThis.crypto?.randomUUID?.();
+    if (!id) return t("Cannot create a safe marker ID in this browser.", "تعذّر إنشاء رقم آمن للعلامة في هذا المتصفح.");
+    const next: ReviewMarker = {
+      id, take, seconds, category, observation: observation.trim(),
+    };
+    setMarkers((previous) => [...previous, next]);
+    setSelectedMarkerId(id);
+    return null;
+  }
+
+  function removeMarker(id: string) {
+    setMarkers((previous) => previous.filter((item) => item.id !== id));
+    setSelectedMarkerId((previous) => previous === id ? null : previous);
+  }
+
+  function seekToMarker(marker: ReviewMarker) {
+    const media = playbackNodes.current[marker.take];
+    if (!takesRef.current[marker.take] || !media) return;
+    try {
+      media.currentTime = marker.seconds;
+      media.focus();
+      setSelectedMarkerId(marker.id);
+    } catch {
+      setFailed(true);
+      setFeedback(t("Could not seek to this moment; try the player controls.", "تعذّر الانتقال لهذه اللحظة. استخدم أدوات تشغيل الفيديو."));
+    }
+  }
+
   useEffect(() => {
     live.current = true;
     const stopWhenHidden = () => {
@@ -264,13 +322,7 @@ export function PerformanceLab() {
   }, []);
 
   async function copyReview() {
-    const text = [
-      "SLAMS Performance Lab — actor's own notes (not graded)",
-      `Take A: ${notes.a.trim() || "No note"}`,
-      `Take B: ${notes.b.trim() || "No note"}`,
-      `Difference noticed: ${comparison.trim() || "Not entered"}`,
-      "Local media is not copied, uploaded, graded, or linked to Passport.",
-    ].join("\n");
+    const text = formatLocalReview(locale, sceneObjective, notes, comparison, markers);
     try {
       await navigator.clipboard.writeText(text);
       setFeedback(
@@ -436,6 +488,7 @@ export function PerformanceLab() {
                         playsInline
                         preload="metadata"
                         src={takes[id]!.url}
+                        ref={(node) => { playbackNodes.current[id] = node; }}
                         className="w-full rounded bg-black"
                         aria-label={t(
                           `Playback take ${id.toUpperCase()}`,
@@ -447,6 +500,7 @@ export function PerformanceLab() {
                         controls
                         preload="metadata"
                         src={takes[id]!.url}
+                        ref={(node) => { playbackNodes.current[id] = node; }}
                         className="w-full"
                         aria-label={t(
                           `Playback take ${id.toUpperCase()}`,
@@ -480,6 +534,17 @@ export function PerformanceLab() {
                     {t("No take in memory", "لا توجد محاولة في الذاكرة")}
                   </p>
                 )}
+                {takes[id] && (
+                  <TakeMarkerEditor
+                    key={takes[id]!.url}
+                    take={id}
+                    markers={markers.filter((marker) => marker.take === id)}
+                    onAdd={(category, observation) => addMarker(id, category, observation)}
+                    onRemove={removeMarker}
+                    onSeek={seekToMarker}
+                    disabled={stage !== "idle"}
+                  />
+                )}
                 <label className="block text-sm font-semibold" htmlFor={`lab-note-${id}`}>
                   {t("What actually happened in this take?", "ماذا حدث بالفعل في هذه المحاولة؟")}
                 </label>
@@ -509,6 +574,24 @@ export function PerformanceLab() {
               "قارن ما رأيته أو سمعته فعلًا: التوقيت والاستماع والهدف والحركة والتكتيك والاستجابة. الاختلاف لا يعني بالضرورة التحسن. التطبيق لا يقيّم التمثيل.",
             )}
           </p>
+          <label className="block font-semibold" htmlFor="lab-objective">
+            {t("What playable result is your character pursuing?", "ما النتيجة القابلة للأداء التي تحاول شخصيتك تحقيقها؟")}
+          </label>
+          <input
+            id="lab-objective"
+            type="text"
+            className="min-h-11 w-full rounded border border-border bg-background p-3 text-foreground"
+            maxLength={300}
+            value={sceneObjective}
+            onChange={(event) => setSceneObjective(event.target.value)}
+            placeholder={t("For example: reassure the other character", "مثال: أطمن الشخصية الأخرى")}
+          />
+          <p className="text-xs text-muted-foreground">
+            {t(
+              "Your objective and all time-coded notes are your own. The app does not infer goals from recorded media.",
+              "الهدف والملاحظات المحددة بالتوقيت من كتابتك أنت. التطبيق لا يستنتج الأهداف من التسجيلات.",
+            )}
+          </p>
           <label className="block font-semibold" htmlFor="lab-comparison">
             {t("What changed between A and B, if anything?", "ما الذي تغيّر بين أ وب، إن وجد؟")}
           </label>
@@ -523,17 +606,62 @@ export function PerformanceLab() {
           <button
             type="button"
             className={btnSecondary}
-            disabled={!notes.a.trim() && !notes.b.trim() && !comparison.trim()}
+            disabled={!notes.a.trim() && !notes.b.trim() && !comparison.trim() && !sceneObjective.trim() && markers.length === 0}
             onClick={() => void copyReview()}
           >
             {t("Copy comparison as text (no media)", "انسخ المقارنة كنص فقط")}
           </button>
           <p className="text-xs text-muted-foreground">
             {t(
-              "Written observations are not saved by this tool. A future Performance Lab will support time-coded notes, media annotation and opt-in cloud backup after privacy testing.",
-              "الملاحظات لا تُحفظ بواسطة هذه الأداة. النسخة القادمة ستدعم ملاحظات مرتبطة بالتوقيت وتعليقات على التسجيلات وحفظًا اختياريًا بعد اختبار الخصوصية.",
+              "Your time-coded annotations, goal and comparisons stay in this page's memory only. Copy the review explicitly if you want the text. No media or notes are uploaded, graded or saved to Passport.",
+              "الملاحظات الزمنية والهدف والمقارنة موجودة في ذاكرة الصفحة فقط. انسخ التقرير بنفسك للاحتفاظ بالنص. لا يتم رفع أو تقييم التسجيلات أو الملاحظات أو حفظها في جواز الممثل.",
             )}
           </p>
+          <section className="space-y-3 border-t border-border pt-4" aria-label={t("Director retake experiment", "تجربة إعادة المخرج")}>
+            <h4 className="font-semibold">
+              {t("04 — Director: an experiment based only on your written marker", "٠٤ — المخرج: تجربة بناءً على ملاحظتك المكتوبة فقط")}
+            </h4>
+            <p className="text-sm text-muted-foreground">
+              {t(
+                "SLAMS cannot see or interpret the performance. Choose a time-coded note and the Director will suggest a practice action from its category. This is not a skill score or a diagnosis.",
+                "SLAMS لا يرى الأداء ولا يحلّله. اختر ملاحظة زمنية ليقترح المخرج تمرينًا حسب النوع الذي اخترته. هذا ليس تقييمًا للمهارة أو تشخيصًا.",
+              )}
+            </p>
+            {markers.length === 0 ? (
+              <p className="text-sm">{t("Mark a playback moment above to get a specific retake experiment.", "حدّد لحظة من التسجيل أعلاه للحصول على تجربة إعادة محددة.")}</p>
+            ) : (
+              <>
+                <label htmlFor="lab-director-marker" className="block font-semibold">
+                  {t("Choose your observation", "اختر ملاحظتك")}
+                </label>
+                <select
+                  id="lab-director-marker"
+                  className="min-h-11 w-full rounded border border-border bg-background p-3 text-foreground"
+                  value={currentReview?.id ?? ""}
+                  onChange={(event) => setSelectedMarkerId(event.target.value)}
+                >
+                  <option value="">{t("Select a marker", "اختر علامة زمنية")}</option>
+                  {markers.map((marker) => (
+                    <option value={marker.id} key={marker.id}>
+                      {marker.take.toUpperCase()} · {formatTimecode(marker.seconds)} · {marker.observation.slice(0, 60)}
+                    </option>
+                  ))}
+                </select>
+                {currentReview && (
+                  <>
+                    <div className="rounded border border-border bg-secondary p-3 text-sm">
+                      <strong>{t("Your recorded observation", "الملاحظة التي كتبتها")}</strong>
+                      <p className="mt-1 whitespace-pre-wrap break-words" dir="auto">{currentReview.observation}</p>
+                    </div>
+                    <DirectorNote short={t("One actionable retake. Not a verdict.", "إعادة بفعل محدد، ليست حكمًا.")}>
+                      {markerPrompt(currentReview, locale).category}: {markerPrompt(currentReview, locale).exercise}{" "}
+                      {markerPrompt(currentReview, locale).caveat}
+                    </DirectorNote>
+                  </>
+                )}
+              </>
+            )}
+          </section>
           <Link to="/scene" className="underline underline-offset-4">
             {t("Return to the Living Scene", "العودة للمشهد التفاعلي")}
           </Link>

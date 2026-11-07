@@ -32,6 +32,9 @@ vi.mock("@/components/slams", () => ({
   ),
   btnPrimary: "primary",
   btnSecondary: "secondary",
+  DirectorNote: ({ children, short }: { children: ReactNode; short: string }) => (
+    <aside aria-label="The Director" data-short={short}>{children}</aside>
+  ),
 }));
 
 const sessions: StubRecorder[] = [];
@@ -251,4 +254,89 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(screen.getByRole("button", { name: /سجّل المحاولة أ/ })).toBeInTheDocument();
     expect(screen.getByText(/تُمحى لما تخرج/)).toBeInTheDocument();
   });
+  it("marks the playback currentTime, seeks back, and proposes a category-based note without invented review", async () => {
+    vi.stubGlobal("crypto", { randomUUID: () => "11111111-1111-4111-8111-111111111111" });
+    render(<PerformanceLab />);
+    await recordA();
+    const playback = screen.getByLabelText("Playback take A") as HTMLMediaElement;
+    playback.currentTime = 23.4;
+    expect(screen.queryByLabelText("The Director")).toBeNull();
+    const mark = screen.getByRole("button", { name: "Mark current time in Take A" });
+    expect(mark).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("What did you observe at this moment?"), {
+      target: { value: "I responded before the other person's final word." },
+    });
+    expect(mark).toBeEnabled();
+    fireEvent.click(mark);
+    expect(screen.getByRole("button", { name: "Jump to 00:23" })).toBeInTheDocument();
+    expect(screen.getByLabelText("The Director")).toHaveTextContent("Replay the marked moment");
+    expect(screen.getByLabelText("The Director")).toHaveTextContent("did not watch or grade");
+    const select = screen.getByLabelText("Choose your observation") as HTMLSelectElement;
+    expect(select.value).toBe("11111111-1111-4111-8111-111111111111");
+    playback.currentTime = 7;
+    fireEvent.click(screen.getByRole("button", { name: "Jump to 00:23" }));
+    expect(playback.currentTime).toBe(23.4);
+    expect(state.copy).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText("What playable result is your character pursuing?"), {
+      target: { value: "Ask the other character for a clear answer" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Copy comparison as text (no media)" }));
+    await waitFor(() => expect(state.copy).toHaveBeenCalledTimes(1));
+    const copied = state.copy.mock.calls[0]?.[0] as string;
+    expect(copied).toContain("A [00:23] Listening / response");
+    expect(copied).toContain("Ask the other character for a clear answer");
+    expect(copied).toContain("I responded before");
+    expect(copied).not.toContain("blob:slams-take");
+  });
+
+  it("does not create a marker at an invalid or missing playback timestamp", async () => {
+    render(<PerformanceLab />);
+    await recordA();
+    const player = screen.getByLabelText("Playback take A") as HTMLMediaElement;
+    player.currentTime = Number.NaN;
+    fireEvent.change(screen.getByLabelText("What did you observe at this moment?"), {
+      target: { value: "I observed a clear choice in this line." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Mark current time in Take A" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("Open and seek within a recorded take");
+    expect(screen.queryByRole("button", { name: /Jump to/ })).toBeNull();
+    expect(screen.queryByLabelText("The Director")).toBeNull();
+  });
+
+  it("deletes only that take's annotations, clears the selected Director prompt and allows another marker", async () => {
+    vi.stubGlobal("crypto", { randomUUID: () => "11111111-1111-4111-8111-111111111111" });
+    render(<PerformanceLab />);
+    await recordA();
+    const player = screen.getByLabelText("Playback take A") as HTMLMediaElement;
+    player.currentTime = 11;
+    fireEvent.change(screen.getByLabelText("What did you observe at this moment?"), {
+      target: { value: "I did not wait for the partner to answer." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Mark current time in Take A" }));
+    expect(screen.getByRole("button", { name: "Jump to 00:11" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Delete take now" }));
+    expect(screen.queryByRole("button", { name: "Jump to 00:11" })).toBeNull();
+    expect(screen.queryByLabelText("The Director")).toBeNull();
+    expect(screen.getByText("Mark a playback moment above to get a specific retake experiment.")).toBeInTheDocument();
+  });
+
+  it("supports bilingual timecoded observations that remain session-only", async () => {
+    vi.stubGlobal("crypto", { randomUUID: () => "11111111-1111-4111-8111-111111111111" });
+    state.locale = "ar";
+    render(<PerformanceLab />);
+    fireEvent.click(screen.getByRole("button", { name: /سجّل المحاولة أ/ }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "أوقف التسجيل" })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: "أوقف التسجيل" }));
+    await waitFor(() => expect(screen.getByLabelText("شغّل المحاولة أ")).toBeInTheDocument());
+    const player = screen.getByLabelText("شغّل المحاولة أ") as HTMLMediaElement;
+    player.currentTime = 6;
+    fireEvent.change(screen.getByLabelText("ماذا لاحظت في هذه اللحظة؟"), {
+      target: { value: "سمعت الوقفة قبل الرد وغيّرت التوقيت" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /حدّد توقيت المحاولة أ الحالي/ }));
+    expect(screen.getByRole("button", { name: "انتقل إلى 00:06" })).toBeInTheDocument();
+    expect(screen.getByLabelText("The Director")).toHaveTextContent("التطبيق لم يشاهد الأداء");
+    expect(screen.getByText(/الملاحظات الزمنية والهدف والمقارنة موجودة في ذاكرة الصفحة فقط/)).toBeInTheDocument();
+  });
+
 });
