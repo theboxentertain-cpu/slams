@@ -81,7 +81,7 @@ export function ActorProjectDetail({
   projectId,
 }: {
   kind: WorkFileKind;
-  projectId?: string;
+  projectId?: string | undefined;
 }) {
   const { locale } = useLanguage();
   const ui = STRINGS[locale];
