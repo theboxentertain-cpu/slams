@@ -85,7 +85,7 @@ describe("Actor at Work project workspace", () => {
     fireEvent.click(screen.getByRole("button", { name: "Load this version into the editor (not saved)" }));
     expect(screen.getByLabelText("Project / production title")).toHaveValue("Old title");
     expect(mock.update).not.toHaveBeenCalled();
-    expect(screen.getByRole("status")).toHaveTextContent("not");
+    expect(screen.getByRole("status")).toHaveTextContent("Save it to create a new revision.");
   });
 
   it("requires an authenticated account without creating deceptive guest project storage", () => {
