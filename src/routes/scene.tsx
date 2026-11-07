@@ -114,7 +114,7 @@ function Scene() {
               {TACTICS.map((x) => (
                 <button
                   key={x.id}
-                  className={`${btnSecondary} flex-col items-start text-left`}
+                  className={`${btnSecondary} flex-col items-start text-start`}
                   onClick={() => {
                     setTactic(x.id);
                     setStep("response");
@@ -148,7 +148,7 @@ function Scene() {
                 <button
                   key={x.id}
                   data-school={x.id}
-                  className={`${btnSecondary} flex-col items-start border-l-4 border-l-school text-left`}
+                  className={`${btnSecondary} flex-col items-start border-s-4 border-s-school text-start`}
                   onClick={() => {
                     setIntervention(x.id);
                     setStep("practice");

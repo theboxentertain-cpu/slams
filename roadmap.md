@@ -1,6 +1,7 @@
 # SLAMS Sprint 01B — Foundation Repair
 
 ## Current verification request
+- [ ] Implement and verify whole-app RTL page flow, alignment, directional icons, and interactive controls on desktop/mobile, without redesign or data changes.
 - [ ] Make the whole app bilingual in English/Arabic: shared language switch, persisted preference, authored translations, RTL layout, and browser/regression verification; preserve all data and behavior.
 - [ ] Match the new SLAMS page-design references through presentation-only changes; preserve navigation, real progress, honest curriculum, and Director modes, then check desktop/mobile and regressions.
 - [x] Add reference-led section-aware Director reactions and motion, preserving modes, takes, and existing data; 170 automated tests passed, desktop/mobile coach interactions and take/retake silence verified, reduced motion verified, zero uncaught browser errors; automatic build OK.

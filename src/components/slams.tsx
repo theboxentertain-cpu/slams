@@ -95,7 +95,7 @@ export function DirectorToggle() {
       <legend className="sr-only">
         <T>Director mode</T>
       </legend>
-      <span className="mr-1 text-muted-foreground" aria-hidden>
+      <span className="me-1 text-muted-foreground" aria-hidden>
         <T>Director</T>
       </span>
       {(["on", "quiet", "off"] as DirectorMode[]).map((m) => (

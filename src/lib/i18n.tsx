@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { arabic } from "./arabic";
+import { DirectionProvider } from "@radix-ui/react-direction";
 
 export type Locale = "en" | "ar";
 export const LANGUAGE_KEY = "slams.language.v1";
@@ -51,13 +52,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   }
   return (
-    <LanguageContext.Provider value={{ locale, setLocale }}>{children}</LanguageContext.Provider>
+    <LanguageContext.Provider value={{ locale, setLocale }}>
+      <DirectionProvider dir={locale === "ar" ? "rtl" : "ltr"}>
+        {children}
+      </DirectionProvider>
+    </LanguageContext.Provider>
   );
 }
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  return { ...context, t: (source: string) => translateText(source, context.locale) };
+  return { ...context, dir: context.locale === "ar" ? "rtl" as const : "ltr" as const, t: (source: string) => translateText(source, context.locale) };
 }
 
 /** Translate a known, authored JSX label without adding a layout element.
