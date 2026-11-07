@@ -10,11 +10,11 @@ describe("real-token Actor at Work write-security staging gate", () => {
   it("parses and fails closed to the known separate Supabase staging project", () => {
     expect(() => execFileSync(process.execPath, ["--check", scriptPath])).not.toThrow();
     expect(script).toContain('const STAGING_REF = "bfoukjcissyardeokfev"');
-    expect(script).toContain('SLAMS_STAGING_API_WRITES_ACK');
-    expect(script).toContain('synthetic-fixtures-only');
-    expect(script).toContain('SLAMS_NONPROD_RLS_ACK');
+    expect(script).toContain("SLAMS_STAGING_API_WRITES_ACK");
+    expect(script).toContain("synthetic-fixtures-only");
+    expect(script).toContain("SLAMS_NONPROD_RLS_ACK");
     expect(script).toContain('startsWith("SLAMS STAGING TEST")');
-    expect(script).not.toContain('edrchrzqsrfrlcfbnxhs');
+    expect(script).not.toContain("edrchrzqsrfrlcfbnxhs");
   });
 
   it("uses only real user credentials, never a service key, and restores fixture data", () => {
