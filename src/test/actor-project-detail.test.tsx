@@ -135,7 +135,7 @@ describe("Dedicated project workspaces", () => {
         }),
       }),
     );
-    expect(mock.audition.data.objective).toBe("أقنعه يفضل");
+    expect((mock.audition["data"] as Record<string, string>)["objective"]).toBe("أقنعه يفضل");
   });
 
   it("requires signing in and does not expose browser-only projects", () => {
