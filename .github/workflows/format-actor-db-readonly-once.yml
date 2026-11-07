@@ -1,0 +1,35 @@
+name: One-time read-only actor staging verifier formatting
+
+on:
+  push:
+    branches: [chore/actor-work-db-release-preflight-2026-11-07]
+    paths: [.github/workflows/format-actor-db-readonly-once.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.repository == 'theboxentertain-cpu/slams'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chore/actor-work-db-release-preflight-2026-11-07
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Format read-only RLS verifier and guard
+        run: |
+          bunx prettier --write scripts/db/verify-actor-rls-real-auth.mjs src/test/actor-work-db-release-gate.test.ts
+          git diff --check
+      - name: Commit targeted formatting
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -u scripts/db/verify-actor-rls-real-auth.mjs src/test/actor-work-db-release-gate.test.ts
+            git commit -m "style(db): format read-only staging verifier"
+            git push origin HEAD:chore/actor-work-db-release-preflight-2026-11-07
+          fi
