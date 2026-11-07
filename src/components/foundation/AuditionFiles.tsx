@@ -15,7 +15,8 @@ import { useActorProjects } from "@/lib/use-actor-projects";
 const COPY = {
   en: {
     heading: "My auditions",
-    intro: "One private preparation file per audition. Link a project only when you choose. Your original audition notes remain separate.",
+    intro:
+      "One private preparation file per audition. Link a project only when you choose. Your original audition notes remain separate.",
     guest: "Sign in to create individual, account-saved audition files.",
     login: "Sign in",
     loading: "Loading audition records…",
@@ -157,7 +158,10 @@ export function AuditionFiles() {
       <p className="text-sm text-muted-foreground">{ui.intro}</p>
       {!auditions.signedIn ? (
         <p>
-          {ui.guest} <Link to="/auth" className="underline">{ui.login}</Link>
+          {ui.guest}{" "}
+          <Link to="/auth" className="underline">
+            {ui.login}
+          </Link>
         </p>
       ) : (
         <>
@@ -165,7 +169,11 @@ export function AuditionFiles() {
           {auditions.error && (
             <div className="panel p-4 foundation-stack" role="alert">
               <p>{ui.missing}</p>
-              <button type="button" className={btnSecondary} onClick={() => void auditions.reload()}>
+              <button
+                type="button"
+                className={btnSecondary}
+                onClick={() => void auditions.reload()}
+              >
                 {ui.retry}
               </button>
             </div>
@@ -186,16 +194,22 @@ export function AuditionFiles() {
                       aria-pressed={selectedId === record.id}
                       onClick={() => open(record)}
                     >
-                      <span className="min-w-0 break-words">{record.title} · {record.roleName || "—"}</span>
+                      <span className="min-w-0 break-words">
+                        {record.title} · {record.roleName || "—"}
+                      </span>
                       <span className="text-xs">
-                        {stageLabel(record.status)} · {record.dueDate ?? "—"} · {ui.revision} {record.revision}
+                        {stageLabel(record.status)} · {record.dueDate ?? "—"} · {ui.revision}{" "}
+                        {record.revision}
                       </span>
                     </button>
                   </li>
                 ))}
               </ul>
               {(creating || selected) && (
-                <section className="panel p-4 foundation-stack" aria-label={creating ? ui.new : ui.heading}>
+                <section
+                  className="panel p-4 foundation-stack"
+                  aria-label={creating ? ui.new : ui.heading}
+                >
                   <button
                     type="button"
                     className={btnSecondary}
@@ -271,11 +285,16 @@ export function AuditionFiles() {
                         value={draft.status}
                         disabled={busy}
                         onChange={(event) =>
-                          setDraft({ ...draft, status: event.target.value as AuditionDraft["status"] })
+                          setDraft({
+                            ...draft,
+                            status: event.target.value as AuditionDraft["status"],
+                          })
                         }
                       >
                         {AUDITION_STATUSES.map((status) => (
-                          <option key={status} value={status}>{ui[status]}</option>
+                          <option key={status} value={status}>
+                            {ui[status]}
+                          </option>
                         ))}
                       </select>
                     </label>
@@ -297,7 +316,11 @@ export function AuditionFiles() {
                         />
                       </label>
                     ))}
-                    {validation && <p role="status" className="text-sm text-amber">{validation}</p>}
+                    {validation && (
+                      <p role="status" className="text-sm text-amber">
+                        {validation}
+                      </p>
+                    )}
                     <button
                       type="submit"
                       className={btnPrimary}
@@ -311,7 +334,11 @@ export function AuditionFiles() {
               )}
             </>
           )}
-          {message && <p role="status" className="text-sm text-amber">{message}</p>}
+          {message && (
+            <p role="status" className="text-sm text-amber">
+              {message}
+            </p>
+          )}
         </>
       )}
       <p className="text-sm text-muted-foreground">{ui.legacy}</p>
