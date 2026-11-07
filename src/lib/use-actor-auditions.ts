@@ -37,7 +37,10 @@ export function fromAuditionRow(row: Row): ActorAudition {
     title: row.title,
     roleName: row.role_name,
     dueDate: row.due_date,
-    status: row.status,
+    status:
+      row.status === "ready" || row.status === "submitted" || row.status === "closed"
+        ? row.status
+        : "preparing",
     notes: parseAuditionNotes(row.notes),
     revision: row.revision,
     createdAt: row.created_at,
