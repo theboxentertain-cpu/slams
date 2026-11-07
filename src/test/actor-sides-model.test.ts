@@ -54,7 +54,9 @@ describe("Script-side snapshots and exact line anchors", () => {
   it("accepts first and last line anchors and rejects out of bounds and reversals", () => {
     const text = "A\nB\nC";
     expect(validateSideAnnotations([note], text)).toBeNull();
-    expect(validateSideAnnotations([{ ...note, fromLine: 3, toLine: 2 }], text)).toMatch(/Line range/);
+    expect(validateSideAnnotations([{ ...note, fromLine: 3, toLine: 2 }], text)).toMatch(
+      /Line range/,
+    );
     expect(validateSideAnnotations([{ ...note, toLine: 4 }], text)).toMatch(/Line range/);
     expect(validateSideAnnotations([{ ...note, fromLine: 0 }], text)).toMatch(/Line range/);
     expect(validateSideAnnotations([{ ...note, toLine: 2.5 }], text)).toMatch(/Line range/);
@@ -62,15 +64,20 @@ describe("Script-side snapshots and exact line anchors", () => {
   it("requires distinct beat identities and limits user-authored annotations", () => {
     expect(validateSideAnnotations([note, note], "A\nB\nC")).toMatch(/unique/);
     expect(validateSideAnnotations([{ ...note, beat: "  " }], "A\nB\nC")).toMatch(/beat label/);
-    expect(validateSideAnnotations([{ ...note, objective: "x".repeat(501) }], "A\nB\nC")).toMatch(/500/);
+    expect(validateSideAnnotations([{ ...note, objective: "x".repeat(501) }], "A\nB\nC")).toMatch(
+      /500/,
+    );
   });
   it("rejects malformed cloud beat annotations without executing supplied text", () => {
-    const notes = parseSideAnnotations([
-      { ...note, beat: "<script>not executed</script>" },
-      { ...note, id: "not a uuid" },
-      { ...note, toLine: 99 },
-      { ...note, fromLine: "2" },
-    ], "A\nB\nC");
+    const notes = parseSideAnnotations(
+      [
+        { ...note, beat: "<script>not executed</script>" },
+        { ...note, id: "not a uuid" },
+        { ...note, toLine: 99 },
+        { ...note, fromLine: "2" },
+      ],
+      "A\nB\nC",
+    );
     expect(notes).toHaveLength(1);
     expect(notes[0]?.beat).toBe("<script>not executed</script>");
   });
