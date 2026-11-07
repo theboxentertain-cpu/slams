@@ -30,3 +30,12 @@ jobs:
         run: bun run build
       - name: Enforce repository-wide lint and formatting
         run: bun run lint
+
+  database_contract:
+    name: Disposable PostgreSQL migration and RLS audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run network-isolated PostgreSQL policy tests
+        run: bash scripts/test-rls.sh
