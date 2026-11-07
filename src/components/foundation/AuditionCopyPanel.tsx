@@ -19,6 +19,7 @@ const UI = {
     unavailable: "Existing audition notes could not be read. Nothing was copied.",
     noContent: "There are no eligible notes to copy into empty project fields.",
     occupied: "Project field already contains notes. It will not be overwritten.",
+    tooLong: "This source note is longer than the 900-character project field. It cannot be copied as-is.",
     choose: "Select fields to stage",
     preview: "Preview source notes",
     stage: "Copy selected notes into this unsaved editor",
@@ -35,6 +36,7 @@ const UI = {
     unavailable: "تعذر قراءة ملاحظات الأوديشن. ما اتنسخش أي شيء.",
     noContent: "مفيش ملاحظات قابلة للنسخ في حقول المشروع الفاضية.",
     occupied: "الحقل فيه ملاحظات بالفعل ومش هيتم استبدالها.",
+    tooLong: "الملاحظة أطول من الحد المسموح (٩٠٠ حرف)، ومش هينفع تتنسخ كما هي.",
     choose: "اختار الحقول اللي عايز تنسخها",
     preview: "راجع ملاحظات المصدر",
     stage: "انسخ الحقول المختارة للمحرر من غير حفظ",
@@ -105,6 +107,9 @@ export function AuditionCopyPanel({
                     </span>
                     {candidate.occupied && (
                       <span className="text-muted-foreground">{ui.occupied}</span>
+                    )}
+                    {candidate.tooLong && (
+                      <span className="text-muted-foreground">{ui.tooLong}</span>
                     )}
                     <details>
                       <summary>{ui.preview}</summary>
