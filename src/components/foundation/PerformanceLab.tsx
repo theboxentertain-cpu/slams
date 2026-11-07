@@ -350,9 +350,47 @@ export function PerformanceLab() {
       }
       if (recorder.current?.state === "recording") endCapture();
     };
+    // Browsers may put a document in the back/forward cache without running
+    // React unmount. Never keep permission or temporary media across pagehide.
+    const discardOnPageHide = () => {
+      requestId.current++;
+      permissionPending.current = false;
+      stopTimers();
+      if (recorder.current) {
+        recorder.current.onstop = null;
+        recorder.current.ondataavailable = null;
+        recorder.current.onerror = null;
+        if (recorder.current.state !== "inactive") {
+          try {
+            recorder.current.stop();
+          } catch {
+            /* The device may have stopped already. */
+          }
+        }
+        recorder.current = null;
+      }
+      stopTracks();
+      chunks.current = [];
+      captureTarget.current = null;
+      Object.values(takesRef.current).forEach((take) => {
+        if (take) URL.revokeObjectURL(take.url);
+      });
+      takesRef.current = { a: null, b: null };
+      playbackNodes.current = { a: null, b: null };
+      setTakes({ a: null, b: null });
+      setNotes({ a: "", b: "" });
+      setMarkers([]);
+      setSelectedMarkerId(null);
+      setComparison("");
+      setSceneObjective("");
+      setStage("idle");
+      setFeedback("");
+    };
     document.addEventListener("visibilitychange", stopWhenHidden);
+    window.addEventListener("pagehide", discardOnPageHide);
     return () => {
       document.removeEventListener("visibilitychange", stopWhenHidden);
+      window.removeEventListener("pagehide", discardOnPageHide);
       live.current = false;
       requestId.current++;
       permissionPending.current = false;
