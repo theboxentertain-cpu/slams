@@ -15,9 +15,12 @@ SELECT current_database() AS database_name,
        current_user AS db_role,
        current_setting('server_version') AS postgres_version;
 
--- Keep this first: no actor_projects + actor_auditions = not deployed.
+-- Keep this first: missing Actor at Work tables means deployment is incomplete.
+-- The project may be a fresh, separate Supabase instance; verify backend identity
+-- before interpreting an empty catalog as an upgraded Lovable database.
 WITH expected(name) AS (
   VALUES ('actor_projects'), ('actor_project_revisions'), ('actor_auditions'),
+         ('actor_sides'),
          ('audition_prep'), ('passport_entries'),
          ('academic_reviewers'), ('academic_policies')
 )
@@ -39,32 +42,43 @@ ORDER BY expected.name;
 -- Drizzle's on-disk journal is NOT proof of applied migrations.
 -- The live ledger and local journal must be manually reconciled.
 SELECT to_regclass('drizzle.__drizzle_migrations') IS NOT NULL
-       AS drizzle_ledger_exists;
+       AS drizzle_ledger_exists,
+       to_regclass('supabase_migrations.schema_migrations') IS NOT NULL
+       AS supabase_ledger_exists;
 SELECT column_name, data_type
 FROM information_schema.columns
 WHERE table_schema='drizzle' AND table_name='__drizzle_migrations'
 ORDER BY ordinal_position;
--- The ledger exists in the audited instance; show metadata only.
--- This requires read privilege on the migration ledger (do not expose credentials).
-SELECT to_jsonb(m) AS migration_ledger_row
-FROM drizzle.__drizzle_migrations AS m
-LIMIT 30;
+-- New/isolated Supabase projects may have no Drizzle schema or ledger.
+-- psql conditional prevents an undefined_table exception in that case.
+-- Query the actual ledger only when present; never infer applied migrations
+-- from the repository's JSON journal.
+SELECT CASE WHEN to_regclass('drizzle.__drizzle_migrations') IS NOT NULL
+       THEN 'true' ELSE 'false' END AS has_drizzle_ledger
+\gset
+\if :has_drizzle_ledger
+  SELECT to_jsonb(m) AS migration_ledger_row
+  FROM drizzle.__drizzle_migrations AS m
+  LIMIT 30;
+\else
+  SELECT 'ABSENT — no Drizzle migration history in this database' AS migration_ledger_status;
+\endif
 
 -- Check whether the required RLS policy commands actually exist.
 SELECT tablename, cmd, roles::text AS allowed_roles, policyname, qual, with_check
 FROM pg_policies
 WHERE schemaname='public'
-  AND tablename IN ('actor_projects','actor_project_revisions','actor_auditions')
+  AND tablename IN ('actor_projects','actor_project_revisions','actor_auditions','actor_sides')
 ORDER BY tablename, cmd, policyname;
 
 -- Verify GRANT and implicit PUBLIC rights. Expected:
--- actor_projects: authenticated SELECT/INSERT/UPDATE/DELETE
--- actor_project_revisions: authenticated SELECT only
--- actor_auditions: authenticated SELECT/INSERT/UPDATE only, NO DELETE
+-- After 0007, authenticated has SELECT/INSERT/UPDATE but NO DELETE on actor_projects.
+-- actor_project_revisions: authenticated SELECT only.
+-- actor_auditions and actor_sides: authenticated SELECT/INSERT/UPDATE only, NO DELETE.
 SELECT table_name, grantee, privilege_type
 FROM information_schema.role_table_grants
 WHERE table_schema='public'
-  AND table_name IN ('actor_projects','actor_project_revisions','actor_auditions')
+  AND table_name IN ('actor_projects','actor_project_revisions','actor_auditions','actor_sides')
   AND grantee IN ('PUBLIC','anon','authenticated','service_role')
 ORDER BY table_name,grantee,privilege_type;
 
@@ -75,7 +89,7 @@ FROM pg_constraint
 WHERE connamespace='public'::regnamespace
   AND conrelid IN (
     SELECT oid FROM pg_class WHERE relnamespace='public'::regnamespace
-    AND relname IN ('actor_projects','actor_project_revisions','actor_auditions')
+    AND relname IN ('actor_projects','actor_project_revisions','actor_auditions','actor_sides')
   )
 ORDER BY table_name,conname;
 
@@ -89,7 +103,8 @@ WHERE n.nspname='public'
   AND p.proname IN (
     'actor_projects_before_write',
     'actor_projects_record_revision',
-    'actor_auditions_before_write'
+    'actor_auditions_before_write',
+    'actor_sides_before_write'
   )
 ORDER BY p.proname;
 
@@ -100,7 +115,7 @@ FROM pg_trigger t
 WHERE NOT t.tgisinternal
   AND t.tgrelid IN (
     SELECT oid FROM pg_class WHERE relnamespace='public'::regnamespace
-      AND relname IN ('actor_projects','actor_project_revisions','actor_auditions')
+      AND relname IN ('actor_projects','actor_project_revisions','actor_auditions','actor_sides')
   )
 ORDER BY table_name,t.tgname;
 
