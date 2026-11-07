@@ -26,6 +26,10 @@ jobs:
           bunx eslint . --rule 'prettier/prettier: off'
       - name: Run unit and UI tests
         run: bun run test
+      - name: Validate architecture ownership
+        run: |
+          node scripts/audit-page-contracts.test.cjs
+          node scripts/audit-page-contracts.cjs --structure-only
       - name: Compile production build
         run: bun run build
       - name: Enforce repository-wide lint and formatting
@@ -41,3 +45,6 @@ jobs:
         run: bash scripts/test-rls.sh
       - name: Rehearse private-backup runner using synthetic SQL only
         run: bash scripts/db/test-backup-recovery-runner.sh
+
+      - name: Verify account deletion SQL race boundaries
+        run: bash scripts/test-account-deletion-race.sh

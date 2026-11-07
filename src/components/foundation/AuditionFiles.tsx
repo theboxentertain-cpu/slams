@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { btnPrimary, btnSecondary } from "@/components/slams";
 import { useLanguage } from "@/lib/i18n";
+import { useUnsavedWork } from "@/lib/unsaved-work";
 import {
   AUDITION_FIELDS,
   AUDITION_STATUSES,
@@ -45,6 +46,7 @@ const COPY = {
     editLegacy: "Open original audition-preparation notes",
     legacy: "The original single audition-preparation record is not moved, overwritten or deleted.",
     sides: "Open script sides for your auditions",
+    rehearse: "Rehearse this audition",
     unsaved: "Unsaved edits disappear when you switch records or leave this screen.",
     noProject: "Create a project in Actor at Work to associate it with an audition.",
   },
@@ -79,6 +81,7 @@ const COPY = {
     editLegacy: "افتح ملاحظات الأوديشن الأصلية",
     legacy: "ملاحظات الأوديشن القديمة مش هتتنقل أو تتمسح أو تتغير.",
     sides: "افتح نصوص الأوديشنات",
+    rehearse: "اتمرن على الأوديشن ده",
     unsaved: "التعديلات اللي متحفظتش بتضيع لو غيرت الملف أو خرجت من الصفحة.",
     noProject: "اعمل مشروع من قسم شغل الممثل علشان تربطه بالأوديشن.",
   },
@@ -95,7 +98,7 @@ function asDraft(record: ActorAudition): AuditionDraft {
 }
 
 /** Multi-file professional preparation. Legacy notes retain their own storage and UI. */
-export function AuditionFiles() {
+export function AuditionFiles({ auditionId }: { auditionId?: string | undefined } = {}) {
   const { locale } = useLanguage();
   const ui = COPY[locale];
   const auditions = useActorAuditions();
@@ -106,13 +109,31 @@ export function AuditionFiles() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const accountRef = useRef(auditions.userId);
+  const openedRoute = useRef("");
   accountRef.current = auditions.userId;
   const selected = auditions.records.find((record) => record.id === selectedId) ?? null;
+  const baseline = selected ? asDraft(selected) : blankAuditionDraft();
+  const dirty =
+    auditions.signedIn &&
+    (creating || !!selected) &&
+    JSON.stringify(draft) !== JSON.stringify(baseline);
+  const markSaved = useUnsavedWork(dirty);
+  function mayDiscard() {
+    return (
+      !dirty ||
+      window.confirm(
+        locale === "ar"
+          ? "عندك تعديلات غير محفوظة. لو خرجت هتضيع. تخرج من غير حفظ؟"
+          : "You have unsaved changes. Leaving will discard them. Leave without saving?",
+      )
+    );
+  }
   const ownedProjectIds = projects.projects.map((project) => project.id);
   const validation = validateAuditionDraft(draft, ownedProjectIds);
   const canSave = auditions.loaded && !auditions.error && (creating || !!selected);
   const projectReady = projects.loaded && !projects.error;
   useEffect(() => {
+    openedRoute.current = "";
     setSelectedId(null);
     setCreating(false);
     setDraft(blankAuditionDraft());
@@ -120,13 +141,28 @@ export function AuditionFiles() {
     setMessage("");
   }, [auditions.userId]);
 
-  function open(record: ActorAudition) {
+  useEffect(() => {
+    const key = `${auditions.userId ?? ""}:${auditionId ?? ""}`;
+    if (!auditionId || !auditions.loaded || openedRoute.current === key) return;
+    openedRoute.current = key;
+    const record = auditions.records.find((item) => item.id === auditionId);
+    if (record) {
+      setSelectedId(record.id);
+      setCreating(false);
+      setDraft(asDraft(record));
+      setMessage("");
+    }
+  }, [auditionId, auditions.userId, auditions.loaded, auditions.records]);
+
+  function open(record: ActorAudition, confirmedSave = false) {
+    if (!confirmedSave && !mayDiscard()) return;
     setSelectedId(record.id);
     setCreating(false);
     setDraft(asDraft(record));
     setMessage("");
   }
   function newFile() {
+    if (!mayDiscard()) return;
     setSelectedId(null);
     setCreating(true);
     setDraft(blankAuditionDraft());
@@ -144,7 +180,8 @@ export function AuditionFiles() {
         : await auditions.update(selected!, draft, ownedProjectIds);
       if (accountRef.current !== owner) return;
       if (result.value) {
-        open(result.value);
+        markSaved();
+        open(result.value, true);
         setMessage(creating ? ui.created : ui.saved);
       } else {
         setMessage(result.error ?? "Save not confirmed. Your edits were not discarded.");
@@ -217,6 +254,7 @@ export function AuditionFiles() {
                     className={btnSecondary}
                     disabled={busy}
                     onClick={() => {
+                      if (!mayDiscard()) return;
                       setCreating(false);
                       setSelectedId(null);
                       setMessage("");
@@ -332,6 +370,15 @@ export function AuditionFiles() {
                     </button>
                   </form>
                   <p className="text-xs text-muted-foreground">{ui.unsaved}</p>
+                  {selected && (
+                    <Link
+                      to="/rehearsal"
+                      search={{ auditionId: selected.id, returnTo: "audition" }}
+                      className={btnSecondary}
+                    >
+                      {ui.rehearse}
+                    </Link>
+                  )}
                 </section>
               )}
             </>

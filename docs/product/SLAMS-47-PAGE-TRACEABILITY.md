@@ -29,22 +29,22 @@ Page IDs are functional responsibilities. Shared routes, tabs, dialogs and scene
 | P19 — School Progress | `/conservatory/$school` · tab · SchoolPage / TrainingSummary | PARTIAL / FAIL | Continue training only for eligible started unit; from P12 Progress tab | BP-P19 / PASS | School evidence link to P43 is indirect through Progress; complete reviewed school pathway not verified live. |
 | P20 — Technique Matrix | `/matrix` · gated-route · SupportPage (matrix) | GATED / BLOCKED | Explore the schools → /conservatory; from P09 diagram; profile menu | BP-P20 / PASS | Reviewed comparisons and safe active-scene return/context not implemented. |
 | P21 — Rehearsal Hub | `/rehearsal` · route/tab · RehearsalHub | WORKING / PASS | Start rehearsal → /scene; from primary Rehearse; P06 studio; P47 Rehearse | BP-P21 / PASS | No additional gap in bounded implemented/disclosed responsibility. |
-| P22 — My Scenes / Scene Library | `/rehearsal` · tab · RehearsalHub (My Scenes/New Scene) | PARTIAL / BLOCKED | Select Stay / Start rehearsal → /scene; from P21 My Scenes tab | BP-P22 / PASS | Personal scene/script storage and creation unavailable; one authored demonstration only. |
+| P22 — My Scenes / Scene Library | `/rehearsal` · route/subview · RehearsalHub / ContextualRehearsal | PARTIAL / BLOCKED | Select Stay / Start rehearsal → /scene; from P21 My Scenes tab | BP-P22 / PASS | Implemented in source with owner and context guards; new production schema remains unapplied. Real production persistence, recovery and physical Android acceptance remain unverified. |
 | P23 — Scene Briefing | `/scene` · subview · Scene (explore) | PARTIAL / FAIL | Begin take → tactic selection; from P21/P22 Start rehearsal; Office clapper | BP-P23 / PASS | Objective/roles are fixed authored circumstances; no preparable objective/technique or persistent scene/session context contract. |
 | P24 — Living Scene | `/scene` · route/subview · Scene (perform/response) | PARTIAL / FAIL | Choose tactic → authored response; from P23 Begin take; P26 retake context | BP-P24 / PASS | Inline Director modes now available; stable scene/session/objective persistence is still missing. |
 | P25 — Director Intervention | `/scene` · subview · Scene (intervene/practice) | PARTIAL / FAIL | Choose technique; exercise → retake; from P24 Cut — call an intervention | BP-P25 / PASS | No change-technique via Matrix or in-flow return to take; context round trip absent. |
 | P26 — Retake Studio | `/scene` · subview · Scene (retake) | PARTIAL / BLOCKED | Cut — end take → reflection; from P25 completed exercise | BP-P26 / PASS | Three distinct takes and captured comparison remain unsupported. |
 | P27 — Reflection & Review | `/scene` · subview · Scene (reflect) | PARTIAL / BLOCKED | Save to Passport; from P26 Cut — end take | BP-P27 / PASS | Eligible next-exercise navigation requires reviewed available material and is not implemented; summary, repeat, save and Hub return are verified working subsets. |
-| P28 — Rehearsal Record | `/scene` · subview · Scene (saved) / Passport journey record | PARTIAL / FAIL | Open Passport → /passport; from P27 successful save; P43 saved record list | BP-P28 / PASS | Stable scene/session/objective identifiers absent; live reload/login still unverified. |
+| P28 — Rehearsal Record | `/scene` · route/subview · Scene saved / contextual rehearsal record | PARTIAL / BLOCKED | Open Passport → /passport; from P27 successful save; P43 saved record list | BP-P28 / PASS | Implemented in source with owner and context guards; new production schema remains unapplied. Real production persistence, recovery and physical Android acceptance remain unverified. |
 | P29 — Performance Lab | `/lab` · gated-route · SupportPage (lab) | GATED / BLOCKED | Run a text-only take → /scene; from P10 camera; P21 Sessions; profile menu | BP-P29 / PASS | Capture/playback/comparison/annotation storage and media permissions unavailable. |
 | P30 — Rehearsal Lounge | `/lounge` · gated-route · SupportPage (lounge) | GATED / BLOCKED | Rehearse solo → /scene; from P10 chair; P21 Sessions; profile menu | BP-P30 / PASS | Partner service, invitations, shared scenes/sessions and moderation unavailable. |
 | P31 — Professional Workspace | `/work` · route · WorkHub | WORKING / PASS | Open audition preparation → /work/audition?tab=preparation; from primary Work; P06 casting; P09; P47 Work | BP-P31 / PASS | No additional gap in bounded implemented/disclosed responsibility. |
-| P32 — Audition Workspace | `/work/audition` · route/tab · AuditionFile / AuditionWorkspace | PARTIAL / FAIL | Save audition prep; from P31 preparation; profile/context links | BP-P32 / PASS | No context-bound rehearsal action; Script gated; one six-field record rather than linked professional workspace. |
-| P33 — Auditions List | `/work` · subview · WorkHub / useAuditionPrep | PARTIAL / BLOCKED | Open current audition preparation; from P31 saved/current preparation | BP-P33 / PASS | No multi-audition list/new-record creation; avoid blank New Audition overwriting current notes. |
-| P34 — Human / Character Laboratory | `/work/character` · gated-route · SupportPage (character) | GATED / BLOCKED | Open audition preparation → /work/audition; from P31 planned-tools availability; legacy links | BP-P34 / PASS | Dedicated saved character biography/relationships/behavior and scene testing unavailable. |
-| P35 — Scene Breakdown | `/work/breakdown` · gated-route · SupportPage (breakdown) | GATED / BLOCKED | Rehearse the demonstration scene → /scene; from P31 planned-tools availability; legacy links | BP-P35 / PASS | Script ingestion, beats and persisted annotations unavailable. |
+| P32 — Audition Workspace | `/work/audition` · route/subview · AuditionFile / AuditionWorkspace / AuditionFiles | PARTIAL / BLOCKED | Save audition prep; from P31 preparation; profile/context links | BP-P32 / PASS | Implemented in source with owner and context guards; new production schema remains unapplied. Real production persistence, recovery and physical Android acceptance remain unverified. |
+| P33 — Auditions List | `/work` · route/subview · WorkHub / AuditionFiles / useActorAuditions | PARTIAL / BLOCKED | Open current audition preparation; from P31 saved/current preparation | BP-P33 / PASS | Implemented in source with owner and context guards; new production schema remains unapplied. Real production persistence, recovery and physical Android acceptance remain unverified. |
+| P34 — Human / Character Laboratory | `/work/character` · route/subview · ActorProjectDetail (character) | PARTIAL / BLOCKED | Open audition preparation → /work/audition; from P31 planned-tools availability; legacy links | BP-P34 / PASS | Implemented in source with owner and context guards; new production schema remains unapplied. Real production persistence, recovery and physical Android acceptance remain unverified. |
+| P35 — Scene Breakdown | `/work/breakdown` · route/subview · ActorProjectDetail (breakdown) / ActorSidesPage | PARTIAL / BLOCKED | Rehearse the demonstration scene → /scene; from P31 planned-tools availability; legacy links | BP-P35 / PASS | Implemented in source with owner and context guards; new production schema remains unapplied. Real production persistence, recovery and physical Android acceptance remain unverified. |
 | P36 — Self-Tape Studio | `/work/self-tape` · gated-route · SupportPage (selfTape) | GATED / BLOCKED | Run a text-only take → /scene; from P31 planned-tools availability; legacy links | BP-P36 / PASS | Preparation checklist and camera/capture/storage/playback/export pipeline unavailable. |
-| P37 — Project Journal | `/work/journal` · gated-route · SupportPage (journal) | GATED / BLOCKED | Open saved reflections → /passport; from P31 planned-tools availability; legacy links | BP-P37 / PASS | Project records, revisions, scripts and linked rehearsal history unavailable. |
+| P37 — Project Journal | `/work/journal` · route/subview · ActorJournal / useActorJournal | PARTIAL / BLOCKED | Open saved reflections → /passport; from P31 planned-tools availability; legacy links | BP-P37 / PASS | Implemented in source with owner and context guards; new production schema remains unapplied. Real production persistence, recovery and physical Android acceptance remain unverified. |
 | P38 — Stuck Desk Home | `/stuck` · route · StuckIntake / DraftInterventions | PARTIAL / BLOCKED | Try the Living Scene; expand authored suggestion; from primary Stuck Desk; P06 script; P09; P47 Get Unstuck | BP-P38 / PASS | Saved intake/issue classification and saved-fix history unavailable; no observed diagnosis. |
 | P39 — Identify the Problem | `/stuck/diagnosis` · gated-route · SupportPage (diagnosis) | GATED / BLOCKED | Explore existing draft interventions → /stuck; from Legacy bookmarked diagnosis; contextual availability | BP-P39 / PASS | Transparent validated diagnostic/evidence rules and persistent scene-specific intake unavailable. |
 | P40 — Intervention Desk | `/stuck/intervention` · redirect/subview · DraftInterventions / intervention redirect | PARTIAL / BLOCKED | Practice in the scripted demonstration → /scene; from P38 authored issue option; legacy intervention redirect | BP-P40 / PASS | Suggestions pending faculty review; no time-bounded rescue, linked retry or saved remedy. |
@@ -270,7 +270,7 @@ Baseline contract result: **PASS**; current result: **PASS**.
 
 ### P22 — My Scenes / Scene Library
 
-Owner: `src/components/foundation/WorkspacePages.tsx`.
+Owner: `src/components/foundation/WorkspacePages.tsx`, `src/components/foundation/ContextualRehearsal.tsx`, `src/lib/use-actor-rehearsals.ts`.
 
 Actual outgoing actions: P23 scripted scene; New Scene truthful gate; P21 tabs.
 
@@ -330,13 +330,13 @@ Baseline contract result: **FAIL**; current result: **BLOCKED**. Choice/response
 
 ### P28 — Rehearsal Record
 
-Owner: `src/routes/scene.tsx`, `src/routes/passport.tsx`.
+Owner: `src/routes/scene.tsx`, `src/routes/passport.tsx`, `src/components/foundation/ContextualRehearsal.tsx`.
 
 Actual outgoing actions: P43 Open Passport; P23 Rehearse again; P21 Return to the rehearsal studio.
 
 Blueprint acceptance: Owner-scoped save survives authentic reload/login; signed-out local storage disclosed.
 
-Baseline contract result: **FAIL**; current result: **FAIL**. Explicit saved confirmation → Rehearsal Hub action added; confirmed saves remain required.
+Baseline contract result: **FAIL**; current result: **BLOCKED**. Explicit saved confirmation → Rehearsal Hub action added; confirmed saves remain required.
 
 ### P29 — Performance Lab
 
@@ -370,17 +370,17 @@ Baseline contract result: **PASS**; current result: **PASS**.
 
 ### P32 — Audition Workspace
 
-Owner: `src/components/foundation/AuditionWorkspace.tsx`, `src/components/foundation/WorkspacePages.tsx`, `src/lib/store.ts`.
+Owner: `src/components/foundation/AuditionWorkspace.tsx`, `src/components/foundation/AuditionFiles.tsx`, `src/components/foundation/WorkspacePages.tsx`.
 
 Actual outgoing actions: Brief/Script/Character/Preparation tabs; P31 back; explicit import.
 
 Blueprint acceptance: Existing user notes preserved, no phantom autosave or lost edits on tab changes.
 
-Baseline contract result: **FAIL**; current result: **FAIL**.
+Baseline contract result: **FAIL**; current result: **BLOCKED**.
 
 ### P33 — Auditions List
 
-Owner: `src/components/foundation/WorkspacePages.tsx`.
+Owner: `src/components/foundation/WorkspacePages.tsx`, `src/components/foundation/AuditionFiles.tsx`, `src/lib/use-actor-auditions.ts`.
 
 Actual outgoing actions: P32 current record; P31 workspace.
 
@@ -390,7 +390,7 @@ Baseline contract result: **BLOCKED**; current result: **BLOCKED**.
 
 ### P34 — Human / Character Laboratory
 
-Owner: `src/components/foundation/SupportPage.tsx`.
+Owner: `src/components/foundation/ActorProjectDetail.tsx`, `src/lib/use-actor-projects.ts`.
 
 Actual outgoing actions: P32 existing prep; P31 back.
 
@@ -400,7 +400,7 @@ Baseline contract result: **BLOCKED**; current result: **BLOCKED**.
 
 ### P35 — Scene Breakdown
 
-Owner: `src/components/foundation/SupportPage.tsx`.
+Owner: `src/components/foundation/ActorProjectDetail.tsx`, `src/components/foundation/ActorSidesPage.tsx`, `src/lib/use-actor-sides.ts`.
 
 Actual outgoing actions: P24 supported demo; P31 back.
 
@@ -420,7 +420,7 @@ Baseline contract result: **BLOCKED**; current result: **BLOCKED**.
 
 ### P37 — Project Journal
 
-Owner: `src/components/foundation/SupportPage.tsx`.
+Owner: `src/components/foundation/ActorJournal.tsx`, `src/lib/use-actor-journal.ts`.
 
 Actual outgoing actions: P43 existing records; P31 back.
 

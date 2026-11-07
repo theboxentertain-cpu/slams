@@ -14,6 +14,7 @@ import { useOfficePreferences } from "@/lib/office-preferences";
 import { useSession } from "@/lib/session";
 import { LanguageSwitch, useLanguage } from "@/lib/i18n";
 import { enterStudio, useStudioEntry } from "@/lib/studio-entry";
+import { UnsavedWorkProvider } from "@/lib/unsaved-work";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,33 +69,40 @@ export function AppShell({ children }: { children: ReactNode }) {
     };
   }, [cinematic]);
   return (
-    <div
-      className="app-shell"
-      data-motion={animate ? "on" : "off"}
-      data-welcome={cinematic ? "true" : "false"}
-    >
-      <a className="skip-link" href="#page-content">
-        {t("Skip to content")}
-      </a>
-      {children}
-      {!cinematic && (
-        <nav ref={nav} className="primary-navigation" aria-label={t("Main studio navigation")}>
-          {PRIMARY_NAVIGATION.map((item) => {
-            const Icon = icons[item.icon];
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                aria-current={active === item.to ? "page" : undefined}
-              >
-                <Icon aria-hidden="true" />
-                <span>{t(item.label)}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      )}
-    </div>
+    <UnsavedWorkProvider>
+      <div
+        className="app-shell"
+        data-motion={animate ? "on" : "off"}
+        data-welcome={cinematic ? "true" : "false"}
+      >
+        <a className="skip-link" href="#page-content">
+          {t("Skip to content")}
+        </a>
+        {children}
+        {!cinematic && (
+          <nav
+            ref={nav}
+            className="primary-navigation"
+            data-primary-navigation="studio"
+            aria-label={t("Main studio navigation")}
+          >
+            {PRIMARY_NAVIGATION.map((item) => {
+              const Icon = icons[item.icon];
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  aria-current={active === item.to ? "page" : undefined}
+                >
+                  <Icon aria-hidden="true" />
+                  <span>{t(item.label)}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        )}
+      </div>
+    </UnsavedWorkProvider>
   );
 }
 

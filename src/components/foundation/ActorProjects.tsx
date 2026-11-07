@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { btnPrimary, btnSecondary } from "@/components/slams";
 import { useLanguage } from "@/lib/i18n";
+import { useUnsavedWork } from "@/lib/unsaved-work";
 import {
   PROJECT_NOTE_FIELDS,
   blankProjectDraft,
@@ -37,6 +38,8 @@ const LABELS = {
     openCharacter: "Open dedicated Character File",
     openBreakdown: "Open dedicated Scene Breakdown",
     openSides: "Open private script sides",
+    rehearse: "Rehearse this project",
+    journal: "Open project journal",
     save: "Save project",
     create: "Create project",
     saving: "Saving…",
@@ -76,6 +79,8 @@ const LABELS = {
     openCharacter: "افتح ملف الشخصية المستقل",
     openBreakdown: "افتح تحليل المشهد المستقل",
     openSides: "افتح النصوص الخاصة",
+    rehearse: "اتمرن على المشروع ده",
+    journal: "افتح يوميات المشروع",
     save: "احفظ الملف",
     create: "إنشاء الملف",
     saving: "جاري الحفظ…",
@@ -101,7 +106,7 @@ function projectDraft(project: ActorProject): ProjectDraft {
   return { title: project.title, roleName: project.roleName, notes: { ...project.notes } };
 }
 
-export function ActorProjects() {
+export function ActorProjects({ projectId }: { projectId?: string | undefined } = {}) {
   const { locale } = useLanguage();
   const ui = LABELS[locale];
   const store = useActorProjects();
@@ -114,10 +119,28 @@ export function ActorProjects() {
   const [history, setHistory] = useState<ActorProjectRevision[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const selectedRef = useRef<string | null>(null);
+  const openedRoute = useRef("");
   selectedRef.current = selectedId;
   const selected = store.projects.find((project) => project.id === selectedId) ?? null;
+  const baseline = selected ? projectDraft(selected) : blankProjectDraft();
+  const dirty =
+    store.signedIn &&
+    (creating || !!selected) &&
+    JSON.stringify(draft) !== JSON.stringify(baseline);
+  const markSaved = useUnsavedWork(dirty);
+  function mayDiscard() {
+    return (
+      !dirty ||
+      window.confirm(
+        locale === "ar"
+          ? "عندك تعديلات غير محفوظة. لو خرجت هتضيع. تخرج من غير حفظ؟"
+          : "You have unsaved changes. Leaving will discard them. Leave without saving?",
+      )
+    );
+  }
 
   useEffect(() => {
+    openedRoute.current = "";
     setSelectedId(null);
     setCreating(false);
     setDraft(blankProjectDraft());
@@ -126,7 +149,22 @@ export function ActorProjects() {
     setMessage("");
   }, [store.userId]);
 
-  function openProject(project: ActorProject) {
+  useEffect(() => {
+    const key = `${store.userId ?? ""}:${projectId ?? ""}`;
+    if (!projectId || !store.loaded || openedRoute.current === key) return;
+    openedRoute.current = key;
+    const record = store.projects.find((item) => item.id === projectId);
+    if (record) {
+      setSelectedId(record.id);
+      setCreating(false);
+      setDraft(projectDraft(record));
+      setHistory(null);
+      setMessage("");
+    }
+  }, [projectId, store.userId, store.loaded, store.projects]);
+
+  function openProject(project: ActorProject, confirmedSave = false) {
+    if (!confirmedSave && !mayDiscard()) return;
     setSelectedId(project.id);
     setCreating(false);
     setDraft(projectDraft(project));
@@ -135,6 +173,7 @@ export function ActorProjects() {
     setMessage("");
   }
   function newProject() {
+    if (!mayDiscard()) return;
     setSelectedId(null);
     setCreating(true);
     setDraft(blankProjectDraft());
@@ -143,6 +182,7 @@ export function ActorProjects() {
     setMessage("");
   }
   function closeProject() {
+    if (!mayDiscard()) return;
     setSelectedId(null);
     setCreating(false);
     setHistory(null);
@@ -160,7 +200,8 @@ export function ActorProjects() {
     try {
       const result = creating ? await store.create(draft) : await store.update(selected!, draft);
       if (result.value) {
-        openProject(result.value);
+        markSaved();
+        openProject(result.value, true);
         setMessage(creating ? ui.created : ui.saved);
       } else {
         setMessage(result.error ?? "Project save was not confirmed.");
@@ -171,13 +212,14 @@ export function ActorProjects() {
   }
 
   async function changeStatus(next: ProjectStatus) {
-    if (!selected || busy) return;
+    if (!selected || busy || !mayDiscard()) return;
     setBusy(true);
     setMessage("");
     try {
       const result = await store.update(selected, projectDraft(selected), next);
       if (result.value) {
-        openProject(result.value);
+        markSaved();
+        openProject(result.value, true);
         setMessage(ui.changed);
       } else {
         setMessage(result.error ?? "Project update was not confirmed.");
@@ -353,6 +395,20 @@ export function ActorProjects() {
                   {selected && !creating && (
                     <div className="foundation-stack border-t border-amber/30 pt-3">
                       <nav aria-label={ui.title} className="flex flex-wrap gap-2">
+                        <Link
+                          to="/work/journal"
+                          search={{ projectId: selected.id }}
+                          className={btnSecondary}
+                        >
+                          {ui.journal}
+                        </Link>
+                        <Link
+                          to="/rehearsal"
+                          search={{ projectId: selected.id, returnTo: "project" }}
+                          className={btnSecondary}
+                        >
+                          {ui.rehearse}
+                        </Link>
                         <Link
                           to="/work/character"
                           search={{ projectId: selected.id }}

@@ -8,9 +8,16 @@ import { AuditionWorkspace } from "./AuditionWorkspace";
 import { AuditionFiles } from "./AuditionFiles";
 import { ActorProjects } from "./ActorProjects";
 import { SUPPORT_PAGES } from "@/lib/foundation";
+import { ContextualRehearsal } from "./ContextualRehearsal";
+import { validateRehearsalSearch, type RehearsalSearch } from "@/lib/actor-rehearsal-model";
 type TabProps = { tab: string; onTabChange: (tab: string) => void };
 
-export function WorkHub({ tab, onTabChange }: TabProps) {
+export function WorkHub({
+  tab,
+  onTabChange,
+  projectId,
+  auditionId,
+}: TabProps & { projectId?: string | undefined; auditionId?: string | undefined }) {
   const prep = useAuditionPrep();
   return (
     <Page title="Actor at Work" eyebrow="DO THE WORK" backTo="/" world="work">
@@ -42,10 +49,10 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
           <Link to="/work/sides" className="underline">
             <T>Open script sides and line-anchored beats</T>
           </Link>
-          <AuditionFiles />
+          <AuditionFiles auditionId={auditionId} />
         </section>
       ) : tab === "projects" ? (
-        <ActorProjects />
+        <ActorProjects projectId={projectId} />
       ) : tab === "characters" ? (
         <section className="foundation-stack">
           <h2>
@@ -74,10 +81,10 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
           <T>Tools in development</T>
         </summary>
         <p>
-          <T>Recording and project journals remain in development.</T>
+          <T>Recording, playback and export are not implemented.</T>
         </p>
         <ul>
-          {(["selfTape", "journal"] as const).map((id) => {
+          {(["selfTape"] as const).map((id) => {
             const tool = SUPPORT_PAGES[id];
             return (
               <li key={id}>
@@ -105,8 +112,8 @@ export function AuditionFile({ tab, onTabChange }: TabProps) {
               </h2>
               <p>
                 <T>
-                  Import or paste a plain-text side and attach it to a separate audition or project.
-                  Existing single-record audition notes are not modified.
+                  Import TXT, PDF or DOCX sides, or paste text, and attach them to an audition or
+                  project. Existing single-record audition notes are not modified.
                 </T>
               </p>
               <Link to="/work/sides" className={btnPrimary}>
@@ -167,84 +174,100 @@ export function AuditionFile({ tab, onTabChange }: TabProps) {
     </Page>
   );
 }
-export function RehearsalHub({ tab, onTabChange }: TabProps) {
+export function RehearsalHub({
+  tab,
+  onTabChange,
+  search = validateRehearsalSearch({}),
+  onContextChange = () => undefined,
+}: TabProps & {
+  search?: RehearsalSearch;
+  onContextChange?: (next: Partial<RehearsalSearch>) => void;
+}) {
   const passport = usePassport();
+  const contextual = !!(
+    search.projectId ||
+    search.auditionId ||
+    search.sideId ||
+    search.sceneId ||
+    search.sessionId
+  );
   return (
-    <Page title="Rehearsal Studio" eyebrow="MAKE THE WORK ACTIVE" backTo="/" world="rehearsal">
-      <SectionTabs page="rehearsal" value={tab} onChange={onTabChange}>
-        {(current) =>
-          current === "my-scenes" ? (
-            <section className="foundation-stack">
-              <span className="office-kicker">
-                <T>ORIGINAL SCRIPTED DEMONSTRATION</T>
-              </span>
-              <h2>
-                <T>“Stay”</T>
-              </h2>
-              <p>
-                <T>
-                  Explore, perform, intervene, practice, retake and reflect. The partner responses
-                  are fixed; no recording, analysis or grading takes place.
-                </T>
-              </p>
-              <Link to="/scene" className={btnPrimary}>
-                <T>Start rehearsal</T>
-              </Link>
-              <p>
-                <T>
-                  Rehearsal drafts and personal scene libraries are in development. Completed
-                  reflections remain in Passport.
-                </T>
-              </p>
-            </section>
-          ) : current === "new-scene" ? (
-            <section className="foundation-stack">
-              <Unavailable>
-                <T>
-                  Importing and saving your own scripts is in development. The working demonstration
-                  is available now.
-                </T>
-              </Unavailable>
-              <Link to="/scene" className={btnPrimary}>
-                <T>Try the demonstration</T>
-              </Link>
-            </section>
-          ) : (
-            <section className="foundation-stack">
-              <h2>
-                <T>Saved rehearsal records</T>
-              </h2>
-              {!passport.loaded ? (
-                <p role="status">
-                  <T>Loading records…</T>
-                </p>
-              ) : passport.error ? (
-                <p role="alert">
-                  <T>Saved records could not be loaded.</T>
-                </p>
-              ) : (
+    <Page
+      title="Rehearsal Studio"
+      eyebrow="MAKE THE WORK ACTIVE"
+      backTo="/"
+      world="rehearsal"
+      performing={!!search.sessionId}
+    >
+      {contextual ? (
+        <ContextualRehearsal search={search} onNavigate={onContextChange} />
+      ) : (
+        <SectionTabs page="rehearsal" value={tab} onChange={onTabChange}>
+          {(current) =>
+            current === "my-scenes" ? (
+              <section className="foundation-stack">
+                <ContextualRehearsal search={search} onNavigate={onContextChange} />
+                <span className="office-kicker">
+                  <T>ORIGINAL SCRIPTED DEMONSTRATION</T>
+                </span>
+                <h2>
+                  <T>“Stay”</T>
+                </h2>
                 <p>
-                  {passport.entries.length} completed rehearsal{" "}
-                  {passport.entries.length === 1 ? "record" : "records"} saved{" "}
-                  {passport.signedIn ? "to your account" : "in this browser"}.
+                  <T>
+                    Explore, perform, intervene, practice, retake and reflect. The partner responses
+                    are fixed; no recording, analysis or grading takes place.
+                  </T>
                 </p>
-              )}
-              <Link to="/passport" className={btnPrimary}>
-                <T>Open rehearsal history</T>
-              </Link>
-              <p>
-                <T>These are completed reflection records, not resumable or live sessions.</T>
-              </p>
-              <Link to="/lab">
-                <T>Performance Lab</T>
-              </Link>
-              <Link to="/lounge">
-                <T>Rehearsal Lounge</T>
-              </Link>
-            </section>
-          )
-        }
-      </SectionTabs>
+                <Link to="/scene" className={btnPrimary}>
+                  <T>Start rehearsal</T>
+                </Link>
+              </section>
+            ) : current === "new-scene" ? (
+              <section className="foundation-stack">
+                <ContextualRehearsal search={search} onNavigate={onContextChange} />
+                <Link to="/scene" className={btnPrimary}>
+                  <T>Try the demonstration</T>
+                </Link>
+              </section>
+            ) : (
+              <section className="foundation-stack">
+                <ContextualRehearsal search={search} onNavigate={onContextChange} />
+                <h2>
+                  <T>Saved rehearsal records</T>
+                </h2>
+                {!passport.loaded ? (
+                  <p role="status">
+                    <T>Loading records…</T>
+                  </p>
+                ) : passport.error ? (
+                  <p role="alert">
+                    <T>Saved records could not be loaded.</T>
+                  </p>
+                ) : (
+                  <p>
+                    {passport.entries.length} completed rehearsal{" "}
+                    {passport.entries.length === 1 ? "record" : "records"} saved{" "}
+                    {passport.signedIn ? "to your account" : "in this browser"}.
+                  </p>
+                )}
+                <Link to="/passport" className={btnPrimary}>
+                  <T>Open rehearsal history</T>
+                </Link>
+                <p>
+                  <T>These are completed reflection records, not resumable or live sessions.</T>
+                </p>
+                <Link to="/lab">
+                  <T>Performance Lab</T>
+                </Link>
+                <Link to="/lounge">
+                  <T>Rehearsal Lounge</T>
+                </Link>
+              </section>
+            )
+          }
+        </SectionTabs>
+      )}
     </Page>
   );
 }

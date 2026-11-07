@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { webcrypto } from "node:crypto";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ActorSidesPage } from "@/components/foundation/ActorSidesPage";
@@ -44,6 +45,7 @@ beforeEach(() => {
   vi.resetAllMocks();
   vi.stubGlobal("crypto", {
     randomUUID: () => "a823216a-e0af-42b9-9028-c67b94ebf940",
+    subtle: webcrypto.subtle,
   });
   mocks.sides = {
     userId: "actor-A",
@@ -127,6 +129,8 @@ describe("Script sides UI", () => {
       target: { value: "project:" + owner },
     });
     expect(mocks.create).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Save side" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("checkbox", { name: /I reviewed this text preview/ }));
     fireEvent.click(screen.getByRole("button", { name: "Save side" }));
     await waitFor(() => expect(mocks.create).toHaveBeenCalledOnce());
     expect(mocks.create).toHaveBeenCalledWith(
@@ -136,18 +140,93 @@ describe("Script sides UI", () => {
       }),
       [owner],
       [],
+      {
+        source: expect.objectContaining({
+          file,
+          kind: "txt",
+          sha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+        }),
+      },
     );
   });
-  it("rejects a .pdf file rather than claiming it has extracted its content", () => {
+  it("rejects a malformed PDF while retaining the draft without uploading", async () => {
     render(<ActorSidesPage />);
     fireEvent.click(screen.getByRole("button", { name: "New side" }));
     const file = new File(["PDF data"], "sides.pdf", { type: "application/pdf" });
     fireEvent.change(screen.getByLabelText(/Or load a UTF-8/), {
       target: { files: [file] },
     });
-    expect(screen.getByText(/Only \.txt files/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(/valid PDF header/)).toBeInTheDocument());
     expect(screen.getByLabelText("Paste original side text")).toHaveValue("");
     expect(mocks.create).not.toHaveBeenCalled();
+  });
+  it("selects a valid excerpt from a larger source while retaining the full original", async () => {
+    render(<ActorSidesPage />);
+    fireEvent.click(screen.getByRole("button", { name: "New side" }));
+    const text = Array.from({ length: 500 }, (_, index) => `${index + 1}: ${"a".repeat(95)}`).join(
+      "\n",
+    );
+    const file = new File([text], "whole-script.txt");
+    fireEvent.change(screen.getByLabelText(/Or load a UTF-8/), { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByLabelText("First source line")).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText("Attach to one of your projects or auditions"), {
+      target: { value: "project:" + owner },
+    });
+    expect(screen.getByRole("button", { name: "Save side" })).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("First source line"), { target: { value: "10" } });
+    fireEvent.change(screen.getByLabelText("Last source line"), { target: { value: "12" } });
+    fireEvent.click(screen.getByRole("button", { name: "Use these source lines" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /I reviewed this text preview/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Save side" }));
+    await waitFor(() => expect(mocks.create).toHaveBeenCalledOnce());
+    expect(mocks.create).toHaveBeenCalledWith(
+      expect.objectContaining({ content: text.split("\n").slice(9, 12).join("\n") }),
+      [owner],
+      [],
+      { source: expect.objectContaining({ file, content: text }) },
+    );
+  });
+
+  it("creates a new source version on the same parent only after explicit review", async () => {
+    const existing = {
+      ...saved,
+      annotations: [
+        {
+          id: "a823216a-e0af-42b9-9028-c67b94ebf940",
+          fromLine: 1,
+          toLine: 1,
+          beat: "Old beat",
+          objective: "",
+          tactic: "",
+        },
+      ],
+      sourceVersion: 1,
+      sourceGroupId: saved.id,
+    };
+    mocks.sides = { ...mocks.sides, sides: [existing] };
+    render(<ActorSidesPage />);
+    fireEvent.click(screen.getByRole("button", { name: /The Balcony/ }));
+    fireEvent.click(screen.getByRole("button", { name: "New source version" }));
+    expect(screen.getByLabelText("Attach to one of your projects or auditions")).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("Paste original side text"), {
+      target: { value: "A revised script\nNew second line" },
+    });
+    expect(screen.getByRole("button", { name: "Save side" })).toBeDisabled();
+    expect(screen.getByText(/no beat notes/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("checkbox", { name: /I reviewed this text preview/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Save side" }));
+    await waitFor(() => expect(mocks.create).toHaveBeenCalledOnce());
+    expect(mocks.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: "A revised script\nNew second line",
+        target: existing.target,
+      }),
+      [owner],
+      [],
+      { previous: existing },
+    );
+    expect(existing.content).toBe(saved.content);
+    expect(existing.annotations).toHaveLength(1);
   });
 
   it("displays script evidence separately from interpretation and saves line-anchored beat", async () => {
