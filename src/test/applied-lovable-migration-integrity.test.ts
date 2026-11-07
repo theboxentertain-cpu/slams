@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 // Recorded from the actual Lovable Cloud SLAMS Drizzle ledger on 2026-11-07.
@@ -23,9 +24,7 @@ describe("SLAMS deployed migration file integrity", () => {
   it.each(appliedMigrations)(
     "keeps the applied $tag SQL unchanged from its live ledger hash",
     ({ tag, hash }) => {
-      const sql = readFileSync(
-        new URL(`../../drizzle/migrations/${tag}.sql`, import.meta.url),
-      );
+      const sql = readFileSync(resolve(process.cwd(), "drizzle", "migrations", `${tag}.sql`));
       expect(createHash("sha256").update(sql).digest("hex")).toBe(hash);
     },
   );
