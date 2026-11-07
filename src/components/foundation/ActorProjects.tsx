@@ -253,17 +253,29 @@ export function ActorProjects() {
                         disabled={busy}
                         onClick={() => openProject(project)}
                       >
-                        <span className="min-w-0 break-words">{project.title} · {project.roleName || "—"}</span>
-                        <span className="shrink-0 text-xs">{ui.revision} {project.revision}</span>
+                        <span className="min-w-0 break-words">
+                          {project.title} · {project.roleName || "—"}
+                        </span>
+                        <span className="shrink-0 text-xs">
+                          {ui.revision} {project.revision}
+                        </span>
                       </button>
                     </li>
                   ))}
                 </ul>
               </div>
               {editing && (
-                <section className="panel p-4 foundation-stack" aria-label={creating ? ui.new : ui.title}>
+                <section
+                  className="panel p-4 foundation-stack"
+                  aria-label={creating ? ui.new : ui.title}
+                >
                   <div className="flex flex-wrap justify-end">
-                    <button type="button" className={btnSecondary} disabled={busy} onClick={closeProject}>
+                    <button
+                      type="button"
+                      className={btnSecondary}
+                      disabled={busy}
+                      onClick={closeProject}
+                    >
                       {ui.close}
                     </button>
                   </div>
@@ -299,29 +311,35 @@ export function ActorProjects() {
                       <details key={group} className="planned-tools">
                         <summary>{group === "Character" ? ui.character : ui.breakdown}</summary>
                         <div className="grid gap-3">
-                          {PROJECT_NOTE_FIELDS.filter((field) => field.group === group).map((field) => (
-                            <label className="grid gap-1 text-sm" key={field.key}>
-                              {locale === "ar" ? field.ar : field.label}
-                              <textarea
-                                className="w-full rounded border border-input bg-background p-3"
-                                rows={3}
-                                maxLength={900}
-                                disabled={busy}
-                                value={draft.notes[field.key]}
-                                onChange={(event) => {
-                                  setDraft({
-                                    ...draft,
-                                    notes: { ...draft.notes, [field.key]: event.target.value },
-                                  });
-                                  setMessage("");
-                                }}
-                              />
-                            </label>
-                          ))}
+                          {PROJECT_NOTE_FIELDS.filter((field) => field.group === group).map(
+                            (field) => (
+                              <label className="grid gap-1 text-sm" key={field.key}>
+                                {locale === "ar" ? field.ar : field.label}
+                                <textarea
+                                  className="w-full rounded border border-input bg-background p-3"
+                                  rows={3}
+                                  maxLength={900}
+                                  disabled={busy}
+                                  value={draft.notes[field.key]}
+                                  onChange={(event) => {
+                                    setDraft({
+                                      ...draft,
+                                      notes: { ...draft.notes, [field.key]: event.target.value },
+                                    });
+                                    setMessage("");
+                                  }}
+                                />
+                              </label>
+                            ),
+                          )}
                         </div>
                       </details>
                     ))}
-                    {invalid && <p className="text-sm text-amber" role="status">{invalid}</p>}
+                    {invalid && (
+                      <p className="text-sm text-amber" role="status">
+                        {invalid}
+                      </p>
+                    )}
                     <button type="submit" className={btnPrimary} disabled={busy || !!invalid}>
                       {busy ? ui.saving : creating ? ui.create : ui.save}
                     </button>
@@ -329,14 +347,21 @@ export function ActorProjects() {
                   {selected && !creating && (
                     <div className="foundation-stack border-t border-amber/30 pt-3">
                       <div className="flex flex-wrap gap-2">
-                        <button type="button" className={btnSecondary} disabled={busy} onClick={() => void showHistory()}>
+                        <button
+                          type="button"
+                          className={btnSecondary}
+                          disabled={busy}
+                          onClick={() => void showHistory()}
+                        >
                           {ui.history}
                         </button>
                         <button
                           type="button"
                           className={btnSecondary}
                           disabled={busy}
-                          onClick={() => void changeStatus(selected.status === "active" ? "archived" : "active")}
+                          onClick={() =>
+                            void changeStatus(selected.status === "active" ? "archived" : "active")
+                          }
                         >
                           {selected.status === "active" ? ui.archive : ui.restore}
                         </button>
@@ -348,11 +373,18 @@ export function ActorProjects() {
                           {history.map((revision) => (
                             <details className="planned-tools" key={revision.revision}>
                               <summary>
-                                {ui.revision} {revision.revision} · {new Date(revision.createdAt).toLocaleString(locale === "ar" ? "ar-EG" : "en-GB")}
+                                {ui.revision} {revision.revision} ·{" "}
+                                {new Date(revision.createdAt).toLocaleString(
+                                  locale === "ar" ? "ar-EG" : "en-GB",
+                                )}
                               </summary>
-                              <p className="break-words">{revision.title} — {revision.roleName}</p>
+                              <p className="break-words">
+                                {revision.title} — {revision.roleName}
+                              </p>
                               <dl className="saved-choices">
-                                {PROJECT_NOTE_FIELDS.filter((field) => revision.notes[field.key]).map((field) => (
+                                {PROJECT_NOTE_FIELDS.filter(
+                                  (field) => revision.notes[field.key],
+                                ).map((field) => (
                                   <div key={field.key}>
                                     <dt>{locale === "ar" ? field.ar : field.label}</dt>
                                     <dd>{revision.notes[field.key]}</dd>
@@ -363,7 +395,11 @@ export function ActorProjects() {
                                 type="button"
                                 className={btnSecondary}
                                 onClick={() => {
-                                  setDraft({ title: revision.title, roleName: revision.roleName, notes: { ...revision.notes } });
+                                  setDraft({
+                                    title: revision.title,
+                                    roleName: revision.roleName,
+                                    notes: { ...revision.notes },
+                                  });
                                   setMessage(ui.copyLoaded);
                                 }}
                               >
@@ -380,7 +416,11 @@ export function ActorProjects() {
               )}
             </>
           )}
-          {message && <p role="status" className="text-sm text-amber">{message}</p>}
+          {message && (
+            <p role="status" className="text-sm text-amber">
+              {message}
+            </p>
+          )}
           <Link className="underline" to="/work/audition" search={{ tab: "preparation" }}>
             {ui.legacy}
           </Link>
