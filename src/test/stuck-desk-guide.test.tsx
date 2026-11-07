@@ -9,9 +9,28 @@ import { StuckDeskGuide } from "@/components/foundation/StuckDeskGuide";
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
-vi.mock("@/components/slams", () => ({ btnSecondary: "secondary" }));
+const passportMock = vi.hoisted(() => ({
+  user: null as { id: string } | null,
+  add: vi.fn(),
+  error: null as string | null,
+}));
+vi.mock("@/lib/session", () => ({
+  useSession: () => ({ user: passportMock.user, loading: false }),
+}));
+vi.mock("@/lib/store", () => ({
+  usePassport: () => ({
+    add: passportMock.add,
+    error: passportMock.error,
+    loaded: true,
+    signedIn: Boolean(passportMock.user),
+  }),
+}));
+vi.mock("@/components/slams", () => ({ btnPrimary: "primary", btnSecondary: "secondary" }));
 
 beforeEach(() => {
+  passportMock.user = null;
+  passportMock.error = null;
+  passportMock.add.mockReset().mockResolvedValue({});
   localStorage.removeItem("slams.language.v1");
   Object.defineProperty(navigator, "clipboard", {
     configurable: true,
@@ -111,6 +130,58 @@ describe("Stuck Desk self-guided practice", () => {
     const note = vi.mocked(navigator.clipboard.writeText).mock.calls[0]?.[0];
     expect(note).toContain("قبل التجربة");
     expect(note).toContain("حركت إيدي براحة");
+  });
+  it("saves to Passport only by explicit action and preserves the original observations", async () => {
+    vi.stubGlobal("crypto", { randomUUID: () => "11111111-1111-4111-8111-111111111111" });
+    render(<StuckDeskGuide />);
+    fireEvent.click(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[0]!.q }));
+    fireEvent.change(screen.getByLabelText("Before: what did you actually do?"), {
+      target: { value: "I planned my answer" },
+    });
+    fireEvent.change(screen.getByLabelText("After the experiment: what did you do differently?"), {
+      target: { value: "I listened for the actual pause" },
+    });
+    expect(passportMock.add).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Save these notes to Actor's Passport" }));
+    await waitFor(() => expect(passportMock.add).toHaveBeenCalledOnce());
+    expect(passportMock.add).toHaveBeenCalledWith(expect.objectContaining({
+      id: "11111111-1111-4111-8111-111111111111",
+      exerciseNote: "I planned my answer",
+      retakeLine: "I listened for the actual pause",
+      obstacle: DRAFT_INTERVENTIONS[0]!.q,
+    }));
+    expect(screen.getByRole("button", { name: "Saved to Actor's Passport" })).toBeDisabled();
+    expect(screen.getByRole("status")).toHaveTextContent("saved to Passport by your explicit request");
+    vi.unstubAllGlobals();
+  });
+
+  it("keeps retry and copy available after an unconfirmed account save", async () => {
+    passportMock.add.mockResolvedValue({ error: "Write rejected" });
+    render(<StuckDeskGuide />);
+    fireEvent.click(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[1]!.q }));
+    fireEvent.change(screen.getByLabelText("Before: what did you actually do?"), {
+      target: { value: "Tried to look angry" },
+    });
+    fireEvent.change(screen.getByLabelText("After the experiment: what did you do differently?"), {
+      target: { value: "Asked a specific question" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save these notes to Actor's Passport" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Save not confirmed");
+    expect(screen.getByRole("button", { name: "Save these notes to Actor's Passport" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Copy my practice note" })).toBeEnabled();
+  });
+
+  it("resets unsaved notes on actor account switches", () => {
+    passportMock.user = { id: "actor-a" };
+    const view = render(<StuckDeskGuide />);
+    fireEvent.click(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[0]!.q }));
+    fireEvent.change(screen.getByLabelText("Before: what did you actually do?"), {
+      target: { value: "Account A private work" },
+    });
+    passportMock.user = { id: "actor-b" };
+    view.rerender(<StuckDeskGuide />);
+    expect(screen.queryByText("Account A private work")).toBeNull();
+    expect(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[0]!.q })).toHaveAttribute("aria-expanded", "false");
   });
 });
 
