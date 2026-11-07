@@ -203,7 +203,7 @@ export function ActorSidesPage() {
   }
   useEffect(() => {
     if (selected) setAnnotationDraft(selected.annotations.map((note) => ({ ...note })));
-  }, [selected?.id, selected?.revision]);
+  }, [selected]);
 
   async function readTextFile(event: ChangeEvent<HTMLInputElement>) {
     const input = event.currentTarget;
