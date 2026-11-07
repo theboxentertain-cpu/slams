@@ -293,7 +293,10 @@ describe("Performance Lab: consent and local-only evidence", () => {
     render(<PerformanceLab />);
     await recordA();
     const player = screen.getByLabelText("Playback take A") as HTMLMediaElement;
-    player.currentTime = Number.NaN;
+    Object.defineProperty(player, "currentTime", {
+      configurable: true,
+      get: () => Number.NaN,
+    });
     fireEvent.change(screen.getByLabelText("What did you observe at this moment?"), {
       target: { value: "I observed a clear choice in this line." },
     });
