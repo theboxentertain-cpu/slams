@@ -25,7 +25,9 @@ export interface SideDraft {
 export const blankSideDraft = (): SideDraft => ({ title: "", content: "", target: null });
 export const sideLines = (content: string) => content.split(/\r\n|\r|\n/);
 export function anchoredExcerpt(content: string, fromLine: number, toLine: number): string {
-  return sideLines(content).slice(fromLine - 1, toLine).join("\n");
+  return sideLines(content)
+    .slice(fromLine - 1, toLine)
+    .join("\n");
 }
 const byteLength = (content: string) => new Blob([content]).size;
 
@@ -59,11 +61,20 @@ export function validateSideAnnotations(value: SideAnnotation[], content: string
     if (!UUID.test(note.id) || unique.has(note.id))
       return "Every beat must have a unique valid identifier.";
     unique.add(note.id);
-    if (!Number.isInteger(note.fromLine) || !Number.isInteger(note.toLine) ||
-        note.fromLine < 1 || note.toLine < note.fromLine || note.toLine > lines)
+    if (
+      !Number.isInteger(note.fromLine) ||
+      !Number.isInteger(note.toLine) ||
+      note.fromLine < 1 ||
+      note.toLine < note.fromLine ||
+      note.toLine > lines
+    )
       return "Line range must exist in the original script.";
-    if (!note.beat.trim() || note.beat.length > 300 ||
-        note.objective.length > 500 || note.tactic.length > 500)
+    if (
+      !note.beat.trim() ||
+      note.beat.length > 300 ||
+      note.objective.length > 500 ||
+      note.tactic.length > 500
+    )
       return "Write a beat label (max 300 characters); notes are limited to 500 characters.";
   }
   if (byteLength(JSON.stringify(value)) > 16000)
@@ -77,12 +88,14 @@ export function parseSideAnnotations(value: unknown, content: string): SideAnnot
   for (const candidate of value) {
     if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) continue;
     const item = candidate as Record<string, unknown>;
-    if (typeof item["id"] !== "string" ||
+    if (
+      typeof item["id"] !== "string" ||
       typeof item["fromLine"] !== "number" ||
       typeof item["toLine"] !== "number" ||
       typeof item["beat"] !== "string" ||
       typeof item["objective"] !== "string" ||
-      typeof item["tactic"] !== "string")
+      typeof item["tactic"] !== "string"
+    )
       continue;
     const note: SideAnnotation = {
       id: item["id"],
