@@ -47,7 +47,8 @@ real authenticated A/B cross-owner testing, and explicit production release appr
 - Initial staging baseline: PostgreSQL 17.11, zero app tables, auth users,
   storage buckets and storage objects.
 - Applied reviewed SQL `0000`, `0001`, `0002`, `0004`, `0005`,
-  `0006`, `0007` in that order under **Supabase's staging migration ledger**.
+  `0006`, `0007`, and subsequently `0008` role-grants hardening under
+  **Supabase's staging migration ledger**.
   Academic `0003` remains deferred and was **not** applied.
 - Verified after initial actor migrations: 17 public app tables, all with RLS,
   expected actor tables and triggers present, 8 schools, 36 terms,
@@ -64,7 +65,11 @@ real authenticated A/B cross-owner testing, and explicit production release appr
   the excess grants on all 17 existing app tables, regrants only intended
   operations and revokes direct trigger-function execution. It also tightens
   new-object default privileges for the postgres role. **Apply and verify
-  this correction in staging and re-run security advisors before any release.**
+  this correction in staging and re-run security advisors before any release.
+  **Staging 0008 applied successfully (2026-11-07).** Post-apply verified:
+  zero client-role TRUNCATE/TRIGGER on all 17 app tables, no client DELETE
+  on any Actor at Work table, only SELECT on project revisions, internal
+  trigger EXECUTE revoked, and **zero Supabase security advisor findings**.**
   Other Supabase-managed default grants (supabase_admin) are not modified.
 - The staging migration ledger is `supabase_migrations.schema_migrations`,
   **not** the original production Drizzle ledger. Do not fabricate Drizzle
