@@ -144,14 +144,18 @@ describe("Stuck Desk self-guided practice", () => {
     expect(passportMock.add).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Save these notes to Actor's Passport" }));
     await waitFor(() => expect(passportMock.add).toHaveBeenCalledOnce());
-    expect(passportMock.add).toHaveBeenCalledWith(expect.objectContaining({
-      id: "11111111-1111-4111-8111-111111111111",
-      exerciseNote: "I planned my answer",
-      retakeLine: "I listened for the actual pause",
-      obstacle: DRAFT_INTERVENTIONS[0]!.q,
-    }));
+    expect(passportMock.add).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "11111111-1111-4111-8111-111111111111",
+        exerciseNote: "I planned my answer",
+        retakeLine: "I listened for the actual pause",
+        obstacle: DRAFT_INTERVENTIONS[0]!.q,
+      }),
+    );
     expect(screen.getByRole("button", { name: "Saved to Actor's Passport" })).toBeDisabled();
-    expect(screen.getByRole("status")).toHaveTextContent("saved to Passport by your explicit request");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "saved to Passport by your explicit request",
+    );
     vi.unstubAllGlobals();
   });
 
@@ -167,7 +171,9 @@ describe("Stuck Desk self-guided practice", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Save these notes to Actor's Passport" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Save not confirmed");
-    expect(screen.getByRole("button", { name: "Save these notes to Actor's Passport" })).toBeEnabled();
+    expect(
+      screen.getByRole("button", { name: "Save these notes to Actor's Passport" }),
+    ).toBeEnabled();
     expect(screen.getByRole("button", { name: "Copy my practice note" })).toBeEnabled();
   });
 
@@ -181,7 +187,10 @@ describe("Stuck Desk self-guided practice", () => {
     passportMock.user = { id: "actor-b" };
     view.rerender(<StuckDeskGuide />);
     expect(screen.queryByText("Account A private work")).toBeNull();
-    expect(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[0]!.q })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("button", { name: DRAFT_INTERVENTIONS[0]!.q })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
   });
 });
 

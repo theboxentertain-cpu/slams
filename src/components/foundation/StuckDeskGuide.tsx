@@ -29,7 +29,8 @@ const COPY = {
     copy: "Copy my practice note",
     copied: "Copied. Nothing was saved to SLAMS.",
     failed: "Clipboard unavailable. Your notes are still visible here to select and copy manually.",
-    saved: "Private rehearsal notes saved to Passport by your explicit request. No video or performance assessment was saved.",
+    saved:
+      "Private rehearsal notes saved to Passport by your explicit request. No video or performance assessment was saved.",
     temporary:
       "Session only unless you explicitly save to Passport. No performance is recorded or graded. Switching problems clears unsaved notes.",
     scene: "Practice in the scripted demonstration",
@@ -70,7 +71,8 @@ const COPY = {
 export function StuckDeskGuide() {
   const { user, loading } = useSession();
   const { locale } = useLanguage();
-  if (loading) return <p role="status">{locale === "ar" ? "جارٍ تحميل الجلسة…" : "Loading actor session…"}</p>;
+  if (loading)
+    return <p role="status">{locale === "ar" ? "جارٍ تحميل الجلسة…" : "Loading actor session…"}</p>;
   return <StuckDeskGuideSession key={user?.id ?? "guest"} />;
 }
 
