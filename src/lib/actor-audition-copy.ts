@@ -22,7 +22,8 @@ export function auditionCopyCandidates(source: LegacyAuditionPrep, target: Proje
   return LEGACY_AUDITION_COPY_KEYS.map((key) => {
     const value = typeof source[key] === "string" ? source[key] : "";
     const occupied = target.notes[key].trim().length > 0;
-    return { key, value, occupied, eligible: !!value.trim() && !occupied };
+    const tooLong = value.length > 900;
+    return { key, value, occupied, tooLong, eligible: !!value.trim() && !occupied && !tooLong };
   });
 }
 
