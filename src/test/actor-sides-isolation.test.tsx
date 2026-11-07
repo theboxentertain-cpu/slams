@@ -19,9 +19,14 @@ vi.mock("@/integrations/supabase/client", () => ({
   supabase: { from: (name: string) => mocks.from(name) },
 }));
 const row = (id: string, userId: string, revision = 1) => ({
-  id, user_id: userId, project_id: owner, audition_id: null,
-  title: "Side " + id, content: "SCENE ONE\nمريم: قول الحقيقة\nI need the truth",
-  annotations: [], revision,
+  id,
+  user_id: userId,
+  project_id: owner,
+  audition_id: null,
+  title: "Side " + id,
+  content: "SCENE ONE\nمريم: قول الحقيقة\nI need the truth",
+  annotations: [],
+  revision,
   created_at: "2026-11-07T00:00:00Z",
   updated_at: "2026-11-07T00:00:00Z",
 });
@@ -92,14 +97,20 @@ describe("Private source-side storage", () => {
     const hook = await mount();
     await act(async () => {
       const result = await hook.result.current.create(
-        { title: "Audition scene", content: row("a2", "actor-A").content,
-          target: { kind: "project", id: owner } },
-        [owner], [],
+        {
+          title: "Audition scene",
+          content: row("a2", "actor-A").content,
+          target: { kind: "project", id: owner },
+        },
+        [owner],
+        [],
       );
       expect(result).toMatchObject({ value: { revision: 1, id: "a2" } });
     });
     expect(mocks.insert).toHaveBeenCalledWith({
-      user_id: "actor-A", project_id: owner, audition_id: null,
+      user_id: "actor-A",
+      project_id: owner,
+      audition_id: null,
       title: "Audition scene",
       content: "SCENE ONE\nمريم: قول الحقيقة\nI need the truth",
       annotations: [],
@@ -110,20 +121,26 @@ describe("Private source-side storage", () => {
   it("refuses spoofed parent IDs before sending a database request", async () => {
     const hook = await mount();
     await act(async () => {
-      expect(await hook.result.current.create(
-        { title: "Other script", content: "Line",
-          target: { kind: "project", id: "a823216a-e0af-42b9-9028-c67b94ebf940" } },
-        [owner], [],
-      )).toMatchObject({ error: expect.stringContaining("unavailable") });
+      expect(
+        await hook.result.current.create(
+          {
+            title: "Other script",
+            content: "Line",
+            target: { kind: "project", id: "a823216a-e0af-42b9-9028-c67b94ebf940" },
+          },
+          [owner],
+          [],
+        ),
+      ).toMatchObject({ error: expect.stringContaining("unavailable") });
     });
     expect(mocks.insert).not.toHaveBeenCalled();
   });
   it("saves anchors but never submits a rewritten source text or parent ID", async () => {
     const hook = await mount();
     await act(async () => {
-      expect(await hook.result.current.annotate(
-        hook.result.current.sides[0]!, [annotation],
-      )).toMatchObject({ value: { revision: 2 } });
+      expect(
+        await hook.result.current.annotate(hook.result.current.sides[0]!, [annotation]),
+      ).toMatchObject({ value: { revision: 2 } });
     });
     expect(mocks.update).toHaveBeenCalledWith({ annotations: [annotation] });
     expect(mocks.predicate).toHaveBeenCalledWith("id", "a1");
@@ -134,22 +151,28 @@ describe("Private source-side storage", () => {
     const hook = await mount();
     mocks.updated.mockResolvedValue({ data: null, error: { message: "stale" } });
     await act(async () => {
-      expect(await hook.result.current.annotate(
-        hook.result.current.sides[0]!, [annotation],
-      )).toMatchObject({ error: expect.stringContaining("changed elsewhere") });
+      expect(
+        await hook.result.current.annotate(hook.result.current.sides[0]!, [annotation]),
+      ).toMatchObject({ error: expect.stringContaining("changed elsewhere") });
     });
     expect(hook.result.current.sides[0]?.revision).toBe(1);
   });
   it("discards account A's delayed list response after changing to account B", async () => {
     let resolveA!: (data: unknown) => void;
     mocks.list
-      .mockReturnValueOnce(new Promise((resolve) => { resolveA = resolve; }))
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveA = resolve;
+        }),
+      )
       .mockResolvedValueOnce({ data: [row("b1", "actor-B")], error: null });
     const hook = renderHook(() => useActorSides());
     mocks.session = { user: { id: "actor-B" }, loading: false };
     hook.rerender();
     await waitFor(() => expect(hook.result.current.sides[0]?.id).toBe("b1"));
-    await act(async () => { resolveA({ data: [row("a1", "actor-A")], error: null }); });
+    await act(async () => {
+      resolveA({ data: [row("a1", "actor-A")], error: null });
+    });
     expect(hook.result.current.sides.map((side) => side.id)).toEqual(["b1"]);
   });
   it("fails closed when deployed project doesn't yet have actor_sides", async () => {
