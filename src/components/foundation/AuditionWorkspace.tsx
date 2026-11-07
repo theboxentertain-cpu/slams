@@ -63,6 +63,16 @@ export function AuditionWorkspace({ prep }: { prep: ReturnType<typeof useAuditio
           <T>Work through your sides before the room. Saved to your account.</T>
         </p>
       )}
+      {signedIn && (
+        <div className="mb-4 text-sm">
+          <Link to="/work/character" className="underline underline-offset-4">
+            <T>Copy selected audition notes into a character project</T>
+          </Link>
+          <p className="mt-1 text-muted-foreground">
+            <T>Your audition notes remain a separate record. Copying requires your explicit choice and project save.</T>
+          </p>
+        </div>
+      )}
       {signedIn && localHasData && (
         <div className="mb-4 rounded border border-amber p-3 text-sm">
           <p>
