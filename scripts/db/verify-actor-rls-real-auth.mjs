@@ -53,14 +53,8 @@ if (!publishableKey.startsWith("sb_publishable_")) {
 }
 
 const fixture = {
-  actor_projects: [
-    process.env.SLAMS_TEST_A_PROJECT_ID,
-    process.env.SLAMS_TEST_B_PROJECT_ID,
-  ],
-  actor_auditions: [
-    process.env.SLAMS_TEST_A_AUDITION_ID,
-    process.env.SLAMS_TEST_B_AUDITION_ID,
-  ],
+  actor_projects: [process.env.SLAMS_TEST_A_PROJECT_ID, process.env.SLAMS_TEST_B_PROJECT_ID],
+  actor_auditions: [process.env.SLAMS_TEST_A_AUDITION_ID, process.env.SLAMS_TEST_B_AUDITION_ID],
   actor_sides: [process.env.SLAMS_TEST_A_SIDE_ID, process.env.SLAMS_TEST_B_SIDE_ID],
 };
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -116,10 +110,14 @@ try {
       await actorB.from(table).select("id,user_id").eq("id", ownB),
       `Actor B reads own ${table}`,
     );
-    assert(aOwn.length === 1 && aOwn[0].user_id === userA,
-      `Missing or incorrect Actor A staging fixture in ${table}`);
-    assert(bOwn.length === 1 && bOwn[0].user_id === userB,
-      `Missing or incorrect Actor B staging fixture in ${table}`);
+    assert(
+      aOwn.length === 1 && aOwn[0].user_id === userA,
+      `Missing or incorrect Actor A staging fixture in ${table}`,
+    );
+    assert(
+      bOwn.length === 1 && bOwn[0].user_id === userB,
+      `Missing or incorrect Actor B staging fixture in ${table}`,
+    );
 
     const aOther = checked(
       await actorA.from(table).select("id").eq("id", ownB),
@@ -129,8 +127,10 @@ try {
       await actorB.from(table).select("id").eq("id", ownA),
       `Actor B cross-read ${table}`,
     );
-    assert(aOther.length === 0 && bOther.length === 0,
-      `RLS BREACH: private ${table} record visible to another actor`);
+    assert(
+      aOther.length === 0 && bOther.length === 0,
+      `RLS BREACH: private ${table} record visible to another actor`,
+    );
 
     const anonymous = await anon.from(table).select("id").eq("id", ownA);
     assert(
@@ -142,29 +142,41 @@ try {
 
   const [aProject, bProject] = fixture.actor_projects;
   const aHistory = checked(
-    await actorA.from("actor_project_revisions").select("project_id,revision")
+    await actorA
+      .from("actor_project_revisions")
+      .select("project_id,revision")
       .eq("project_id", aProject),
     "Actor A own project history",
   );
   const bHistory = checked(
-    await actorB.from("actor_project_revisions").select("project_id,revision")
+    await actorB
+      .from("actor_project_revisions")
+      .select("project_id,revision")
       .eq("project_id", bProject),
     "Actor B own project history",
   );
-  assert(aHistory.length > 0 && bHistory.length > 0,
-    "Both disposable staging projects require an original revision fixture.");
+  assert(
+    aHistory.length > 0 && bHistory.length > 0,
+    "Both disposable staging projects require an original revision fixture.",
+  );
 
   const [aOtherHistory, bOtherHistory] = await Promise.all([
     actorA.from("actor_project_revisions").select("revision").eq("project_id", bProject),
     actorB.from("actor_project_revisions").select("revision").eq("project_id", aProject),
   ]);
-  assert(checked(aOtherHistory, "A read B revision").length === 0,
-    "RLS BREACH: A can see B revision history");
-  assert(checked(bOtherHistory, "B read A revision").length === 0,
-    "RLS BREACH: B can see A revision history");
+  assert(
+    checked(aOtherHistory, "A read B revision").length === 0,
+    "RLS BREACH: A can see B revision history",
+  );
+  assert(
+    checked(bOtherHistory, "B read A revision").length === 0,
+    "RLS BREACH: B can see A revision history",
+  );
 
-  const anonHistory = await anon.from("actor_project_revisions")
-    .select("revision").eq("project_id", aProject);
+  const anonHistory = await anon
+    .from("actor_project_revisions")
+    .select("revision")
+    .eq("project_id", aProject);
   assert(
     anonHistory.error?.code === "42501" ||
       (!anonHistory.error && (anonHistory.data ?? []).length === 0),
