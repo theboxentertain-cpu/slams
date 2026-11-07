@@ -77,20 +77,20 @@ export function parseSideAnnotations(value: unknown, content: string): SideAnnot
   for (const candidate of value) {
     if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) continue;
     const item = candidate as Record<string, unknown>;
-    if (typeof item.id !== "string" ||
-      typeof item.fromLine !== "number" ||
-      typeof item.toLine !== "number" ||
-      typeof item.beat !== "string" ||
-      typeof item.objective !== "string" ||
-      typeof item.tactic !== "string")
+    if (typeof item["id"] !== "string" ||
+      typeof item["fromLine"] !== "number" ||
+      typeof item["toLine"] !== "number" ||
+      typeof item["beat"] !== "string" ||
+      typeof item["objective"] !== "string" ||
+      typeof item["tactic"] !== "string")
       continue;
     const note: SideAnnotation = {
-      id: item.id,
-      fromLine: item.fromLine,
-      toLine: item.toLine,
-      beat: item.beat,
-      objective: item.objective,
-      tactic: item.tactic,
+      id: item["id"],
+      fromLine: item["fromLine"],
+      toLine: item["toLine"],
+      beat: item["beat"],
+      objective: item["objective"],
+      tactic: item["tactic"],
     };
     if (!validateSideAnnotations([note], content)) notes.push(note);
     if (notes.length === MAX_ANNOTATIONS) break;
