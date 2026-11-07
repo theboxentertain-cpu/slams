@@ -43,6 +43,7 @@ const COPY = {
     revision: "Revision",
     editLegacy: "Open original audition-preparation notes",
     legacy: "The original single audition-preparation record is not moved, overwritten or deleted.",
+    sides: "Open script sides for your auditions",
     unsaved: "Unsaved edits disappear when you switch records or leave this screen.",
     noProject: "Create a project in Actor at Work to associate it with an audition.",
   },
@@ -76,6 +77,7 @@ const COPY = {
     revision: "نسخة",
     editLegacy: "افتح ملاحظات الأوديشن الأصلية",
     legacy: "ملاحظات الأوديشن القديمة مش هتتنقل أو تتمسح أو تتغير.",
+    sides: "افتح نصوص الأوديشنات",
     unsaved: "التعديلات اللي متحفظتش بتضيع لو غيرت الملف أو خرجت من الصفحة.",
     noProject: "اعمل مشروع من قسم شغل الممثل علشان تربطه بالأوديشن.",
   },
@@ -314,6 +316,9 @@ export function AuditionFiles() {
           {message && <p role="status" className="text-sm text-amber">{message}</p>}
         </>
       )}
+      <Link to="/work/sides" className="underline">
+        {ui.sides}
+      </Link>
       <p className="text-sm text-muted-foreground">{ui.legacy}</p>
       <Link to="/work/audition" search={{ tab: "preparation" }} className="underline">
         {ui.editLegacy}
