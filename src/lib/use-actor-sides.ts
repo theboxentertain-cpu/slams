@@ -16,7 +16,8 @@ type Result<T> = { value: T; error?: never } | { value?: never; error: string };
 const columns =
   "id, user_id, project_id, audition_id, title, content, annotations, revision, created_at, updated_at";
 const accountChanged = "Your account changed; reload before continuing.";
-const unavailable = "Private script sides could not be loaded. The reviewed side database may not be installed.";
+const unavailable =
+  "Private script sides could not be loaded. The reviewed side database may not be installed.";
 export interface ActorSide {
   id: string;
   userId: string;
@@ -29,11 +30,12 @@ export interface ActorSide {
   updatedAt: string;
 }
 function parseSide(row: Row): ActorSide | null {
-  const target: SideTarget | null = row.project_id && !row.audition_id
-    ? { kind: "project", id: row.project_id }
-    : row.audition_id && !row.project_id
-      ? { kind: "audition", id: row.audition_id }
-      : null;
+  const target: SideTarget | null =
+    row.project_id && !row.audition_id
+      ? { kind: "project", id: row.project_id }
+      : row.audition_id && !row.project_id
+        ? { kind: "audition", id: row.audition_id }
+        : null;
   if (!target) return null;
   return {
     id: row.id,
@@ -95,7 +97,9 @@ export function useActorSides() {
       setState({ owner: userId, loaded: true, sides: [], error: unavailable });
     }
   }, [userId, sessionLoading]);
-  useEffect(() => { void reload(); }, [reload]);
+  useEffect(() => {
+    void reload();
+  }, [reload]);
 
   async function create(
     draft: SideDraft,
@@ -127,10 +131,14 @@ export function useActorSides() {
       const side = parseSide(data as Row);
       if (!side || side.target.id !== draft.target.id || side.target.kind !== draft.target.kind)
         return { error: "The side's target was not confirmed by the server." };
-      setState((s) => s.owner === userId ? {
-        ...s,
-        sides: [side, ...s.sides.filter((old) => old.id !== side.id)],
-      } : s);
+      setState((s) =>
+        s.owner === userId
+          ? {
+              ...s,
+              sides: [side, ...s.sides.filter((old) => old.id !== side.id)],
+            }
+          : s,
+      );
       return { value: side };
     } catch (cause) {
       return { error: cause instanceof Error ? cause.message : "Side creation failed." };
@@ -158,17 +166,26 @@ export function useActorSides() {
         .select(columns)
         .single();
       if (error || !data)
-        throw new Error("Annotation save was not confirmed. The side may have changed elsewhere; reload.");
+        throw new Error(
+          "Annotation save was not confirmed. The side may have changed elsewhere; reload.",
+        );
       if (!alive.current || scope.current !== token) return { error: accountChanged };
-      if (data.user_id !== userId || data.id !== prior.id ||
-          data.content !== prior.content || data.revision <= prior.revision ||
-          data.project_id !== (prior.target.kind === "project" ? prior.target.id : null) ||
-          data.audition_id !== (prior.target.kind === "audition" ? prior.target.id : null))
+      if (
+        data.user_id !== userId ||
+        data.id !== prior.id ||
+        data.content !== prior.content ||
+        data.revision <= prior.revision ||
+        data.project_id !== (prior.target.kind === "project" ? prior.target.id : null) ||
+        data.audition_id !== (prior.target.kind === "audition" ? prior.target.id : null)
+      )
         return { error: "The server did not verify the original side and its new revision." };
       const side = parseSide(data as Row);
       if (!side) return { error: "Saved annotation target could not be confirmed." };
-      setState((s) => s.owner === userId
-        ? { ...s, sides: s.sides.map((item) => item.id === side.id ? side : item) } : s);
+      setState((s) =>
+        s.owner === userId
+          ? { ...s, sides: s.sides.map((item) => (item.id === side.id ? side : item)) }
+          : s,
+      );
       return { value: side };
     } catch (cause) {
       return { error: cause instanceof Error ? cause.message : "Annotation save failed." };
@@ -177,10 +194,13 @@ export function useActorSides() {
   const signedIn = !!userId;
   const currentOwner = state.owner === (userId ?? null);
   return {
-    userId, signedIn,
+    userId,
+    signedIn,
     loaded: !sessionLoading && (!signedIn || (currentOwner && state.loaded)),
     error: signedIn && currentOwner ? state.error : null,
     sides: !sessionLoading && signedIn && currentOwner ? state.sides : [],
-    reload, create, annotate,
+    reload,
+    create,
+    annotate,
   };
 }
