@@ -6,15 +6,30 @@ const migration = readFileSync(
   resolve(process.cwd(), "drizzle/migrations/0008_slams_role_grants_hardening.sql"),
   "utf8",
 );
-const disposable = readFileSync(
-  resolve(process.cwd(), "scripts/rls-actor-work.sql"),
-  "utf8",
-);
+const disposable = readFileSync(resolve(process.cwd(), "scripts/rls-actor-work.sql"), "utf8");
 
 describe("SLAMS Supabase default-privilege hardening", () => {
   it("explicitly revokes inherited broad access from every existing SLAMS table", () => {
     expect(migration).toContain("REVOKE ALL ON TABLE");
-    for (const name of ["profiles","passport_entries","audition_prep","schools","curriculum_years","curriculum_terms","curriculum_courses","curriculum_workshops","curriculum_lessons","curriculum_exercises","curriculum_assessments","curriculum_imports","unit_progress","actor_projects","actor_project_revisions","actor_auditions","actor_sides"]) {
+    for (const name of [
+      "profiles",
+      "passport_entries",
+      "audition_prep",
+      "schools",
+      "curriculum_years",
+      "curriculum_terms",
+      "curriculum_courses",
+      "curriculum_workshops",
+      "curriculum_lessons",
+      "curriculum_exercises",
+      "curriculum_assessments",
+      "curriculum_imports",
+      "unit_progress",
+      "actor_projects",
+      "actor_project_revisions",
+      "actor_auditions",
+      "actor_sides",
+    ]) {
       expect(migration).toContain("public." + name);
     }
     expect(migration).toContain("FROM PUBLIC, anon, authenticated");
@@ -23,7 +38,9 @@ describe("SLAMS Supabase default-privilege hardening", () => {
   });
 
   it("restores only intended authenticated privileges", () => {
-    expect(migration).toContain("GRANT SELECT, INSERT, UPDATE ON public.actor_projects TO authenticated");
+    expect(migration).toContain(
+      "GRANT SELECT, INSERT, UPDATE ON public.actor_projects TO authenticated",
+    );
     expect(migration).toContain("GRANT SELECT ON public.actor_project_revisions TO authenticated");
     expect(migration).toContain("ON public.actor_auditions, public.actor_sides TO authenticated");
     expect(migration).toContain("REVOKE ALL ON FUNCTION public.handle_new_user()");
