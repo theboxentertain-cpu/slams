@@ -39,6 +39,9 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
           <Link to="/work/audition" search={{ tab: "preparation" }} className={btnPrimary}>
             <T>Open audition preparation</T>
           </Link>
+          <Link to="/work/sides" className="underline">
+            <T>Open script sides and line-anchored beats</T>
+          </Link>
           <AuditionFiles />
         </section>
       ) : tab === "projects" ? (
@@ -96,12 +99,20 @@ export function AuditionFile({ tab, onTabChange }: TabProps) {
           current === "preparation" ? (
             <AuditionWorkspace prep={prep} />
           ) : current === "script" ? (
-            <Unavailable>
-              <T>
-                Saved scripts and sides are in development. Your current preparation notes are
-                preserved.
-              </T>
-            </Unavailable>
+            <section className="foundation-stack">
+              <h2>
+                <T>Your script sides</T>
+              </h2>
+              <p>
+                <T>
+                  Import or paste a plain-text side and attach it to a separate audition or project.
+                  Existing single-record audition notes are not modified.
+                </T>
+              </p>
+              <Link to="/work/sides" className={btnPrimary}>
+                <T>Open script sides and beat annotations</T>
+              </Link>
+            </section>
           ) : (
             <section className="foundation-stack">
               <h2>{current === "brief" ? "Your brief" : "Your character choices"}</h2>
