@@ -108,7 +108,8 @@ describe("Actor at Work project workspace", () => {
     render(<ActorProjects />);
     expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/auth");
     expect(screen.getByRole("link", { name: "Open existing audition notes" })).toHaveAttribute(
-      "href", "/work/audition",
+      "href",
+      "/work/audition",
     );
     expect(screen.queryByRole("button", { name: "New project" })).toBeNull();
   });
