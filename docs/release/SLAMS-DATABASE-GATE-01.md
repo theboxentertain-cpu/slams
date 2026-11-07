@@ -1,4 +1,96 @@
-# SLAMS release blocker 1: database schema and migration verification
+# SLAMS — Actor at Work database release gate
+
+**Current status (2026-11-07): BLOCKED FOR PRODUCTION SCHEMA CHANGES.**
+**Cleared:** actual Lovable Cloud backend identification, live migration ledger inventory,
+byte-for-byte migration checksum reconciliation, and legacy RLS presence inspection.
+**Uncleared:** verified restorable backup, an isolated disposable staging database,
+real authenticated A/B cross-owner testing, and explicit production release approval.
+
+## Actual live backend — verified read-only
+
+- Lovable project: `64914af9-5120-4ab2-bf0b-13e6ee092b40` (SLAMS).
+- Existing Lovable-managed Supabase backend reference (project configuration):
+  `edrchrzqsrfrlcfbnxhs`. Do not assume this database is accessible through
+  the user's separate Supabase account.
+- Separate user-owned Supabase project `bfoukjcissyardeokfev` is a **different,
+  initially empty project**. **Never treat it as SLAMS production or switch the
+  app's backend to it as a migration shortcut.**
+- Current database: PostgreSQL 17.11, accessible for read-only SQL through the
+  connected Lovable project.
+- Actual `drizzle.__drizzle_migrations` ledger, verified on 2026-11-07:
+  - id 1, tag `0000_sprint01b_foundation`, SHA-256
+    `db2e37b4fff52904e009a075655318b69343d11215c79f0f7ec06987a1b51adc`
+  - id 2, tag `0001_validate_actual_unit_progress`, SHA-256
+    `2d105d575f3b84d1f2dbe93d9d19c558ff050a03847c9921ed029e5585109ff1`
+  - id 3, tag `0002_curriculum_reviewed_material`, SHA-256
+    `4f2820cfad7fa38e202add86c2b39f3d9273d5c9c5077fb998e57ffc232722a9`
+- These three ledger hashes were independently SHA-256 recomputed over the exact
+  corresponding GitHub migration file contents and **all three match**.
+  `src/test/applied-lovable-migration-integrity.test.ts` protects them from
+  accidental edits in subsequent pull requests.
+- Live tables `profiles`, `audition_prep`, `passport_entries`, `unit_progress`,
+  `schools` and `curriculum_courses` exist with RLS enabled. The existing
+  `audition_prep` and `passport_entries` tables each have four role-scoped
+  owner policies (SELECT/INSERT/UPDATE/DELETE).
+- `actor_projects`, `actor_project_revisions`, `actor_auditions`, `actor_sides`
+  and `academic_policies` are absent. New Actor at Work screens **cannot be
+  assumed to persist against this backend yet**.
+- The earlier Lovable free-plan SQL query quota briefly blocked queries;
+  subsequently **live read-only ledger and catalog queries succeeded**.
+- No production schema/data writes, migration, backup restoration, or staging
+  provisioning have been performed during this audit.
+
+## Backup and environment gate — still open
+
+1. In Lovable, open the **existing SLAMS project** → Cloud → Database →
+   Backups. Confirm an available UTC backup timestamp. **Do not click Restore**.
+   Daily backups exist as a product feature, but existence/freshness of an
+   actual SLAMS restorable snapshot has not been independently checked.
+2. Export a private independent snapshot via More → Cloud → Overview →
+   Advanced settings → Export project data → Export data → Database → Export.
+   Download and store the resulting file securely; **it may contain users and
+   password hashes. Do not upload this archive into GitHub or chat.**
+   Database export does not include separately stored files or application
+   secrets. Export availability, integrity and restoreability are not yet proven.
+3. Prepare an **isolated non-production environment** with the schema,
+   sanitized fixtures, and a tested restore. A separate empty Supabase project
+   may be evaluated *only as staging* after explicit environment designation;
+   it is not a clone, and must never become the production app backend by
+   accident.
+4. Lovable's Test/Live environment feature is closed for new Cloud projects,
+   so do not count on that feature as an existing staging environment.
+
+Official documentation:
+- https://docs.lovable.dev/features/database
+- https://docs.lovable.dev/features/advanced-settings
+- https://docs.lovable.dev/features/environments
+
+## Migration rollout — no automatic apply
+
+- Source proposals are `0004_actor_projects_versioned`,
+  `0005_actor_auditions`, `0006_actor_sides_anchored`, then
+  `0007_actor_projects_no_delete`.
+- `0003_academic_progression_placement` remains **DEFERRED** with the
+  Conservatory. Never execute a generic migrate-all command that may apply it.
+- Validate exact source SQL, dependencies, trigger owner, default PUBLIC
+  function permissions, schema privileges, database ownership, migration
+  registration/ledger handling, and recovery before applying to staging.
+- Run disposable PostgreSQL tests, read-only staging preflight, rolled-back
+  SQL role simulations and a separate authenticated-user A/B/API isolation test.
+- Require regression tests for legacy audition preparation and Passport,
+  account switching, stale revision conflicts, and Android RTL/accessibility.
+- Only after complete staging evidence and release approval may a controlled
+  production migration plan be authorized. No unreviewed schema writes.
+
+## Important security review
+
+The existing `public.handle_new_user` function is SECURITY DEFINER with
+`search_path=public`; review its ownership and function safety separately.
+This observation is **not** proof of exploitation, and unrelated functions
+must not be changed during the Actor at Work rollout without their own review.
+
+---
+## Previous release audit (historical)
 
 **State at authoring:** NOT RESOLVED / PRODUCTION SQL WRITES FORBIDDEN.
 
