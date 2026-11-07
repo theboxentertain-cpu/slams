@@ -1,0 +1,801 @@
+/**
+ * Local-only Performance Lab. Only explicit user clicks request microphone or
+ * camera permission; recorded blobs remain in process memory (object URLs),
+ * never in localStorage, Supabase, a service worker, or Passport.
+ */
+import { useEffect, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useLanguage } from "@/lib/i18n";
+import { Page, DirectorNote, btnPrimary, btnSecondary } from "@/components/slams";
+import { TakeMarkerEditor } from "./TakeMarkerEditor";
+import {
+  formatLocalReview,
+  markerPrompt,
+  validateMarker,
+  formatTimecode,
+  type MarkerCategory,
+  type ReviewMarker,
+} from "@/lib/performance-review-model";
+
+type Slot = "a" | "b";
+type CaptureKind = "video" | "audio";
+type Stage = "idle" | "requesting" | "recording" | "finishing";
+type Take = { url: string; type: string; bytes: number; recordedAt: string; kind: CaptureKind };
+type Takes = Record<Slot, Take | null>;
+type Notes = Record<Slot, string>;
+const MAX_MS = 90_000;
+const MAX_NOTE = 1000;
+const initialTakes: Takes = { a: null, b: null };
+const initialNotes: Notes = { a: "", b: "" };
+
+export function supportedLocalCapture(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    typeof navigator !== "undefined" &&
+    !!navigator.mediaDevices?.getUserMedia &&
+    typeof MediaRecorder !== "undefined" &&
+    typeof URL.createObjectURL === "function" &&
+    typeof URL.revokeObjectURL === "function"
+  );
+}
+
+function safeDownloadExtension(mime: string, kind: CaptureKind) {
+  if (mime.includes("mp4")) return "mp4";
+  if (mime.includes("ogg")) return "ogg";
+  if (mime.includes("webm")) return "webm";
+  return kind === "audio" ? "webm" : "webm";
+}
+
+export function PerformanceLab() {
+  const { locale } = useLanguage();
+  const ar = locale === "ar";
+  const t = (en: string, arabic: string) => (ar ? arabic : en);
+  const [stage, setStage] = useState<Stage>("idle");
+  const [kind, setKind] = useState<CaptureKind>("video");
+  const [slot, setSlot] = useState<Slot>("a");
+  const [takes, setTakes] = useState<Takes>(initialTakes);
+  const [notes, setNotes] = useState<Notes>(initialNotes);
+  const [comparison, setComparison] = useState("");
+  const [sceneObjective, setSceneObjective] = useState("");
+  const [markers, setMarkers] = useState<ReviewMarker[]>([]);
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+  const playbackNodes = useRef<Record<Slot, HTMLMediaElement | null>>({ a: null, b: null });
+  const currentReview = markers.find((item) => item.id === selectedMarkerId) ?? null;
+  const [feedback, setFeedback] = useState("");
+  const [failed, setFailed] = useState(false);
+  const captureError = useRef(false);
+  const [elapsed, setElapsed] = useState(0);
+  const live = useRef(true);
+  const takesRef = useRef<Takes>(initialTakes);
+  const recorder = useRef<MediaRecorder | null>(null);
+  const stream = useRef<MediaStream | null>(null);
+  const chunks = useRef<Blob[]>([]);
+  const startTime = useRef(0);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tick = useRef<ReturnType<typeof setInterval> | null>(null);
+  const requestId = useRef(0);
+  const permissionPending = useRef(false);
+  const captureTarget = useRef<{ slot: Slot; kind: CaptureKind } | null>(null);
+
+  function stopTracks() {
+    stream.current?.getTracks().forEach((track) => track.stop());
+    stream.current = null;
+  }
+  function stopTimers() {
+    if (timeout.current !== null) clearTimeout(timeout.current);
+    if (tick.current !== null) clearInterval(tick.current);
+    timeout.current = null;
+    tick.current = null;
+  }
+  function discard(slotId: Slot) {
+    const existing = takesRef.current[slotId];
+    if (existing) URL.revokeObjectURL(existing.url);
+    const next = { ...takesRef.current, [slotId]: null };
+    takesRef.current = next;
+    setTakes(next);
+    setNotes((prev) => ({ ...prev, [slotId]: "" }));
+    setMarkers((prev) => prev.filter((marker) => marker.take !== slotId));
+    setSelectedMarkerId(null);
+    playbackNodes.current[slotId] = null;
+    setComparison("");
+    setFeedback("");
+  }
+  function endCapture() {
+    if (!recorder.current || recorder.current.state === "inactive") return;
+    setStage("finishing");
+    stopTimers();
+    try {
+      recorder.current.stop();
+    } catch {
+      setFailed(true);
+      setFeedback(
+        t(
+          "Could not finish this recording. No take was saved.",
+          "تعذّر إنهاء التسجيل. لم يتم حفظ محاولة.",
+        ),
+      );
+      setStage("idle");
+    } finally {
+      stopTracks();
+    }
+  }
+
+  async function startCapture() {
+    if (stage !== "idle") return;
+    setFeedback("");
+    setFailed(false);
+    captureError.current = false;
+    if (!supportedLocalCapture()) {
+      setFailed(true);
+      setFeedback(
+        t(
+          "This browser does not support local capture. The text rehearsal remains available.",
+          "المتصفح لا يدعم التسجيل المحلي. التدريب النصي ما زال متاحًا.",
+        ),
+      );
+      return;
+    }
+    setStage("requesting");
+    permissionPending.current = true;
+    setElapsed(0);
+    const sequence = ++requestId.current;
+    let acquired: MediaStream | null = null;
+    try {
+      // This is the sole permission request and only occurs on a real click.
+      acquired = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: kind === "video" ? { facingMode: "user" } : false,
+      });
+      if (sequence === requestId.current) permissionPending.current = false;
+      if (!live.current || sequence !== requestId.current || document.hidden) {
+        acquired.getTracks().forEach((track) => track.stop());
+        if (live.current && sequence === requestId.current && document.hidden) {
+          setStage("idle");
+          setFailed(true);
+          setFeedback(
+            t(
+              "Recording permission returned while this page was hidden. No recording started.",
+              "وصل إذن التسجيل أثناء وجود الصفحة بالخلفية. لم يبدأ أي تسجيل.",
+            ),
+          );
+        }
+        return;
+      }
+      stream.current = acquired;
+      const preferred =
+        kind === "video"
+          ? ["video/webm;codecs=vp8,opus", "video/webm", "video/mp4"]
+          : ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"];
+      const preferredType = preferred.find((type) => MediaRecorder.isTypeSupported?.(type));
+      const mr = preferredType
+        ? new MediaRecorder(acquired, { mimeType: preferredType })
+        : new MediaRecorder(acquired);
+      chunks.current = [];
+      recorder.current = mr;
+      captureTarget.current = { slot, kind };
+      mr.ondataavailable = (event) => {
+        if (event.data.size > 0) chunks.current.push(event.data);
+      };
+      mr.onerror = () => {
+        if (!live.current) return;
+        captureError.current = true;
+        setFailed(true);
+        setFeedback(
+          t(
+            "Recorder failed. Try again; no take was uploaded.",
+            "حدث خطأ في التسجيل. جرّب مجددًا؛ لم يتم رفع أي شيء.",
+          ),
+        );
+        endCapture();
+      };
+      mr.onstop = () => {
+        stopTimers();
+        stopTracks();
+        recorder.current = null;
+        if (!live.current) return;
+        const target = captureTarget.current;
+        const recorded = [...chunks.current];
+        chunks.current = [];
+        captureTarget.current = null;
+        const mime = mr.mimeType || recorded[0]?.type || "";
+        const blob = new Blob(recorded, { type: mime || "application/octet-stream" });
+        if (!target || !recorded.length || !blob.size || captureError.current) {
+          setStage("idle");
+          setFailed(true);
+          setFeedback(
+            t(
+              "No usable take was captured. Retry with device permission enabled.",
+              "لم يتم تسجيل محاولة صالحة. فعّل صلاحية الجهاز وحاول مرة أخرى.",
+            ),
+          );
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const next: Takes = {
+          ...takesRef.current,
+          [target.slot]: {
+            url,
+            type: blob.type,
+            bytes: blob.size,
+            recordedAt: new Date().toISOString(),
+            kind: target.kind,
+          },
+        };
+        if (takesRef.current[target.slot]) URL.revokeObjectURL(takesRef.current[target.slot]!.url);
+        takesRef.current = next;
+        setTakes(next);
+        setNotes((prev) => ({ ...prev, [target.slot]: "" }));
+        setMarkers((prev) => prev.filter((marker) => marker.take !== target.slot));
+        setSelectedMarkerId(null);
+        playbackNodes.current[target.slot] = null;
+        setComparison("");
+        setFailed(false);
+        setStage("idle");
+        setFeedback(
+          t(
+            `Take ${target.slot.toUpperCase()} is ready locally. It was not uploaded or saved to Passport.`,
+            `المحاولة ${target.slot === "a" ? "أ" : "ب"} جاهزة على الجهاز. لم تُرفع أو تُحفظ في جواز الممثل.`,
+          ),
+        );
+      };
+      mr.start(250);
+      startTime.current = Date.now();
+      setStage("recording");
+      timeout.current = setTimeout(() => endCapture(), MAX_MS);
+      tick.current = setInterval(
+        () => setElapsed(Math.min(90, Math.floor((Date.now() - startTime.current) / 1000))),
+        1000,
+      );
+    } catch {
+      if (sequence === requestId.current) permissionPending.current = false;
+      acquired?.getTracks().forEach((track) => track.stop());
+      stopTracks();
+      stopTimers();
+      recorder.current = null;
+      if (live.current && sequence === requestId.current) {
+        setStage("idle");
+        setFailed(true);
+        setFeedback(
+          t(
+            "Permission was denied, the device is busy, or recording is unsupported. No data was captured.",
+            "تم رفض الإذن أو الكاميرا مشغولة أو التسجيل غير مدعوم. لم يتم التقاط أي بيانات.",
+          ),
+        );
+      }
+    }
+  }
+
+  function addMarker(take: Slot, category: MarkerCategory, observation: string): string | null {
+    const media = playbackNodes.current[take];
+    const retained = takesRef.current[take];
+    if (!retained || !media || media.getAttribute("src") !== retained.url)
+      return t(
+        "Play the actual take before marking a timestamp.",
+        "شغّل المحاولة الفعلية قبل تحديد التوقيت.",
+      );
+    const seconds = media.currentTime;
+    const issue = validateMarker(
+      take,
+      seconds,
+      category,
+      observation,
+      markers.filter((m) => m.take === take).length,
+    );
+    if (issue) {
+      return ar
+        ? issue.startsWith("Write")
+          ? "اكتب ملاحظة فعلية بين ٨ و٤٠٠ حرف."
+          : issue.startsWith("Limit")
+            ? "وصلت للحد الأقصى: ١٥ علامة لكل محاولة. احذف علامة لإضافة أخرى."
+            : "انتقل للحظة صالحة داخل التسجيل قبل وضع العلامة."
+        : issue;
+    }
+    const id = globalThis.crypto?.randomUUID?.();
+    if (!id)
+      return t(
+        "Cannot create a safe marker ID in this browser.",
+        "تعذّر إنشاء رقم آمن للعلامة في هذا المتصفح.",
+      );
+    const next: ReviewMarker = {
+      id,
+      take,
+      seconds,
+      category,
+      observation: observation.trim(),
+    };
+    setMarkers((previous) => [...previous, next]);
+    setSelectedMarkerId(id);
+    return null;
+  }
+
+  function removeMarker(id: string) {
+    setMarkers((previous) => previous.filter((item) => item.id !== id));
+    setSelectedMarkerId((previous) => (previous === id ? null : previous));
+  }
+
+  function seekToMarker(marker: ReviewMarker) {
+    const media = playbackNodes.current[marker.take];
+    if (!takesRef.current[marker.take] || !media) return;
+    try {
+      media.currentTime = marker.seconds;
+      media.focus();
+      setSelectedMarkerId(marker.id);
+    } catch {
+      setFailed(true);
+      setFeedback(
+        t(
+          "Could not seek to this moment; try the player controls.",
+          "تعذّر الانتقال لهذه اللحظة. استخدم أدوات تشغيل الفيديو.",
+        ),
+      );
+    }
+  }
+
+  useEffect(() => {
+    live.current = true;
+    const stopWhenHidden = () => {
+      if (!document.hidden) return;
+      if (permissionPending.current) {
+        // A late browser permission grant must never start recording in background.
+        permissionPending.current = false;
+        requestId.current++;
+        setStage("idle");
+        setFailed(true);
+        setFeedback(
+          t(
+            "Permission request cancelled when the page was hidden. Start again when ready.",
+            "اتلغى طلب الإذن لما الصفحة دخلت الخلفية. تقدر تبدأ من جديد وقت ما تحب.",
+          ),
+        );
+      }
+      if (recorder.current?.state === "recording") endCapture();
+    };
+    // Browsers may put a document in the back/forward cache without running
+    // React unmount. Never keep permission or temporary media across pagehide.
+    const discardOnPageHide = () => {
+      requestId.current++;
+      permissionPending.current = false;
+      stopTimers();
+      if (recorder.current) {
+        recorder.current.onstop = null;
+        recorder.current.ondataavailable = null;
+        recorder.current.onerror = null;
+        if (recorder.current.state !== "inactive") {
+          try {
+            recorder.current.stop();
+          } catch {
+            /* The device may have stopped already. */
+          }
+        }
+        recorder.current = null;
+      }
+      stopTracks();
+      chunks.current = [];
+      captureTarget.current = null;
+      Object.values(takesRef.current).forEach((take) => {
+        if (take) URL.revokeObjectURL(take.url);
+      });
+      takesRef.current = { a: null, b: null };
+      playbackNodes.current = { a: null, b: null };
+      setTakes({ a: null, b: null });
+      setNotes({ a: "", b: "" });
+      setMarkers([]);
+      setSelectedMarkerId(null);
+      setComparison("");
+      setSceneObjective("");
+      setStage("idle");
+      setFeedback("");
+    };
+    document.addEventListener("visibilitychange", stopWhenHidden);
+    window.addEventListener("pagehide", discardOnPageHide);
+    return () => {
+      document.removeEventListener("visibilitychange", stopWhenHidden);
+      window.removeEventListener("pagehide", discardOnPageHide);
+      live.current = false;
+      requestId.current++;
+      permissionPending.current = false;
+      stopTimers();
+      if (recorder.current) {
+        recorder.current.onstop = null;
+        recorder.current.ondataavailable = null;
+        recorder.current.onerror = null;
+        if (recorder.current.state !== "inactive") {
+          try {
+            recorder.current.stop();
+          } catch {
+            /* Device has already ended. */
+          }
+        }
+      }
+      stopTracks();
+      Object.values(takesRef.current).forEach((take) => {
+        if (take) URL.revokeObjectURL(take.url);
+      });
+    };
+  }, []);
+
+  async function copyReview() {
+    const text = formatLocalReview(locale, sceneObjective, notes, comparison, markers);
+    try {
+      await navigator.clipboard.writeText(text);
+      setFeedback(
+        t(
+          "Review copied as text only. No clips saved.",
+          "تم نسخ الملاحظات نصيًا فقط. لم تُحفظ التسجيلات.",
+        ),
+      );
+      setFailed(false);
+    } catch {
+      setFeedback(
+        t(
+          "Clipboard unavailable. Your notes are still on this page.",
+          "الحافظة غير متاحة. ملاحظاتك ما زالت على الصفحة.",
+        ),
+      );
+      setFailed(true);
+    }
+  }
+
+  return (
+    <Page
+      title="Performance Lab"
+      eyebrow="CAPTURE · RETAKE · COMPARE"
+      backTo="/rehearsal"
+      world="rehearsal"
+    >
+      <section
+        className="foundation-stack"
+        aria-label={t("Local Performance Lab", "معمل الأداء المحلي")}
+      >
+        <div className="availability-note">
+          <h2 className="font-bold">
+            {t("Local-only capture · early pilot", "تسجيل محلي فقط · نسخة تجريبية")}
+          </h2>
+          <p className="mt-2">
+            {t(
+              "Recording starts only when you press Record and grant device permission. Each take ends after 90 seconds at most. Playback stays in this page's memory; leaving it erases both takes. No AI observation, automatic score, cloud upload, or Passport media storage.",
+              "يبدأ التسجيل فقط لما تضغط تسجيل وتوافق على إذن الجهاز. مدة كل محاولة بحد أقصى ٩٠ ثانية. التسجيلات موجودة في ذاكرة الصفحة فقط وتُمحى لما تخرج. لا يوجد تحليل آلي أو درجات أو رفع سحابي أو حفظ تسجيلات في جواز الممثل.",
+            )}
+          </p>
+          <p className="mt-2 text-sm">
+            {t(
+              "Only record yourself and people who knowingly agree. Avoid capturing private conversations or bystanders.",
+              "سجّل نفسك ومن وافق بوضوح فقط. تجنّب تصوير أشخاص آخرين أو أحاديث خاصة.",
+            )}
+          </p>
+        </div>
+
+        <section
+          className="panel space-y-4 p-4"
+          aria-label={t("Capture controls", "أدوات التسجيل")}
+        >
+          <h3 className="text-lg font-semibold">
+            {t("01 — Choose a take and capture mode", "٠١ — اختار المحاولة ونوع التسجيل")}
+          </h3>
+          <fieldset className="flex flex-wrap gap-4" disabled={stage !== "idle"}>
+            <legend className="mb-2 font-semibold">{t("Take slot", "مكان المحاولة")}</legend>
+            <label className="flex min-h-11 items-center gap-2">
+              <input
+                type="radio"
+                name="take-slot"
+                checked={slot === "a"}
+                onChange={() => setSlot("a")}
+              />
+              {t("Take A", "المحاولة أ")}
+            </label>
+            <label className="flex min-h-11 items-center gap-2">
+              <input
+                type="radio"
+                name="take-slot"
+                checked={slot === "b"}
+                onChange={() => setSlot("b")}
+              />
+              {t("Take B", "المحاولة ب")}
+            </label>
+          </fieldset>
+          <fieldset className="flex flex-wrap gap-4" disabled={stage !== "idle"}>
+            <legend className="mb-2 font-semibold">
+              {t("What to record", "ماذا تريد أن تسجّل؟")}
+            </legend>
+            <label className="flex min-h-11 items-center gap-2">
+              <input
+                type="radio"
+                name="capture-kind"
+                checked={kind === "video"}
+                onChange={() => setKind("video")}
+              />
+              {t("Camera + microphone", "كاميرا وميكروفون")}
+            </label>
+            <label className="flex min-h-11 items-center gap-2">
+              <input
+                type="radio"
+                name="capture-kind"
+                checked={kind === "audio"}
+                onChange={() => setKind("audio")}
+              />
+              {t("Voice only", "صوت فقط")}
+            </label>
+          </fieldset>
+          <div className="flex flex-wrap items-center gap-3">
+            {stage === "idle" ? (
+              <button
+                type="button"
+                className={btnPrimary}
+                onClick={() => void startCapture()}
+                disabled={!supportedLocalCapture()}
+              >
+                {t(
+                  `Record Take ${slot.toUpperCase()} (request permission)`,
+                  `سجّل المحاولة ${slot === "a" ? "أ" : "ب"} (طلب الإذن)`,
+                )}
+              </button>
+            ) : stage === "recording" ? (
+              <button type="button" className={btnPrimary} onClick={endCapture}>
+                {t("Stop recording", "أوقف التسجيل")}
+              </button>
+            ) : (
+              <span role="status">
+                {stage === "requesting"
+                  ? t("Requesting device permission…", "جارٍ طلب إذن الجهاز…")
+                  : t("Finishing local take…", "جارٍ إنهاء التسجيل المحلي…")}
+              </span>
+            )}
+            {stage === "recording" && (
+              <span role="status" aria-live="off">
+                {t(
+                  `Recording Take ${slot.toUpperCase()}: ${elapsed}s / 90s`,
+                  `تسجيل المحاولة ${slot === "a" ? "أ" : "ب"}: ${elapsed} / ٩٠ ثانية`,
+                )}
+              </span>
+            )}
+          </div>
+          {!supportedLocalCapture() && (
+            <p role="alert">
+              {t(
+                "Your device/browser does not expose secure local recording. You can still use the Living Scene.",
+                "الجهاز أو المتصفح لا يتيح التسجيل المحلي. تقدر تستخدم المشهد التفاعلي.",
+              )}
+            </p>
+          )}
+          {feedback && <p role={failed ? "alert" : "status"}>{feedback}</p>}
+        </section>
+
+        <section
+          className="panel space-y-3 p-4"
+          aria-label={t("Before and after takes", "محاولات قبل وبعد")}
+        >
+          <h3 className="text-lg font-semibold">
+            {t("02 — Play back your actual takes", "٠٢ — شاهد محاولاتك الحقيقية")}
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {(["a", "b"] as const).map((id) => (
+              <div key={id} className="min-w-0 space-y-2 rounded border border-border p-3">
+                <h4 className="font-bold">
+                  {t(`Take ${id.toUpperCase()}`, `المحاولة ${id === "a" ? "أ" : "ب"}`)}
+                </h4>
+                {takes[id] ? (
+                  <>
+                    {takes[id]!.kind === "video" ? (
+                      <video
+                        controls
+                        playsInline
+                        preload="metadata"
+                        src={takes[id]!.url}
+                        ref={(node) => {
+                          playbackNodes.current[id] = node;
+                        }}
+                        className="w-full rounded bg-black"
+                        aria-label={t(
+                          `Playback take ${id.toUpperCase()}`,
+                          `شغّل المحاولة ${id === "a" ? "أ" : "ب"}`,
+                        )}
+                      />
+                    ) : (
+                      <audio
+                        controls
+                        preload="metadata"
+                        src={takes[id]!.url}
+                        ref={(node) => {
+                          playbackNodes.current[id] = node;
+                        }}
+                        className="w-full"
+                        aria-label={t(
+                          `Playback take ${id.toUpperCase()}`,
+                          `شغّل صوت المحاولة ${id === "a" ? "أ" : "ب"}`,
+                        )}
+                      />
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      {t("Memory only · not uploaded", "في الذاكرة فقط · لم يتم الرفع")}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <a
+                        className={btnSecondary}
+                        href={takes[id]!.url}
+                        download={`slams-take-${id}.${safeDownloadExtension(takes[id]!.type, takes[id]!.kind)}`}
+                      >
+                        {t("Download this take", "نزّل هذه المحاولة")}
+                      </a>
+                      <button
+                        type="button"
+                        className={btnSecondary}
+                        onClick={() => discard(id)}
+                        disabled={stage !== "idle"}
+                      >
+                        {t("Delete take now", "امسح المحاولة الآن")}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    {t("No take in memory", "لا توجد محاولة في الذاكرة")}
+                  </p>
+                )}
+                {takes[id] && (
+                  <TakeMarkerEditor
+                    key={takes[id]!.url}
+                    take={id}
+                    markers={markers.filter((marker) => marker.take === id)}
+                    onAdd={(category, observation) => addMarker(id, category, observation)}
+                    onRemove={removeMarker}
+                    onSeek={seekToMarker}
+                    disabled={stage !== "idle"}
+                  />
+                )}
+                <label className="block text-sm font-semibold" htmlFor={`lab-note-${id}`}>
+                  {t("What actually happened in this take?", "ماذا حدث بالفعل في هذه المحاولة؟")}
+                </label>
+                <textarea
+                  id={`lab-note-${id}`}
+                  className="w-full rounded border border-border bg-background p-3 text-foreground"
+                  maxLength={MAX_NOTE}
+                  rows={3}
+                  value={notes[id]}
+                  onChange={(e) => setNotes((prev) => ({ ...prev, [id]: e.target.value }))}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section
+          className="panel space-y-3 p-4"
+          aria-label={t("Your comparison", "مقارنتك الشخصية")}
+        >
+          <h3 className="text-lg font-semibold">
+            {t("03 — Compare observable behavior", "٠٣ — قارن السلوك الملحوظ")}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t(
+              "Compare what you actually saw or heard: timing, listening, intention, movement, tactic, or response. A difference is not automatically an improvement. The app cannot evaluate your acting.",
+              "قارن ما رأيته أو سمعته فعلًا: التوقيت والاستماع والهدف والحركة والتكتيك والاستجابة. الاختلاف لا يعني بالضرورة التحسن. التطبيق لا يقيّم التمثيل.",
+            )}
+          </p>
+          <label className="block font-semibold" htmlFor="lab-objective">
+            {t(
+              "What playable result is your character pursuing?",
+              "ما النتيجة القابلة للأداء التي تحاول شخصيتك تحقيقها؟",
+            )}
+          </label>
+          <input
+            id="lab-objective"
+            type="text"
+            className="min-h-11 w-full rounded border border-border bg-background p-3 text-foreground"
+            maxLength={300}
+            value={sceneObjective}
+            onChange={(event) => setSceneObjective(event.target.value)}
+            placeholder={t(
+              "For example: reassure the other character",
+              "مثال: أطمن الشخصية الأخرى",
+            )}
+          />
+          <p className="text-xs text-muted-foreground">
+            {t(
+              "Your objective and all time-coded notes are your own. The app does not infer goals from recorded media.",
+              "الهدف والملاحظات المحددة بالتوقيت من كتابتك أنت. التطبيق لا يستنتج الأهداف من التسجيلات.",
+            )}
+          </p>
+          <label className="block font-semibold" htmlFor="lab-comparison">
+            {t("What changed between A and B, if anything?", "ما الذي تغيّر بين أ وب، إن وجد؟")}
+          </label>
+          <textarea
+            id="lab-comparison"
+            className="w-full rounded border border-border bg-background p-3 text-foreground"
+            maxLength={1200}
+            rows={4}
+            value={comparison}
+            onChange={(e) => setComparison(e.target.value)}
+          />
+          <button
+            type="button"
+            className={btnSecondary}
+            disabled={
+              !notes.a.trim() &&
+              !notes.b.trim() &&
+              !comparison.trim() &&
+              !sceneObjective.trim() &&
+              markers.length === 0
+            }
+            onClick={() => void copyReview()}
+          >
+            {t("Copy comparison as text (no media)", "انسخ المقارنة كنص فقط")}
+          </button>
+          <p className="text-xs text-muted-foreground">
+            {t(
+              "Your time-coded annotations, goal and comparisons stay in this page's memory only. Copy the review explicitly if you want the text. No media or notes are uploaded, graded or saved to Passport.",
+              "الملاحظات الزمنية والهدف والمقارنة موجودة في ذاكرة الصفحة فقط. انسخ التقرير بنفسك للاحتفاظ بالنص. لا يتم رفع أو تقييم التسجيلات أو الملاحظات أو حفظها في جواز الممثل.",
+            )}
+          </p>
+          <section
+            className="space-y-3 border-t border-border pt-4"
+            aria-label={t("Director retake experiment", "تجربة إعادة المخرج")}
+          >
+            <h4 className="font-semibold">
+              {t(
+                "04 — Director: an experiment based only on your written marker",
+                "٠٤ — المخرج: تجربة بناءً على ملاحظتك المكتوبة فقط",
+              )}
+            </h4>
+            <p className="text-sm text-muted-foreground">
+              {t(
+                "SLAMS cannot see or interpret the performance. Choose a time-coded note and the Director will suggest a practice action from its category. This is not a skill score or a diagnosis.",
+                "SLAMS لا يرى الأداء ولا يحلّله. اختر ملاحظة زمنية ليقترح المخرج تمرينًا حسب النوع الذي اخترته. هذا ليس تقييمًا للمهارة أو تشخيصًا.",
+              )}
+            </p>
+            {markers.length === 0 ? (
+              <p className="text-sm">
+                {t(
+                  "Mark a playback moment above to get a specific retake experiment.",
+                  "حدّد لحظة من التسجيل أعلاه للحصول على تجربة إعادة محددة.",
+                )}
+              </p>
+            ) : (
+              <>
+                <label htmlFor="lab-director-marker" className="block font-semibold">
+                  {t("Choose your observation", "اختر ملاحظتك")}
+                </label>
+                <select
+                  id="lab-director-marker"
+                  className="min-h-11 w-full rounded border border-border bg-background p-3 text-foreground"
+                  value={currentReview?.id ?? ""}
+                  onChange={(event) => setSelectedMarkerId(event.target.value)}
+                >
+                  <option value="">{t("Select a marker", "اختر علامة زمنية")}</option>
+                  {markers.map((marker) => (
+                    <option value={marker.id} key={marker.id}>
+                      {marker.take.toUpperCase()} · {formatTimecode(marker.seconds)} ·{" "}
+                      {marker.observation.slice(0, 60)}
+                    </option>
+                  ))}
+                </select>
+                {currentReview && (
+                  <>
+                    <div className="rounded border border-border bg-secondary p-3 text-sm">
+                      <strong>{t("Your recorded observation", "الملاحظة التي كتبتها")}</strong>
+                      <p className="mt-1 whitespace-pre-wrap break-words" dir="auto">
+                        {currentReview.observation}
+                      </p>
+                    </div>
+                    <DirectorNote
+                      short={t(
+                        "One actionable retake. Not a verdict.",
+                        "إعادة بفعل محدد، ليست حكمًا.",
+                      )}
+                    >
+                      {markerPrompt(currentReview, locale).category}:{" "}
+                      {markerPrompt(currentReview, locale).exercise}{" "}
+                      {markerPrompt(currentReview, locale).caveat}
+                    </DirectorNote>
+                  </>
+                )}
+              </>
+            )}
+          </section>
+          <Link to="/scene" className="underline underline-offset-4">
+            {t("Return to the Living Scene", "العودة للمشهد التفاعلي")}
+          </Link>
+        </section>
+      </section>
+    </Page>
+  );
+}
