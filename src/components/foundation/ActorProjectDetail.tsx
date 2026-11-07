@@ -104,6 +104,7 @@ export function ActorProjectDetail({
     setDraft(project ? asDraft(project) : blankProjectDraft());
     setMessage("");
     setCopyOpen(false);
+    setSaving(false);
   }, [store.userId, project?.id, project?.revision]);
 
   async function save(event: FormEvent<HTMLFormElement>) {
