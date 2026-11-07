@@ -21,7 +21,6 @@ export const Route = createFileRoute("/lab")({
       },
     ],
   }),
-  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) =>
-    validateTab("lab", input),
+  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) => validateTab("lab", input),
   component: PerformanceLab,
 });

@@ -13,11 +13,23 @@ const state = vi.hoisted(() => ({
 }));
 vi.mock("@/lib/i18n", () => ({ useLanguage: () => ({ locale: state.locale }) }));
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement> & { to: string; children: ReactNode }) =>
-    <a href={to} {...rest}>{children}</a>,
+  Link: ({
+    children,
+    to,
+    ...rest
+  }: AnchorHTMLAttributes<HTMLAnchorElement> & { to: string; children: ReactNode }) => (
+    <a href={to} {...rest}>
+      {children}
+    </a>
+  ),
 }));
 vi.mock("@/components/slams", () => ({
-  Page: ({ title, children }: { title: string; children: ReactNode }) => <main><h1>{title}</h1>{children}</main>,
+  Page: ({ title, children }: { title: string; children: ReactNode }) => (
+    <main>
+      <h1>{title}</h1>
+      {children}
+    </main>
+  ),
   btnPrimary: "primary",
   btnSecondary: "secondary",
 }));
@@ -33,8 +45,12 @@ class StubRecorder {
     this.mimeType = options?.mimeType ?? "video/webm";
     sessions.push(this);
   }
-  static isTypeSupported(_mime: string) { return true; }
-  start(_interval: number) { this.state = "recording"; }
+  static isTypeSupported(_mime: string) {
+    return true;
+  }
+  start(_interval: number) {
+    this.state = "recording";
+  }
   stop() {
     this.state = "inactive";
     this.ondataavailable?.({ data: new Blob(["take-media"], { type: this.mimeType }) });
@@ -51,11 +67,14 @@ beforeEach(() => {
   state.revokeURL.mockReset();
   state.copy.mockReset().mockResolvedValue(undefined);
   Object.defineProperty(navigator, "clipboard", {
-    configurable: true, value: { writeText: state.copy },
+    configurable: true,
+    value: { writeText: state.copy },
   });
   let count = 0;
   state.makeURL.mockImplementation(() => "blob:slams-take-" + ++count);
-  state.permission.mockImplementation(async () => ({ getTracks: () => [{ stop: state.stopTrack }] }));
+  state.permission.mockImplementation(async () => ({
+    getTracks: () => [{ stop: state.stopTrack }],
+  }));
   Object.defineProperty(navigator, "mediaDevices", {
     configurable: true,
     value: { getUserMedia: state.permission },
@@ -81,7 +100,11 @@ async function recordA() {
   fireEvent.click(screen.getByRole("button", { name: /Record Take A \(request permission\)/ }));
   await waitFor(() => expect(screen.getByRole("button", { name: "Stop recording" })).toBeEnabled());
   fireEvent.click(screen.getByRole("button", { name: "Stop recording" }));
-  await waitFor(() => expect(screen.getByText("Take A is ready locally. It was not uploaded or saved to Passport.")).toBeInTheDocument());
+  await waitFor(() =>
+    expect(
+      screen.getByText("Take A is ready locally. It was not uploaded or saved to Passport."),
+    ).toBeInTheDocument(),
+  );
 }
 
 describe("Performance Lab: consent and local-only evidence", () => {
@@ -92,7 +115,9 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(state.permission).not.toHaveBeenCalled();
     expect(sessions).toHaveLength(0);
     expect(state.makeURL).not.toHaveBeenCalled();
-    expect(screen.getByText(/No AI observation, automatic score, cloud upload/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/No AI observation, automatic score, cloud upload/i),
+    ).toBeInTheDocument();
   });
   it("records one explicitly requested take, stops tracks and reveals user-controlled playback/download/delete", async () => {
     render(<PerformanceLab />);
@@ -105,7 +130,10 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(state.stopTrack).toHaveBeenCalled();
     const playback = screen.getByLabelText("Playback take A");
     expect(playback).toHaveAttribute("src", "blob:slams-take-1");
-    expect(screen.getByRole("link", { name: "Download this take" })).toHaveAttribute("download", "slams-take-a.webm");
+    expect(screen.getByRole("link", { name: "Download this take" })).toHaveAttribute(
+      "download",
+      "slams-take-a.webm",
+    );
     expect(state.revokeURL).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Delete take now" }));
     expect(state.revokeURL).toHaveBeenCalledWith("blob:slams-take-1");
@@ -117,9 +145,13 @@ describe("Performance Lab: consent and local-only evidence", () => {
     fireEvent.click(screen.getByRole("radio", { name: "Take B" }));
     fireEvent.click(screen.getByRole("radio", { name: "Voice only" }));
     fireEvent.click(screen.getByRole("button", { name: /Record Take B/ }));
-    await waitFor(() => expect(screen.getByRole("button", { name: "Stop recording" })).toBeEnabled());
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Stop recording" })).toBeEnabled(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Stop recording" }));
-    await waitFor(() => expect(screen.getByLabelText("Playback take B")).toHaveAttribute("src", "blob:slams-take-2"));
+    await waitFor(() =>
+      expect(screen.getByLabelText("Playback take B")).toHaveAttribute("src", "blob:slams-take-2"),
+    );
     expect(state.permission).toHaveBeenLastCalledWith({ audio: true, video: false });
     expect(screen.getByLabelText("Playback take A").tagName).toBe("VIDEO");
     expect(screen.getByLabelText("Playback take B").tagName).toBe("AUDIO");
@@ -154,7 +186,9 @@ describe("Performance Lab: consent and local-only evidence", () => {
     const timerSpy = vi.spyOn(globalThis, "setTimeout");
     render(<PerformanceLab />);
     fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
-    await waitFor(() => expect(screen.getByRole("button", { name: "Stop recording" })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Stop recording" })).toBeInTheDocument(),
+    );
     expect(timerSpy).toHaveBeenCalledWith(expect.any(Function), 90_000);
     timerSpy.mockRestore();
     Object.defineProperty(document, "hidden", { configurable: true, value: true });
@@ -165,7 +199,11 @@ describe("Performance Lab: consent and local-only evidence", () => {
   });
   it("releases permission obtained after the actor leaves without constructing a recorder", async () => {
     let resolvePermission!: (stream: unknown) => void;
-    state.permission.mockReturnValueOnce(new Promise((resolve) => { resolvePermission = resolve; }));
+    state.permission.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolvePermission = resolve;
+      }),
+    );
     const view = render(<PerformanceLab />);
     fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
     expect(state.permission).toHaveBeenCalledOnce();
@@ -186,7 +224,9 @@ describe("Performance Lab: consent and local-only evidence", () => {
   it("stops a capture on unmount, and does not write abandoned media to a blob URL", async () => {
     const view = render(<PerformanceLab />);
     fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
-    await waitFor(() => expect(screen.getByRole("button", { name: "Stop recording" })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Stop recording" })).toBeInTheDocument(),
+    );
     view.unmount();
     expect(sessions[0]?.state).toBe("inactive");
     expect(state.stopTrack).toHaveBeenCalled();
@@ -197,12 +237,17 @@ describe("Performance Lab: consent and local-only evidence", () => {
     render(<PerformanceLab />);
     expect(screen.getByRole("button", { name: /Record Take A/ })).toBeDisabled();
     expect(screen.getByRole("alert")).toHaveTextContent("does not expose secure local recording");
-    expect(screen.getByRole("link", { name: "Return to the Living Scene" })).toHaveAttribute("href", "/scene");
+    expect(screen.getByRole("link", { name: "Return to the Living Scene" })).toHaveAttribute(
+      "href",
+      "/scene",
+    );
   });
   it("offers Arabic controls and discloses recordings are local and temporary", () => {
     state.locale = "ar";
     render(<PerformanceLab />);
-    expect(screen.getByRole("heading", { name: "تسجيل محلي فقط · نسخة تجريبية" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "تسجيل محلي فقط · نسخة تجريبية" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /سجّل المحاولة أ/ })).toBeInTheDocument();
     expect(screen.getByText(/تُمحى لما تخرج/)).toBeInTheDocument();
   });
