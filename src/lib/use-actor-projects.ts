@@ -41,7 +41,7 @@ export function fromProjectRow(row: ProjectRow): ActorProject {
     userId: row.user_id,
     title: row.title,
     roleName: row.role_name,
-    status: row.status,
+    status: row.status === "archived" ? "archived" : "active",
     notes: parseProjectNotes(row.notes),
     revision: row.revision,
     createdAt: row.created_at,
