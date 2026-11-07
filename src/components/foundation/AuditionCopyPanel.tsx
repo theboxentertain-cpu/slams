@@ -19,7 +19,8 @@ const UI = {
     unavailable: "Existing audition notes could not be read. Nothing was copied.",
     noContent: "There are no eligible notes to copy into empty project fields.",
     occupied: "Project field already contains notes. It will not be overwritten.",
-    tooLong: "This source note is longer than the 900-character project field. It cannot be copied as-is.",
+    tooLong:
+      "This source note is longer than the 900-character project field. It cannot be copied as-is.",
     choose: "Select fields to stage",
     preview: "Preview source notes",
     stage: "Copy selected notes into this unsaved editor",
