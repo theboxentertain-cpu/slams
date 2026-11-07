@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { actorSupabase as supabase, type ActorRow } from "@/lib/actor-work-supabase-types";
 import { useSession } from "@/lib/session";
-import type { Tables } from "@/integrations/supabase/types";
 import {
   parseAuditionNotes,
   validateAuditionDraft,
@@ -10,7 +9,7 @@ import {
   type AuditionStatus,
 } from "@/lib/actor-audition-model";
 
-type Row = Tables<"actor_auditions">;
+type Row = ActorRow<"actor_auditions">;
 type Result<T> = { value: T; error?: never } | { value?: never; error: string };
 const columns =
   "id, user_id, project_id, title, role_name, due_date, status, notes, revision, created_at, updated_at";
@@ -38,7 +37,10 @@ export function fromAuditionRow(row: Row): ActorAudition {
     title: row.title,
     roleName: row.role_name,
     dueDate: row.due_date,
-    status: row.status,
+    status:
+      row.status === "ready" || row.status === "submitted" || row.status === "closed"
+        ? row.status
+        : "preparing",
     notes: parseAuditionNotes(row.notes),
     revision: row.revision,
     createdAt: row.created_at,

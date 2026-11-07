@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { actorSupabase as supabase, type ActorRow } from "@/lib/actor-work-supabase-types";
 import { useSession } from "@/lib/session";
 import {
   parseProjectNotes,
@@ -8,10 +8,9 @@ import {
   type ProjectNotes,
   type ProjectStatus,
 } from "@/lib/actor-project-model";
-import type { Tables } from "@/integrations/supabase/types";
 
-type ProjectRow = Tables<"actor_projects">;
-type RevisionRow = Tables<"actor_project_revisions">;
+type ProjectRow = ActorRow<"actor_projects">;
+type RevisionRow = ActorRow<"actor_project_revisions">;
 
 export interface ActorProject {
   id: string;
@@ -42,7 +41,7 @@ export function fromProjectRow(row: ProjectRow): ActorProject {
     userId: row.user_id,
     title: row.title,
     roleName: row.role_name,
-    status: row.status,
+    status: row.status === "archived" ? "archived" : "active",
     notes: parseProjectNotes(row.notes),
     revision: row.revision,
     createdAt: row.created_at,
