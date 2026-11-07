@@ -6,8 +6,18 @@ export const PROJECT_NOTE_FIELDS = [
   { key: "action", group: "Character", label: "Playable action", ar: "الفعل القابل للتمثيل" },
   { key: "moment", group: "Character", label: "Moment before", ar: "اللحظة السابقة" },
   { key: "relationships", group: "Character", label: "Relationships", ar: "العلاقات" },
-  { key: "beats", group: "Breakdown", label: "Scene beats / changes", ar: "وحدات المشهد والتحولات" },
-  { key: "tactics", group: "Breakdown", label: "Tactics and transitions", ar: "التكتيكات والتحولات" },
+  {
+    key: "beats",
+    group: "Breakdown",
+    label: "Scene beats / changes",
+    ar: "وحدات المشهد والتحولات",
+  },
+  {
+    key: "tactics",
+    group: "Breakdown",
+    label: "Tactics and transitions",
+    ar: "التكتيكات والتحولات",
+  },
 ] as const;
 
 export type ProjectNoteKey = (typeof PROJECT_NOTE_FIELDS)[number]["key"];
@@ -20,7 +30,11 @@ export interface ProjectDraft {
 }
 export const blankProjectNotes = (): ProjectNotes =>
   Object.fromEntries(PROJECT_NOTE_FIELDS.map(({ key }) => [key, ""])) as ProjectNotes;
-export const blankProjectDraft = (): ProjectDraft => ({ title: "", roleName: "", notes: blankProjectNotes() });
+export const blankProjectDraft = (): ProjectDraft => ({
+  title: "",
+  roleName: "",
+  notes: blankProjectNotes(),
+});
 
 /** A PostgREST/JSON payload is untrusted even when served from our own database. */
 export function parseProjectNotes(value: unknown): ProjectNotes {
