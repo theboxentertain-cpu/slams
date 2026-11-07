@@ -49,6 +49,7 @@ export function PerformanceLab() {
   const [comparison, setComparison] = useState("");
   const [feedback, setFeedback] = useState("");
   const [failed, setFailed] = useState(false);
+  const captureError = useRef(false);
   const [elapsed, setElapsed] = useState(0);
   const live = useRef(true);
   const takesRef = useRef<Takes>(initialTakes);
@@ -100,6 +101,7 @@ export function PerformanceLab() {
     if (stage !== "idle") return;
     setFeedback("");
     setFailed(false);
+    captureError.current = false;
     if (!supportedLocalCapture()) {
       setFailed(true);
       setFeedback(t("This browser does not support local capture. The text rehearsal remains available.", "المتصفح لا يدعم التسجيل المحلي. التدريب النصي ما زال متاحًا."));
@@ -133,6 +135,7 @@ export function PerformanceLab() {
       };
       mr.onerror = () => {
         if (!live.current) return;
+        captureError.current = true;
         setFailed(true);
         setFeedback(t("Recorder failed. Try again; no take was uploaded.", "حدث خطأ في التسجيل. جرّب مجددًا؛ لم يتم رفع أي شيء."));
         endCapture();
@@ -148,7 +151,7 @@ export function PerformanceLab() {
         captureTarget.current = null;
         const mime = mr.mimeType || recorded[0]?.type || "";
         const blob = new Blob(recorded, { type: mime || "application/octet-stream" });
-        if (!target || !recorded.length || !blob.size || failed) {
+        if (!target || !recorded.length || !blob.size || captureError.current) {
           setStage("idle");
           setFailed(true);
           setFeedback(t("No usable take was captured. Retry with device permission enabled.", "لم يتم تسجيل محاولة صالحة. فعّل صلاحية الجهاز وحاول مرة أخرى."));
