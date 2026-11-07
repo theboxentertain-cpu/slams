@@ -43,6 +43,13 @@
       "when": 1794015000000,
       "tag": "0005_actor_auditions",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794018000000,
+      "tag": "0006_actor_sides_anchored",
+      "breakpoints": true
     }
   ]
 }

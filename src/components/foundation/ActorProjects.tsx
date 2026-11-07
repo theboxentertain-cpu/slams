@@ -36,6 +36,7 @@ const LABELS = {
     breakdown: "Scene breakdown",
     openCharacter: "Open dedicated Character File",
     openBreakdown: "Open dedicated Scene Breakdown",
+    openSides: "Open private script sides",
     save: "Save project",
     create: "Create project",
     saving: "Saving…",
@@ -74,6 +75,7 @@ const LABELS = {
     breakdown: "تحليل المشهد",
     openCharacter: "افتح ملف الشخصية المستقل",
     openBreakdown: "افتح تحليل المشهد المستقل",
+    openSides: "افتح النصوص الخاصة",
     save: "احفظ الملف",
     create: "إنشاء الملف",
     saving: "جاري الحفظ…",
@@ -364,6 +366,9 @@ export function ActorProjects() {
                           className={btnSecondary}
                         >
                           {ui.openBreakdown}
+                        </Link>
+                        <Link to="/work/sides" className={btnSecondary}>
+                          {ui.openSides}
                         </Link>
                       </nav>
                       <div className="flex flex-wrap gap-2">
