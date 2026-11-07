@@ -110,6 +110,44 @@ describe("Script sides UI", () => {
       [],
     );
   });
+  it("reads UTF-8 .txt locally and retains CRLF source until explicit save", async () => {
+    render(<ActorSidesPage />);
+    fireEvent.click(screen.getByRole("button", { name: "New side" }));
+    const file = new File(["A\\r\\nليلى: ابقى"], "my-side.txt", { type: "text/plain" });
+    Object.defineProperty(file, "text", { value: async () => "A\\r\\nليلى: ابقى" });
+    fireEvent.change(screen.getByLabelText(/Or load a UTF-8/), {
+      target: { files: [file] },
+    });
+    await waitFor(() =>
+      expect(screen.getByLabelText("Paste original side text")).toHaveValue("A\\nليلى: ابقى"),
+    );
+    fireEvent.change(screen.getByLabelText("Attach to one of your projects or auditions"), {
+      target: { value: "project:" + owner },
+    });
+    expect(mocks.create).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Save side" }));
+    await waitFor(() => expect(mocks.create).toHaveBeenCalledOnce());
+    expect(mocks.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: "my-side",
+        content: "A\\r\\nليلى: ابقى",
+      }),
+      [owner],
+      [],
+    );
+  });
+  it("rejects a .pdf file rather than claiming it has extracted its content", () => {
+    render(<ActorSidesPage />);
+    fireEvent.click(screen.getByRole("button", { name: "New side" }));
+    const file = new File(["PDF data"], "sides.pdf", { type: "application/pdf" });
+    fireEvent.change(screen.getByLabelText(/Or load a UTF-8/), {
+      target: { files: [file] },
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("Only .txt files");
+    expect(screen.getByLabelText("Paste original side text")).toHaveValue("");
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
+
   it("displays script evidence separately from interpretation and saves line-anchored beat", async () => {
     render(<ActorSidesPage />);
     fireEvent.click(screen.getByRole("button", { name: /The Balcony/ }));
