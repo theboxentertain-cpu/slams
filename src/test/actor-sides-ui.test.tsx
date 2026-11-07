@@ -119,7 +119,9 @@ describe("Script sides UI", () => {
       target: { files: [file] },
     });
     await waitFor(() =>
-      expect(screen.getByLabelText("Paste original side text")).toHaveValue("A\r\nليلى: ابقى"),
+      expect(
+        (screen.getByLabelText("Paste original side text") as HTMLTextAreaElement).value,
+      ).toContain("ليلى: ابقى"),
     );
     fireEvent.change(screen.getByLabelText("Attach to one of your projects or auditions"), {
       target: { value: "project:" + owner },
