@@ -8,6 +8,83 @@ export type Database = {
   };
   public: {
     Tables: {
+      actor_projects: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          role_name: string;
+          status: "active" | "archived";
+          notes: Json;
+          revision: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          role_name?: string;
+          status?: "active" | "archived";
+          notes?: Json;
+          revision?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          title?: string;
+          role_name?: string;
+          status?: "active" | "archived";
+          notes?: Json;
+          revision?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      actor_project_revisions: {
+        Row: {
+          project_id: string;
+          user_id: string;
+          revision: number;
+          title: string;
+          role_name: string;
+          status: string;
+          notes: Json;
+          created_at: string;
+        };
+        Insert: {
+          project_id: string;
+          user_id: string;
+          revision: number;
+          title: string;
+          role_name: string;
+          status: string;
+          notes: Json;
+          created_at?: string;
+        };
+        Update: {
+          project_id?: string;
+          user_id?: string;
+          revision?: number;
+          title?: string;
+          role_name?: string;
+          status?: string;
+          notes?: Json;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "actor_project_revisions_parent";
+            columns: ["user_id", "project_id"];
+            isOneToOne: false;
+            referencedRelation: "actor_projects";
+            referencedColumns: ["user_id", "id"];
+          },
+        ];
+      };
       audition_prep: {
         Row: {
           data: Json;
