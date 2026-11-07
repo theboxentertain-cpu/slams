@@ -50,6 +50,13 @@
       "when": 1794018000000,
       "tag": "0006_actor_sides_anchored",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794040000000,
+      "tag": "0007_actor_projects_no_delete",
+      "breakpoints": true
     }
   ]
 }
