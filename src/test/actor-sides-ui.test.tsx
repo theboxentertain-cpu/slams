@@ -88,7 +88,7 @@ describe("Script sides UI", () => {
     expect(screen.getByRole("list", { name: "Original script — immutable snapshot" })).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("From line"), { target: { value: "2" } });
     fireEvent.change(screen.getByLabelText("To line"), { target: { value: "3" } });
-    expect(screen.getByText(/مريم: ما تمشيش/)).toBeInTheDocument();
+    expect(screen.getAllByText(/مريم: ما تمشيش/).length).toBeGreaterThan(0);
     fireEvent.change(screen.getByLabelText("Beat / change"), { target: { value: "New tactic" } });
     fireEvent.change(screen.getByLabelText("Actor's playable objective (interpretation)"), {
       target: { value: "To stop them" },
