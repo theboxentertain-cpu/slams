@@ -66,7 +66,14 @@ beforeEach(() => {
         },
         update: (value: unknown) => {
           mock.updatePayload(value);
-          return { ...query, select: () => ({ single: mock.updateResult }) };
+          const mutation = {
+            eq: (key: string, val: unknown) => {
+              mock.eq(table, key, val);
+              return mutation;
+            },
+            select: () => ({ single: mock.updateResult }),
+          };
+          return mutation;
         },
       };
     throw new Error("Unexpected table: " + table);
