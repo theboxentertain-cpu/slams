@@ -260,6 +260,53 @@ describe("Performance Lab: consent and local-only evidence", () => {
     Object.defineProperty(document, "hidden", { configurable: true, value: false });
   });
 
+  it("discards local takes and all written notes on browser pagehide/bfcache", async () => {
+    render(<PerformanceLab />);
+    await recordA();
+    fireEvent.change(screen.getByLabelText("What playable result is your character pursuing?"), {
+      target: { value: "A private actor objective" },
+    });
+    fireEvent.change(screen.getAllByLabelText("What actually happened in this take?")[0]!, {
+      target: { value: "A private note" },
+    });
+    fireEvent(window, new Event("pagehide"));
+    expect(state.revokeURL).toHaveBeenCalledWith("blob:slams-take-1");
+    expect(screen.queryByLabelText("Playback take A")).toBeNull();
+    expect(screen.getAllByText("No take in memory")).toHaveLength(2);
+    expect(screen.getByLabelText("What playable result is your character pursuing?")).toHaveValue("");
+    expect(screen.getAllByLabelText("What actually happened in this take?")[0]).toHaveValue("");
+  });
+
+  it("stops an active recorder on browser pagehide without saving abandoned capture", async () => {
+    render(<PerformanceLab />);
+    fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Stop recording" })).toBeInTheDocument(),
+    );
+    fireEvent(window, new Event("pagehide"));
+    expect(sessions[0]?.state).toBe("inactive");
+    expect(state.stopTrack).toHaveBeenCalled();
+    expect(state.makeURL).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: /Record Take A/ })).toBeEnabled();
+  });
+
+  it("rejects late camera permission after a browser pagehide", async () => {
+    let grant!: (stream: unknown) => void;
+    state.permission.mockReturnValueOnce(
+      new Promise((resolve) => {
+        grant = resolve;
+      }),
+    );
+    render(<PerformanceLab />);
+    fireEvent.click(screen.getByRole("button", { name: /Record Take A/ }));
+    expect(state.permission).toHaveBeenCalledOnce();
+    fireEvent(window, new Event("pagehide"));
+    grant({ getTracks: () => [{ stop: state.stopTrack }] });
+    await waitFor(() => expect(state.stopTrack).toHaveBeenCalled());
+    expect(sessions).toHaveLength(0);
+    expect(state.makeURL).not.toHaveBeenCalled();
+  });
+
   it("releases the live stream and revokes media URLs on navigation away", async () => {
     const view = render(<PerformanceLab />);
     await recordA();
