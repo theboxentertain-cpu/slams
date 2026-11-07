@@ -60,7 +60,8 @@ export function fromRevisionRow(row: RevisionRow): ActorProjectRevision {
   };
 }
 const changedAccount = "Your account changed. Reload Actor at Work before continuing.";
-const unavailable = "Project files could not be loaded. The secure project database may not be installed in this deployment.";
+const unavailable =
+  "Project files could not be loaded. The secure project database may not be installed in this deployment.";
 
 export function useActorProjects() {
   const { user, loading: sessionLoading } = useSession();
@@ -103,7 +104,9 @@ export function useActorProjects() {
       setState({
         owner: userId,
         loaded: true,
-        projects: ((data ?? []) as ProjectRow[]).filter((row) => row.user_id === userId).map(fromProjectRow),
+        projects: ((data ?? []) as ProjectRow[])
+          .filter((row) => row.user_id === userId)
+          .map(fromProjectRow),
         error: null,
       });
     } catch {
