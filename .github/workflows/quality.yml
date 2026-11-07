@@ -39,3 +39,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run network-isolated PostgreSQL policy tests
         run: bash scripts/test-rls.sh
+      - name: Rehearse private-backup runner using synthetic SQL only
+        run: bash scripts/db/test-backup-recovery-runner.sh
