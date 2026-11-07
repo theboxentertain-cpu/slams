@@ -5,6 +5,7 @@ import { useAuditionPrep, usePassport } from "@/lib/store";
 import { StuckDeskGuide } from "./StuckDeskGuide";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 import { AuditionWorkspace } from "./AuditionWorkspace";
+import { ActorProjectsWorkspace } from "./ActorProjectsWorkspace";
 import { SUPPORT_PAGES } from "@/lib/foundation";
 type TabProps = { tab: string; onTabChange: (tab: string) => void };
 
@@ -41,14 +42,14 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
             <T>Multiple audition files and deadlines are in development.</T>
           </p>
         </section>
+      ) : tab === "projects" ? (
+        <ActorProjectsWorkspace />
       ) : (
         <section className="foundation-stack">
           <Unavailable>
-            {tab === "projects"
-              ? "Project files, saved scripts and revision history are in development."
-              : tab === "characters"
-                ? "Dedicated character files are in development. Existing audition notes remain available."
-                : "Recording, playback and export are not implemented."}
+            {tab === "characters"
+              ? "Dedicated character files are in development. Project files now support given circumstances and objectives."
+              : "Recording, playback and export are not implemented."}
           </Unavailable>
           <button className={btnPrimary} onClick={() => onTabChange("auditions")}>
             <T>Back to audition preparation</T>
