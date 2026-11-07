@@ -151,7 +151,7 @@ export function CurriculumUnit({
       </article>
     );
   return (
-    <details className="mt-3 border-l border-border pl-3">
+    <details className="mt-3 border-s border-border ps-3">
       <summary className="cursor-pointer font-bold">
         {unit.title} · {kind}
       </summary>

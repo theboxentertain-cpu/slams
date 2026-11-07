@@ -63,7 +63,7 @@ function paperSound() {
 }
 
 export function DirectorsOffice() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [view, setView] = useState<OfficeView>("desk");
   const [visited, setVisited] = useState<OfficeView[]>(["desk"]);
   const [booksOpen, setBooksOpen] = useState(false);
@@ -115,13 +115,14 @@ export function DirectorsOffice() {
   }
   function tabKeys(event: KeyboardEvent) {
     let next = index;
-    if (event.key === "ArrowRight") next = (index + 1) % 3;
-    else if (event.key === "ArrowLeft") next = (index + 2) % 3;
+    if (event.key === (locale === "ar" ? "ArrowLeft" : "ArrowRight")) next = (index + 1) % 3;
+    else if (event.key === (locale === "ar" ? "ArrowRight" : "ArrowLeft")) next = (index + 2) % 3;
     else if (event.key === "Home") next = 0;
     else if (event.key === "End") next = 2;
     else return;
     event.preventDefault();
-    selectView(OFFICE_VIEWS[next]!.id, true);
+    const nextView = OFFICE_VIEWS[next];
+    if (nextView) selectView(nextView.id, true);
   }
   const expression: DirectorExpression =
     mode === "off"
@@ -233,7 +234,9 @@ export function DirectorsOffice() {
           if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.4) {
             swiped.current = true;
             event.preventDefault();
-            selectView(OFFICE_VIEWS[Math.max(0, Math.min(2, index + (dx < 0 ? 1 : -1)))]!.id);
+            const delta = (dx < 0 ? 1 : -1) * (locale === "ar" ? -1 : 1);
+            const nextView = OFFICE_VIEWS[Math.max(0, Math.min(2, index + delta))];
+            if (nextView) selectView(nextView.id);
           }
         }}
         onClickCapture={(event) => {
@@ -252,7 +255,7 @@ export function DirectorsOffice() {
             className="office-icon-button room-arrow"
             aria-label="Previous office view"
             disabled={index === 0}
-            onClick={() => selectView(OFFICE_VIEWS[index - 1]!.id)}
+            onClick={() => { const previous = OFFICE_VIEWS[index - 1]; if (previous) selectView(previous.id); }}
           >
             <ArrowLeft size={17} />
           </button>
@@ -281,7 +284,7 @@ export function DirectorsOffice() {
             className="office-icon-button room-arrow"
             aria-label="Next office view"
             disabled={index === 2}
-            onClick={() => selectView(OFFICE_VIEWS[index + 1]!.id)}
+            onClick={() => { const next = OFFICE_VIEWS[index + 1]; if (next) selectView(next.id); }}
           >
             <ArrowRight size={17} />
           </button>
