@@ -53,6 +53,18 @@ describe("Legacy audition → project staging", () => {
     expect(target.notes).toEqual(blankProjectDraft().notes);
   });
 
+  it("refuses source notes that would violate project field length", () => {
+    const target = blankProjectDraft();
+    const sourceWithLongNote = { objective: "A".repeat(901) };
+    const options = auditionCopyCandidates(sourceWithLongNote, target);
+    expect(options.find((option) => option.key === "objective")).toMatchObject({
+      eligible: false,
+      tooLong: true,
+    });
+    expect(copyAuditionFields(sourceWithLongNote, target, ["objective"]).error).toBeTruthy();
+    expect(target.notes.objective).toBe("");
+  });
+
   it("copies Arabic prose exactly, deduplicates selected keys, and never persists anything", () => {
     const target = blankProjectDraft();
     const arabic = { objective: "أقنعه\nمن غير انفعال" };
