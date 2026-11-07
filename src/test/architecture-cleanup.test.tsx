@@ -95,16 +95,13 @@ describe("Available work comes first", () => {
     expect(screen.getByLabelText("Private project files")).toHaveTextContent("Project library");
     expect(screen.queryByRole("heading", { name: "In development" })).toBeNull();
   });
-  it.each(["characters", "self-tapes"])(
-    "gives an old %s bookmark a useful route back",
-    (tab) => {
-      const change = vi.fn();
-      render(<WorkHub tab={tab} onTabChange={change} />);
-      expect(screen.getByRole("heading", { name: "In development" })).toBeInTheDocument();
-      fireEvent.click(screen.getByRole("button", { name: "Back to audition preparation" }));
-      expect(change).toHaveBeenCalledWith("auditions");
-    },
-  );
+  it.each(["characters", "self-tapes"])("gives an old %s bookmark a useful route back", (tab) => {
+    const change = vi.fn();
+    render(<WorkHub tab={tab} onTabChange={change} />);
+    expect(screen.getByRole("heading", { name: "In development" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Back to audition preparation" }));
+    expect(change).toHaveBeenCalledWith("auditions");
+  });
   it("retains every authored draft intervention without competing empty workflow tabs", () => {
     render(<StuckIntake tab="describe" onTabChange={vi.fn()} />);
     for (const item of DRAFT_INTERVENTIONS)
