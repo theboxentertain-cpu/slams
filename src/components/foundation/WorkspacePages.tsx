@@ -5,6 +5,7 @@ import { useAuditionPrep, usePassport } from "@/lib/store";
 import { StuckDeskGuide } from "./StuckDeskGuide";
 import { SectionTabs, Unavailable } from "./SectionTabs";
 import { AuditionWorkspace } from "./AuditionWorkspace";
+import { AuditionFiles } from "./AuditionFiles";
 import { ActorProjects } from "./ActorProjects";
 import { SUPPORT_PAGES } from "@/lib/foundation";
 type TabProps = { tab: string; onTabChange: (tab: string) => void };
@@ -38,9 +39,7 @@ export function WorkHub({ tab, onTabChange }: TabProps) {
           <Link to="/work/audition" search={{ tab: "preparation" }} className={btnPrimary}>
             <T>Open audition preparation</T>
           </Link>
-          <p className="text-sm text-muted-foreground">
-            <T>Multiple audition files and deadlines are in development.</T>
-          </p>
+          <AuditionFiles />
         </section>
       ) : tab === "projects" ? (
         <ActorProjects />
