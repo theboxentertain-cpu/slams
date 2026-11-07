@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { LanguageProvider, LanguageSwitch, LANGUAGE_KEY } from "@/lib/i18n";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
@@ -12,13 +12,13 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); localStorage.clear(); document.documentElement.dir = "ltr"; });
 
-it("provides RTL to controls and returns them to LTR when English is selected", () => {
+it("provides RTL to controls and returns them to LTR when English is selected", async () => {
   render(<LanguageProvider><LanguageSwitch /><Tabs defaultValue="first"><TabsList><TabsTrigger value="first">First</TabsTrigger><TabsTrigger value="second">Second</TabsTrigger></TabsList><TabsContent value="first">Content</TabsContent></Tabs><Slider defaultValue={[30]} aria-label="Intensity" /></LanguageProvider>);
-  expect(screen.getByRole("tablist")).toHaveAttribute("dir", "rtl");
+  await waitFor(() => expect(screen.getByRole("tablist")).toHaveAttribute("dir", "rtl"));
   const slider = screen.getByRole("slider");
   expect(slider.closest('[dir="rtl"]')).not.toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "English" }));
-  expect(screen.getByRole("tablist")).toHaveAttribute("dir", "ltr");
+  await waitFor(() => expect(screen.getByRole("tablist")).toHaveAttribute("dir", "ltr"));
   expect(slider.closest('[dir="ltr"]')).not.toBeNull();
 });
 
