@@ -80,5 +80,6 @@ describe("Script-side snapshots and exact line anchors", () => {
     );
     expect(notes).toHaveLength(1);
     expect(notes[0]?.beat).toBe("<script>not executed</script>");
+    expect(parseSideAnnotations([note, note], "A\\nB\\nC")).toHaveLength(1);
   });
 });
