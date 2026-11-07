@@ -149,7 +149,7 @@
 .training-structure-note {
   margin: 0 0 22px;
   padding: 13px 17px;
-  border-left: 3px solid #ba965b;
+  border-inline-start: 3px solid #ba965b;
   background: #291a11b3;
   color: #d6be98;
   font-size: 13px;
@@ -195,7 +195,7 @@
   min-width: 0;
   overflow: hidden;
   background: #27180d;
-  border-right: 1px solid #b8945f77;
+  border-inline-end: 1px solid #b8945f77;
 }
 .school-card-art > .school-portrait {
   position: absolute;
@@ -216,7 +216,7 @@
   position: absolute;
   z-index: 1;
   bottom: 10px;
-  left: 10px;
+  inset-inline-start: 10px;
   display: grid;
   place-items: center;
   width: 34px;
@@ -277,7 +277,7 @@
 .school-card-arrow {
   position: absolute;
   top: 11px;
-  right: 9px;
+  inset-inline-end: 9px;
   color: #e1bd7e;
 }
 .training-next-actions {
@@ -306,7 +306,7 @@
 .training-next-actions > a > svg:last-child {
   width: 16px;
   height: 16px;
-  margin-left: auto;
+  margin-inline-start: auto;
   flex-shrink: 0;
 }
 .training-next-actions strong {

@@ -10,6 +10,7 @@
 @import "./training-worlds.css";
 @import "./baseline.css";
 @import "./lesson.css";
+@import "./rtl.css";
 
 @custom-variant dark (&:is(.dark *));
 

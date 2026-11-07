@@ -513,11 +513,11 @@
   position: relative;
 }
 .password-control input {
-  padding-right: 57px;
+  padding-inline-end: 57px;
 }
 .password-control button {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: 0;
   display: grid;
   place-items: center;
@@ -551,11 +551,11 @@
 .account-error {
   color: #8d1221;
   padding: 10px;
-  border-left: 3px solid #a71324;
+  border-inline-start: 3px solid #a71324;
   font-weight: 700;
 }
 .account-notice {
-  border-left: 3px solid #4f651c;
+  border-inline-start: 3px solid #4f651c;
   padding: 10px;
 }
 .account-provider-note {
