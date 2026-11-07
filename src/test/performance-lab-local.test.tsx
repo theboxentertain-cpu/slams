@@ -273,7 +273,9 @@ describe("Performance Lab: consent and local-only evidence", () => {
     expect(state.revokeURL).toHaveBeenCalledWith("blob:slams-take-1");
     expect(screen.queryByLabelText("Playback take A")).toBeNull();
     expect(screen.getAllByText("No take in memory")).toHaveLength(2);
-    expect(screen.getByLabelText("What playable result is your character pursuing?")).toHaveValue("");
+    expect(screen.getByLabelText("What playable result is your character pursuing?")).toHaveValue(
+      "",
+    );
     expect(screen.getAllByLabelText("What actually happened in this take?")[0]).toHaveValue("");
   });
 
