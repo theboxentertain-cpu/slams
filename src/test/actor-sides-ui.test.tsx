@@ -113,13 +113,13 @@ describe("Script sides UI", () => {
   it("reads UTF-8 .txt locally and retains CRLF source until explicit save", async () => {
     render(<ActorSidesPage />);
     fireEvent.click(screen.getByRole("button", { name: "New side" }));
-    const file = new File(["A\\r\\nليلى: ابقى"], "my-side.txt", { type: "text/plain" });
-    Object.defineProperty(file, "text", { value: async () => "A\\r\\nليلى: ابقى" });
+    const file = new File(["A\r\nليلى: ابقى"], "my-side.txt", { type: "text/plain" });
+    Object.defineProperty(file, "text", { value: async () => "A\r\nليلى: ابقى" });
     fireEvent.change(screen.getByLabelText(/Or load a UTF-8/), {
       target: { files: [file] },
     });
     await waitFor(() =>
-      expect(screen.getByLabelText("Paste original side text")).toHaveValue("A\\nليلى: ابقى"),
+      expect(screen.getByLabelText("Paste original side text")).toHaveValue("A\r\nليلى: ابقى"),
     );
     fireEvent.change(screen.getByLabelText("Attach to one of your projects or auditions"), {
       target: { value: "project:" + owner },
@@ -130,7 +130,7 @@ describe("Script sides UI", () => {
     expect(mocks.create).toHaveBeenCalledWith(
       expect.objectContaining({
         title: "my-side",
-        content: "A\\r\\nليلى: ابقى",
+        content: "A\r\nليلى: ابقى",
       }),
       [owner],
       [],
