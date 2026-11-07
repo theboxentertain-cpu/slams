@@ -85,6 +85,7 @@ export function validateSideAnnotations(value: SideAnnotation[], content: string
 export function parseSideAnnotations(value: unknown, content: string): SideAnnotation[] {
   if (!Array.isArray(value)) return [];
   const notes: SideAnnotation[] = [];
+  const usedIds = new Set<string>();
   for (const candidate of value) {
     if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) continue;
     const item = candidate as Record<string, unknown>;
@@ -105,7 +106,10 @@ export function parseSideAnnotations(value: unknown, content: string): SideAnnot
       objective: item["objective"],
       tactic: item["tactic"],
     };
-    if (!validateSideAnnotations([note], content)) notes.push(note);
+    if (!validateSideAnnotations([note], content) && !usedIds.has(note.id)) {
+      usedIds.add(note.id);
+      notes.push(note);
+    }
     if (notes.length === MAX_ANNOTATIONS) break;
   }
   return notes;
