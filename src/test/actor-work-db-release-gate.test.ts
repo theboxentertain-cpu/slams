@@ -6,13 +6,14 @@ function repositoryFile(path: string): string {
 }
 
 describe("Actor at Work database rollout safety", () => {
-  const journal = JSON.parse(
-    repositoryFile("drizzle/migrations/meta/_journal.json"),
-  ) as { entries: Array<{ tag: string }> };
+  const journal = JSON.parse(repositoryFile("drizzle/migrations/meta/_journal.json")) as {
+    entries: Array<{ tag: string }>;
+  };
   const projects = repositoryFile("drizzle/migrations/0004_actor_projects_versioned.sql");
   const auditions = repositoryFile("drizzle/migrations/0005_actor_auditions.sql");
   const preflight = repositoryFile("scripts/db/actor-work-preflight-readonly.sql");
   const staging = repositoryFile("scripts/db/actor-work-staging-rls.psql");
+  const realAuth = repositoryFile("scripts/db/verify-actor-rls-real-auth.mjs");
   const gate = repositoryFile("docs/ops/ACTOR_WORK_DATABASE_RELEASE_GATE.md");
 
   it("flags academic 0003 in the shared pending journal; does not authorize migrate-all", () => {
@@ -23,9 +24,9 @@ describe("Actor at Work database rollout safety", () => {
         "0005_actor_auditions",
       ]),
     );
-    expect(
-      repositoryFile("drizzle/migrations/0003_academic_progression_placement.sql"),
-    ).toContain("PROPOSAL ONLY");
+    expect(repositoryFile("drizzle/migrations/0003_academic_progression_placement.sql")).toContain(
+      "PROPOSAL ONLY",
+    );
     expect(gate).toContain("Never run all pending Drizzle journal entries");
   });
 
@@ -45,16 +46,22 @@ describe("Actor at Work database rollout safety", () => {
     expect(projects).toContain("actor_project_revisions_parent");
     expect(projects).toContain("FOREIGN KEY (user_id, project_id)");
     expect(projects).toMatch(/GRANT SELECT ON public\.actor_project_revisions TO authenticated/);
-    expect(projects).toMatch(/FOR SELECT TO authenticated USING \(user_id = \(select auth\.uid\(\)\)\)/);
-    expect(projects).not.toMatch(/GRANT (?:ALL|INSERT|UPDATE|DELETE) ON public\.actor_project_revisions TO authenticated/);
+    expect(projects).toMatch(
+      /FOR SELECT TO authenticated USING \(user_id = \(select auth\.uid\(\)\)\)/,
+    );
+    expect(projects).not.toMatch(
+      /GRANT (?:ALL|INSERT|UPDATE|DELETE) ON public\.actor_project_revisions TO authenticated/,
+    );
     expect(auditions).toContain("FOREIGN KEY (user_id, project_id)");
     expect(auditions).toContain("ON DELETE RESTRICT");
-    expect(auditions).toMatch(/GRANT SELECT, INSERT, UPDATE ON public\.actor_auditions TO authenticated/);
+    expect(auditions).toMatch(
+      /GRANT SELECT, INSERT, UPDATE ON public\.actor_auditions TO authenticated/,
+    );
     expect(auditions).not.toMatch(/GRANT .*DELETE ON public\.actor_auditions TO authenticated/);
     expect(auditions).toContain("NEW.revision := OLD.revision + 1");
   });
 
-  it("forbids live tests and requires a rolled-back, two-identity staging harness", () => {
+  it("forbids live tests and requires rolled-back and real-token staging checks", () => {
     expect(staging).toContain("confirmed_nonproduction");
     expect(staging).toContain("SET LOCAL ROLE authenticated");
     expect(staging).toContain("request.jwt.claim.sub");
@@ -63,6 +70,11 @@ describe("Actor at Work database rollout safety", () => {
     expect(staging).toContain("actor_project_revisions");
     expect(staging).toContain("foreign_key_violation");
     expect(staging).toContain("insufficient_privilege");
+    expect(realAuth).toContain("staging-only");
+    expect(realAuth).toContain("signInWithPassword");
+    expect(realAuth).toContain("sb_publishable_");
+    expect(realAuth).toContain("cross-account audition association");
+    expect(realAuth).toContain("cleanUp");
     expect(gate).toContain("real authenticated user sessions");
     expect(gate).toContain("No production SQL");
   });
