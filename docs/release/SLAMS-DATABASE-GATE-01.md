@@ -2,11 +2,11 @@
 
 **State at authoring:** NOT RESOLVED / PRODUCTION SQL WRITES FORBIDDEN.
 
-SLAMS Lovable project `64914af9-5120-4ab2-bf0b-13e6ee092b40` reports a Supabase database enabled. Attempts to inspect the database through its Lovable database connector returned the free-tier action-limit error. The query was **not executed**. There is no confirmed deployed schema, migration version, direct RLS result, or live backup. No migration has been applied through this work.
+SLAMS Lovable project `64914af9-5120-4ab2-bf0b-13e6ee092b40` reports a Supabase database enabled. Earlier **read-only** `information_schema` / `pg_catalog` inspection succeeded and confirmed legacy `audition_prep` and `passport_entries` with owner-scoped RLS policies, and **absence** of `actor_projects`, `actor_project_revisions`, `actor_auditions`, and `actor_sides`. The `drizzle.__drizzle_migrations` **ledger table** exists. Further read-only queries needed to examine its **actual entries/hashes** were blocked by the Lovable free-tier action quota; those later queries were **not executed**. Thus neither the applied migration history nor live two-account RLS has been verified. No migration or live database write has been performed through this work.
 
 ## Verified code findings
 
-1. GitHub `drizzle/migrations/meta/_journal.json` lists migrations 0000–0006, but JSON is **a proposal catalog**, not a deployed migration ledger.
+1. GitHub `drizzle/migrations/meta/_journal.json` lists migrations 0000–0007, but JSON is **a proposal catalog**, not a deployed migration ledger. The deferred academic progression migration `0003` must not be applied indirectly while rolling out Actor at Work.
 2. 0004 sets account-scoped RLS, ownership-immutable project revisions and an append-only history trigger. However, it also grants authenticated users DELETE on `actor_projects` and creates an owner-delete policy. Direct deletion can erase a project and its history. The UI uses archive/restore, not direct delete.
 3. Migration 0007 removes project DELETE grants/policy without altering user records. **Proposed only**; not installed in a real DB.
 4. 0005 defines owner-linked audition files via composite `(user_id,project_id)` FK; 0006 requires `actor_auditions(user_id,id)` uniqueness and defines owner-linked immutable script sides.
