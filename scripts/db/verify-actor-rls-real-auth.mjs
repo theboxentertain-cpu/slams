@@ -41,8 +41,8 @@ if (url.protocol !== "https:" && url.hostname !== "localhost") {
   throw new Error("Staging URL must use HTTPS (or localhost).");
 }
 const key = process.env.SLAMS_STAGING_PUBLISHABLE_KEY;
-if (key.startsWith("sb_secret_") || key.startsWith("eyJ") && !process.env.SLAMS_ALLOW_LEGACY_ANON_JWT) {
-  throw new Error("Use a publishable staging key; never a privileged secret.");
+if (!key.startsWith("sb_publishable_")) {
+  throw new Error("Refusing legacy JWT or privileged secret keys. Use sb_publishable_ only.");
 }
 
 function client() {
@@ -90,9 +90,10 @@ try {
     user_id: aId, title: marker + "-A", notes: { objective: "observe actor's chosen result" },
   }).select("id,user_id,revision").single();
   const aProject = requireQuery(aResult, "Actor A project create");
-  check(aProject && aProject.user_id === aId && aProject.revision === 1,
-    "Actor A first revision/owner mismatch");
+  check(Boolean(aProject?.id), "Actor A create returned no project identifier");
   created.push({ owner: actorA, id: aProject.id, label: "Actor A" });
+  check(aProject.user_id === aId && aProject.revision === 1,
+    "Actor A first revision/owner mismatch");
 
   const bReadA = requireQuery(await actorB.from("actor_projects")
     .select("id").eq("id", aProject.id), "Actor B read A");
@@ -105,6 +106,11 @@ try {
 
   const forged = await actorB.from("actor_projects")
     .insert({ user_id: aId, title: marker + "-spoof" }).select("id");
+  // If this forbidden operation unexpectedly succeeds, track it for cleanup
+  // before failing. Only an isolated staging environment is allowed here.
+  if (forged.data?.[0]?.id) {
+    created.push({ owner: actorA, id: forged.data[0].id, label: "Forged owner" });
+  }
   check(Boolean(forged.error) && forged.error.code === "42501",
     "RLS BREACH: B did not receive expected RLS rejection for forged user_id");
 
@@ -112,8 +118,9 @@ try {
     user_id: bId, title: marker + "-B",
   }).select("id,user_id,revision").single();
   const bProject = requireQuery(bResult, "Actor B project create");
-  check(bProject && bProject.user_id === bId, "Actor B owner mismatch");
+  check(Boolean(bProject?.id), "Actor B create returned no project identifier");
   created.push({ owner: actorB, id: bProject.id, label: "Actor B" });
+  check(bProject.user_id === bId, "Actor B owner mismatch");
 
   const aReadB = requireQuery(await actorA.from("actor_projects")
     .select("id").eq("id", bProject.id), "Actor A read B");
