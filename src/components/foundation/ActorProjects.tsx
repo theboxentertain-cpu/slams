@@ -146,11 +146,11 @@ export function ActorProjects() {
     setMessage("");
     try {
       const result = creating ? await store.create(draft) : await store.update(selected!, draft);
-      if (result.error) {
-        setMessage(result.error);
-      } else {
+      if (result.value) {
         openProject(result.value);
         setMessage(creating ? ui.created : ui.saved);
+      } else {
+        setMessage(result.error ?? "Project save was not confirmed.");
       }
     } finally {
       setBusy(false);
@@ -163,10 +163,11 @@ export function ActorProjects() {
     setMessage("");
     try {
       const result = await store.update(selected, projectDraft(selected), next);
-      if (result.error) setMessage(result.error);
-      else {
+      if (result.value) {
         openProject(result.value);
         setMessage(ui.changed);
+      } else {
+        setMessage(result.error ?? "Project update was not confirmed.");
       }
     } finally {
       setBusy(false);
@@ -180,8 +181,8 @@ export function ActorProjects() {
     setMessage("");
     const result = await store.loadHistory(selected);
     if (selectedRef.current === expectedId) {
-      setHistory(result.error ? null : result.value);
-      if (result.error) setMessage(result.error || ui.versionUnavailable);
+      setHistory(result.value ?? null);
+      if (!result.value) setMessage(result.error ?? ui.versionUnavailable);
       setHistoryLoading(false);
     }
   }
