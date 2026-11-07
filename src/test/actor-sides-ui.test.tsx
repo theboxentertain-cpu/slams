@@ -77,7 +77,7 @@ describe("Script sides UI", () => {
     fireEvent.click(save);
     await waitFor(() => expect(mocks.create).toHaveBeenCalledOnce());
     expect(mocks.create).toHaveBeenCalledWith(
-      { title: "Side 2", content: "INT. ROOM\r\nمريم: صدقني",
+      { title: "Side 2", content: "INT. ROOM\nمريم: صدقني",
         target: { kind: "project", id: owner } },
       [owner], [],
     );
