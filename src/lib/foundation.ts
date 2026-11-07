@@ -124,15 +124,6 @@ export const SUPPORT_PAGES = {
     action: "/scene",
     label: "Skip to a first rehearsal",
   },
-  lab: {
-    to: "/lab",
-    title: "Performance Lab",
-    parent: "/rehearsal",
-    message:
-      "Recorded takes, playback and side-by-side comparison are in development. No recording is made by the text-only Living Scene.",
-    action: "/scene",
-    label: "Run a text-only take",
-  },
   lounge: {
     to: "/lounge",
     title: "Rehearsal Lounge",
