@@ -200,7 +200,14 @@ export function PerformanceLab() {
 
   useEffect(() => {
     live.current = true;
+    const stopWhenHidden = () => {
+      if (document.hidden && recorder.current?.state === "recording") {
+        endCapture();
+      }
+    };
+    document.addEventListener("visibilitychange", stopWhenHidden);
     return () => {
+      document.removeEventListener("visibilitychange", stopWhenHidden);
       live.current = false;
       requestId.current++;
       stopTimers();
