@@ -1,0 +1,77 @@
+/* Mirror interface flow, never the Director, portraits, or scenic artwork. */
+:root[dir="rtl"] {
+  --font-display: "Noto Sans Arabic", system-ui, sans-serif;
+  --font-sans: "Noto Sans Arabic", system-ui, sans-serif;
+}
+:root[dir="rtl"] :is(h1, h2, h3, h4, label, button, [role="tab"], .studio-eyebrow, .office-kicker) {
+  letter-spacing: 0;
+}
+:root[dir="rtl"] :is(.section-coach-label, .baseline-ribbon, .curriculum-reading-sheet h2, .meisner-workshop strong) {
+  font-family: var(--font-sans);
+  font-style: normal;
+  line-height: 1.6;
+}
+/* Only horizontal navigation symbols reverse; play, undo, and external links do not. */
+:root[dir="rtl"] svg:is(.lucide-arrow-left, .lucide-arrow-right, .lucide-chevron-left, .lucide-chevron-right) {
+  transform: scaleX(-1);
+}
+:root[dir="rtl"] .welcome-back svg {
+  transform: scaleX(-1);
+}
+:root[dir="rtl"] :is(.section-coach, .office-journey) {
+  margin-left: 0;
+  margin-inline-start: auto;
+}
+/* Scenic heading art stays in its photographed position; copy flows independently. */
+:root[dir="rtl"] .training-heading {
+  direction: ltr;
+}
+:root[dir="rtl"] .training-heading :is(.studio-heading-copy, .section-coach) {
+  direction: rtl;
+  text-align: start;
+}
+:root[dir="rtl"] .training-heading .section-coach {
+  margin-inline-start: 0;
+  margin-left: 46%;
+}
+:root[dir="rtl"] .training-heading .section-coach:has(.section-coach-note) {
+  margin-left: 0;
+}
+:root[dir="rtl"] .school-card-copy > strong {
+  padding-inline-start: 17px;
+  padding-inline-end: 22px;
+  font-style: normal;
+  line-height: 1.55;
+}
+:root[dir="rtl"] .availability-note {
+  border-left: 0;
+  border-inline-start: 2px solid var(--border);
+}
+:root[dir="rtl"] .password-control input {
+  padding-right: 12px;
+  padding-left: 57px;
+}
+:root[dir="rtl"] .office-premium .office-profile-identity {
+  right: auto;
+  left: 0;
+  text-align: start;
+}
+:root[dir="rtl"] .director-controls {
+  flex-wrap: wrap;
+}
+/* Mixed user-authored text chooses its own base direction without changing its value. */
+:is(textarea, .whitespace-pre-wrap, bdi) {
+  unicode-bidi: plaintext;
+}
+@media (max-width: 700px) {
+  :root[dir="rtl"] .training-heading .section-coach {
+    margin-left: 43%;
+  }
+  :root[dir="rtl"] .training-heading .section-coach:has(.section-coach-note) {
+    margin-left: 0;
+  }
+  :root[dir="rtl"] .school-card-copy > strong {
+    padding-inline-start: 14px;
+    padding-inline-end: 23px;
+  }
+}
