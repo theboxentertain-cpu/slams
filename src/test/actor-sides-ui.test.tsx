@@ -143,7 +143,7 @@ describe("Script sides UI", () => {
     fireEvent.change(screen.getByLabelText(/Or load a UTF-8/), {
       target: { files: [file] },
     });
-    expect(screen.getByRole("status")).toHaveTextContent("Only .txt files");
+    expect(screen.getByText(/Only \.txt files/)).toBeInTheDocument();
     expect(screen.getByLabelText("Paste original side text")).toHaveValue("");
     expect(mocks.create).not.toHaveBeenCalled();
   });
