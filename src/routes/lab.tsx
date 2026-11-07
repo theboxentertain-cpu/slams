@@ -1,6 +1,7 @@
 import { createFileRoute, type SearchSchemaInput } from "@tanstack/react-router";
 import { validateTab } from "@/lib/foundation";
-import { SupportPage } from "@/components/foundation/SupportPage";
+import { PerformanceLab } from "@/components/foundation/PerformanceLab";
+
 export const Route = createFileRoute("/lab")({
   head: () => ({
     meta: [
@@ -10,19 +11,17 @@ export const Route = createFileRoute("/lab")({
       {
         name: "description",
         content:
-          "Recording and playback will arrive only after privacy and security are in place. Nothing is recorded today.",
+          "Consent-based, session-only camera or microphone takes, playback and self-observation. No AI analysis, automatic grades or cloud media storage.",
       },
       { property: "og:title", content: "Performance Lab — SLAMS" },
       {
         property: "og:description",
         content:
-          "Recording and playback will arrive only after privacy and security are in place. Nothing is recorded today.",
+          "Local-only, user-initiated recording and before/after take comparison. Recorded media is not uploaded.",
       },
     ],
   }),
-  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) => validateTab("lab", input),
-  component: Screen,
+  validateSearch: (input: { tab?: unknown } & SearchSchemaInput) =>
+    validateTab("lab", input),
+  component: PerformanceLab,
 });
-function Screen() {
-  return <SupportPage id="lab" />;
-}
