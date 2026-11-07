@@ -1,0 +1,234 @@
+-- SLAMS Actor at Work: staging-only RLS regression harness.
+--
+-- Run ONLY against a disposable/nonproduction Supabase database AFTER an
+-- approved review and separate, successful application of migrations 0004–0007.
+-- Provision two REAL, DISTINCT disposable test users via an authorized admin.
+-- Their UUIDs must already exist in auth.users; do not use production identities.
+--
+-- psql -X -v ON_ERROR_STOP=1 \
+--   -v confirmed_nonproduction=yes -v actor_a='<TEST_UUID_A>' \
+--   -v actor_b='<TEST_UUID_B>' "$STAGING_DB_URL" \
+--   -f scripts/db/actor-work-staging-rls.psql
+--
+-- Runs an explicit transaction with ROLLBACK; generated project/audition records
+-- and trigger-generated history are removed even after successful assertions.
+-- A PostgreSQL service/admin connection is required to SET LOCAL ROLE
+-- authenticated. It does NOT replace real two-user app-token browser testing.
+-- Do not run in Lovable's live database query tool.
+
+\set ON_ERROR_STOP on
+\pset pager off
+BEGIN;
+
+-- Safe, fail-closed guard before ANY test data changes.
+SELECT set_config('slams.test_confirmed', :'confirmed_nonproduction', true);
+SELECT set_config('slams.test_a', :'actor_a', true);
+SELECT set_config('slams.test_b', :'actor_b', true);
+DO $block$
+BEGIN
+  IF current_setting('slams.test_confirmed') <> 'yes' THEN
+    RAISE EXCEPTION 'BLOCKED: explicitly confirm a disposable staging database';
+  END IF;
+  IF current_setting('slams.test_a')::uuid = current_setting('slams.test_b')::uuid THEN
+    RAISE EXCEPTION 'BLOCKED: test actors must be different';
+  END IF;
+  IF (SELECT count(*) FROM auth.users
+      WHERE id IN (current_setting('slams.test_a')::uuid,
+                   current_setting('slams.test_b')::uuid)) <> 2 THEN
+    RAISE EXCEPTION 'BLOCKED: both disposable test identities must exist in auth.users';
+  END IF;
+  IF to_regclass('public.actor_projects') IS NULL
+     OR to_regclass('public.actor_project_revisions') IS NULL
+     OR to_regclass('public.actor_auditions') IS NULL
+     OR to_regclass('public.actor_sides') IS NULL THEN
+    RAISE EXCEPTION 'BLOCKED: reviewed actor-work migrations 0004–0007 not installed';
+  END IF;
+END;
+$block$;
+
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub', :'actor_a', true);
+DO $block$
+BEGIN
+  IF current_user <> 'authenticated'
+     OR auth.uid() IS DISTINCT FROM current_setting('slams.test_a')::uuid THEN
+    RAISE EXCEPTION 'BLOCKED: SQL role / simulated JWT identity is not actor A';
+  END IF;
+END;
+$block$;
+
+-- Owner A creates a project. The server trigger must write revision 1.
+INSERT INTO public.actor_projects (user_id, title, role_name, notes)
+VALUES (auth.uid(), 'SLAMS disposable RLS test A', 'Role A', '{}'::jsonb)
+RETURNING id AS a_project_id \gset
+SELECT set_config('slams.project_a', :'a_project_id', true);
+DO $block$
+BEGIN
+  IF (SELECT count(*) FROM public.actor_project_revisions
+      WHERE project_id = current_setting('slams.project_a')::uuid
+        AND user_id = auth.uid() AND revision = 1) <> 1 THEN
+    RAISE EXCEPTION 'FAIL: project owner did not receive revision 1';
+  END IF;
+END;
+$block$;
+
+INSERT INTO public.actor_auditions
+ (user_id, project_id, title, role_name, notes)
+VALUES (auth.uid(), :'a_project_id', 'SLAMS disposable audition A', 'Role A', '{}'::jsonb)
+RETURNING id AS a_audition_id \gset
+SELECT set_config('slams.audition_a', :'a_audition_id', true);
+
+-- Switch the simulated token to B while retaining authenticated SQL role.
+SELECT set_config('request.jwt.claim.sub', :'actor_b', true);
+DO $block$
+BEGIN
+  IF current_user <> 'authenticated'
+     OR auth.uid() IS DISTINCT FROM current_setting('slams.test_b')::uuid THEN
+    RAISE EXCEPTION 'BLOCKED: SQL role / simulated JWT identity is not actor B';
+  END IF;
+  IF EXISTS (SELECT 1 FROM public.actor_projects
+             WHERE id = current_setting('slams.project_a')::uuid)
+     OR EXISTS (SELECT 1 FROM public.actor_project_revisions
+                WHERE project_id = current_setting('slams.project_a')::uuid)
+     OR EXISTS (SELECT 1 FROM public.actor_auditions
+                WHERE id = current_setting('slams.audition_a')::uuid) THEN
+    RAISE EXCEPTION 'FAIL: actor B can read actor A private material';
+  END IF;
+  UPDATE public.actor_projects SET title = 'INTRUSION'
+   WHERE id = current_setting('slams.project_a')::uuid;
+  IF FOUND THEN
+    RAISE EXCEPTION 'FAIL: actor B updated actor A project';
+  END IF;
+  UPDATE public.actor_auditions SET title = 'INTRUSION'
+   WHERE id = current_setting('slams.audition_a')::uuid;
+  IF FOUND THEN
+    RAISE EXCEPTION 'FAIL: actor B updated actor A audition';
+  END IF;
+END;
+$block$;
+
+-- Final hardening 0007 denies authenticated project DELETE entirely,
+-- including one's own project, to preserve archive/restore and history.
+DO $block$
+DECLARE blocked BOOLEAN := FALSE;
+BEGIN
+  BEGIN
+    DELETE FROM public.actor_projects
+    WHERE id = current_setting('slams.project_a')::uuid;
+  EXCEPTION WHEN insufficient_privilege THEN blocked := TRUE;
+  END;
+  IF NOT blocked THEN
+    RAISE EXCEPTION 'FAIL: project deletion permission was not revoked by 0007';
+  END IF;
+END;
+$block$;
+
+-- An authenticated actor cannot forge another user's project ownership.
+DO $block$
+DECLARE blocked BOOLEAN := FALSE;
+BEGIN
+  BEGIN
+    INSERT INTO public.actor_projects(user_id,title)
+    VALUES (current_setting('slams.test_a')::uuid, 'FORGED OWNER');
+  EXCEPTION WHEN insufficient_privilege THEN blocked := TRUE;
+  END;
+  IF NOT blocked THEN
+    RAISE EXCEPTION 'FAIL: actor B forged actor A project ownership';
+  END IF;
+END;
+$block$;
+
+-- Composite owner+project FK must forbid B linking an audition to A's project.
+DO $block$
+DECLARE blocked BOOLEAN := FALSE;
+BEGIN
+  BEGIN
+    INSERT INTO public.actor_auditions(user_id,project_id,title)
+    VALUES(auth.uid(),current_setting('slams.project_a')::uuid,'FORGED PROJECT LINK');
+  EXCEPTION WHEN foreign_key_violation THEN blocked := TRUE;
+  END;
+  IF NOT blocked THEN
+    RAISE EXCEPTION 'FAIL: actor B linked a private audition to A project';
+  END IF;
+END;
+$block$;
+
+-- Owner B can create and read only its own project.
+INSERT INTO public.actor_projects(user_id,title)
+VALUES(auth.uid(),'SLAMS disposable RLS test B')
+RETURNING id AS b_project_id \gset
+SELECT set_config('slams.project_b', :'b_project_id', true);
+DO $block$
+BEGIN
+  IF (SELECT count(*) FROM public.actor_projects WHERE id=current_setting('slams.project_b')::uuid) <> 1
+    OR EXISTS(SELECT 1 FROM public.actor_projects WHERE id=current_setting('slams.project_a')::uuid) THEN
+    RAISE EXCEPTION 'FAIL: actor B owner scope is incorrect';
+  END IF;
+END;
+$block$;
+
+-- Back to A: verify B is invisible and server-owned revision increments.
+SELECT set_config('request.jwt.claim.sub', :'actor_a', true);
+DO $block$
+BEGIN
+  IF EXISTS(SELECT 1 FROM public.actor_projects WHERE id=current_setting('slams.project_b')::uuid) THEN
+    RAISE EXCEPTION 'FAIL: actor A can read actor B project';
+  END IF;
+END;
+$block$;
+
+UPDATE public.actor_projects
+SET title='SLAMS A updated',notes='{"objective":"seek an answer"}'::jsonb
+WHERE id=:'a_project_id' AND user_id=auth.uid() AND revision=1;
+DO $block$
+BEGIN
+  IF (SELECT revision FROM public.actor_projects
+      WHERE id=current_setting('slams.project_a')::uuid) <> 2 THEN
+    RAISE EXCEPTION 'FAIL: project revision did not advance to 2';
+  END IF;
+  IF (SELECT count(*) FROM public.actor_project_revisions
+      WHERE project_id=current_setting('slams.project_a')::uuid) <> 2 THEN
+    RAISE EXCEPTION 'FAIL: project revision history not append-only';
+  END IF;
+  UPDATE public.actor_projects SET title='STALE WRITE'
+   WHERE id=current_setting('slams.project_a')::uuid AND revision=1;
+  IF FOUND THEN RAISE EXCEPTION 'FAIL: stale project revision overwrote changes'; END IF;
+END;
+$block$;
+
+-- History records must not be manually inserted by end users.
+DO $block$
+DECLARE blocked BOOLEAN := FALSE;
+BEGIN
+  BEGIN
+    INSERT INTO public.actor_project_revisions
+      (project_id,user_id,revision,title,role_name,status,notes)
+    VALUES(current_setting('slams.project_a')::uuid,auth.uid(),99,
+           'FORGED HISTORY','','active','{}'::jsonb);
+  EXCEPTION WHEN insufficient_privilege THEN blocked := TRUE;
+  END;
+  IF NOT blocked THEN
+    RAISE EXCEPTION 'FAIL: authenticated role could forge project history';
+  END IF;
+END;
+$block$;
+
+UPDATE public.actor_auditions
+SET status='ready'
+WHERE id=:'a_audition_id' AND user_id=auth.uid() AND revision=1;
+DO $block$
+BEGIN
+  IF (SELECT revision FROM public.actor_auditions
+      WHERE id=current_setting('slams.audition_a')::uuid) <> 2 THEN
+    RAISE EXCEPTION 'FAIL: audition revision did not advance to 2';
+  END IF;
+  UPDATE public.actor_auditions SET title='STALE AUDITION WRITE'
+  WHERE id=current_setting('slams.audition_a')::uuid AND revision=1;
+  IF FOUND THEN RAISE EXCEPTION 'FAIL: stale audition revision overwrote changes'; END IF;
+END;
+$block$;
+
+-- This is a SQL RLS simulation, not actual login-token, API, or Android verification.
+-- Every test write and side effect is rolled back.
+ROLLBACK;
+\echo 'PASS: staging SQL-level RLS and revision assertions completed; rolled back all test writes.'
