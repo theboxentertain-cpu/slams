@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { actorSupabase as supabase, type ActorRow } from "@/lib/actor-work-supabase-types";
 import { useSession } from "@/lib/session";
-import type { Tables } from "@/integrations/supabase/types";
 import {
   parseSideAnnotations,
   validateSideAnnotations,
@@ -11,7 +10,7 @@ import {
   type SideTarget,
 } from "@/lib/actor-sides-model";
 
-type Row = Tables<"actor_sides">;
+type Row = ActorRow<"actor_sides">;
 type Result<T> = { value: T; error?: never } | { value?: never; error: string };
 const columns =
   "id, user_id, project_id, audition_id, title, content, annotations, revision, created_at, updated_at";
