@@ -21,6 +21,9 @@ vi.mock("@tanstack/react-router", () => ({
     </a>
   ),
 }));
+vi.mock("@/components/foundation/AuditionFiles", () => ({
+  AuditionFiles: () => <section aria-label="Separate audition files">Audition library</section>,
+}));
 vi.mock("@/components/foundation/ActorProjects", () => ({
   ActorProjects: () => <section aria-label="Private project files">Project library</section>,
 }));
