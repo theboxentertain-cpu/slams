@@ -18,7 +18,10 @@ vi.mock("@/lib/use-actor-auditions", () => ({ useActorAuditions: () => mocks.aud
 vi.mock("@/lib/i18n", () => ({ useLanguage: () => ({ locale: "en" }) }));
 vi.mock("@/components/slams", () => ({
   Page: ({ children, title }: { children: ReactNode; title: string }) => (
-    <main><h1>{title}</h1>{children}</main>
+    <main>
+      <h1>{title}</h1>
+      {children}
+    </main>
   ),
   btnPrimary: "primary",
   btnSecondary: "secondary",
@@ -43,22 +46,43 @@ beforeEach(() => {
     randomUUID: () => "a823216a-e0af-42b9-9028-c67b94ebf940",
   });
   mocks.sides = {
-    userId: "actor-A", signedIn: true, loaded: true, sides: [saved], error: null,
-    create: mocks.create, annotate: mocks.annotate, reload: mocks.reload,
+    userId: "actor-A",
+    signedIn: true,
+    loaded: true,
+    sides: [saved],
+    error: null,
+    create: mocks.create,
+    annotate: mocks.annotate,
+    reload: mocks.reload,
   };
   mocks.projects = {
-    loaded: true, error: null, projects: [{ id: owner, title: "The Balcony" }],
+    loaded: true,
+    error: null,
+    projects: [{ id: owner, title: "The Balcony" }],
   };
   mocks.auditions = { loaded: true, error: null, records: [] };
   mocks.create.mockResolvedValue({ value: saved });
   mocks.annotate.mockResolvedValue({
-    value: { ...saved, annotations: [{
-      id: "a823216a-e0af-42b9-9028-c67b94ebf940",
-      fromLine: 2, toLine: 3, beat: "New tactic", objective: "To stop them", tactic: "To reassure",
-    }], revision: 2 },
+    value: {
+      ...saved,
+      annotations: [
+        {
+          id: "a823216a-e0af-42b9-9028-c67b94ebf940",
+          fromLine: 2,
+          toLine: 3,
+          beat: "New tactic",
+          objective: "To stop them",
+          tactic: "To reassure",
+        },
+      ],
+      revision: 2,
+    },
   });
 });
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
 
 describe("Script sides UI", () => {
   it("imports pasted multilingual text only after user confirms save and parent", async () => {
@@ -77,15 +101,21 @@ describe("Script sides UI", () => {
     fireEvent.click(save);
     await waitFor(() => expect(mocks.create).toHaveBeenCalledOnce());
     expect(mocks.create).toHaveBeenCalledWith(
-      { title: "Side 2", content: "INT. ROOM\nمريم: صدقني",
-        target: { kind: "project", id: owner } },
-      [owner], [],
+      {
+        title: "Side 2",
+        content: "INT. ROOM\nمريم: صدقني",
+        target: { kind: "project", id: owner },
+      },
+      [owner],
+      [],
     );
   });
   it("displays script evidence separately from interpretation and saves line-anchored beat", async () => {
     render(<ActorSidesPage />);
     fireEvent.click(screen.getByRole("button", { name: /The Balcony/ }));
-    expect(screen.getByRole("list", { name: "Original script — immutable snapshot" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "Original script — immutable snapshot" }),
+    ).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("From line"), { target: { value: "2" } });
     fireEvent.change(screen.getByLabelText("To line"), { target: { value: "3" } });
     expect(screen.getAllByText(/مريم: ما تمشيش/).length).toBeGreaterThan(0);
