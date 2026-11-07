@@ -89,16 +89,28 @@ describe("Available work comes first", () => {
     expect(screen.queryByRole("tablist")).toBeNull();
     const disclosure = screen.getByText("Tools in development").closest("details");
     expect(disclosure).not.toHaveAttribute("open");
-    expect(within(disclosure!).getAllByRole("link", { hidden: true })).toHaveLength(4);
+    expect(within(disclosure!).getAllByRole("link", { hidden: true })).toHaveLength(2);
   });
   it("opens an actual project workspace for the projects tab", () => {
     render(<WorkHub tab="projects" onTabChange={vi.fn()} />);
     expect(screen.getByLabelText("Private project files")).toHaveTextContent("Project library");
     expect(screen.queryByRole("heading", { name: "In development" })).toBeNull();
   });
-  it.each(["characters", "self-tapes"])("gives an old %s bookmark a useful route back", (tab) => {
+  it("exposes dedicated Character Files for an existing characters bookmark", () => {
+    render(<WorkHub tab="characters" onTabChange={vi.fn()} />);
+    expect(screen.queryByRole("heading", { name: "In development" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Open Character Files" })).toHaveAttribute(
+      "href",
+      "/work/character",
+    );
+    expect(screen.getByRole("link", { name: "Open Scene Breakdowns" })).toHaveAttribute(
+      "href",
+      "/work/breakdown",
+    );
+  });
+  it("keeps the unavailable self-tapes bookmark truthful", () => {
     const change = vi.fn();
-    render(<WorkHub tab={tab} onTabChange={change} />);
+    render(<WorkHub tab="self-tapes" onTabChange={change} />);
     expect(screen.getByRole("heading", { name: "In development" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Back to audition preparation" }));
     expect(change).toHaveBeenCalledWith("auditions");

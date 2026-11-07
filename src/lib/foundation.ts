@@ -52,24 +52,6 @@ export function validateTab(page: PageId, input: Record<string, unknown>) {
 }
 
 export const SUPPORT_PAGES = {
-  character: {
-    to: "/work/character",
-    title: "Character File",
-    parent: "/work",
-    message:
-      "Dedicated character files are in development. Your existing audition circumstances and objectives remain available in audition preparation.",
-    action: "/work/audition",
-    label: "Open audition preparation",
-  },
-  breakdown: {
-    to: "/work/breakdown",
-    title: "Scene Breakdown",
-    parent: "/work",
-    message:
-      "Saved beat annotations and scene breakdowns are in development. The existing Living Scene is available for text-based rehearsal.",
-    action: "/scene",
-    label: "Rehearse the demonstration scene",
-  },
   selfTape: {
     to: "/work/self-tape",
     title: "Self-Tape Studio",

@@ -34,6 +34,8 @@ const LABELS = {
     role: "Role / character",
     character: "Character file",
     breakdown: "Scene breakdown",
+    openCharacter: "Open dedicated Character File",
+    openBreakdown: "Open dedicated Scene Breakdown",
     save: "Save project",
     create: "Create project",
     saving: "Saving…",
@@ -70,6 +72,8 @@ const LABELS = {
     role: "الدور أو الشخصية",
     character: "ملف الشخصية",
     breakdown: "تحليل المشهد",
+    openCharacter: "افتح ملف الشخصية المستقل",
+    openBreakdown: "افتح تحليل المشهد المستقل",
     save: "احفظ الملف",
     create: "إنشاء الملف",
     saving: "جاري الحفظ…",
@@ -346,6 +350,22 @@ export function ActorProjects() {
                   </form>
                   {selected && !creating && (
                     <div className="foundation-stack border-t border-amber/30 pt-3">
+                      <nav aria-label={ui.title} className="flex flex-wrap gap-2">
+                        <Link
+                          to="/work/character"
+                          search={{ projectId: selected.id }}
+                          className={btnSecondary}
+                        >
+                          {ui.openCharacter}
+                        </Link>
+                        <Link
+                          to="/work/breakdown"
+                          search={{ projectId: selected.id }}
+                          className={btnSecondary}
+                        >
+                          {ui.openBreakdown}
+                        </Link>
+                      </nav>
                       <div className="flex flex-wrap gap-2">
                         <button
                           type="button"
