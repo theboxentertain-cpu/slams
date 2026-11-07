@@ -15,7 +15,8 @@ type Result<T> = { value: T; error?: never } | { value?: never; error: string };
 const columns =
   "id, user_id, project_id, title, role_name, due_date, status, notes, revision, created_at, updated_at";
 const scopeError = "Account changed; reload Actor at Work before continuing.";
-const schemaError = "Separate audition files are unavailable. The secured audition database may not be installed.";
+const schemaError =
+  "Separate audition files are unavailable. The secured audition database may not be installed.";
 export interface ActorAudition {
   id: string;
   userId: string;
@@ -123,7 +124,8 @@ export function useActorAuditions() {
         })
         .select(columns)
         .single();
-      if (error || !data) throw new Error(error?.message ?? "No audition save confirmation received.");
+      if (error || !data)
+        throw new Error(error?.message ?? "No audition save confirmation received.");
       if (!mounted.current || scope.current !== startedFor) return { error: scopeError };
       if (data.user_id !== userId || data.revision !== 1)
         return { error: "New audition ownership or revision was not verified." };
