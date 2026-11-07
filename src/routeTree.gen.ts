@@ -43,6 +43,7 @@ import { Route as WorkBreakdownRouteImport } from './routes/work.breakdown'
 import { Route as WorkCharacterRouteImport } from './routes/work.character'
 import { Route as WorkJournalRouteImport } from './routes/work.journal'
 import { Route as WorkSelfTapeRouteImport } from './routes/work.self-tape'
+import { Route as WorkSidesRouteImport } from './routes/work.sides'
 import { Route as ConservatorySchoolIndexRouteImport } from './routes/conservatory.$school.index'
 import { Route as ConservatorySchoolYearsYearRouteImport } from './routes/conservatory.$school.years.$year'
 import { Route as ConservatorySchoolUnitsKindUnitIdRouteImport } from './routes/conservatory.$school.units.$kind.$unitId'
@@ -218,6 +219,11 @@ const WorkSelfTapeRoute = WorkSelfTapeRouteImport.update({
   path: '/self-tape',
   getParentRoute: () => WorkRoute,
 } as any)
+const WorkSidesRoute = WorkSidesRouteImport.update({
+  id: '/sides',
+  path: '/sides',
+  getParentRoute: () => WorkRoute,
+} as any)
 const ConservatorySchoolIndexRoute = ConservatorySchoolIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -273,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/work/character': typeof WorkCharacterRoute
   '/work/journal': typeof WorkJournalRoute
   '/work/self-tape': typeof WorkSelfTapeRoute
+  '/work/sides': typeof WorkSidesRoute
   '/conservatory/': typeof ConservatoryIndexRoute
   '/stuck/': typeof StuckIndexRoute
   '/welcome/': typeof WelcomeIndexRoute
@@ -308,6 +315,7 @@ export interface FileRoutesByTo {
   '/work/character': typeof WorkCharacterRoute
   '/work/journal': typeof WorkJournalRoute
   '/work/self-tape': typeof WorkSelfTapeRoute
+  '/work/sides': typeof WorkSidesRoute
   '/conservatory': typeof ConservatoryIndexRoute
   '/stuck': typeof StuckIndexRoute
   '/welcome': typeof WelcomeIndexRoute
@@ -349,6 +357,7 @@ export interface FileRoutesById {
   '/work/character': typeof WorkCharacterRoute
   '/work/journal': typeof WorkJournalRoute
   '/work/self-tape': typeof WorkSelfTapeRoute
+  '/work/sides': typeof WorkSidesRoute
   '/conservatory/': typeof ConservatoryIndexRoute
   '/stuck/': typeof StuckIndexRoute
   '/welcome/': typeof WelcomeIndexRoute
@@ -391,6 +400,7 @@ export interface FileRouteTypes {
     | '/work/character'
     | '/work/journal'
     | '/work/self-tape'
+    | '/work/sides'
     | '/conservatory/'
     | '/stuck/'
     | '/welcome/'
@@ -426,6 +436,7 @@ export interface FileRouteTypes {
     | '/work/character'
     | '/work/journal'
     | '/work/self-tape'
+    | '/work/sides'
     | '/conservatory'
     | '/stuck'
     | '/welcome'
@@ -466,6 +477,7 @@ export interface FileRouteTypes {
     | '/work/character'
     | '/work/journal'
     | '/work/self-tape'
+    | '/work/sides'
     | '/conservatory/'
     | '/stuck/'
     | '/welcome/'
@@ -737,6 +749,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkSelfTapeRouteImport
       parentRoute: typeof WorkRoute
     }
+    '/work/sides': {
+      id: '/work/sides'
+      path: '/sides'
+      fullPath: '/work/sides'
+      preLoaderRoute: typeof WorkSidesRouteImport
+      parentRoute: typeof WorkRoute
+    }
     '/conservatory/$school/': {
       id: '/conservatory/$school/'
       path: '/'
@@ -840,6 +859,7 @@ interface WorkRouteChildren {
   WorkCharacterRoute: typeof WorkCharacterRoute
   WorkJournalRoute: typeof WorkJournalRoute
   WorkSelfTapeRoute: typeof WorkSelfTapeRoute
+  WorkSidesRoute: typeof WorkSidesRoute
   WorkIndexRoute: typeof WorkIndexRoute
 }
 
@@ -849,6 +869,7 @@ const WorkRouteChildren: WorkRouteChildren = {
   WorkCharacterRoute: WorkCharacterRoute,
   WorkJournalRoute: WorkJournalRoute,
   WorkSelfTapeRoute: WorkSelfTapeRoute,
+  WorkSidesRoute: WorkSidesRoute,
   WorkIndexRoute: WorkIndexRoute,
 }
 
