@@ -1,10 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useRef, type ReactNode } from "react";
 import { useBlocker } from "@tanstack/react-router";
 import { useLanguage } from "@/lib/i18n";
-
-type Registration = (key: symbol, dirty: boolean) => void;
-const noop: Registration = () => {};
-const UnsavedWorkContext = createContext<Registration>(noop);
+import { UnsavedWorkContext, type Registration } from "./unsaved-work-state";
 
 /** One router blocker protects every mounted private editor, including browser Back. */
 export function UnsavedWorkProvider({ children }: { children: ReactNode }) {
@@ -27,16 +24,4 @@ export function UnsavedWorkProvider({ children }: { children: ReactNode }) {
   }, [hasUnsavedWork]);
   useBlocker({ shouldBlockFn: shouldBlock, enableBeforeUnload: hasUnsavedWork });
   return <UnsavedWorkContext.Provider value={register}>{children}</UnsavedWorkContext.Provider>;
-}
-
-/** Returns a synchronous clear for confirmed saves that immediately navigate. */
-export function useUnsavedWork(dirty: boolean): () => void {
-  const register = useContext(UnsavedWorkContext);
-  const key = useRef(Symbol("private-editor"));
-  useEffect(() => {
-    const editorKey = key.current;
-    register(editorKey, dirty);
-    return () => register(editorKey, false);
-  }, [dirty, register]);
-  return useCallback(() => register(key.current, false), [register]);
 }
