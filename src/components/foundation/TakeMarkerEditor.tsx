@@ -80,10 +80,10 @@ export function TakeMarkerEditor({
             setError("");
           }}
         />
-        <span className="text-xs text-muted-foreground">
-          {observation.length}/{MARKER_MAX_CHARACTERS}
-        </span>
       </label>
+      <p className="text-xs text-muted-foreground" aria-live="off">
+        {observation.length}/{MARKER_MAX_CHARACTERS}
+      </p>
       <button
         className={btnSecondary}
         type="button"
