@@ -1,24 +1,13 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { arabic } from "./arabic";
 import { DirectionProvider } from "@radix-ui/react-direction";
-
-export type Locale = "en" | "ar";
-export const LANGUAGE_KEY = "slams.language.v1";
-const LANGUAGE_EVENT = "slams-language";
-
-export function translateText(source: string, locale: Locale): string {
-  if (locale === "en") return source;
-  const normalized = source.replace(/\s+/g, " ").trim();
-  const translated = arabic[normalized];
-  if (!translated) return source;
-  return `${source.match(/^\s*/)?.[0] ?? ""}${translated}${source.match(/\s*$/)?.[0] ?? ""}`;
-}
-
-const LanguageContext = createContext({
-  locale: "en" as Locale,
-  setLocale: (_locale: Locale) => {},
-});
+import {
+  LANGUAGE_EVENT,
+  LANGUAGE_KEY,
+  LanguageContext,
+  useLanguage,
+  type Locale,
+} from "./i18n-state";
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLanguage] = useState<Locale>("en");
@@ -58,30 +47,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  return {
-    ...context,
-    dir: context.locale === "ar" ? ("rtl" as const) : ("ltr" as const),
-    t: (source: string) => translateText(source, context.locale),
-  };
-}
-
 /** Translate a known, authored JSX label without adding a layout element.
  * Do not pass user-entered values, route identifiers or stored records.
  */
 export function T({ children }: { children: string }) {
   const { t } = useLanguage();
   return <>{t(children)}</>;
-}
-
-/** Keeps mixed JSX text reactive without translating user-authored values. */
-export function useTranslation() {
-  const { t, locale } = useLanguage();
-  return {
-    t: (value: ReactNode): ReactNode => (typeof value === "string" ? t(value) : value),
-    locale,
-  };
 }
 
 export function LanguageSwitch({ className = "" }: { className?: string }) {
