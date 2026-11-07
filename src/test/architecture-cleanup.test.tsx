@@ -33,6 +33,7 @@ vi.mock("@/components/slams", () => ({
   btnPrimary: "primary",
   btnSecondary: "secondary",
 }));
+vi.mock("@/lib/session", () => ({ useSession: () => ({ user: null, loading: false }) }));
 vi.mock("@/lib/store", () => ({
   useAuditionPrep: () => ({
     data: { role: "Existing saved preparation" },

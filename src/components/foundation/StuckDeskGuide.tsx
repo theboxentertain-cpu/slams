@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { btnSecondary } from "@/components/slams";
 import { useLanguage } from "@/lib/i18n";
+import { useSession } from "@/lib/session";
+import { StuckDeskPassportSave } from "./StuckDeskPassportSave";
 import { DRAFT_INTERVENTIONS } from "@/data/stuck";
 import { formatStuckSession, STUCK_GUIDES, type StuckGuideId } from "@/data/stuck-guides";
 
@@ -27,8 +29,10 @@ const COPY = {
     copy: "Copy my practice note",
     copied: "Copied. Nothing was saved to SLAMS.",
     failed: "Clipboard unavailable. Your notes are still visible here to select and copy manually.",
+    saved:
+      "Private rehearsal notes saved to Passport by your explicit request. No video or performance assessment was saved.",
     temporary:
-      "Session only: these notes are not saved, recorded, graded, or added to Passport. Switching problems clears them.",
+      "Session only unless you explicitly save to Passport. No performance is recorded or graded. Switching problems clears unsaved notes.",
     scene: "Practice in the scripted demonstration",
     noResult: "No result is inferred from these notes. You decide what to investigate next.",
   },
@@ -52,8 +56,9 @@ const COPY = {
     copy: "انسخ ملاحظات التدريب",
     copied: "تم النسخ. لم يتم حفظ أي شيء في SLAMS.",
     failed: "الحافظة غير متاحة. تقدر تحدد الملاحظات الظاهرة وتنسخها يدوياً.",
+    saved: "تم حفظ ملاحظاتك الشخصية في جواز الممثل بطلب منك. لم يتم حفظ تسجيل أو تقييم للأداء.",
     temporary:
-      "الملاحظات مؤقتة: مش محفوظة أو مسجلة أو مقيمة، ومش مضافة لجواز الممثل. تغيير المشكلة يمسحها.",
+      "الملاحظات مؤقتة إلا لو اخترت حفظها في جواز الممثل. مفيش تسجيل أو تقييم للأداء. تغيير المشكلة يمسح الملاحظات غير المحفوظة.",
     scene: "اتدرب في المشهد التفاعلي المكتوب",
     noResult: "التطبيق مش بيستنتج نتيجة من ملاحظاتك. أنت اللي بتحدد الخطوة التالية.",
   },
@@ -64,18 +69,28 @@ const COPY = {
  * Deliberately no network, persistent storage, recording, or third-party data.
  */
 export function StuckDeskGuide() {
+  const { user, loading } = useSession();
+  const { locale } = useLanguage();
+  if (loading)
+    return <p role="status">{locale === "ar" ? "جارٍ تحميل الجلسة…" : "Loading actor session…"}</p>;
+  return <StuckDeskGuideSession key={user?.id ?? "guest"} />;
+}
+
+function StuckDeskGuideSession() {
   const { locale } = useLanguage();
   const ui = COPY[locale];
   const [open, setOpen] = useState<StuckGuideId | null>(null);
   const [before, setBefore] = useState("");
   const [after, setAfter] = useState("");
   const [copyResult, setCopyResult] = useState<"copied" | "failed" | null>(null);
+  const [saved, setSaved] = useState(false);
 
   function selectProblem(id: StuckGuideId) {
     setOpen((current) => (current === id ? null : id));
     setBefore("");
     setAfter("");
     setCopyResult(null);
+    setSaved(false);
   }
 
   return (
@@ -147,6 +162,7 @@ export function StuckDeskGuide() {
                       onChange={(event) => {
                         setBefore(event.target.value);
                         setCopyResult(null);
+                        setSaved(false);
                       }}
                       maxLength={1200}
                       rows={4}
@@ -164,6 +180,7 @@ export function StuckDeskGuide() {
                       onChange={(event) => {
                         setAfter(event.target.value);
                         setCopyResult(null);
+                        setSaved(false);
                       }}
                       maxLength={1200}
                       rows={4}
@@ -193,6 +210,16 @@ export function StuckDeskGuide() {
                       >
                         {ui.copy}
                       </button>
+                      <StuckDeskPassportSave
+                        key={id + ":" + before + ":" + after}
+                        problem={locale === "ar" ? guide.arQuestion : problem.q}
+                        technique={problem.school}
+                        intervention={locale === "ar" ? guide.arFix : problem.fix}
+                        before={before}
+                        after={after}
+                        saved={saved}
+                        onSaved={() => setSaved(true)}
+                      />
                     </section>
                   )}
                   <p role="status" aria-live="polite">
@@ -200,7 +227,9 @@ export function StuckDeskGuide() {
                       ? ui.copied
                       : copyResult === "failed"
                         ? ui.failed
-                        : ui.temporary}
+                        : saved
+                          ? ui.saved
+                          : ui.temporary}
                   </p>
                   <Link to="/scene" className="underline underline-offset-4">
                     {ui.scene}
